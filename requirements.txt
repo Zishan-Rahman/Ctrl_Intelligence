@@ -1,0 +1,8 @@
+asgiref
+backports.zoneinfo
+Django
+pip
+pkg-resources
+setuptools
+sqlparse
+wheel
