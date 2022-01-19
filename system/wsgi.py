@@ -1,5 +1,5 @@
 """
-WSGI config for bookclub project.
+WSGI config for system project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bookclub.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'system.settings')
 
 application = get_wsgi_application()
