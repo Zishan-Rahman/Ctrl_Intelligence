@@ -11,6 +11,6 @@ https://github.com/Zishan-Rahman/Ctrl_Intelligence/edit/main/README.md
 - Zakariya Mohamed Ahmed (K20008985)
 - Lorenzo Bonara (K20068878)
 - Yiğit Cengiz (K20077068)
-- Suhayb Yones
+- Suhayb Yones (K20044202)
 - Brendon Zoto (K19011443)
 
