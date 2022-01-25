@@ -7,7 +7,7 @@ https://github.com/Zishan-Rahman/Ctrl_Intelligence/edit/main/README.md
 - Emma Conteh (K20045772)
 - Surma Begum (K19025208)
 - Zishan Rahman (K20071291)
-- Raisa Ahmed
+- Raisa Ahmed (K20056465)
 - Zakariya Mohamed Ahmed (K20008985)
 - Lorenzo Bonara (K20068878)
 - Yiğit Cengiz (K20077068)
