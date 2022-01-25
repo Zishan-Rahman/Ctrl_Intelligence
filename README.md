@@ -1,7 +1,7 @@
 # Ctrl_Intelligence
 Ctrl Intelligence, the major group project for SEG.
 
-
+https://github.com/Zishan-Rahman/Ctrl_Intelligence/edit/main/README.md
 ## Team Members:
 - Fathima (JD) Jamal-Deen (K1922032)
 - Emma Conteh (K20045772)
@@ -9,7 +9,7 @@ Ctrl Intelligence, the major group project for SEG.
 - Zishan Rahman (K20071291)
 - Raisa Ahmed
 - Zakariya Mohamed Ahmed (K20008985)
-- Lorenzo Bonara
+- Lorenzo Bonara (K20068878)
 - Yiğit Cengiz (K20077068)
 - Suhayb Yones
 - Brendon Zoto (K19011443)
