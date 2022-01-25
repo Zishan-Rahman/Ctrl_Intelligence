@@ -6,7 +6,7 @@ Ctrl Intelligence, the major group project for SEG.
 - Fathima (JD) Jamal-Deen (k1922032)
 - Emma Conteh (k20045772)
 - Surma Begum
-- Zishan Rahman
+- Zishan Rahman (k20071291)
 - Raisa Ahmed
 - Zakariya Mohamed Ahmed
 - Lorenzo Bonara
