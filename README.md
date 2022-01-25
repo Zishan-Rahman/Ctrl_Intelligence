@@ -8,9 +8,9 @@ Ctrl Intelligence, the major group project for SEG.
 - Surma Begum
 - Zishan Rahman (k20071291)
 - Raisa Ahmed
-- Zakariya Mohamed Ahmed
+- Zakariya Mohamed Ahmed (K20008985)
 - Lorenzo Bonara
-- Yigit Cengiz
+- Yiğit Cengiz (K20077068)
 - Suhayb Yones
-- Brendon Zoto
+- Brendon Zoto (K19011443)
 
