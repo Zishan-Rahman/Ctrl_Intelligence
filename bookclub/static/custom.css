@@ -1,0 +1,32 @@
+
+#cover-image {
+    background: url('images/background.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    height: 100%;
+  }
+
+  h1.cover-heading {
+    font-size: 4rem;
+  }
+
+  p.cover-text {
+    font-size: 1.7rem;
+  }
+
+  .cover-card {
+    background-color: rgba(245, 245, 245, 0.938);
+    max-width: 30rem;
+    padding-top: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 30px;
+    border-radius: 15%;
+  }
+  .cover-card-block {
+    opacity: 1
+  }
+
+
