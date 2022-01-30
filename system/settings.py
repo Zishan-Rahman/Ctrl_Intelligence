@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookclub'
+    'bookclub',
 ]
 
 MIDDLEWARE = [
@@ -115,6 +115,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+AUTH_USER_MODEL = 'bookclub.User'
 
 
 # Static files (CSS, JavaScript, Images)
