@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
+from bookclub.views import account_views, authentication_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('log_in/', views.LogInView.as_view(), name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
+    path('', account_views.landing_page, name='landing_page'),
 ]

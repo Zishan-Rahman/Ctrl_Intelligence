@@ -42,4 +42,4 @@ class LogInView(LoginProhibitedMixin, View):
 
 def log_out(request):
     logout(request)
-    return redirect('home')
+    return redirect('landing_page')
