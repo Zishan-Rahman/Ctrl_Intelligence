@@ -53,16 +53,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     #Had to remove blank=True for public_bio in order to edit it?
     public_bio = models.CharField(max_length=520)
+
     short_personal_statement = models.TextField()
-
-    user_levels = (
-        (3, 'Owner'),
-        (2, 'Officer'),
-        (1, 'Memeber'),
-        (0, 'Unapproved'),
-    )
-
-    user_level = models.PositiveSmallIntegerField(choices=user_levels, default = 0)
 
     def full_name(self):
       return f'{self.first_name} {self.last_name}'
@@ -70,4 +62,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-
