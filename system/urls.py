@@ -19,5 +19,8 @@ from bookclub import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.landing_page, name='landing_page'),
+    path('', views.landing_page, name= 'landing_page'),
+    path('home_page/',views.home_page , name = 'home_page'),
+    path('user_list/',views.user_list , name = 'user_list'),
+    path('club_list/',views.club_list , name = 'club_list'),
 ]
