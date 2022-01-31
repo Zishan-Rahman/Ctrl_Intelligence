@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse
@@ -13,7 +14,7 @@ class LogInView(LoginProhibitedMixin, View):
     """View that handles log in."""
 
     http_method_names = ['get', 'post']
-    redirect_when_logged_in_url = 'feed'
+    redirect_when_logged_in_url = 'home_page'
 
     def get(self, request):
         """Display log in template."""
@@ -28,7 +29,7 @@ class LogInView(LoginProhibitedMixin, View):
         self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
         user = form.get_user()
         if user is not None:
-            login(request, user)
+            form = login(request, user)
             return redirect(self.next)
         messages.add_message(request, messages.ERROR, "The credentials provided were invalid!")
         return self.render()
@@ -39,7 +40,7 @@ class LogInView(LoginProhibitedMixin, View):
         form = LogInForm()
         return render(self.request, 'log_in.html', {'form': form, 'next': self.next})
 
-
+@login_required
 def log_out(request):
     logout(request)
     return redirect('landing_page')

@@ -8,14 +8,14 @@ from bookclub.models import User
 class LogInFormTestCase(TestCase):
     """Unit tests for the log in form."""
     def setUp(self):
-        self.form_input = {'email': 'sensei@cobrakai.dojo', 'password': 'NoM1yag1Do!'}
+        self.form_input = {'email': 'johndoe@example.org', 'password': 'Password123'}
         self.user1 = User.objects.create_user(
-            email = 'sensei@cobrakai.dojo',
-            name = 'Jonny Lawrence',
-            personal_statement = 'I\'m gonna kick some ass',
-            chess_experience = 'B',
-            password = 'NoM1yag1Do!',
-            bio = 'STRIKE FIRST - STRIKE HARD - NO MERCY',
+            email = 'johndoe@example.org',
+            first_name = 'John',
+            last_name = 'Doe',
+            public_bio = 'I\'m gonna kick some ass',
+            password = 'Password123',
+            short_personal_statement = 'STRIKE FIRST - STRIKE HARD - NO MERCY',
         )
 
     def test_valid_log_in_form(self):
@@ -50,20 +50,20 @@ class LogInFormTestCase(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_can_authenticate_valid_user(self):
-        fixture = User.objects.get(email='sensei@cobrakai.dojo')
-        form_input = {'email': 'sensei@cobrakai.dojo', 'password': 'NoM1yag1Do!'}
+        fixture = User.objects.get(email='johndoe@example.org')
+        form_input = {'email': 'johndoe@example.org', 'password': 'Password123'}
         form = LogInForm(data=form_input)
         user = form.get_user()
         self.assertEqual(user, fixture)
 
     def test_invalid_credentials_do_not_authenticate(self):
-        form_input = {'email': 'sensei@cobrakai.dojo', 'password': 'WrongPassword123'}
+        form_input = {'email': 'johndoe@example.org', 'password': 'WrongPassword123'}
         form = LogInForm(data=form_input)
         user = form.get_user()
         self.assertEqual(user, None)
 
     def test_blank_password_does_not_authenticate(self):
-        form_input = {'email': 'sensei@cobrakai.dojo', 'password': ''}
+        form_input = {'email': 'johndoe@example.org', 'password': ''}
         form = LogInForm(data=form_input)
         user = form.get_user()
         self.assertEqual(user, None)
