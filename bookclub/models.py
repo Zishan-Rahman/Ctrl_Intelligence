@@ -47,11 +47,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Add additional fields here if needed
 
     # Had to remove blank=True for public_bio in order to edit it?
-    public_bio = models.CharField(max_length=520)
+    public_bio = models.CharField(max_length=520, blank=True)
 
-    short_personal_statement = models.TextField()
+    favourite_genre = models.CharField(max_length=30, blank=True)
 
-    favourite_genre = models.CharField(max_length=520)
+    location = models.CharField(max_length=30, blank=False, default=None)
+
+    age = models.IntegerField(default=None)
 
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
@@ -105,7 +107,7 @@ class Club(models.Model):
         else:
             raise ValueError
 
-    def add_new_member(self, user):
+    def make_member(self, user):
         self.members.add(user)
         self.save()
 
