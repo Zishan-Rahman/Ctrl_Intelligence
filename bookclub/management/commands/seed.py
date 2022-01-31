@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
             fname = faker.first_name()
             lname = faker.last_name()
-            randomEmail = f"{i}@example.org"
+            randomEmail = faker.unique.email(safe=False)
             randomPassw = 'Password123'
             randomBio =  "I'm new here"
             randomGenre = "Science Fiction"
@@ -20,11 +20,11 @@ class Command(BaseCommand):
 
             randomUser = User.objects.create_user(
                 email=randomEmail,
-                password=randomPassw, 
-                first_name=fname, last_name=lname, 
-                public_bio=randomBio, 
-                favourite_genre=randomGenre, 
-                location=randomLocation, 
+                password=randomPassw,
+                first_name=fname, last_name=lname,
+                public_bio=randomBio,
+                favourite_genre=randomGenre,
+                location=randomLocation,
                 age=randomAge)
 
             randomUsers.append(randomUser)
@@ -39,6 +39,3 @@ class Command(BaseCommand):
             )
         newClub.organisers.add(randomUsers[1])
         newClub.members.add(randomUsers[2])
-
-
-

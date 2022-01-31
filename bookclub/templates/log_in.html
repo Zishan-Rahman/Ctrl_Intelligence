@@ -8,15 +8,14 @@
 <body>
 <h2>Book Club Manager</h2>
   <form class="modal-content animate" action="{% url 'log_in' %}" method="post">
+  {% csrf_token %}
       <div class="container">
-        {% csrf_token %}
         <label for="email"><b>Email</b></label>
         <input type="text" placeholder="Enter Email" name="email" required>
         <label for="psw"><b>Password</b></label>
         <input type="password" placeholder="Enter Password" name="psw" required>
         <button type="submit" value="Submit">Submit</button>
-    </div>
-  </form>
-</div>
-</body>
+      </div>
+    </form>
+  </body>
 </html>

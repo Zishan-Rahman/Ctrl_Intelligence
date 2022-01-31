@@ -119,9 +119,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = 'bookclub.User'
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -134,6 +131,9 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# User model for authentication and login purposes
+AUTH_USER_MODEL = 'bookclub.User'
 
 # Login URL for redirecting users from login protected views
 LOGIN_URL = 'log_in'
