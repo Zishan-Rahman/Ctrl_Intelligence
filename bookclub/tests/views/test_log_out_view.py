@@ -14,8 +14,10 @@ class LogOutViewTestCase(TestCase, LogInTester):
             first_name = 'John',
             last_name = 'Doe',
             public_bio = 'I\'m gonna kick some ass',
+            favourite_genre = 'Romance',
+            location = 'London',
+            age = 25,
             password = 'Password123',
-            short_personal_statement = 'STRIKE FIRST - STRIKE HARD - NO MERCY',
         )
 
     def test_log_out_url(self):

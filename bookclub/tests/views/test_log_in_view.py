@@ -16,8 +16,10 @@ class LogInViewTestCase(TestCase, LogInTester):
             first_name = 'John',
             last_name = 'Doe',
             public_bio = 'I\'m gonna kick some ass',
+            favourite_genre = 'Romance',
+            location = 'London',
+            age = 25,
             password = 'Password123',
-            short_personal_statement = 'STRIKE FIRST - STRIKE HARD - NO MERCY',
         )
 
     def test_log_in_url(self):
@@ -41,7 +43,7 @@ class LogInViewTestCase(TestCase, LogInTester):
         self.assertEqual(len(messages_list), 0)
 
     def test_get_log_in_with_redirect(self):
-        destination_url = reverse('home_page')
+        destination_url = reverse('home')
         self.url = reverse_with_next('log_in', destination_url)
         response = self.client.get(self.url)#getting login view
         self.assertEqual(response.status_code, 200)
@@ -98,19 +100,19 @@ class LogInViewTestCase(TestCase, LogInTester):
         form_input = {'email': 'johndoe@example.org', 'password': 'Password123'}#valid credential
         response = self.client.post(self.url, form_input, follow = True)#as we want client to follow redirect all the way to follow
         self.assertTrue(self._is_logged_in())
-        response_url = reverse('home_page')
+        response_url = reverse('home')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
-        self.assertTemplateUsed(response, 'home_page.html')
+        self.assertTemplateUsed(response, 'home.html')
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 0)
 
     def test_successful_log_in_with_redirect(self):
-        redirect_url = reverse('home_page')
-        form_input = {'email': 'johndoe@example.org', 'password': 'Password123', 'next': redirect_url }#valid credential
-        response = self.client.post(self.url, form_input, follow = True)#as we want client to follow redirect all the way to follow
+        redirect_url = reverse('home')
+        form_input = { 'email': 'johndoe@example.org', 'password': 'Password123', 'next': redirect_url }
+        response = self.client.post(self.url, form_input, follow=True)
         self.assertTrue(self._is_logged_in())
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        self.assertTemplateUsed(response, 'home_page.html')
+        self.assertTemplateUsed(response, 'home.html')
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 0)
 
@@ -118,12 +120,12 @@ class LogInViewTestCase(TestCase, LogInTester):
         self.client.login(email = self.user.email, password = "Password123")
         form_input = {'email': 'wronguser@example.org', 'password': 'WrongPassword123'}#valid credential
         response = self.client.post(self.url, form_input, follow=True)
-        redirect_url = reverse('home_page')
+        redirect_url = reverse('home')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        self.assertTemplateUsed(response, 'home_page.html')
+        self.assertTemplateUsed(response, 'home.html')
 
     def test_post_log_in_with_incorrect_credentials_and_redirect(self):
-        redirect_url = reverse('home_page')
+        redirect_url = reverse('home')
         form_input = { 'email': 'johndoe@example.org', 'password': 'WrongPassword123', 'next': redirect_url }
         response = self.client.post(self.url, form_input)
         next = response.context['next']

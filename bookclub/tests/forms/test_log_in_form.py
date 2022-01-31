@@ -9,13 +9,15 @@ class LogInFormTestCase(TestCase):
     """Unit tests for the log in form."""
     def setUp(self):
         self.form_input = {'email': 'johndoe@example.org', 'password': 'Password123'}
-        self.user1 = User.objects.create_user(
+        self.user = User.objects.create_user(
             email = 'johndoe@example.org',
             first_name = 'John',
             last_name = 'Doe',
             public_bio = 'I\'m gonna kick some ass',
+            favourite_genre = 'Romance',
+            location = 'London',
+            age = 25,
             password = 'Password123',
-            short_personal_statement = 'STRIKE FIRST - STRIKE HARD - NO MERCY',
         )
 
     def test_valid_log_in_form(self):

@@ -9,7 +9,7 @@ def landing_page(request):
 
 @login_required
 def home_page(request):
-    return render(request, 'home_page.html')
+    return render(request, 'home.html')
 
 @login_required
 def user_list(request):
