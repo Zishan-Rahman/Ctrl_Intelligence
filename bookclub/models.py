@@ -51,9 +51,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     favourite_genre = models.CharField(max_length=30, blank=True)
 
-    location = models.CharField(max_length=30, blank=False, default="London")
+    location = models.CharField(max_length=30, blank=False, default=None)
 
-    age = models.IntegerField(default=18)
+    age = models.IntegerField(default=None)
 
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
