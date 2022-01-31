@@ -2,7 +2,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse
@@ -40,7 +39,7 @@ class LogInView(LoginProhibitedMixin, View):
         form = LogInForm()
         return render(self.request, 'log_in.html', {'form': form, 'next': self.next})
 
-@login_required
+
 def log_out(request):
     logout(request)
     return redirect('landing_page')
