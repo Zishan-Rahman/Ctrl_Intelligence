@@ -16,3 +16,4 @@ def club_list(request):
     return render(request, 'club_list.html')
 
 
+
