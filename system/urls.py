@@ -20,4 +20,5 @@ from bookclub import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.landing_page, name= 'landing_page'),
+    path('home_page/',views.home_page , name = 'home_page')
 ]
