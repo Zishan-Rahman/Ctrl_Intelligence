@@ -49,11 +49,11 @@ class ClubModelTestCase(TestCase):
         self._assert_book_club_is_invalid()
 
     def test_description_may_contain_512_characters(self):
-        self.club_bush_house.location = "a" * 512
+        self.club_bush_house.description = "a" * 512
         self._assert_book_club_is_valid()
 
     def test_location_may_not_contain_over_512_characters_long(self):
-        self.club_bush_house.location = "a" * 513
+        self.club_bush_house.description = "a" * 513
         self._assert_book_club_is_invalid()
 
     def test_book_club_description_can_be_blank(self):
@@ -65,14 +65,15 @@ class ClubModelTestCase(TestCase):
         self._assert_book_club_is_invalid()
 
     def test_book_club_owners(self):
-        self.assertEqual(self.club_bush_house.owner, 1)
-        self.assertEqual(self.club_somerset_house, 2)
+        self.assertEqual(self.club_bush_house.owner.pk, 1)
+        self.assertEqual(self.club_somerset_house.pk, 2)
 
     def test_make_member(self):
         self.club_bush_house.make_member(self.user_two)
         self.assertEqual(self.club_bush_house.get_members().get(pk=2), self.user_two)
 
     def test_make_organiser(self):
+        self.club_bush_house.make_member(self.user_two)
         self.club_bush_house.make_organiser(self.user_two)
         self.assertEqual(self.club_bush_house.get_organisers().get(pk=2), self.user_two)
 
