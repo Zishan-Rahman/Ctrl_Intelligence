@@ -55,18 +55,42 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     age = models.IntegerField(blank=True, null=True)
 
-    def full_name(self):
+    def get_full_name(self):
         return f'{self.first_name} {self.last_name}'
+
+    def get_first_name(self):
+        return self.first_name
+
+    def get_last_name(self):
+        return self.last_name
+
+    def get_email(self):
+        return self.email
+
+    def get_bio(self):
+        return self.public_bio
+
+    def get_favourite_genre(self):
+        return self.favourite_genre
+
+    def get_location(self):
+        return self.location
+
+    def get_age(self):
+        return self.age
+
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
 
 
+# Club Model adapted from Clucker user model and Chess club management system club model
+
 class Club(models.Model):
-    name = models.CharField(unique=True, blank=False, max_length=50)
-    description = models.CharField(blank=True, max_length=500)
-    location = models.CharField(blank=False, max_length=100)
+    name = models.CharField(unique=True, blank=False, max_length=48)
+    description = models.CharField(blank=True, max_length=512)
+    location = models.CharField(blank=False, max_length=96)
     members = models.ManyToManyField(User, related_name='member_of')
     organisers = models.ManyToManyField(User, related_name='organiser_of')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_of')
@@ -91,7 +115,13 @@ class Club(models.Model):
             return "Not in club"
 
     def make_owner(self, user):
-        if self.user_level(user) == "Organiser":
+        if self.user_level(user) == "Member":
+            self.members.remove(user)
+            self.organisers.add(self.owner)
+            self.owner = user
+            self.save()
+
+        elif self.user_level(user) == "Organiser":
             self.organisers.remove(user)
             self.organisers.add(self.owner)
             self.owner = user
@@ -110,3 +140,29 @@ class Club(models.Model):
     def make_member(self, user):
         self.members.add(user)
         self.save()
+
+    def get_number_of_members(self):
+        return self.members.count()
+
+    def get_number_of_officers(self):
+        return self.organisers.count()
+
+    def get_members(self):
+        return self.members.all()
+
+    def get_organisers(self):
+        return self.organisers.all()
+
+    def get_owner(self):
+        return self.owner
+
+    def get_all_users(self):
+        return self.get_members().union(self.get_officers()).union(
+            User.objects.filter(email=self.get_owner().email))
+
+    def remove_from_club(self, user):
+        if self.user_level(user) == "Member":
+            self.members.remove(user)
+            self.save()
+        else:
+            raise ValueError

@@ -1,0 +1,23 @@
+[
+  {
+    "model": "bookclub.club",
+    "pk": 1,
+    "fields": {
+      "name": "Bush House Book Club",
+      "description": "Bush House Official Book Club!",
+      "location": "Strand, London",
+      "owner": 1
+    }
+  },
+    {
+    "model": "bookclub.club",
+    "pk": 2,
+    "fields": {
+      "name": "Somserset House Book Club",
+      "description": "Somerset House Official Book Club!",
+      "location": "Strand, London",
+      "owner": 2
+    }
+  }
+]
+
