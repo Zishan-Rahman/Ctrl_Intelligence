@@ -1,22 +1,18 @@
+{% extends 'base_content.html' %}
+{% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="{% static 'login_style.css' %}" rel="stylesheet">
-</head>
-<body>
-<h2>Book Club Manager</h2>
+<div class="container text-center">
+<h2><strong>Book Club Manager</strong></h2>
+<div class="container">
+  <div class="row">
   <form class="modal-content animate" action="{% url 'log_in' %}" method="post">
-  {% csrf_token %}
-      <input type="hidden" name="next" value="{{ next }}">
-      <div class="container">
-        <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" required>
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" required>
-        <button type="submit" value="Submit">Submit</button>
-      </div>
-    </form>
-  </body>
-</html>
+    <h2><strong> Log in </strong></h2>\
+   {%  csrf_token  %}
+        <input type ="hidden" name="next" value ="{{ next }}">
+         {%  include 'partials/bootstrap_form.html' with form=form %}
+        <input type ="submit" value ="Log in" class ="btn btn-dark">
+     </form>
+     </div>
+ </div>
+ </div>
+ {% endblock %}
