@@ -55,8 +55,30 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     age = models.IntegerField(blank=True, null=True)
 
-    def full_name(self):
+    def get_full_name(self):
         return f'{self.first_name} {self.last_name}'
+
+    def get_first_name(self):
+        return self.first_name
+
+    def get_last_name(self):
+        return self.last_name
+
+    def get_email(self):
+        return self.email
+
+    def get_bio(self):
+        return self.public_bio
+
+    def get_favourite_genre(self):
+        return self.favourite_genre
+
+    def get_location(self):
+        return self.location
+
+    def get_age(self):
+        return self.age
+
 
     objects = UserManager()
 
