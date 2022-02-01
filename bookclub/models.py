@@ -166,4 +166,3 @@ class Club(models.Model):
             self.save()
         else:
             raise ValueError
-
