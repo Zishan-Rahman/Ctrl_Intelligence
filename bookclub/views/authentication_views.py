@@ -1,12 +1,14 @@
 """Authenticated related views."""
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse
-from bookclub.forms import LogInForm
+from bookclub.forms import LogInForm, SignUpForm
 from .mixins import LoginProhibitedMixin
+from bookclub.helpers import login_prohibited
 
 
 class LogInView(LoginProhibitedMixin, View):
@@ -43,3 +45,16 @@ class LogInView(LoginProhibitedMixin, View):
 def log_out(request):
     logout(request)
     return redirect('landing_page')
+
+
+@login_prohibited
+def sign_up(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = SignUpForm()
+    return render(request, 'sign_up.html', {'form': form})
