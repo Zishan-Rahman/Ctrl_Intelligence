@@ -10,14 +10,14 @@ class LogInFormTestCase(TestCase):
     def setUp(self):
         self.form_input = {'email': 'johndoe@example.org', 'password': 'Password123'}
         self.user = User.objects.create_user(
-            email = 'johndoe@example.org',
-            first_name = 'John',
-            last_name = 'Doe',
-            public_bio = 'I\'m gonna kick some ass',
-            favourite_genre = 'Romance',
-            location = 'London',
-            age = 25,
-            password = 'Password123',
+            email='johndoe@example.org',
+            first_name='John',
+            last_name='Doe',
+            public_bio='I\'m gonna kick some ass',
+            favourite_genre='Romance',
+            location='London',
+            age=25,
+            password='Password123',
         )
 
     def test_valid_log_in_form(self):
@@ -28,8 +28,8 @@ class LogInFormTestCase(TestCase):
         form = LogInForm()
         self.assertIn('email', form.fields)
         self.assertIn('password', form.fields)
-        password_field = form.fields['password']#password needs to be obscuted
-        self.assertTrue(isinstance(password_field.widget,forms.PasswordInput))#checks widget used is password input
+        password_field = form.fields['password']    #password needs to be obscuted
+        self.assertTrue(isinstance(password_field.widget,forms.PasswordInput))  #checks widget used is password input
 
     def test_form_rejects_blank_email(self):
         self.form_input['email']= ''
