@@ -2,6 +2,8 @@ from django.conf import settings
 from django.shortcuts import redirect
 
 #decorator which stops the user from logging in to the system
+
+
 def login_prohibited(view_function):
     def modified_view_function(request):
         if request.user.is_authenticated:

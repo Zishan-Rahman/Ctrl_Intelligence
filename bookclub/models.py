@@ -119,7 +119,7 @@ class Club(models.Model):
     def get_number_of_members(self):
         return self.members.count()
 
-    def get_number_of_officers(self):
+    def get_number_organisers(self):
         return self.organisers.count()
 
     def get_members(self):
@@ -134,7 +134,7 @@ class Club(models.Model):
     def get_all_users(self):
         return (
             self.get_members()
-            .union(self.get_officers())
+            .union(self.get_organisers())
             .union(User.objects.filter(email=self.get_owner().email))
         )
 
