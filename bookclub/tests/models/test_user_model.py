@@ -40,6 +40,9 @@ class UserModelTestCase(TestCase):
         self._assert_user_is_invalid()
 
     # bio tests
+    def test_valid_user(self):
+        self._assert_user_is_valid()
+
     def test_bio_must_not_contain_more_than_520_characters(self):
         self.user_one.public_bio = "x" * 521
         self._assert_user_is_invalid()
@@ -75,10 +78,6 @@ class UserModelTestCase(TestCase):
 
     def test_email_must_contain_username(self):
         self.user_one.email = "@example.org"
-        self._assert_user_is_invalid()
-
-    def test_email_must_be_unique(self):
-        self.user_one.email = self.user_two.email
         self._assert_user_is_invalid()
 
     def test_email_must_be_unique(self):

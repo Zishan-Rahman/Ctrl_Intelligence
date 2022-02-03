@@ -4,59 +4,34 @@ from django.utils.timezone import make_aware
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from .custom_managers import UserManager
+from django.core.validators import RegexValidator
 
 
 # # Create your models here.
-
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(
-        unique=True,
-        max_length=255,
-        blank=False,
-    )
-
-    # All these field declarations are copied as-is
-    # from `AbstractUser`
-    first_name = models.CharField(
-        max_length=30,
-        blank=False,
-    )
-    last_name = models.CharField(
-        max_length=30,
-        blank=False,
-    )
+    email = models.EmailField(unique=True, max_length=255, blank=False)
+    first_name = models.CharField(max_length=30, blank=False)
+    last_name = models.CharField(max_length=30, blank=False)
     is_staff = models.BooleanField(
         default=False,
-        help_text=(
-            'Designates whether the user can log into '
-            'this admin site.'
-        ),
+        help_text=("Designates whether the user can log into " "this admin site."),
     )
     is_active = models.BooleanField(
         default=True,
         help_text=(
-            'Designates whether this user should be '
-            'treated as active. Unselect this instead '
-            'of deleting accounts.'
+            "Designates whether this user should be "
+            "treated as active. Unselect this instead "
+            "of deleting accounts."
         ),
     )
-    date_joined = models.DateTimeField(
-        default=timezone.now,
-    )
-
-    # Add additional fields here if needed
-
-    # Had to remove blank=True for public_bio in order to edit it?
+    date_joined = models.DateTimeField(default=timezone.now)
     public_bio = models.CharField(max_length=520, blank=True)
-
     favourite_genre = models.CharField(max_length=30, blank=True)
-
     location = models.CharField(max_length=30, blank=False)
-
     age = models.IntegerField(blank=True, null=True)
 
     def get_full_name(self):
-        return f'{self.first_name} {self.last_name}'
+        return f"{self.first_name} {self.last_name}"
 
     def get_first_name(self):
         return self.first_name
@@ -79,21 +54,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_age(self):
         return self.age
 
-
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
 
 
 # Club Model adapted from Clucker user model and Chess club management system club model
+
 
 class Club(models.Model):
     name = models.CharField(unique=True, blank=False, max_length=48)
     description = models.CharField(blank=True, max_length=512)
     location = models.CharField(blank=False, max_length=96)
-    members = models.ManyToManyField(User, related_name='member_of')
-    organisers = models.ManyToManyField(User, related_name='organiser_of')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_of')
+    members = models.ManyToManyField(User, related_name="member_of")
+    organisers = models.ManyToManyField(User, related_name="organiser_of")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
 
     def get_name(self):
         return self.name
@@ -157,8 +132,11 @@ class Club(models.Model):
         return self.owner
 
     def get_all_users(self):
-        return self.get_members().union(self.get_officers()).union(
-            User.objects.filter(email=self.get_owner().email))
+        return (
+            self.get_members()
+            .union(self.get_officers())
+            .union(User.objects.filter(email=self.get_owner().email))
+        )
 
     def remove_from_club(self, user):
         if self.user_level(user) == "Member":
