@@ -8,9 +8,7 @@ from bookclub.models import User
 
 class TestSignUpForm(TestCase):
 
-
     def setUp(self):
-        self.club = Club.objects.get(name="TestClubNumber1")
 
         self.form_input = {
             'first_name': 'Alex',
