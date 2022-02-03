@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 from bookclub.models import User
 
+
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
 
@@ -20,6 +21,7 @@ class LogInForm(forms.Form):
             user = authenticate(email=email, password=password)
         return user
 
+
 class SignUpForm(forms.ModelForm):
     """Form enabling users to register"""
 
@@ -28,11 +30,11 @@ class SignUpForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'email')
 
     new_password = forms.CharField(
-    label='Password',
-    widget=forms.PasswordInput(),
-    validators=[RegexValidator(
-        regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
-        message='Password must contain an uppercase character, a lowercase character and a number'
+        label='Password',
+        widget=forms.PasswordInput(),
+        validators=[RegexValidator(
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
+            message='Password must contain an uppercase character, a lowercase character and a number'
         )]
     )
     password_confirmation = forms.CharField(label='Password confirmation', widget=forms.PasswordInput())

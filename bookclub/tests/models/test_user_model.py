@@ -43,12 +43,20 @@ class UserModelTestCase(TestCase):
     def test_valid_user(self):
         self._assert_user_is_valid()
 
-    def test_bio_must_not_contain_more_than_520_characters(self):
-        self.user_one.public_bio = "x" * 521
+    def test_bio_must_not_contain_more_than_512_characters(self):
+        self.user_one.public_bio = "x" * 513
         self._assert_user_is_invalid()
 
     def test_bio_may_contain_520_characters(self):
-        self.user_one.public_bio = "x" * 520
+        self.user_one.public_bio = "x" * 512
+        self._assert_user_is_valid()
+
+    def test_location_must_not_contain_more_than_96_characters(self):
+        self.user_one.location = "x" * 97
+        self._assert_user_is_invalid()
+
+    def test_location_may_contain_96_characters(self):
+        self.user_one.location = "x" * 96
         self._assert_user_is_valid()
 
     def test_bio_may_not_be_unique(self):

@@ -25,9 +25,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(default=timezone.now)
-    public_bio = models.CharField(max_length=520, blank=True)
+    public_bio = models.CharField(max_length=512, blank=True)
     favourite_genre = models.CharField(max_length=30, blank=True)
-    location = models.CharField(max_length=30, blank=False)
+    location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
 
     def get_full_name(self):
@@ -119,7 +119,7 @@ class Club(models.Model):
     def get_number_of_members(self):
         return self.members.count()
 
-    def get_number_of_officers(self):
+    def get_number_organisers(self):
         return self.organisers.count()
 
     def get_members(self):
@@ -134,7 +134,7 @@ class Club(models.Model):
     def get_all_users(self):
         return (
             self.get_members()
-            .union(self.get_officers())
+            .union(self.get_organisers())
             .union(User.objects.filter(email=self.get_owner().email))
         )
 
