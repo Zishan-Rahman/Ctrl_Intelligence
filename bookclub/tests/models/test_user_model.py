@@ -26,14 +26,6 @@ class UserModelTestCase(TestCase):
         self.user_one.first_name = "x" * 31
         self._assert_user_is_invalid()
 
-    def test_first_name_cannot_contain_numbers(self):
-        self.user_one.first_name = "jo4"
-        self._assert_user_is_invalid()
-
-    def test_first_name_cannot_contain_special_characters(self):
-        self.user_one.first_name = "jo$dg"
-        self._assert_user_is_invalid()
-
     # last name tests
     def test_last_name_must_not_be_blank(self):
         self.user_one.last_name = ""
@@ -45,14 +37,6 @@ class UserModelTestCase(TestCase):
 
     def test_last_name_must_not_contain_more_than_31_characters(self):
         self.user_one.last_name = "x" * 31
-        self._assert_user_is_invalid()
-
-    def test_last_name_cannot_contain_numbers(self):
-        self.user_one.last_name = "jo4"
-        self._assert_user_is_invalid()
-
-    def test_last_name_cannot_contain_special_characters(self):
-        self.user_one.last_name = "jo$dg"
         self._assert_user_is_invalid()
 
     # bio tests
