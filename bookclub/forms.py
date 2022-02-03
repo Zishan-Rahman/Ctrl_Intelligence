@@ -5,6 +5,16 @@ from django.core.validators import RegexValidator
 from bookclub.models import User
 
 
+class UserForm(forms.ModelForm):
+    """Form to update user profiles."""
+
+    class Meta:
+        """Form options."""
+
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'public_bio', 'favourite_genre', 'location', 'age']
+        widgets = { 'public_bio': forms.Textarea() }
+
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
 
@@ -115,3 +125,18 @@ class PasswordForm(NewPasswordMixin):
             self.user.set_password(new_password)
             self.user.save()
         return self.user
+
+class EditProfileForm(forms.ModelForm):
+    template_name='/something/else'
+
+    class Meta:
+        model = User
+        fields = (
+            'first_name',
+            'last_name',
+            'email',
+            'public_bio',
+            'favourite_genre',
+            'location',
+            'age'
+        )
