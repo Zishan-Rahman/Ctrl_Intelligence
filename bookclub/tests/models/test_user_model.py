@@ -28,11 +28,11 @@ class UserModelTestCase(TestCase):
 
     def test_first_name_cannot_contain_numbers(self):
         self.user_one.first_name = "jo4"
-        self._assert_user_is_invalid
+        self._assert_user_is_invalid()
 
     def test_first_name_cannot_contain_special_characters(self):
         self.user_one.first_name = "jo$dg"
-        self._assert_user_is_invalid
+        self._assert_user_is_invalid()
 
     # last name tests
     def test_last_name_must_not_be_blank(self):
@@ -49,11 +49,11 @@ class UserModelTestCase(TestCase):
 
     def test_last_name_cannot_contain_numbers(self):
         self.user_one.last_name = "jo4"
-        self._assert_user_is_invalid
+        self._assert_user_is_invalid()
 
     def test_last_name_cannot_contain_special_characters(self):
         self.user_one.last_name = "jo$dg"
-        self._assert_user_is_invalid
+        self._assert_user_is_invalid()
 
     # bio tests
     def test_bio_must_not_contain_more_than_520_characters(self):
@@ -66,7 +66,7 @@ class UserModelTestCase(TestCase):
 
     def test_bio_may_not_be_unique(self):
         self.user_one.public_bio = self.user_two.public_bio
-        self._assert_user_is_valid
+        self._assert_user_is_valid()
 
     # email tests
     def test_email_must_contain_at_symbol(self):
@@ -95,11 +95,11 @@ class UserModelTestCase(TestCase):
 
     def test_email_must_be_unique(self):
         self.user_one.email = self.user_two.email
-        self._assert_user_is_invalid
+        self._assert_user_is_invalid()
 
     def test_email_must_be_unique(self):
         self.user_one.email = self.user_two.email
-        self._assert_user_is_invalid
+        self._assert_user_is_invalid()
 
     def _assert_user_is_valid(self):
         try:
