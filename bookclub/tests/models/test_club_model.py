@@ -40,7 +40,7 @@ class ClubModelTestCase(TestCase):
         self.club_bush_house.location = "a" * 96
         self._assert_book_club_is_valid()
 
-    def test_location_may_not_contain_over_96_characters_long(self):
+    def test_location_may_not_contain_over_96_characters(self):
         self.club_bush_house.location = "a" * 97
         self._assert_book_club_is_invalid()
 
@@ -52,7 +52,7 @@ class ClubModelTestCase(TestCase):
         self.club_bush_house.description = "a" * 512
         self._assert_book_club_is_valid()
 
-    def test_location_may_not_contain_over_512_characters_long(self):
+    def test_location_may_not_contain_over_512_characters(self):
         self.club_bush_house.description = "a" * 513
         self._assert_book_club_is_invalid()
 

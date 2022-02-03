@@ -25,9 +25,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(default=timezone.now)
-    public_bio = models.CharField(max_length=520, blank=True)
+    public_bio = models.CharField(max_length=512, blank=True)
     favourite_genre = models.CharField(max_length=30, blank=True)
-    location = models.CharField(max_length=30, blank=False)
+    location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
 
     def get_full_name(self):
