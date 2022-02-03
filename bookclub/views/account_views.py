@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from bookclub.templates import *
 from django.contrib.auth.decorators import login_required
 
