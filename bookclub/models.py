@@ -144,3 +144,7 @@ class Club(models.Model):
             self.save()
         else:
             raise ValueError
+
+class Application(models.Model):
+    member = models.ForeignKey(User)
+    club = models.ForeignKey(Club)
