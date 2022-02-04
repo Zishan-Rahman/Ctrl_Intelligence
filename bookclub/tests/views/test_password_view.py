@@ -18,7 +18,7 @@ class PasswordViewTest(TestCase):
         self.user = User.objects.get(email='johndoe@bookclub.com')
         self.url = reverse('password')
         self.form_input = {
-            'password': 'pbkdf2_sha256$260000$VEDi9wsMYG6eNVeL8WSPqj$LHEiR2iUkusHCIeiQdWS+xQGC9/CjhhrjEOESMMp+c0=',
+            'password': 'Password123',
             'new_password': 'NewPassword123',
             'password_confirmation': 'NewPassword123',
         }

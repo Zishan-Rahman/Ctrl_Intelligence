@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 from bookclub.models import User
 
-
 class UserForm(forms.ModelForm):
     """Form to update user profiles."""
 
@@ -71,7 +70,7 @@ class SignUpForm(forms.ModelForm):
         return user
 
 class NewPasswordMixin(forms.Form):
-    #Form mixing for new_password and password_confirmation fields.
+    """Form mixing for new_password and password_confirmation fields."""
 
     new_password = forms.CharField(
         label='Password',
@@ -85,7 +84,7 @@ class NewPasswordMixin(forms.Form):
     password_confirmation = forms.CharField(label='Password confirmation', widget=forms.PasswordInput())
 
     def clean(self):
-        #Form mixing for new_password and password_confirmation fields.
+        """Form mixing for new_password and password_confirmation fields."""
 
         super().clean()
         new_password = self.cleaned_data.get('new_password')
@@ -95,18 +94,18 @@ class NewPasswordMixin(forms.Form):
 
 
 class PasswordForm(NewPasswordMixin):
-    #Form enabling users to change their password.
+    """Form enabling users to change their password."""
 
     password = forms.CharField(label='Current password', widget=forms.PasswordInput())
 
     def __init__(self, user=None, **kwargs):
-        #Construct new form instance with a user instance.
+        """Construct new form instance with a user instance."""
 
         super().__init__(**kwargs)
         self.user = user
 
     def clean(self):
-        #Clean the data and generate messages for any errors.
+        """Clean the data and generate messages for any errors."""
 
         super().clean()
         password = self.cleaned_data.get('password')
@@ -118,25 +117,10 @@ class PasswordForm(NewPasswordMixin):
             self.add_error('password', "Password is invalid")
 
     def save(self):
-        #Save the user's new password.
+        """Save the user's new password."""
 
         new_password = self.cleaned_data['new_password']
         if self.user is not None:
             self.user.set_password(new_password)
             self.user.save()
         return self.user
-
-class EditProfileForm(forms.ModelForm):
-    template_name='/something/else'
-
-    class Meta:
-        model = User
-        fields = (
-            'first_name',
-            'last_name',
-            'email',
-            'public_bio',
-            'favourite_genre',
-            'location',
-            'age'
-        )
