@@ -14,6 +14,7 @@ class ApplicationModelTestCase(TestCase):
     def setUp(self) -> None:
         self.user_one = User.objects.get(pk=1)
         self.user_two = User.objects.get(pk=2)
+        self.club_bush_house = Club.objects.get(pk=1)
         self.club_somerset_house = Club.objects.get(pk=2)
         self.application = Application.objects.create(applicant=self.user_one, club=self.club_somerset_house)
         
@@ -47,3 +48,13 @@ class ApplicationModelTestCase(TestCase):
         """Test if a user cannot apply to their own club."""
         self.application.applicant = self.user_two
         self._assert_application_is_invalid
+        
+    def test_club_itself_cannot_be_applicant(self) -> None:
+        """Test if a club entity cannot apply to another club."""
+        with self.assertRaises(ValueError):
+            self.application.applicant = self.club_bush_house
+            
+    def test_user_cannot_be_club(self) -> None:
+        """Test if an applicant cannot be a club entity."""
+        with self.assertRaises(ValueError):
+            self.application.club = self.user_one
