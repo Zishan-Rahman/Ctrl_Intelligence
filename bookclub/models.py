@@ -144,3 +144,8 @@ class Club(models.Model):
             self.save()
         else:
             raise ValueError
+
+class Application(models.Model):
+    """A model for denoting and storing applications made by users to join book clubs."""
+    applicant = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
