@@ -10,6 +10,7 @@ class ApplicationModelTestCase(TestCase):
 
     def setUp(self) -> None:
         self.user_one = User.objects.get(pk=1)
+        self.user_two = User.objects.get(pk=2)
         self.club_somerset_house = Club.objects.get(pk=2)
         self.application = Application.objects.create(applicant=self.user_one, club=self.club_somerset_house)
         
@@ -32,4 +33,8 @@ class ApplicationModelTestCase(TestCase):
         
     def test_club_must_be_present(self) -> None:
         self.application.club = None
+        self._assert_application_is_invalid
+        
+    def test_club_owner_cannot_be_applicant(self) -> None:
+        self.application.applicant = self.user_two
         self._assert_application_is_invalid
