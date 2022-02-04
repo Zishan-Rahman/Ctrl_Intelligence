@@ -146,5 +146,5 @@ class Club(models.Model):
             raise ValueError
 
 class Application(models.Model):
-    member = models.ForeignKey(User, blank=False)
-    club = models.ForeignKey(Club, blank=False)
+    member = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
