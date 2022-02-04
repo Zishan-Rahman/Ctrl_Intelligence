@@ -11,7 +11,7 @@ class ApplicationModelTestCase(TestCase):
     def setUp(self) -> None:
         self.user_one = User.objects.get(pk=1)
         self.club_somerset_house = Club.objects.get(pk=2)
-        self.application = Application.objects.create(self.user_one, self.club_somerset_house)
+        self.application = Application.objects.create(applicant=self.user_one, club=self.club_somerset_house)
         
     def _assert_application_is_valid(self) -> None:
         try:
