@@ -1,7 +1,82 @@
 {% extends 'base_content.html' %}
 {% block content %}
-   <body>
-      <h1>Book Club</h1>
-      <p>This is the home page</p>
-   </body>
+  <h1>Book Club</h1>
+  <p>This is the home page</p>
+  <div id="top-content">
+    <span id="clubs-selection-title">Clubs:</span>
+    <select name="clubs", id="clubs-selection" onchange="getClub(); showClubs()">
+      {% for cm in club_memberships %}
+      <option value="{{ cm.foreign_club }}">{{ cm.foreign_club }} ({{ cm.get_membership_display }})</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="content-box">
+  <div id="main-content" class="card shadow d-flex">
+    <ul class="nav nav-tabs mb-3 shadow-sm" id="mainTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="member-pane-tab" data-bs-toggle="tab" data-bs-target="#member-pane" type="button" role="tab" aria-controls="member-pane" aria-selected="true">Members</button>
+      </li>
+    </ul>
+
+    <div class="tab-content container-fluid" id="mainTabContent">
+      <div class="tab-pane fade show active" id="member-pane" role="tabpanel" aria-labelledby="member-pane-tab"><div id="member-list"></div></div>
+    </div>
+  </div>
+  <div id="side-content">
+    <div class="side-box card shadow d-flex">
+      <div id="club-description"></div>
+    </div>
+
+<script type="text/javascript">
+  function getClubName() {
+    let selection = document.getElementById("clubs-selection");
+    return encodeURI(selection.options[selection.selectedIndex].value);
+  }
+
+  function showClubs() {
+    if(!document.getElementById("member-pane-tab").classList.contains("active")) {
+      if(!document.getElementById("tournament-pane-tab").classList.contains("active")) {
+        $("#member-pane-tab").tab('show');
+      }
+    }
+  }
+  function getClub() {
+  let request = new XMLHttpRequest();
+  request.onreadystatechange = function () {
+    if(this.readyState == 4 && this.status == 200) {
+      renderClub(JSON.parse(this.response));
+    }
+  }
+  request.open("GET", "{% url 'club_list' %}"+"?name="+getClubName());
+  request.send();
+}
+function renderClub(club) {
+    if(club["is_staff"]) {
+      document.getElementById("application-pane-tab").style.display = "block";
+      document.getElementById("staff-pane-tab").style.display = "block";
+      let application_list = document.getElementById("application-list");
+    } else {
+      document.getElementById("application-pane-tab").style.display = "none";
+      document.getElementById("staff-pane-tab").style.display = "none";
+    }
+
+    let member_list = document.getElementById("member-list");
+    renderUsers(member_list, [club["owner"]].concat(club["officers"], club["members"]), club["is_staff"]);
+    if(club["is_owner"]) {
+      insertRankButtons(member_list, club["officers"], 1, "Transfer Ownership", "Demote");
+      insertRankButtons(member_list, club["members"], 1 + club["officers"].length, "Promote", "Kick");
+    }
+    else if(club["is_staff"]) {
+      insertRankButtons(member_list, club["members"], 1 + club["officers"].length, "", "Kick");
+    }
+
+    renderClubDescription(club["location"], club["description"]);
+  }
+  function renderClubDescription(location, description) {
+  let container = document.getElementById("club-description");
+  container.innerHTML = "<h5>" + "Location: <br/>" + location + "</h5><p>" + "<strong>Description: </strong> <br/>" + description + "</p>";
+}
+
+  getClub();
+</script>
 {% endblock %}
