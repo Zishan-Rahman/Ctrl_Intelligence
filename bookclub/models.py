@@ -1,10 +1,11 @@
 from django.db import models
+from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from .custom_managers import UserManager
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 
 
 # # Create your models here.
@@ -57,6 +58,44 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
+
+
+
+#books model
+
+class Book(models.Model):
+    isbn = models.CharField(unique=True, max_length=12, blank=False)
+    title = models.CharField(unique=True, blank=False, max_length=512)
+    author = models.CharField(blank=False, max_length=512)
+    pub_year = models.IntegerField(blank=False, validators = [MinValueValidator(1800), MaxValueValidator(2022)])
+    publisher = models.CharField(blank=False, max_length=512)
+    small_url = models.URLField(unique=True, blank=False, max_length=512)
+    medium_url = models.URLField(unique=True, blank=False, max_length=512)
+    large_url = models.URLField(unique=True, blank=False, max_length=512)
+
+    def get_isbn(self):
+        return self.isbn
+
+    def get_title(self):
+        return self.title
+
+    def get_pub_year(self):
+        return self.pub_year
+
+    def get_pub_company(self):
+        return self.pub_company
+
+    def get_small_url(self):
+        return self.small_url
+
+    def get_medium_url(self):
+        return self.medium_url
+
+    def get_large_url(self):
+        return self.large_url
+
+
+
 
 
 # Club Model adapted from Clucker user model and Chess club management system club model
