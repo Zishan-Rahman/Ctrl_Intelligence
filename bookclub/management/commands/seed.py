@@ -11,7 +11,6 @@ class Command(BaseCommand):
         self.load_users()
 
     def load_users(self):
-
         count = 1
         file_path_users = "data/BX-Users.csv"
 
