@@ -2,17 +2,18 @@
 {% block content %}
 {% load static %}
 <div class="container text-center">
-<h2><strong>Bookwise Manager</strong></h2>
+<h2><strong>Welcome Back!</strong></h2>
 <div class="container">
   <div class="row">
+    <div class="col-12">
   <form class="modal-content animate" action="{% url 'log_in' %}" method="post">
-    <h2><strong>Log in</strong></h2>
+    <h3><strong>Log in</strong></h3>
    {%  csrf_token  %}
         <input type ="hidden" name="next" value ="{{ next }}">
          {%  include 'partials/bootstrap_form.html' with form=form %}
-        <input type ="submit" value ="Log in" class ="btn btn-dark">
-        <br>
+        <input type ="submit" value ="Log in" class ="btn btn-primary">
      </form>
+     </div>
      </div>
  </div>
  </div>
