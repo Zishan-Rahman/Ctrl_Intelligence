@@ -24,17 +24,21 @@ class Command(BaseCommand):
                 first_name = self.faker.first_name()
                 last_name = self.faker.last_name()
                 email = f'{first_name.lower()}.{last_name.lower()}{id}@example.org'
-
+                location = row[1]
+                age = row[2]
                 public_bio = self.faker.text(max_nb_chars=512)
                 password = "pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0="
+
+                if age == 'NULL':
+                    age = None
 
                 user = User(
                     id=id,
                     first_name=first_name,
                     last_name=last_name,
                     password=password,
-                    location=row[1],
-                    age=12,
+                    location=location,
+                    age=age,
                     public_bio=public_bio,
                     email=email
                 )
