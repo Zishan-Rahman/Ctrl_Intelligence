@@ -62,7 +62,6 @@ class Command(BaseCommand):
             next(data)
             books = []
             for row in data:
-
                 book = Book(
                     isbn=row[0],
                     title=row[1],
@@ -73,7 +72,6 @@ class Command(BaseCommand):
                     medium_url=row[6],
                     large_url=row[7]
                 )
-
                 books.append(book)
                 count += 1
                 percent_complete = float((count/271380)*100)

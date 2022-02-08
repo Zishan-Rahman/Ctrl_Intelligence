@@ -60,8 +60,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
 
 
+# books model
 
-#books model
 
 class Book(models.Model):
     isbn = models.CharField(unique=True, max_length=12, blank=False)
@@ -83,7 +83,7 @@ class Book(models.Model):
         return self.pub_year
 
     def get_pub_company(self):
-        return self.pub_company
+        return self.publisher
 
     def get_small_url(self):
         return self.small_url
@@ -93,10 +93,6 @@ class Book(models.Model):
 
     def get_large_url(self):
         return self.large_url
-
-
-
-
 
 # Club Model adapted from Clucker user model and Chess club management system club model
 
@@ -184,7 +180,14 @@ class Club(models.Model):
         else:
             raise ValueError
 
+
 class Application(models.Model):
     """A model for denoting and storing applications made by users to join book clubs."""
     applicant = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
+
+    def get_applicant(self):
+        return self.applicant
+
+    def get_application_club(self):
+        return self.club
