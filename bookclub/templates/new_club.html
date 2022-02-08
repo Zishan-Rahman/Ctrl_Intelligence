@@ -1,0 +1,16 @@
+<!-- new club page adapted from the chess club project -->
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container-applications" style="padding:50px">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="new-club-title">Create New Club</h1>
+      <form action="{% url 'new_club' %}" method="post">
+        {% csrf_token %}
+        {% include 'partials/bootstrap_form.html' with form=form %}
+        <input id="create-new-club-button" type="submit" value="Create New Club" class="btn btn-primary">
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

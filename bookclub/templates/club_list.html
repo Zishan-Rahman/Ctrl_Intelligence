@@ -1,8 +1,28 @@
+<!-- club list page adapted from the chess club project -->
 {% extends 'base_content.html' %}
 {% block content %}
-   <body>
-      <h1>Bookwise</h1>
-      <p>This is the club list page</p>
-   </body>
-
+<div class="container-applications">
+  <div class="application-title">
+    <h1>Clubs</h1>
+    <p></p>
+    <a href="{% url 'new_club' %}" style='text-decoration:none; color:blanchedalmond;'>To create a new club, click here!</a>
+    <p></p>
+  </div>
+  <div class="book-table">
+      <table class="table">
+        {% for club in clubs %}
+          <tr>
+              <td>
+                <a href="#" style='text-decoration:none; color:black;
+                display:flex; justify-content:flex-start;'>
+                <span style='flex:1'>{{ club.name }}</span>
+                <span style='flex:1'>Description:{{ club.description }}</span>
+                <span style='flex:1'>Location: {{ club.location }}</span>
+              </a>
+              </td>
+          </tr>
+        {% endfor %}
+      </table>
+  </div>
+</div>
 {% endblock %}
