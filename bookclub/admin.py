@@ -6,7 +6,7 @@ from .models import User, Club
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = [
-        'id', 'first_name', 'last_name', 'email', 'is_active',
+        'id', 'first_name', 'last_name', 'email', 'location', 'age', 'is_active',
     ]
 
 
