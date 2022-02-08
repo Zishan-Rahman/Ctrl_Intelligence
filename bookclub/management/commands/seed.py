@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
-from bookclub.models import User, Club
+from bookclub.models import User, Club, Book
 import csv
 
 class Command(BaseCommand):
@@ -9,6 +9,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """ Loads the given dataset into the database"""
         self.load_users()
+        self.load_books()
 
     def load_users(self):
         count = 1
@@ -23,11 +24,7 @@ class Command(BaseCommand):
                 first_name = self.faker.first_name()
                 last_name = self.faker.last_name()
                 email = f'{first_name.lower()}.{last_name.lower()}{id}@example.org'
-                location = row[1]
                 age = row[2]
-                public_bio = self.faker.text(max_nb_chars=512)
-                password = "pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0="
-
                 if age == 'NULL':
                     age = None
 
@@ -35,10 +32,10 @@ class Command(BaseCommand):
                     id=id,
                     first_name=first_name,
                     last_name=last_name,
-                    password=password,
-                    location=location,
+                    password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
+                    location=row[1],
                     age=age,
-                    public_bio=public_bio,
+                    public_bio=self.faker.text(max_nb_chars=512),
                     email=email
                 )
 
@@ -54,8 +51,40 @@ class Command(BaseCommand):
 
             if users:
                 User.objects.bulk_create(users)
-            print()
             print("Users successfully seeded!")
 
+    def load_books(self):
+        count = 1
+        file_path_users = "data/BX_Books.csv"
+
+        with open(file_path_users, encoding='cp1252') as user_csv_file:
+            data = csv.reader(user_csv_file, delimiter=";")
+            next(data)
+            books = []
+            for row in data:
+
+                book = Book(
+                    isbn=row[0],
+                    title=row[1],
+                    author=row[2],
+                    pub_year=row[3],
+                    publisher=row[4],
+                    small_url=row[5],
+                    medium_url=row[6],
+                    large_url=row[7]
+                )
+
+                books.append(book)
+                count += 1
+                percent_complete = float((count/271380)*100)
+
+                print(f'DONE: {round(percent_complete)}% | {count}/271380', end='\r')
+                if len(books) > 5000:
+                    Book.objects.bulk_create(books)
+                    books = []
+
+            if books:
+                Book.objects.bulk_create(books)
+            print("Books successfully seeded!")
 
 

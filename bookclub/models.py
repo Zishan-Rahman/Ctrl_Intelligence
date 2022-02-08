@@ -65,13 +65,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Book(models.Model):
     isbn = models.CharField(unique=True, max_length=12, blank=False)
-    title = models.CharField(unique=True, blank=False, max_length=512)
+    title = models.CharField(unique=False, blank=False, max_length=512)
     author = models.CharField(blank=False, max_length=512)
     pub_year = models.IntegerField(blank=False, validators = [MinValueValidator(1800), MaxValueValidator(2022)])
     publisher = models.CharField(blank=False, max_length=512)
-    small_url = models.URLField(unique=True, blank=False, max_length=512)
-    medium_url = models.URLField(unique=True, blank=False, max_length=512)
-    large_url = models.URLField(unique=True, blank=False, max_length=512)
+    small_url = models.URLField(unique=False, blank=False, max_length=512)
+    medium_url = models.URLField(unique=False, blank=False, max_length=512)
+    large_url = models.URLField(unique=False, blank=False, max_length=512)
 
     def get_isbn(self):
         return self.isbn
