@@ -3,6 +3,7 @@ from faker import Faker
 from bookclub.models import User, Club, Book
 import csv
 
+
 class Command(BaseCommand):
     faker = Faker('en_GB')
 
@@ -51,7 +52,7 @@ class Command(BaseCommand):
 
             if users:
                 User.objects.bulk_create(users)
-            print("Users successfully seeded!")
+            print("Users successfully seeded")
 
     def load_books(self):
         count = 1
@@ -83,6 +84,6 @@ class Command(BaseCommand):
 
             if books:
                 Book.objects.bulk_create(books)
-            print("Books successfully seeded!")
+            print("Books successfully seeded")
 
 
