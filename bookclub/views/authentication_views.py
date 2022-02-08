@@ -6,8 +6,9 @@ from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse
-from bookclub.forms import LogInForm, SignUpForm
+from bookclub.forms import LogInForm, SignUpForm, PasswordForm
 from .mixins import LoginProhibitedMixin
+from django.contrib.auth.decorators import login_required
 from bookclub.helpers import login_prohibited
 
 
