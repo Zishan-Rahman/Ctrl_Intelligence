@@ -7,5 +7,5 @@ from bookclub.models import Club
 @login_required
 def home_page(request):
     current_user = request.user
-    memberships = Club.objects.filter(pk=1)
+    memberships = Club.objects.filter(members=current_user)
     return render(request, "home.html", {"club_memberships": memberships})
