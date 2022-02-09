@@ -7,6 +7,8 @@ import csv
 class Command(BaseCommand):
     """Seeder to populate database"""
 
+    TOTAL_USERS_IN_DATASET = 278859
+    TOTAL_BOOKS_IN_DATASET = 271380
     faker = Faker('en_GB')
 
     def handle(self, *args, **options):
@@ -52,7 +54,7 @@ class Command(BaseCommand):
                 count += 1
                 percent_complete = float((count/278859)*100)
 
-                print(f'DONE: {round(percent_complete)}% | {count}/278859', end='\r')
+                print(f'[ DONE: {round(percent_complete)}% | {count}/{self.TOTAL_USERS_IN_DATASET} ]', end='\r')
                 if len(users) > 5000:
                     User.objects.bulk_create(users)
                     users = []
@@ -93,7 +95,7 @@ class Command(BaseCommand):
                 count += 1
                 percent_complete = float((count/271380)*100)
 
-                print(f'DONE: {round(percent_complete)}% | {count}/271380', end='\r')
+                print(f'[ DONE: {round(percent_complete)}% | {count}/{self.TOTAL_BOOKS_IN_DATASET} ]', end='\r')
                 if len(books) > 5000:
                     Book.objects.bulk_create(books)
                     books = []
