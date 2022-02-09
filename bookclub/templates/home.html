@@ -1,12 +1,13 @@
 {% extends 'base_content.html' %}
 {% block content %}
-  <h1>BookWise</h1>
-  <div id="top-content">
-    <span id="clubs-selection-title">Clubs:</span>
-    <select name="clubs", id="clubs-selection" onchange="getClub(); showClubs()">
-      {% for cm in club_memberships %}
-      <option value="clubName">{{ cm.get_name }}</option>
-      {% endfor %}
-    </select>
-  </div>
+    <div class="container">
+    <div class="row">
+        <div class="col-12">
+   <body>
+      <h1>Bookwise</h1>
+      <p>This is the home page</p>
+   </body>
+        </div>
+</div>
+    </div>
 {% endblock %}
