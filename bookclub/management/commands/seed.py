@@ -13,13 +13,35 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """ Loads the given dataset into the database"""
-        print()
-        print('SEED USERS:')
-        self.load_users()
-        print('SEED DEFAULT SUPERUSER:')
-        self.default_superuser()
-        print('SEED BOOKS:')
-        self.load_books()
+        seed_possible = self.verify_seeding_possible()
+        if seed_possible:
+            print()
+            print('SEED USERS:')
+            self.load_users()
+            print('SEED DEFAULT SUPERUSER:')
+            self.default_superuser()
+            print('SEED BOOKS:')
+            self.load_books()
+        else:
+            print()
+            print('The database must first be unseeded.')
+            print('To do this, enter the command below:')
+            print('>   python3 manage.py unseed')
+            print()
+
+    def verify_seeding_possible(self):
+        seed_possible = True
+        users_present = User.objects.count()
+        books_present = Book.objects.count()
+
+        if users_present > 0:
+            seed_possible = False
+
+        if books_present > 0:
+            seed_possible = False
+
+        return seed_possible
+
 
     def load_users(self):
         count = 1
@@ -30,16 +52,16 @@ class Command(BaseCommand):
             next(data)
             users = []
             for row in data:
-                id = int(row[0])
+                user_id = int(row[0])
                 first_name = self.faker.first_name()
                 last_name = self.faker.last_name()
-                email = f'{first_name.lower()}.{last_name.lower()}{id}@example.org'
+                email = f'{first_name.lower()}.{last_name.lower()}{user_id}@example.org'
                 age = row[2]
                 if age == 'NULL':
                     age = None
 
                 user = User(
-                    id=id,
+                    id=user_id,
                     first_name=first_name,
                     last_name=last_name,
                     password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
