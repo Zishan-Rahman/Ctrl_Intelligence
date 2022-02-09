@@ -7,11 +7,19 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        print()
+
+        print('Please wait, the users are being unseeded...', end='\r')
         User.objects.all().delete()
-        print("Users successfully unseeded")
+        print("[ COMPLETED: The users have successfully been unseeded ]")
 
+        print()
+        print('Please wait, the clubs are being unseeded...', end='\r')
         Club.objects.all().delete()
-        print("Clubs successfully unseeded")
+        print("[ COMPLETED: The clubs have successfully been unseeded ]")
 
+        print()
+        print('Please wait, the books are being unseeded...', end='\r')
         Book.objects.all().delete()
-        print("Books successfully unseeded")
+        print("[ COMPLETED: The books have successfully been unseeded ]")
+        print()

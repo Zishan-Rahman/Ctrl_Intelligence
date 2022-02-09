@@ -5,11 +5,18 @@ import csv
 
 
 class Command(BaseCommand):
+    """Seeder to populate database"""
+
     faker = Faker('en_GB')
 
     def handle(self, *args, **options):
         """ Loads the given dataset into the database"""
+        print()
+        print('SEED USERS:')
         self.load_users()
+        print('SEED DEFAULT SUPERUSER:')
+        self.default_superuser()
+        print('SEED BOOKS:')
         self.load_books()
 
     def load_users(self):
@@ -52,7 +59,16 @@ class Command(BaseCommand):
 
             if users:
                 User.objects.bulk_create(users)
-            print("Users successfully seeded")
+            print("The users have been successfully seeded")
+            print()
+
+    def default_superuser(self):
+        User.objects.create_superuser(email="ctrl@intelligence.com", password='Password123')
+        print("Default superuser created with details:")
+        print("Email: ctrl@intelligence.com")
+        print("Password: Password123")
+        print()
+
 
     def load_books(self):
         count = 1
@@ -84,6 +100,7 @@ class Command(BaseCommand):
 
             if books:
                 Book.objects.bulk_create(books)
-            print("Books successfully seeded")
+            print("The books have been successfully seeded")
+            print()
 
 

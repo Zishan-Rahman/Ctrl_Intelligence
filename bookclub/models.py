@@ -8,7 +8,7 @@ from .custom_managers import UserManager
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 
 
-# # Create your models here.
+# Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255, blank=False)
     first_name = models.CharField(max_length=30, blank=False)
