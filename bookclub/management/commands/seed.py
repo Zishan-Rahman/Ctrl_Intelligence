@@ -76,8 +76,8 @@ class Command(BaseCommand):
         count = 1
         file_path_users = "data/BX_Books.csv"
 
-        with open(file_path_users, encoding='cp1252') as user_csv_file:
-            data = csv.reader(user_csv_file, delimiter=";")
+        with open(file_path_users, encoding='cp1252') as book_csv_file:
+            data = csv.reader(book_csv_file, delimiter=";")
             next(data)
             books = []
             for row in data:
@@ -96,6 +96,7 @@ class Command(BaseCommand):
                 percent_complete = float((count/271380)*100)
 
                 print(f'[ DONE: {round(percent_complete)}% | {count}/{self.TOTAL_BOOKS_IN_DATASET} ]', end='\r')
+
                 if len(books) > 5000:
                     Book.objects.bulk_create(books)
                     books = []
