@@ -5,23 +5,29 @@
   <div class="application-title">
     <h1>Clubs</h1>
     <p></p>
-    <a href="{% url 'new_club' %}" style='text-decoration:none; color:blanchedalmond;'>To create a new club, click here!</a>
+    <a href="{% url 'new_club' %}" style='text-decoration:none; color:brown;'>To create a new club, click here!</a>
     <p></p>
   </div>
   <div class="book-table">
       <table class="table">
-        {% for club in clubs %}
-          <tr>
-              <td>
-                <a href="#" style='text-decoration:none; color:black;
-                display:flex; justify-content:flex-start;'>
-                <span style='flex:1'>{{ club.name }}</span>
-                <span style='flex:1'>Description:{{ club.description }}</span>
-                <span style='flex:1'>Location: {{ club.location }}</span>
-              </a>
-              </td>
-          </tr>
-        {% endfor %}
+        <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in clubs %}
+      <tr>
+        <td scope="row">{{ forloop.counter }}</td>
+        <td>{{ entry.name }}</td>
+        <td>{{ entry.description }}</td>
+        <td>{{ entry.location }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
       </table>
   </div>
 </div>
