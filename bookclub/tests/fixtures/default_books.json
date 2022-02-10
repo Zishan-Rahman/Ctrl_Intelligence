@@ -1,0 +1,32 @@
+[
+  {
+    "model": "bookclub.book",
+    "pk": 1,
+    "fields": {
+      "isbn": "12345678910",
+      "title": "The Book title",
+      "author": "John Doe",
+      "pub_year": "2021",
+      "publisher": "Example Company",
+      "small_url": "http://exampleurl.com",
+      "medium_url": "http://exampleurl2.com",
+      "large_url": "http://exampleurl3.com"
+    }
+  },
+
+  {
+    "model": "bookclub.book",
+    "pk": 2,
+    "fields": {
+      "isbn": "12345678911",
+      "title": "The Book title2",
+      "author": "John Doe",
+      "pub_year": "2021",
+      "publisher": "Example Company",
+      "small_url": "http://exampleurl4.com",
+      "medium_url": "http://exampleurl5.com",
+      "large_url": "http://exampleurl6.com"
+    }
+  }
+]
+

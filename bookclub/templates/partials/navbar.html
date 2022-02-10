@@ -1,3 +1,4 @@
+{% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark mb-3" style="background-color: brown">
   <div class="container">
   <a class="navbar-brand"
@@ -6,7 +7,7 @@
           {% else %}
                 href="{% url 'landing_page' %}"
           {% endif %} >
-      <span class="bi bi-book"></span>Bookwise</a>
+      <img src="{% static 'images/bookwise.svg' %}" height="32" width="24">ookwise</a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>

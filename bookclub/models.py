@@ -1,13 +1,14 @@
 from django.db import models
+from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from .custom_managers import UserManager
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 
 
-# # Create your models here.
+# Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255, blank=False)
     first_name = models.CharField(max_length=30, blank=False)
@@ -58,6 +59,40 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
 
+
+# books model
+
+
+class Book(models.Model):
+    isbn = models.CharField(unique=True, max_length=12, blank=False)
+    title = models.CharField(unique=False, blank=False, max_length=512)
+    author = models.CharField(blank=False, max_length=512)
+    pub_year = models.IntegerField(blank=False, validators = [MinValueValidator(1800), MaxValueValidator(2022)])
+    publisher = models.CharField(blank=False, max_length=512)
+    small_url = models.URLField(unique=False, blank=False, max_length=512)
+    medium_url = models.URLField(unique=False, blank=False, max_length=512)
+    large_url = models.URLField(unique=False, blank=False, max_length=512)
+
+    def get_isbn(self):
+        return self.isbn
+
+    def get_title(self):
+        return self.title
+
+    def get_pub_year(self):
+        return self.pub_year
+
+    def get_pub_company(self):
+        return self.publisher
+
+    def get_small_url(self):
+        return self.small_url
+
+    def get_medium_url(self):
+        return self.medium_url
+
+    def get_large_url(self):
+        return self.large_url
 
 # Club Model adapted from Clucker user model and Chess club management system club model
 
@@ -145,7 +180,14 @@ class Club(models.Model):
         else:
             raise ValueError
 
+
 class Application(models.Model):
     """A model for denoting and storing applications made by users to join book clubs."""
     applicant = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
+
+    def get_applicant(self):
+        return self.applicant
+
+    def get_application_club(self):
+        return self.club
