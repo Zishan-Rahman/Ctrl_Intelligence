@@ -1,14 +1,25 @@
 from django.core.management.base import BaseCommand, CommandError
-from faker import Faker
-from bookclub.models import User, Club
+from bookclub.models import User, Club, Book
+
 
 class Command(BaseCommand):
+    """Unseeder needs to delete superusers to in order to preserve the specific id's which the seeded users have"""
 
     def handle(self, *args, **options):
-        for user in User.objects.all():
-                #if user isnt a superuser
-                if not (user.is_superuser):
-                    user.delete()
 
-        for club in Club.objects.all():
-                club.delete()
+        print()
+
+        print('Please wait, the users are being unseeded...', end='\r')
+        User.objects.all().delete()
+        print("[ COMPLETED: The users have successfully been unseeded ]")
+
+        print()
+        print('Please wait, the clubs are being unseeded...', end='\r')
+        Club.objects.all().delete()
+        print("[ COMPLETED: The clubs have successfully been unseeded ]")
+
+        print()
+        print('Please wait, the books are being unseeded...', end='\r')
+        Book.objects.all().delete()
+        print("[ COMPLETED: The books have successfully been unseeded ]")
+        print()
