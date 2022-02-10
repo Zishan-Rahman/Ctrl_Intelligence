@@ -8,7 +8,7 @@
     </li>
     {% for entry in club_memberships %}
     <li class="nav-item">
-      <a class="nav-link" href="#">{{ entry.get_name }}</a>
+      <a class="nav-link" href="{{ entry.id }}">{{ forloop.counter }}. {{ entry.get_name }}</a>
     </li>
     {% endfor %}
   </ul>

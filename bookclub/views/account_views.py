@@ -4,24 +4,26 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
 from bookclub.forms import PasswordForm, UserForm
+from bookclub.models import Club
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic.edit import FormView, UpdateView
 
-# Create your views here.
-
 def landing_page(request):
     return render(request, 'landing_page.html')
 
 @login_required
 def user_list(request):
-    return render(request, 'user_list.html')
+    all_users = Club.get_all_users
+    memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
+    return render(request, 'user_list.html', {"club_memberships": memberships})
 
 @login_required
 def club_list(request):
-    return render(request, 'club_list.html')
+    memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
+    return render(request, 'club_list.html', {"club_memberships": memberships})
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
@@ -39,6 +41,12 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+    def get(self, request, *args, **kwargs):
+        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
+        form = self.form_class()
+        return render(request, 'profile.html', {"form": form, "club_memberships": memberships})
+
 
 class PasswordView(LoginRequiredMixin, FormView):
     """View that handles password change requests."""
@@ -65,3 +73,8 @@ class PasswordView(LoginRequiredMixin, FormView):
 
         messages.add_message(self.request, messages.SUCCESS, "Password updated!")
         return reverse('home')
+
+    def get(self, request, *args, **kwargs):
+        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
+        form = self.form_class()
+        return render(request, 'password.html', {"form": form, "club_memberships": memberships})
