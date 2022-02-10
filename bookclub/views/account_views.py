@@ -23,10 +23,6 @@ def home_page(request):
 def user_list(request):
     return render(request, 'user_list.html')
 
-@login_required
-def club_list(request):
-    return render(request, 'club_list.html')
-
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
 

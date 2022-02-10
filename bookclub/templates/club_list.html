@@ -1,13 +1,34 @@
+<!-- club list page adapted from the chess club project -->
 {% extends 'base_content.html' %}
 {% block content %}
-    <div class="container">
-    <div class="row">
-        <div class="col-12">
-   <body>
-      <h1>Bookwise</h1>
-      <p>This is the club list page</p>
-   </body>
-        </div>
+<div class="container-applications">
+  <div class="application-title">
+    <h1>Clubs</h1>
+    <p></p>
+    <a href="{% url 'new_club' %}" style='text-decoration:none; color:brown;'>To create a new club, click here!</a>
+    <p></p>
+  </div>
+  <div class="book-table">
+      <table class="table">
+        <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in clubs %}
+      <tr>
+        <td scope="row">{{ forloop.counter }}</td>
+        <td>{{ entry.name }}</td>
+        <td>{{ entry.description }}</td>
+        <td>{{ entry.location }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+      </table>
+  </div>
 </div>
-    </div>
 {% endblock %}
