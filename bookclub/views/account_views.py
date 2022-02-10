@@ -42,10 +42,19 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        current_user = request.user
         memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
-        form = self.form_class()
+        form = self.form_class(instance=current_user, data=request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
         return render(request, 'profile.html', {"form": form, "club_memberships": memberships})
+
+    def get(self, request, *args, **kwargs):
+        current_user = request.user
+        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
+        form = self.form_class(instance=current_user)
+        return render(request, 'profile.html', {"form": form,"club_memberships": memberships})
 
 
 class PasswordView(LoginRequiredMixin, FormView):
@@ -74,7 +83,17 @@ class PasswordView(LoginRequiredMixin, FormView):
         messages.add_message(self.request, messages.SUCCESS, "Password updated!")
         return reverse('home')
 
+    def post(self, request, *args, **kwargs):
+        current_user = request.user
+        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
+        form = self.form_class(user=current_user,data=request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
+        return render(request, 'password.html', {"form": form,"club_memberships": memberships})
+
+
     def get(self, request, *args, **kwargs):
+        current_user = request.user
         memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
         form = self.form_class()
         return render(request, 'password.html', {"form": form, "club_memberships": memberships})
