@@ -6,6 +6,9 @@
     <li class="nav-item">
       <a class="nav-link" href="{% url 'user_list' %}">User</a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'applications' %}">Applications</a>
+    </li>
     {% for entry in club_memberships %}
     <li class="nav-item">
       <a class="nav-link" href="#">{{ entry.get_name }}</a>
