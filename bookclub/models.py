@@ -30,7 +30,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     favourite_genre = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
-
+    
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
 
