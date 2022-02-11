@@ -1,0 +1,26 @@
+<!-- club list page adapted from the chess club project -->
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container-applications">
+  <div class="book-table">
+      <table class="table">
+        <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Author</th>
+        <th scope="col">Publication Year</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in books %}
+      <tr>
+        <td>{{ entry.title }}</td>
+        <td>{{ entry.author }}</td>
+        <td>{{ entry.pub_year }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+      </table>
+  </div>
+</div>
+{% endblock %}

@@ -8,7 +8,7 @@ from .custom_managers import UserManager
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 
 
-# # Create your models here.
+# Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255, blank=False)
     first_name = models.CharField(max_length=30, blank=False)
@@ -60,18 +60,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
 
 
+# books model
 
-#books model
 
 class Book(models.Model):
     isbn = models.CharField(unique=True, max_length=12, blank=False)
-    title = models.CharField(unique=True, blank=False, max_length=512)
+    title = models.CharField(unique=False, blank=False, max_length=512)
     author = models.CharField(blank=False, max_length=512)
     pub_year = models.IntegerField(blank=False, validators = [MinValueValidator(1800), MaxValueValidator(2022)])
     publisher = models.CharField(blank=False, max_length=512)
-    small_url = models.URLField(unique=True, blank=False, max_length=512)
-    medium_url = models.URLField(unique=True, blank=False, max_length=512)
-    large_url = models.URLField(unique=True, blank=False, max_length=512)
+    small_url = models.URLField(unique=False, blank=False, max_length=512)
+    medium_url = models.URLField(unique=False, blank=False, max_length=512)
+    large_url = models.URLField(unique=False, blank=False, max_length=512)
 
     def get_isbn(self):
         return self.isbn
@@ -83,7 +83,7 @@ class Book(models.Model):
         return self.pub_year
 
     def get_pub_company(self):
-        return self.pub_company
+        return self.publisher
 
     def get_small_url(self):
         return self.small_url
@@ -181,7 +181,14 @@ class Club(models.Model):
         else:
             raise ValueError
 
+
 class Application(models.Model):
     """A model for denoting and storing applications made by users to join book clubs."""
     applicant = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
+
+    def get_applicant(self):
+        return self.applicant
+
+    def get_application_club(self):
+        return self.club
