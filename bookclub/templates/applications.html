@@ -1,0 +1,44 @@
+{% extends 'base_content.html' %}
+{% block content %}
+    <div class="container">
+    <div class="row">
+        <div class="col-12">
+   <body>
+      {% if not applicants %}
+      <h3>You have no pending applications.</h3>
+      {%endif%}
+      <table class="table">
+        <thead class="table-light">
+          <tr>
+            <th scope="col" style="width:15%">Club Applying To</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Date Joined</th>
+            <th scope="col" style="width:30%">Bio</th>
+            <th scope="col">Favourite Genre</th>
+            <th scope="col">Location</th>
+            <th scope="col">Accept</th>
+            <th scope="col">Reject</th>
+          </tr>
+        </thead>
+    {% for a in applicants %}
+      <tr>
+        <td>{{ a.club.name }}</td>
+        <td>{{ a.applicant.first_name }}</td>
+        <td>{{ a.applicant.last_name }}</td>
+        <td>{{ a.applicant.age }}</td>
+        <td>{{ a.applicant.date_joined }}</td>
+        <td>{{ a.applicant.public_bio }}</td>
+        <td>{{ a.applicant.favourite_genre }}</td>
+        <td>{{ a.applicant.location }}</td>
+        <td><a class="btn btn-default" href="{% url 'app_accept' pk=a.pk %}"><span class="btn btn-dark" style="background-color: green">Accept</span></a></td>
+        <td><a class="btn btn-default" href="{% url 'app_remove' pk=a.pk %}"><span class="btn btn-dark" style="background-color: red">Reject</span></a></td>
+      </tr>
+    {% endfor %}
+  </table>
+   </body>
+        </div>
+</div>
+    </div>
+{% endblock %}

@@ -28,6 +28,21 @@
       "password": "pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
       "is_active": true
     }
+  },
+  {
+    "model": "bookclub.user",
+    "pk": 3,
+    "fields": {
+      "first_name": "Joe",
+      "last_name": "Doe",
+      "email": "joedoe@bookclub.com",
+      "public_bio": "Just another fake user again",
+      "favourite_genre": "Romance",
+      "location": "Manchester",
+      "age": 30,
+      "password": "pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
+      "is_active": true
+    }
   }
 
 ]
