@@ -4,11 +4,12 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
 from bookclub.forms import PasswordForm, UserForm
-from django.contrib.auth import login
+from django.contrib.auth import login, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic.edit import FormView, UpdateView
+from bookclub.models import User
 
 # Create your views here.
 
@@ -21,7 +22,8 @@ def home_page(request):
 
 @login_required
 def user_list(request):
-    return render(request, 'user_list.html')
+    users = User.objects.all()
+    return render(request, 'user_list.html', {'users': users})
 
 @login_required
 def club_list(request):
