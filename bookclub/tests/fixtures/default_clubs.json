@@ -18,6 +18,16 @@
       "location": "Strand, London",
       "owner": 2
     }
+  },
+  {
+    "model": "bookclub.club",
+    "pk": 3,
+    "fields": {
+      "name": "Strand House Book Club",
+      "description": "Strand House Official Book Club!",
+      "location": "Strand, London",
+      "owner": 1
+    }
   }
 ]
 

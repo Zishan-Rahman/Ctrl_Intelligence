@@ -41,9 +41,11 @@ def app_accept(request, pk):
     app = Application.objects.all().get(pk=pk)
     app.club.make_member(app.applicant)
     app.delete()
+    messages.add_message(request, messages.SUCCESS, "User accepted!")
     return redirect('applications')
 
 def app_remove(request, pk):
     app = Application.objects.all().get(pk=pk)
     app.delete()
+    messages.add_message(request, messages.SUCCESS, "User rejected!")
     return redirect('applications')

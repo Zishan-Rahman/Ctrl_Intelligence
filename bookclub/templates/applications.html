@@ -2,40 +2,11 @@
 {% block content %}
     <div class="container">
     <div class="row">
-        <div class="col-12"><!--
-    <script>
-        function acceptClick(id){
-            //delete application instance and add to club member list
-            let url = `delete/${id}/`;
-            $.delete(url, {csrfmiddlewaretoken: '{{ csrf_token }}'}, function(){
-                    alert('Removed');
-            })
-    
-        }
-
-        function rejectClick(id){
-            //delete appliation instance
-            alert("Clicked");
-            let url = `delete/${id}/`;
-            alert(url)
-            $.ajax({
-            url: "example.html/my/example",
-            data: {
-                'csrfmiddlewaretoken': "{{ csrf_token }}"
-            },
-            type: "DELETE",
-            dataType: "json"
-            }).done(
-                function(){alert("Deleted");}
-                ).fail(
-                function(){alert("Error");}
-                ) 
-        });
-            
-        }
-    </script>-->
+        <div class="col-12">
    <body>
-      
+      {% if not applicants %}
+      <h3>You have no pending applications.</h3>
+      {%endif%}
       <table class="table">
         <thead class="table-light">
           <tr>

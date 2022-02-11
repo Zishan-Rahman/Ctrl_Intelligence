@@ -1,0 +1,34 @@
+[
+    {
+      "model": "bookclub.application",
+      "pk": 1,
+      "fields": {
+        "applicant": 3,
+        "club": 1
+      }
+    },
+    {
+      "model": "bookclub.application",
+      "pk": 2,
+      "fields": {
+        "applicant": 3,
+        "club": 2
+      }
+    },
+    {
+        "model": "bookclub.application",
+        "pk": 3,
+        "fields": {
+          "applicant": 3,
+          "club": 3
+        }
+    },
+    {
+      "model": "bookclub.application",
+      "pk": 4,
+      "fields": {
+        "applicant": 1,
+        "club": 2
+      }
+    }
+  ]
