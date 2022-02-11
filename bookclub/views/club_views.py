@@ -5,6 +5,7 @@ from bookclub.models import Club
 
 @login_required
 def club_list(request):
+    memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
     clubs = []
     for club in Club.objects.all():
         clubs.append({
@@ -12,7 +13,7 @@ def club_list(request):
             "description": club.get_description,
             "location": club.get_location,
         })
-    return render(request, 'club_list.html', {'clubs':clubs})
+    return render(request, 'club_list.html', {'clubs':clubs, "club_memberships": memberships})
 
 @login_required
 def new_club(request):     # new club adapted from the chess club project
