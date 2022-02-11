@@ -16,6 +16,7 @@ def landing_page(request):
 
 @login_required
 def user_list(request):
+
     all_users = Club.get_all_users
     memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
     return render(request, 'user_list.html', {"club_memberships": memberships})
@@ -24,6 +25,7 @@ def user_list(request):
 def club_list(request):
     memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
     return render(request, 'club_list.html', {"club_memberships": memberships})
+
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""

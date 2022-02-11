@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, club_views, book_views, dashboard_views
+
+from bookclub.views import account_views, authentication_views, dashboard_views, club_related_views, book_views, club_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +31,8 @@ urlpatterns = [
     path('book/', book_views.book_list , name = 'book_list'),
     path('password/', account_views.PasswordView.as_view(), name='password'),
     path('profile/', account_views.ProfileUpdateView.as_view(), name='profile'),
+    path('applications/', club_related_views.ApplicationsView.as_view(), name='applications'),
+    path('applications/accept/<int:pk>/', club_related_views.app_accept, name='app_accept'),
+    path('applications/remove/<int:pk>/', club_related_views.app_remove, name='app_remove'),
     path('clubs/', club_views.new_club , name = 'new_club')
-
 ]
