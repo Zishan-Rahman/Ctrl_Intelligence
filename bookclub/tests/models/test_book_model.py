@@ -32,10 +32,6 @@ class BookModelTestCase(TestCase):
         self.book_one.title = ""
         self._assert_book_is_invalid()
 
-    def test_title_must_be_unique(self):
-        self.book_one.title = self.book_two.title
-        self._assert_book_is_invalid()
-
     #book author tests
 
     def test_author_name_cannot_be_empty(self):
@@ -77,10 +73,6 @@ class BookModelTestCase(TestCase):
         self.book_one.small_url = "example.com"
         self._assert_book_is_invalid()
 
-    def test_small_url_must_be_unique(self):
-        self.book_one.small_url = self.book_two.small_url
-        self._assert_book_is_invalid()
-
      #medium url tests
 
     def test_medium_url_cannot_be_empty(self):
@@ -93,10 +85,6 @@ class BookModelTestCase(TestCase):
 
     def test_medium_url_must_contain_protocol(self):
         self.book_one.medium_url = "example.com"
-        self._assert_book_is_invalid()
-
-    def test_medium_url_must_be_unique(self):
-        self.book_one.medium_url = self.book_two.medium_url
         self._assert_book_is_invalid()
 
      #large url tests
@@ -112,11 +100,6 @@ class BookModelTestCase(TestCase):
     def test_large_url_must_contain_protocol(self):
         self.book_one.large_url = "example.com"
         self._assert_book_is_invalid()
-
-    def test_large_url_must_be_unique(self):
-        self.book_one.large_url = self.book_two.large_url
-        self._assert_book_is_invalid()
-
 
     def _assert_book_is_invalid(self):
         with self.assertRaises(ValidationError):

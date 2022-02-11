@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
 from bookclub.models import User, Club
 
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
         faker = Faker('en_GB')
@@ -13,7 +14,7 @@ class Command(BaseCommand):
             lname = faker.last_name()
             randomEmail = faker.unique.email(safe=False)
             randomPassw = 'Password123'
-            randomBio =  "I'm new here"
+            randomBio = "I'm new here"
             randomGenre = "Science Fiction"
             randomLocation = "London"
             randomAge = 18
@@ -34,8 +35,8 @@ class Command(BaseCommand):
         newClub = Club.objects.create(
             name="Bookclub1",
             location="London",
-            description=faker.text(),
+            description=faker.text(256),
             owner=randomUsers[0],
-            )
+        )
         newClub.organisers.add(randomUsers[1])
         newClub.members.add(randomUsers[2])

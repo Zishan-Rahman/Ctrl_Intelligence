@@ -125,7 +125,7 @@ class PasswordForm(NewPasswordMixin):
             self.user.save()
         return self.user
 
-
+      
 class ApplicantForm(forms.Form):
     """Form enabling owners to choose which club applications to view."""
     applicants_dropdown = forms.ModelChoiceField(label="Select an applicant", queryset=None)
@@ -151,3 +151,12 @@ class ApplicantForm(forms.Form):
         self.fields['applicants_dropdown'].queryset = Application.objects.filter(pk__in=current_applicants_ids)
 
   
+
+class ClubForm(forms.ModelForm):
+    class Meta:
+        model = Club
+        fields = ['name', 'description', 'location']
+
+    def save(self , user ):
+        super().save(commit=False)
+        club = Club.objects.create(name = self.cleaned_data.get('name'),description = self.cleaned_data.get('description'),location = self.cleaned_data.get('location'), owner = user)
