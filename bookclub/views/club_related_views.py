@@ -23,7 +23,7 @@ class ApplicationsView(LoginRequiredMixin, View):
 
     def render(self):
         current_user = self.request.user
-        """Render password club template with blank form"""     
+        """Render all applications of this user's owned clubs"""     
         owned_clubs = []
         applicants = []
         for c in Club.objects.all():
@@ -38,6 +38,7 @@ class ApplicationsView(LoginRequiredMixin, View):
 
 
 def app_accept(request, pk):
+    """Accept application"""
     app = Application.objects.all().get(pk=pk)
     app.club.make_member(app.applicant)
     app.delete()
@@ -45,6 +46,7 @@ def app_accept(request, pk):
     return redirect('applications')
 
 def app_remove(request, pk):
+    """Reject application"""
     app = Application.objects.all().get(pk=pk)
     app.delete()
     messages.add_message(request, messages.SUCCESS, "User rejected!")
