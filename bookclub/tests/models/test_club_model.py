@@ -15,6 +15,7 @@ class ClubModelTestCase(TestCase):
         self.user_two = User.objects.get(pk=2)
         self.club_bush_house = Club.objects.get(pk=1)
         self.club_somerset_house = Club.objects.get(pk=2)
+        self.club_strand_house = Club.objects.get(pk=3)
 
     def test_name_cannot_be_blank(self):
         self.club_bush_house.name = ''
@@ -66,7 +67,13 @@ class ClubModelTestCase(TestCase):
 
     def test_book_club_owners(self):
         self.assertEqual(self.club_bush_house.owner.pk, 1)
-        self.assertEqual(self.club_somerset_house.pk, 2)
+        self.assertEqual(self.club_somerset_house.owner.pk, 2)
+        self.assertEqual(self.club_strand_house.owner.pk, 1)
+
+    def test_club_meeting_types(self):
+        self.assertTrue(self.club_bush_house.meeting_online)
+        self.assertTrue(self.club_somerset_house.meeting_online)
+        self.assertFalse(self.club_strand_house.meeting_online)
 
     def test_make_member(self):
         self.club_bush_house.make_member(self.user_two)
