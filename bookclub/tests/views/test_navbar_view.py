@@ -4,7 +4,7 @@ from django.urls import reverse
 from bookclub.models import User, Club
 from bookclub.tests.helpers import reverse_with_next
 
-class NabarViewTestCase(TestCase):
+class NavbarViewTestCase(TestCase):
     """Tests of the navbar view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
