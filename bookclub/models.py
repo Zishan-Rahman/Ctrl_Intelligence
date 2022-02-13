@@ -191,3 +191,25 @@ class Application(models.Model):
 
     def get_application_club(self):
         return self.club
+
+# Ratings model
+class Ratings(models.Model):
+    """A model for the book ratings"""
+    user = models.ForeignKey(User)
+    isbn = models.ForeignKey(Book)
+    rating = models.IntegerField(validators = [MinValueValidator(0), MaxValueValidator(10))
+
+    def get_user(self):
+        return self.user
+
+    def get_isbn(self):
+        return self.isbn
+
+    def get_ratings(self):
+        return self.ratings
+
+    def get_applicant(self):
+        return self.applicant
+
+    def get_application_club(self):
+        return self.club
