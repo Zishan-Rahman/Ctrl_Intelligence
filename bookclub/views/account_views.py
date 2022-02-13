@@ -4,12 +4,14 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
 from bookclub.forms import PasswordForm, UserForm
-from bookclub.models import Club
+from bookclub.models import Club, User
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.views.generic import ListView
 from django.views.generic.edit import FormView, UpdateView
+
 
 def landing_page(request):
     return render(request, 'landing_page.html')
@@ -20,10 +22,21 @@ def user_list(request):
     memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
     return render(request, 'user_list.html', {"club_memberships": memberships})
 
-@login_required
-def club_list(request):
-    memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
-    return render(request, 'club_list.html', {"club_memberships": memberships})
+class UsersListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all books."""
+
+    model = User
+    template_name = "user_list.html"
+    context_object_name = "users"
+    queryset = User.objects.all()
+    paginate_by = settings.USERS_PER_PAGE
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        memberships = Club.objects.filter(members=self.request.user) | Club.objects.filter(organisers=self.request.user) | Club.objects.filter(owner=self.request.user)
+        context['club_memberships'] = memberships
+        return context
+
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""

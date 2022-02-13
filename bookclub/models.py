@@ -31,6 +31,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
 
+    class Meta:
+        """Model options."""
+
+        ordering = ['last_name', 'first_name']
+
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -73,6 +78,11 @@ class Book(models.Model):
     medium_url = models.URLField(unique=False, blank=False, max_length=512)
     large_url = models.URLField(unique=False, blank=False, max_length=512)
 
+    class Meta:
+        """Model options."""
+
+        ordering = ['title']
+
     def get_isbn(self):
         return self.isbn
 
@@ -105,6 +115,11 @@ class Club(models.Model):
     members = models.ManyToManyField(User, related_name="member_of")
     organisers = models.ManyToManyField(User, related_name="organiser_of")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
+
+    class Meta:
+        """Model options."""
+
+        ordering = ['name']
 
     def get_name(self):
         return self.name
@@ -186,6 +201,11 @@ class Application(models.Model):
     """A model for denoting and storing applications made by users to join book clubs."""
     applicant = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
+
+    class Meta:
+        """Model options."""
+
+        ordering = ['applicant']
 
     def get_applicant(self):
         return self.applicant

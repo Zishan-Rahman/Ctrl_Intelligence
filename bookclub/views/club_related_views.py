@@ -8,34 +8,55 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-from django.views.generic.edit import View
+from django.views.generic import ListView
 from bookclub.models import User, Club, Application
 
 
-class ApplicationsView(LoginRequiredMixin, View):
+class ApplicationsView(LoginRequiredMixin, ListView):
     """View that handles club applications."""
 
-    http_method_names = ['get']
+    model = Application
+    template_name = "applications.html"
+    context_object_name = "applicants"
+    queryset = Application.objects.all()
+    paginate_by = settings.APPLICATIONS_PER_PAGE
 
-    def get(self, request):
-        """Display application template"""
-        return self.render()
+    # def get(self, request):
+    #     """Display application template"""
+    #     return self.render()
 
-    def render(self):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         current_user = self.request.user
-        """Render all applications of this user's owned clubs"""     
         owned_clubs = []
         applicants = []
         for c in Club.objects.all():
             if c.owner == current_user:
                 owned_clubs.append(c)
-        
+
         for a in Application.objects.all():
             if a.club in owned_clubs:
                 applicants.append(a)
-                                                                                                                               
-        return render(self.request, 'applications.html', {'applicants': applicants})
-
+        memberships = Club.objects.filter(members=current_user) | Club.objects.filter(organisers=current_user) | Club.objects.filter(owner=current_user)
+        context['club_memberships'] = memberships
+        context['applicants'] = applicants
+        return context
+    #
+    # def render(self):
+    #     current_user = self.request.user
+    #     """Render all applications of this user's owned clubs"""
+    #     owned_clubs = []
+    #     applicants = []
+    #     for c in Club.objects.all():
+    #         if c.owner == current_user:
+    #             owned_clubs.append(c)
+    #
+    #     for a in Application.objects.all():
+    #         if a.club in owned_clubs:
+    #             applicants.append(a)
+    #     memberships = Club.objects.filter(members=current_user) | Club.objects.filter(organisers=current_user) | Club.objects.filter(owner=current_user)
+    #
+    #     return render(self.request, 'applications.html', {'applicants': applicants,'club_memberships': memberships})
 
 def app_accept(request, pk):
     """Accept application"""
