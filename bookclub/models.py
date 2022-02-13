@@ -94,6 +94,7 @@ class Book(models.Model):
     def get_large_url(self):
         return self.large_url
 
+
 # Club Model adapted from Clucker user model and Chess club management system club model
 
 
