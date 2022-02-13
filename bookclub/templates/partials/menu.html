@@ -6,20 +6,21 @@
     <li class="nav-item">
       <a class="nav-link" href="{% url 'user_list' %}">Users</a>
     </li>
+    <li class="nav-item">
+    <a class="nav-link" href="{% url 'book_list' %}">Books</a>
+  </li>
 
     <li class="nav-item">
       <a class="nav-link" href="{% url 'applications' %}">Applications</a>
     </li>
     {% for entry in club_memberships %}
     <li class="nav-item">
-      <a class="nav-link" href="#">{{ entry.get_name }}</a>
+      <a class="nav-link" href="{{ entry.id }}">{{ forloop.counter }}. {{ entry.get_name }}</a>
     </li>
     {% endfor %}
-
       <li class="nav-item">
       <a class="nav-link" href="{% url 'book_list' %}">Books</a>
     </li>
-
   </ul>
   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
     <li class="nav-item dropdown">
