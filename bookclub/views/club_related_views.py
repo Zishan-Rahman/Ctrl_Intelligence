@@ -33,7 +33,6 @@ class ApplicationsView(LoginRequiredMixin, ListView):
         for c in Club.objects.all():
             if c.owner == current_user:
                 owned_clubs.append(c)
-
         for a in Application.objects.all():
             if a.club in owned_clubs:
                 applicants.append(a)
