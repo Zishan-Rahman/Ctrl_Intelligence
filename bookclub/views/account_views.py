@@ -18,6 +18,7 @@ def landing_page(request):
 
 @login_required
 def user_list(request):
+
     all_users = Club.get_all_users
     memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
     return render(request, 'user_list.html', {"club_memberships": memberships})
@@ -36,6 +37,7 @@ class UsersListView(LoginRequiredMixin, ListView):
         memberships = Club.objects.filter(members=self.request.user) | Club.objects.filter(organisers=self.request.user) | Club.objects.filter(owner=self.request.user)
         context['club_memberships'] = memberships
         return context
+
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
