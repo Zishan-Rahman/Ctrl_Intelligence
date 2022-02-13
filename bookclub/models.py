@@ -197,7 +197,7 @@ class Application(models.Model):
 class Ratings(models.Model):
     """A model for the book ratings"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    isbn = models.ForeignKey(Book)
+    isbn = models.ForeignKey(Book, on_delete=models.CASCADE)
     rating = models.IntegerField(validators = [MinValueValidator(0), MaxValueValidator(10)])
 
     def get_user(self):
