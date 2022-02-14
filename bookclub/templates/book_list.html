@@ -1,7 +1,7 @@
 <!-- club list page adapted from the chess club project -->
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container-applications">
+<div class="container">
   <div class="book-table">
       <table class="table">
         <thead>
@@ -9,6 +9,7 @@
         <th scope="col">Title</th>
         <th scope="col">Author</th>
         <th scope="col">Publication Year</th>
+          <th scope="col">Image </th>
       </tr>
     </thead>
     <tbody>
@@ -17,6 +18,7 @@
         <td>{{ entry.title }}</td>
         <td>{{ entry.author }}</td>
         <td>{{ entry.pub_year }}</td>
+        <td> <img src="{{ entry.medium_url }}" alt="a"></td>
       </tr>
       {% endfor %}
     </tbody>
