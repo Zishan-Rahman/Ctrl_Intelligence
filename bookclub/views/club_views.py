@@ -12,6 +12,8 @@ def club_list(request):
             "name": club.get_name,
             "description": club.get_description,
             "location": club.get_location,
+            "mini_gravatar": club.mini_gravatar(),
+            "gravatar": club.gravatar()
         })
     return render(request, 'club_list.html', {'clubs':clubs, "club_memberships": memberships})
 

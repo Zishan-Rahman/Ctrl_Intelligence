@@ -12,7 +12,7 @@
       <table class="table">
         <thead>
       <tr>
-        <th scope="col">#</th>
+        <th scope="col">Gravatar</th>
         <th scope="col">Name</th>
         <th scope="col">Description</th>
         <th scope="col">Location</th>
@@ -21,7 +21,7 @@
     <tbody>
       {% for entry in clubs %}
       <tr>
-        <td scope="row">{{ forloop.counter }}</td>
+        <td><img src={{ entry.mini_gravatar }} alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></td>
         <td>{{ entry.name }}</td>
         <td>{{ entry.description }}</td>
         <td>{{ entry.location }}</td>
