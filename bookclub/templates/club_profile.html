@@ -15,9 +15,10 @@
               </tr>
               <tr>
                 <td>
-                  <h3 class="profile-name">{{ club.name }}</h3>
-                  <p class="profile-description">{{ club.description }}</p>
-                  <p class="profile-location">{{ club.location }}</p>
+                  <h3>{{ club.name }}</h3>
+                  <p>{{ club.description }}</p>
+                  <p>{{ club.location }}</p>
+                  <p>We meet {% include 'partials/club_meeting_type.html' with club=club %}</p>
                 </td>
               </tr>
               <tr>
