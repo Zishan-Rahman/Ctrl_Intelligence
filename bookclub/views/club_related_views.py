@@ -55,10 +55,9 @@ def app_remove(request, pk):
 @login_required
 def new_application(request, club_id):
     """ Create A New Application """
-    current_user = request.user
-    application = ApplicationForm(request.POST)
-    if application.is_valid():
-        application = Application.objects.create(applicant=current_user, club=Club.objects.get(id=club_id))
-        print("application created")
+    form = ApplicationForm(request.POST)
+    if form.is_valid():
+        application = form.save(request.user.id,club_id)
+    messages.add_message(request, messages.ERROR, "Could not apply to club")
     return redirect('applications')
 
