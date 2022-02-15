@@ -2,7 +2,8 @@ from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User, Book
-from bookclub.tests.helpers import LogInTester
+from bookclub.tests.helpers import LogInTester, reverse_with_next
+
 
 
 # Books View test is adapted from the Chess Club project
@@ -25,10 +26,16 @@ class BooksListViewTestCase(TestCase, LogInTester):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "book_list.html")
 
+    def test_get_books_list_redirects_when_not_logged_in(self):
+        redirect_url = reverse_with_next('log_in', self.url)
+        response = self.client.get(self.url)
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+
     def test_get_book_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_books(settings.BOOKS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
+        print(response.context['books'])
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'book_list.html')
         self.assertEqual(len(response.context['books']), settings.BOOKS_PER_PAGE)
@@ -77,7 +84,7 @@ class BooksListViewTestCase(TestCase, LogInTester):
                 location=f'City {id}',
                 age=18+id
             )
-            Book.objects.create(
+            a=Book.objects.create(
                 isbn=id,
                 title=f'{id} Book',
                 author=f'user {id}',
@@ -87,3 +94,4 @@ class BooksListViewTestCase(TestCase, LogInTester):
                 medium_url=f'medium{id}@example.org',
                 large_url=f'large{id}@example.org',
             )
+            print(a)

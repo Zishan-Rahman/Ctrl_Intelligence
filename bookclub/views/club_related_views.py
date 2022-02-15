@@ -36,9 +36,10 @@ class ApplicationsView(LoginRequiredMixin, ListView):
         for a in Application.objects.all():
             if a.club in owned_clubs:
                 applicants.append(a)
+        context['applicants'] = applicants
         memberships = Club.objects.filter(members=current_user) | Club.objects.filter(organisers=current_user) | Club.objects.filter(owner=current_user)
         context['club_memberships'] = memberships
-        context['applicants'] = applicants
+        #context['applicants'] = applicants
         return context
     #
     # def render(self):

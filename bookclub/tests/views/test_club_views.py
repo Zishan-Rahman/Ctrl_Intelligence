@@ -2,7 +2,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User, Club
-from bookclub.tests.helpers import LogInTester
+from bookclub.tests.helpers import LogInTester, reverse_with_next
 
 
 # clubs views test is adapted from the chess club project
@@ -25,10 +25,16 @@ class ClubsListViewTestCase(TestCase, LogInTester):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "club_list.html")
 
+    def test_get_clubs_list_redirects_when_not_logged_in(self):
+        redirect_url = reverse_with_next('log_in', self.url)
+        response = self.client.get(self.url)
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+
     def test_get_club_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_clubs(settings.CLUBS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
+        print(response.context['clubs'])
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'club_list.html')
         self.assertEqual(len(response.context['clubs']), settings.CLUBS_PER_PAGE)
@@ -77,9 +83,10 @@ class ClubsListViewTestCase(TestCase, LogInTester):
                 location=f'City {id}',
                 age=18+id
             )
-            Club.objects.create(
+            a=Club.objects.create(
                 owner_id=id,
                 name=f'The {id} Book Club',
                 location=f'City {id}',
                 description=f'Description {id}',
             )
+            print(a)

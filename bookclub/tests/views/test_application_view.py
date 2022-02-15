@@ -3,6 +3,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User, Club, Application
+from bookclub.tests.helpers import reverse_with_next
 from django.contrib import messages
 
 
@@ -121,10 +122,15 @@ class ApplicationViewTestCase(TestCase):
         afterCount = self.strand_club.get_number_of_members()
         self.assertEqual(beforeCount, afterCount)
 
+    def test_get_applications_list_redirects_when_not_logged_in(self):
+        redirect_url = reverse_with_next('log_in', self.url)
+        response = self.client.get(self.url)
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+
     def test_get_application_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_applications(settings.APPLICATIONS_PER_PAGE*2+3-1)
-        response = self.client.get(self.url)
+        response = self.client.get(reverse('applications'))
         print(response.context['applicants'])
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'applications.html')
@@ -171,13 +177,14 @@ class ApplicationViewTestCase(TestCase):
                 location=f'City {id}',
                 age=18+id
             )
-            created_club = Club.objects.create(
+            created_club=Club.objects.create(
                 owner_id=id,
                 name=f'The {id} Book Club',
                 location=f'City {id}',
                 description=f'Description {id}',
+                owner=created_user,
             )
-            a = Application.objects.create(
+            a=Application.objects.create(
                 applicant=created_user,
                 club=created_club,
             )
