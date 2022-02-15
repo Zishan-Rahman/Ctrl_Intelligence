@@ -12,6 +12,7 @@ def club_list(request):
             "name": club.get_name,
             "description": club.get_description,
             "location": club.get_location,
+            "meeting_online": club.meeting_online,
             "mini_gravatar": club.mini_gravatar(),
             "gravatar": club.gravatar()
         })

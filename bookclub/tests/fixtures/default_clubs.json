@@ -26,7 +26,8 @@
       "name": "Strand House Book Club",
       "description": "Strand House Official Book Club!",
       "location": "Strand, London",
-      "owner": 1
+      "owner": 1,
+      "meeting_online": false
     }
   }
 ]

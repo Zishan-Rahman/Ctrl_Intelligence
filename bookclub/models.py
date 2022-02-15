@@ -117,6 +117,7 @@ class Club(models.Model):
     members = models.ManyToManyField(User, related_name="member_of")
     organisers = models.ManyToManyField(User, related_name="organiser_of")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
+    meeting_online = models.BooleanField(unique=False,blank=False,default=True)
 
     def get_name(self):
         return self.name
@@ -178,6 +179,11 @@ class Club(models.Model):
 
     def get_owner(self):
         return self.owner
+    
+    def meeting_type(self):
+        if self.meeting_online:
+            return "online"
+        return "in person"
 
     def get_all_users(self):
         return (

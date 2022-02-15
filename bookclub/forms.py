@@ -157,6 +157,19 @@ class ClubForm(forms.ModelForm):
         model = Club
         fields = ['name', 'description', 'location']
 
+    CHOICES = ((True, 'Online'), (False, 'In Person'))
+    meeting_type = forms.ChoiceField(choices=CHOICES,widget=forms.RadioSelect)
+
+    def clean(self):
+        super().clean()
+        meeting_type = self.cleaned_data.get('meeting_type')
+
     def save(self, user):
         super().save(commit=False)
-        club = Club.objects.create(name = self.cleaned_data.get('name'),description = self.cleaned_data.get('description'),location = self.cleaned_data.get('location'), owner = user)
+        club = Club.objects.create(
+            name = self.cleaned_data.get('name'),
+            description = self.cleaned_data.get('description'),
+            location = self.cleaned_data.get('location'),
+            owner = user,
+            meeting_online = self.cleaned_data.get('meeting_type')
+        )
