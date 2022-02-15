@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from .custom_managers import UserManager
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
+from libgravatar import Gravatar
 
 
 # Create your models here.
@@ -30,7 +31,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     favourite_genre = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
-
+    
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -54,6 +55,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_age(self):
         return self.age
+
+    def gravatar(self, size=120):
+        """Return a URL to the user's gravatar."""
+        gravatar_object = Gravatar(self.email)
+        gravatar_url = gravatar_object.get_image(size=size, default='mp')
+        return gravatar_url
+
+    def mini_gravatar(self):
+        """Return a URL to a miniature version of the user's gravatar."""
+        return self.gravatar(size=60)
 
     objects = UserManager()
 
@@ -93,6 +104,7 @@ class Book(models.Model):
 
     def get_large_url(self):
         return self.large_url
+
 
 
 # Club Model adapted from Clucker user model and Chess club management system club model
@@ -186,6 +198,16 @@ class Club(models.Model):
             self.save()
         else:
             raise ValueError
+
+    def gravatar(self, size=120):
+        """Return a URL to the user's gravatar."""
+        gravatar_object = Gravatar(self.name)
+        gravatar_url = gravatar_object.get_image(size=size, default='mp')
+        return gravatar_url
+
+    def mini_gravatar(self):
+        """Return a URL to a miniature version of the user's gravatar."""
+        return self.gravatar(size=60)
 
 
 class Application(models.Model):
