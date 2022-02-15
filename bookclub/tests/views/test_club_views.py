@@ -16,7 +16,7 @@ class ClubsListViewTestCase(TestCase, LogInTester):
         self.user = User.objects.get(pk=1)
 
     def test_clubs_list_url(self):
-        self.assertEqual(self.url, '/club/')
+        self.assertEqual(self.url, '/clubs/')
 
     def test_correct_club_list_template(self):
         self.client.login(email=self.user.email, password="Password123")
