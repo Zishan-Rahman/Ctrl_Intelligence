@@ -18,6 +18,7 @@
         <th scope="col">Name</th>
         <th scope="col">Description</th>
         <th scope="col">Location</th>
+        <th scope="col">Meeting Type</th>
       </tr>
     </thead>
     <tbody>
@@ -27,6 +28,7 @@
         <td>{{ entry.name }}</td>
         <td>{{ entry.description }}</td>
         <td>{{ entry.location }}</td>
+        <td style="text-transform: capitalize;">{% include 'partials/club_meeting_type.html' with club=entry %}</td>
       </tr>
       {% endfor %}
     </tbody>

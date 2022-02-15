@@ -10,7 +10,8 @@ class CreateClubTestForm(TestCase):
         self.form_input = {
         'name' : 'BookBusters',
         'description' : 'Crime and Mystery',
-        'location' : 'Cardiff'
+        'location' : 'Cardiff',
+        'meeting_type' : False
         }
 
     def test_club_form_has_necessary_fields(self):
