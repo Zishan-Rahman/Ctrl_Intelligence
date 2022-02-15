@@ -13,18 +13,10 @@
                   <span class="user-info">
                     <table>
                       <tr>
-                        <!--<td class="user-individual-info">{{ members_number }}</td>-->
                           <td class="user-individual-info">
-                            <!--<a href="{% url 'show_user' club.owner club.id %}" style='text-decoration:none; color:blanchedalmond;'>-->
                               {{ owner.full_name }}
                             </a>
                           </td>
-                      </tr>
-                      <tr>
-                        <td class="user-individual-info">members</td>
-<!--
-                        <td class="user-individual-info"><a href="{% url 'show_user' club.owner club.id %}" style='text-decoration:none; color:blanchedalmond;'>owner</a></td>
--->
                       </tr>
                     </table>
                   </span>
@@ -48,31 +40,4 @@
       </div>
   </div>
 </div>
-
-<!--
-{% if is_member %}
-  <div class="club-member-list">
-    <table class="table" style="color:blanchedalmond;">
-      <tr>
-        <td><a href="{% url 'show_user' club.owner club.id %}"><img src="{{ owner.mini_gravatar }}" alt="Gravatar of {{ owner.full_name }}" class="rounded-circle"></a></td>
-        <td><a href="{% url 'show_user' club.owner club.id %}" style='text-decoration:none; color:blanchedalmond;'>{{ owner.full_name }}</a></td>
-        <td><a href="{% url 'show_user' club.owner club.id %}" style='text-decoration:none; color:blanchedalmond;'>owner</a></td>
-      </tr>
-      {% for officer in officers %}
-      <tr>
-        <td><a href="{% url 'show_user' officer.id club.id %}"><img src="{{ officer.mini_gravatar }}" alt="Gravatar of {{ officer.full_name }}" class="rounded-circle"></a></td>
-        <td><a href="{% url 'show_user' officer.id club.id %}" style='text-decoration:none; color:blanchedalmond;'>{{ officer.full_name }}</a></td>
-        <td><a href="{% url 'show_user' officer.id club.id %}" style='text-decoration:none; color:blanchedalmond;'>officer</a></td>
-      </tr>
-      {%endfor%}
-      {% for member in members %}
-      <tr>
-        <td><a href="{% url 'show_user' member.id club.id%}"><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.full_name }}" class="rounded-circle"></a></td>
-        <td><a href="{% url 'show_user' member.id club.id%}" style='text-decoration:none; color:blanchedalmond;'>{{ member.full_name }}</a></td>
-        <td><a href="{% url 'show_user' member.id club.id%}" style='text-decoration:none; color:blanchedalmond;'>member</a></td>
-      </tr>
-      {%endfor%}
-    </table>
-  </div>
-{% endif %}-->
 {% endblock %}
