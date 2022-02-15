@@ -157,6 +157,6 @@ class ClubForm(forms.ModelForm):
         model = Club
         fields = ['name', 'description', 'location']
 
-    def save(self , user ):
+    def save(self, user):
         super().save(commit=False)
         club = Club.objects.create(name = self.cleaned_data.get('name'),description = self.cleaned_data.get('description'),location = self.cleaned_data.get('location'), owner = user)
