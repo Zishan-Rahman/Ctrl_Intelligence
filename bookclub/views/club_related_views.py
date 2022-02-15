@@ -57,7 +57,9 @@ def new_application(request, club_id):
     """ Create A New Application """
     form = ApplicationForm(request.POST)
     if form.is_valid():
-        application = form.save(request.user.id,club_id)
-    messages.add_message(request, messages.ERROR, "Could not apply to club")
+        application = form.save() #TODO: Get the application to save into the database and get read from the applications view
+        messages.add_message(request, messages.SUCCESS, f"Application to {Club.objects.get(pk=club_id).name} was successfully submitted!")
+    else:
+        messages.add_message(request, messages.ERROR, f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}")
     return redirect('applications')
 
