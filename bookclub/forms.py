@@ -173,3 +173,8 @@ class ClubForm(forms.ModelForm):
             owner = user,
             meeting_online = self.cleaned_data.get('meeting_type')
         )
+
+class ApplicationForm(forms.ModelForm):
+        class Meta:
+            model = Application
+

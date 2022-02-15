@@ -51,3 +51,14 @@ def app_remove(request, pk):
     app.delete()
     messages.add_message(request, messages.SUCCESS, "User rejected!")
     return redirect('applications')
+
+@login_required
+def new_application(request, club_id):
+    """ Create A New Application """
+    current_user = request.user
+    application = ApplicationForm(request.POST)
+    if application.is_valid():
+        application = Application.objects.create(applicant=current_user, club=Club.objects.get(id=club_id))
+        print("application created")
+    return redirect('applications')
+
