@@ -33,6 +33,7 @@ urlpatterns = [
     path('applications/', club_related_views.ApplicationsView.as_view(), name='applications'),
     path('applications/accept/<int:pk>/', club_related_views.app_accept, name='app_accept'),
     path('applications/remove/<int:pk>/', club_related_views.app_remove, name='app_remove'),
+    path('new_application/<int:club_id>/', club_related_views.new_application, name='new_application'),
     path('new_club/', club_views.new_club, name='new_club'),
     path('club_profile/<int:club_id>/', club_views.club_profile, name='club_profile')
 

@@ -175,6 +175,6 @@ class ClubForm(forms.ModelForm):
         )
 
 class ApplicationForm(forms.ModelForm):
-        class Meta:
-            model = Application
-
+    class Meta:
+        model = Application
+        fields = "__all__"

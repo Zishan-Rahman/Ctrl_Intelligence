@@ -9,6 +9,7 @@ def club_list(request):
     clubs = []
     for club in Club.objects.all():
         clubs.append({
+            "id": club.id,
             "name": club.get_name,
             "description": club.get_description,
             "location": club.get_location,

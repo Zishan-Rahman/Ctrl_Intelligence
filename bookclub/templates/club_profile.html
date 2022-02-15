@@ -9,17 +9,8 @@
                 <td>
                   <img src="{{ club.gravatar }}" alt="Gravatar of {{ club.full_name }}" class="rounded-circle profile-image" >
                 </td>
-                <td>
-                  <span class="user-info">
-                    <table>
-                      <tr>
-                          <td class="user-individual-info">
-                              {{ owner.full_name }}
-                            </a>
-                          </td>
                       </tr>
                     </table>
-                  </span>
                 </td>
               </tr>
               <tr>
@@ -28,12 +19,12 @@
                   <p class="profile-description">{{ club.description }}</p>
                   <p class="profile-location">{{ club.location }}</p>
                 </td>
+              </tr>
+              <tr>
                 <td class="club-info">
-                  {% if club not in clubs_already_applied and club not in clubs_owned%}
-                    <a href="{% url 'new_application' club.id%}">
+                    <a href="{% url 'new_application' club.id %}">
                       <button type="submit" class="btn btn-primary" id="apply-button">Apply</button>
                     </a>
-                  {% endif %}
                 </td>
               </tr>
           </table>

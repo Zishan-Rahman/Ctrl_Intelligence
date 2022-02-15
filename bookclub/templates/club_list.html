@@ -22,7 +22,7 @@
     <tbody>
       {% for entry in clubs %}
       <tr scope="row">
-        <td><img src={{ entry.mini_gravatar }} alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></td>
+        <td><a href="{% url 'club_profile' entry.id %}"><img src={{ entry.mini_gravatar }} alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
         <td>{{ entry.name }}</td>
         <td>{{ entry.description }}</td>
         <td>{{ entry.location }}</td>
