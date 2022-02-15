@@ -6,8 +6,8 @@ from bookclub.tests.helpers import LogInTester
 
 # Books View test is adapted from the Chess Club project
 
-class ClubsListViewTestCase(TestCase, LogInTester):
-    """Tests of the club view."""
+class BooksListViewTestCase(TestCase, LogInTester):
+    """Tests of the books view."""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json"]
 
@@ -16,7 +16,7 @@ class ClubsListViewTestCase(TestCase, LogInTester):
         self.user = User.objects.get(pk=1)
 
     def test_book_list_url(self):
-        self.assertEqual(self.url, '/book/')
+        self.assertEqual(self.url, '/books/')
 
     def test_correct_book_list_template(self):
         self.client.login(email=self.user.email, password="Password123")
