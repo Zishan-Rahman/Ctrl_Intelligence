@@ -1,0 +1,36 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+<div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for user_club in user_clubs %}
+                <div class="col">
+                <div class="card h-100">
+                    <div class="row">
+                        <div class="col">
+                            <img src="{{ user_club.mini_gravatar }}" height="128" width="128">
+                        </div>
+                        <div class="col" style="padding-top: 20px">
+                            <p class="card-text">{{ user_club.description }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="card-body">
+                            <h4 class="card-title fw-bold"><strong>{{ user_club.name }}</strong></h4>
+                            <p><strong>{{ user_club.location }}</strong></p>
+                        </div>
+                            </div>
+                        <div class="col ms-auto">
+                            <div class="row">
+                            <a class="btn w-50 mx-auto" style="background-color: brown; color: white; margin-top: 40px" href="#">View</a>
+
+                        </div>
+                        </div>
+                </div>
+                </div>
+                </div>
+            {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
