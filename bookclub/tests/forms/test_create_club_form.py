@@ -11,7 +11,7 @@ class CreateClubTestForm(TestCase):
         'name' : 'BookBusters',
         'description' : 'Crime and Mystery',
         'location' : 'Cardiff',
-        'meeting_online' : False
+        'meeting_type' : False
         }
 
     def test_club_form_has_necessary_fields(self):
