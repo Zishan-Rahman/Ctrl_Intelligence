@@ -193,4 +193,5 @@ class ApplicationForm(forms.ModelForm):
             club=self.cleaned_data.get('club'),
             applicant=self.cleaned_data.get('applicant'),
         )
+        app.save()
         return app
