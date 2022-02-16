@@ -21,9 +21,9 @@ from bookclub.views import account_views, authentication_views, dashboard_views,
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', account_views.landing_page, name='landing_page'),
-    path('sign_up/', views.sign_up, name='sign_up'),
-    path('log_in/', views.LogInView.as_view(), name='log_in'),
-    path('log_out/', views.log_out, name='log_out'),
+    path('sign_up/', authentication_views.sign_up, name='sign_up'),
+    path('log_in/', authentication_views.LogInView.as_view(), name='log_in'),
+    path('log_out/', authentication_views.log_out, name='log_out'),
     path('home/', dashboard_views.home_page, name='home'),
     path('users/', account_views.user_list, name='user_list'),
     path('clubs/', club_views.club_list, name='club_list'),
@@ -34,5 +34,6 @@ urlpatterns = [
     path('applications/accept/<int:pk>/', club_related_views.app_accept, name='app_accept'),
     path('applications/remove/<int:pk>/', club_related_views.app_remove, name='app_remove'),
     path('my_clubs/', club_views.club_selector, name='club_selector'),
+    path('my_clubs1/', club_views.club_selector_alt, name="club_selector_alt"),
     path('new_club/', club_views.new_club, name='new_club')
 ]
