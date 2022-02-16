@@ -5,13 +5,13 @@ from bookclub.tests.helpers import LogInTester, reverse_with_next
 
 class testUserListView(TestCase, LogInTester):
     def setUp(self):
+        self.url = reverse('user_list')
         self.user = User.objects.create(
             first_name = "John",
             last_name = "John",
             public_bio = "hfjdsvsk",
 	        email = "johndoe@bookclub.coms",
             date_joined = "2022-09-04 06:00"
-            self.url = reverse('user_list')
         )
 
     def test_user_list_url(self):
