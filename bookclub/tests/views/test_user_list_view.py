@@ -10,12 +10,12 @@ class testUserListView(TestCase, LogInTester):
             first_name = "John",
             last_name = "John",
             public_bio = "hfjdsvsk",
-	        email = "johndoe@bookclub.com",
+	        email = "johndoe@bookclub.coms",
             date_joined = "2022-09-04 06:00"
         )
 
     def test_user_list_url(self):
-        self.assertEqual(self.url,'/user_list/')
+        self.assertEqual(self.url,'/users/')
 
     def test_get_user_list(self):
         self.client.login(username=self.user.email, password='Password123')
