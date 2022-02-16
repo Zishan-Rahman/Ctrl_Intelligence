@@ -7,7 +7,7 @@ class RatingsModelsTestCase(TestCase):
     fixtures = ["bookclub/tests/fixtures/default_ratings.json"]
 
     def setUp(self):
-        self.ratings_one = Ratings.object.get(pk=1)
+        self.ratings_one = Ratings.objects.get(pk=1)
 
     # ratings tests
     def test_ratings_cannot_be_below_0(self):
