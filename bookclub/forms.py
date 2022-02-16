@@ -185,10 +185,9 @@ class ApplicationForm(forms.ModelForm):
         model = Application
         fields = "__all__"
 
-    def save(self):
+    def save(self, user):
         """Create a new application."""
         club = self.cleaned_data.get('applicants_dropdown')
-        user = request.user
         app = Application.objects.create(
             club=self.cleaned_data.get('club'),
             applicant=self.cleaned_data.get('applicant'),
