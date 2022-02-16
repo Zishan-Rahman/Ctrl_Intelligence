@@ -6,13 +6,13 @@ from with_asserts.mixin import AssertHTMLMixin
 
 class testUserListView(TestCase, LogInTester, AssertHTMLMixin):
     def setUp(self):
+        self.url = reverse('user_list')
         self.user = User.objects.create(
             first_name = "John",
             last_name = "John",
             public_bio = "hfjdsvsk",
 	        email = "johndoe@bookclub.coms",
-            date_joined = "2022-09-04 06:00",
-            self.url = reverse('user_list')
+            date_joined = "2022-09-04 06:00"
         )
 
     def test_user_list_url(self):
