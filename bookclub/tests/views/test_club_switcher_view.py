@@ -57,6 +57,7 @@ class ClubSwitcherViewTestCase(TestCase):
         self.assertNotIn('<p class="card-text text-left">Bush House Official Book Club!</p>', html)
         self.assertNotIn('<p class="card-text text-left">Somerset House Official Book Club!</p>', html)
         self.assertNotIn('<p class="card-text text-left">Strand House Official Book Club!</p>', html)
+        self.client.logout()
 
     def test_user_has_no_clubs_alt_view(self):
         self.client.login(email=self.sam.email, password='Password123')
@@ -65,6 +66,7 @@ class ClubSwitcherViewTestCase(TestCase):
         self.assertNotIn('<h5 class="card-title"><strong>Bush House Book Club</strong></h5>', html)
         self.assertNotIn('<h5 class="card-title"><strong>Somerset House Book Club</strong></h5>', html)
         self.assertNotIn('<h5 class="card-title"><strong>Strand House Book Club</strong></h5>', html)
+        self.client.logout()
 
     def test_user_has_one_club(self):
         self.client.login(email=self.jane.email, password='Password123')
@@ -73,6 +75,7 @@ class ClubSwitcherViewTestCase(TestCase):
         self.assertNotIn('<p class="card-text text-left">Bush House Official Book Club!</p>', html)
         self.assertIn('<p class="card-text text-left">Somerset House Official Book Club!</p>', html)
         self.assertNotIn('<p class="card-text text-left">Strand House Official Book Club!</p>', html)
+        self.client.logout()
 
     def test_user_has_one_club_alt_view(self):
         self.client.login(email=self.jane.email, password='Password123')
@@ -81,6 +84,7 @@ class ClubSwitcherViewTestCase(TestCase):
         self.assertNotIn('<h5 class="card-title"><strong>Bush House Book Club</strong></h5>', html)
         self.assertIn('<h5 class="card-title"><strong>Somerset House Book Club</strong></h5>', html)
         self.assertNotIn('<h5 class="card-title"><strong>Strand House Book Club</strong></h5>', html)
+        self.client.logout()
 
     def test_user_has_two_clubs(self):
         self.client.login(email=self.john.email, password='Password123')
@@ -89,6 +93,7 @@ class ClubSwitcherViewTestCase(TestCase):
         self.assertIn('<p class="card-text text-left">Bush House Official Book Club!</p>', html)
         self.assertNotIn('<p class="card-text text-left">Somerset House Official Book Club!</p>', html)
         self.assertIn('<p class="card-text text-left">Strand House Official Book Club!</p>', html)
+        self.client.logout()
 
     def test_user_has_two_clubs_alt_view(self):
         self.client.login(email=self.john.email, password='Password123')
@@ -97,6 +102,7 @@ class ClubSwitcherViewTestCase(TestCase):
         self.assertIn('<h5 class="card-title"><strong>Bush House Book Club</strong></h5>', html)
         self.assertNotIn('<h5 class="card-title"><strong>Somerset House Book Club</strong></h5>', html)
         self.assertIn('<h5 class="card-title"><strong>Strand House Book Club</strong></h5>', html)
+        self.client.logout()
 
     def test_clubs_shows_when_user_made_member(self):
         self.client.login(email=self.joe.email, password='Password123')
@@ -111,4 +117,5 @@ class ClubSwitcherViewTestCase(TestCase):
         self.assertIn('<p class="card-text text-left">Bush House Official Book Club!</p>', html)
         self.assertNotIn('<p class="card-text text-left">Somerset House Official Book Club!</p>', html)
         self.assertNotIn('<p class="card-text text-left">Strand House Official Book Club!</p>', html)
+        self.client.logout()
 
