@@ -7,7 +7,9 @@ class testUserListView(TestCase, LogInTester):
     def setUp(self):
         self.url = reverse('user_list')
         self.user = User.objects.create(
-            full_name = "John Doe",
+            first_name = "John",
+            last_name = "John",
+            public_bio = "hfjdsvsk",
 	        email = "johndoe@bookclub.com",
             date_joined = "Feb. 11, 2022, 12:19 a.m."
         )
@@ -20,7 +22,9 @@ class testUserListView(TestCase, LogInTester):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_list.html')
-        self.assertContains(response, user.get_full_name)
+        self.assertContains(response, user.first_name)
+        self.assertContains(response, user.last_name)
+        self.assertContains(response, user.public_bio)
         self.assertContains(response, user.email)
         self.assertContains(response, user.date_joined)
 
