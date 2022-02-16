@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
-from clubs.models import User
-from clubs.tests.helpers import LogInTester
+from bookclub.models import User
+from bookclub.tests.helpers import LogInTester
 
 class testUserListView(TestCase, LogInTester):
     def setUp(self):
