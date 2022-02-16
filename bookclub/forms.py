@@ -2,7 +2,10 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from bookclub.models import User, Club, Application
+from bookclub.models import User, Club, Application, Meeting
+from datetime import datetime
+from django.utils import timezone
+
 
 class UserForm(forms.ModelForm):
     """Form to update user profiles."""
@@ -160,3 +163,35 @@ class ClubForm(forms.ModelForm):
     def save(self , user ):
         super().save(commit=False)
         club = Club.objects.create(name = self.cleaned_data.get('name'),description = self.cleaned_data.get('description'),location = self.cleaned_data.get('location'), owner = user)
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class TimeInput(forms.DateInput):
+    input_type = 'time'
+
+class ScheduleMeetingForm(forms.ModelForm):
+
+    class Meta:
+        model = Meeting
+        fields = ['date', 'time']
+        widgets = { 'date': DateInput(), 'time': TimeInput(),}
+
+    def clean(self):
+        now = timezone.now()
+        date = self.cleaned_data['date'].date()
+        time = self.cleaned_data['time']
+        print(date)
+        print(now)
+        print(time)
+        if date < datetime.now().date():
+            print("1")
+            raise forms.ValidationError("The meeting cannot be in the past!")
+        elif date == datetime.now().date() and time < datetime.now().time():
+            print("2")
+            raise forms.ValidationError("The meeting cannot be in the past!")
+
+    def save(self, club):
+        super().save(commit=False)
+        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club)

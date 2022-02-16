@@ -1,0 +1,17 @@
+{% extends 'base_content.html' %}
+{% block content %}
+    <div class="container">
+    <div class="row">
+        <div class="col-12">
+   <body>
+        <h1 class="new-club-title">Schedule a meeting</h1>
+        <form action="{% url 'schedule_meeting' %}" method="post">
+              {% csrf_token %}
+              {% include 'partials/bootstrap_form.html' with form=form %}
+              <input type="submit" value="Schedule meeting" class="btn btn-primary">
+        </form>
+   </body>
+        </div>
+</div>
+    </div>
+{% endblock %}

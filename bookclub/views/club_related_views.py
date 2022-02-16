@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
-from bookclub.forms import  ApplicantForm
+from bookclub.forms import  ApplicantForm, ScheduleMeetingForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -51,3 +51,31 @@ def app_remove(request, pk):
     app.delete()
     messages.add_message(request, messages.SUCCESS, "User rejected!")
     return redirect('applications')
+
+
+class MeetingScheduler(LoginRequiredMixin, View):
+    """View that handles meeting scheduling."""
+
+    http_method_names = ['get', 'post']
+
+    def get(self, request):
+        """Display meeting scheduler template"""
+        return self.render()
+
+    def post(self, request):
+        """Handle scheduling attempt."""
+
+        form = ScheduleMeetingForm(request.POST)
+        current_club=Club.objects.all()[0] #Change as soon as club profile is done
+        if form.is_valid():
+            meeting = form.save(club=current_club)
+            messages.add_message(request, messages.SUCCESS, "The meeting was scheduled!")
+            return redirect('home')
+        messages.add_message(request, messages.ERROR, "The meeting was unable to be scheduled!")
+        return self.render()
+
+    def render(self):
+        """Render meeting scheduler form"""  
+
+        form = ScheduleMeetingForm()
+        return render(self.request, 'schedule_meeting.html', {'form': form})
