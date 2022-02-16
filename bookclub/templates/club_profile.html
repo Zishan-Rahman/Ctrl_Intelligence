@@ -24,6 +24,7 @@
               <tr>
                 <td class="club-info">
                     <a href="{% url 'new_application' club.id %}">
+                      {% csrf_token %}
                       <button type="submit" class="btn btn-primary" id="apply-button">Apply</button>
                     </a>
                 </td>
