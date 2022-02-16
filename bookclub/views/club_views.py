@@ -15,7 +15,6 @@ def club_util(request):
     config.user_clubs = user_clubs_list
 
 
-
 @login_required
 def club_list(request):
     clubs = Club.objects.all()
@@ -24,11 +23,13 @@ def club_list(request):
 
 @login_required
 def club_selector(request):
+    club_util(request)
     return render(request, "club_switcher.html", {'user_clubs': config.user_clubs})
 
 
 @login_required
 def club_selector_alt(request):
+    club_util(request)
     return render(request, "club_switcher_alt.html", {"user_clubs": config.user_clubs})
 
 @login_required

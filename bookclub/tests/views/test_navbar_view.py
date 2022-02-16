@@ -56,3 +56,4 @@ class NavbarViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'partials/menu.html')
         html = response.content.decode('utf8')
         self.assertIn('<a class="nav-link" href="/my_clubs/">My Clubs</a>',  html)
+
