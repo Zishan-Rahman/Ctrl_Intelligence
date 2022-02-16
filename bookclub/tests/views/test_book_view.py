@@ -9,7 +9,7 @@ from bookclub.tests.helpers import LogInTester, reverse_with_next
 # Books View test is adapted from the Chess Club project
 
 class BooksListViewTestCase(TestCase, LogInTester):
-    """Tests of the books view."""
+    """Tests of the club view."""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json"]
 
@@ -35,7 +35,6 @@ class BooksListViewTestCase(TestCase, LogInTester):
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_books(settings.BOOKS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
-        print(response.context['books'])
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'book_list.html')
         self.assertEqual(len(response.context['books']), settings.BOOKS_PER_PAGE)
@@ -84,7 +83,7 @@ class BooksListViewTestCase(TestCase, LogInTester):
                 location=f'City {id}',
                 age=18+id
             )
-            a=Book.objects.create(
+            Book.objects.create(
                 isbn=id,
                 title=f'{id} Book',
                 author=f'user {id}',
@@ -94,4 +93,3 @@ class BooksListViewTestCase(TestCase, LogInTester):
                 medium_url=f'medium{id}@example.org',
                 large_url=f'large{id}@example.org',
             )
-            print(a)

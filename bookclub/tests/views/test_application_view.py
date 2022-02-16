@@ -130,8 +130,10 @@ class ApplicationViewTestCase(TestCase):
     def test_get_application_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_applications(settings.APPLICATIONS_PER_PAGE*2+3-1)
-        response = self.client.get(reverse('applications'))
+        response = self.client.get(self.url)
+        #response.context['applicants'] = list(self._create_test_applications(settings.APPLICATIONS_PER_PAGE*2+3-1))
         print(response.context['applicants'])
+        print(type(response.context['applicants']))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'applications.html')
         self.assertEqual(len(response.context['applicants']), settings.APPLICATIONS_PER_PAGE)
@@ -166,6 +168,7 @@ class ApplicationViewTestCase(TestCase):
 
 
     def _create_test_applications(self,application_count=10):
+        list_applications = []
         for id in range(1,application_count+1, 1):
             created_user = User.objects.create(
                 email=f'user{id}@test.org',
@@ -188,4 +191,7 @@ class ApplicationViewTestCase(TestCase):
                 applicant=created_user,
                 club=created_club,
             )
-            print(a)
+            list_applications.append(a)
+        print(list_applications)
+        print(type(list_applications))
+        return list_applications
