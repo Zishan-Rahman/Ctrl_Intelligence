@@ -21,7 +21,7 @@ class testUserListView(TestCase, LogInTester):
     def test_get_user_list(self):
         self.client.login(username=self.user.email, password='Password123')
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed(response, 'user_list.html')
         self.assertContains(response, user.first_name)
         self.assertContains(response, user.last_name)
