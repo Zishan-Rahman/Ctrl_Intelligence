@@ -17,7 +17,7 @@ class ApplicationViewTestCase(TestCase):
         self.joe = User.objects.get(email='joedoe@bookclub.com')
 
         self.bush_club = Club.objects.get(name='Bush House Book Club')
-        self.somerset_club = Club.objects.get(name='Somserset House Book Club')
+        self.somerset_club = Club.objects.get(name='Somerset House Book Club')
         self.strand_club = Club.objects.get(name='Strand House Book Club')
 
 
@@ -34,7 +34,7 @@ class ApplicationViewTestCase(TestCase):
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('applications'))
         html = response.content.decode('utf8')
-        self.assertIn('<td>Somserset House Book Club</td>',  html)
+        self.assertIn('<td>Somerset House Book Club</td>',  html)
         self.assertIn('<td>Joe</td>',  html)
         self.assertIn('<td>Doe</td>',  html)
         self.assertIn('<td>30</td>', html)
@@ -55,7 +55,7 @@ class ApplicationViewTestCase(TestCase):
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('applications'))
         html = response.content.decode('utf8')
-        self.assertIn('<td>Somserset House Book Club</td>',  html)
+        self.assertIn('<td>Somerset House Book Club</td>',  html)
         self.assertIn('<td>Joe</td>',  html)
         self.assertIn('<td>Doe</td>',  html)
         self.assertIn('<td>30</td>',  html)
@@ -64,7 +64,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertIn('<td>Manchester</td>',  html)
         self.assertIn('<a class="btn btn-default"',  html)
 
-        self.assertIn('<td>Somserset House Book Club</td>',  html)
+        self.assertIn('<td>Somerset House Book Club</td>',  html)
         self.assertIn('<td>John</td>',  html)
         self.assertIn('<td>Doe</td>',  html)
         self.assertIn('<td>39</td>',  html)

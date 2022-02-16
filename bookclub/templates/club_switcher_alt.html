@@ -1,0 +1,77 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div class="text">
+                <h4>My Clubs </h4>
+            </div>
+        </div>
+        <div class="col-6">
+
+        </div>
+        <div class="col-3">
+            <div class="text float-end">
+                <h4>
+                    <a href="{% url 'club_selector' %}"> <i class="bi bi-view-stacked" style="color: cornflowerblue"></i></a>
+                </h4>
+            </div>
+        </div>
+    </div>
+
+
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for user_club in user_clubs %}
+
+          <div class="col">
+            <div class="card h-100">
+                <div class="row" style="margin-top: 5px">
+                    <div class="col text-center">
+                        <img src="{{ user_club.gravatar }}" class="card-img" style="height: 120px; width: 120px">
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="card-body">
+                            <h5 class="card-title"><strong>{{ user_club.name }}</strong></h5>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="card-body">
+                            <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-person-fill"></i> {{ user_club.owner }}</p>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="card-body">
+                                <p class="card-text">{% include 'partials/club_meeting_type.html' with club=user_club %}</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card-body">
+                            <p class="card-text text-center"> <i class="bi bi-geo-alt"></i> {{ user_club.location }}</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card-body">
+                            <a class="btn m-auto" style="background-color: brown; color: white;" href="#">View</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+          </div>
+
+
+
+
+    {% endfor %}
+</div>
+</div>
+
+{% endblock %}
