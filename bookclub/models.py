@@ -212,5 +212,5 @@ class Ratings(models.Model):
     def get_applicant(self):
         return self.applicant
 
-    def get_application_club(self):
-        return self.club
+    # def get_application_club(self):
+    #     return self.club
