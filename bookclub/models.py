@@ -116,7 +116,7 @@ class Club(models.Model):
     members = models.ManyToManyField(User, related_name="member_of")
     organisers = models.ManyToManyField(User, related_name="organiser_of")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
-    meeting_online = models.BooleanField(unique=False, blank=False,default=True)
+    meeting_online = models.BooleanField(unique=False, blank=False, default=True)
 
     def get_name(self):
         return self.name
@@ -220,12 +220,13 @@ class Application(models.Model):
     def get_application_club(self):
         return self.club
 
+
 # Ratings model
-class Ratings(models.Model):
+class Rating(models.Model):
     """A model for the book ratings"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    isbn = models.ForeignKey(Book, on_delete=models.CASCADE)
-    rating = models.IntegerField(validators = [MinValueValidator(0), MaxValueValidator(10)])
+    user = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
+    isbn = models.ForeignKey(Book, blank=False,on_delete=models.CASCADE)
+    rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
 
     def get_user(self):
         return self.user
@@ -233,11 +234,5 @@ class Ratings(models.Model):
     def get_isbn(self):
         return self.isbn
 
-    def get_ratings(self):
-        return self.ratings
-
-    def get_applicant(self):
-        return self.applicant
-
-    def get_application_club(self):
-        return self.club
+    def get_rating(self):
+        return self.rating

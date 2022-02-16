@@ -96,7 +96,7 @@ class UserModelTestCase(TestCase):
         try:
             self.user_one.full_clean()
         except ValidationError:
-            self.fail("Test club should be valid")
+            self.fail("Test user should be valid")
 
     def _assert_user_is_invalid(self):
         with self.assertRaises(ValidationError):
