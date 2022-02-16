@@ -18,11 +18,11 @@ class ClubsListViewTestCase(TestCase, LogInTester):
     def test_book_list_url(self):
         self.assertEqual(self.url, '/book/')
 
-    def test_correct_book_list_template(self):
-        self.client.login(email=self.user.email, password="Password123")
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "book_list.html")
+    # def test_correct_book_list_template(self):
+    #     self.client.login(email=self.user.email, password="Password123")
+    #     response = self.client.get(self.url)
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTemplateUsed(response, "book_list.html")
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()

@@ -1,0 +1,42 @@
+{% extends 'base_content.html' %}
+
+{% block content %}
+
+	{% if query %}
+		<h1>You Searched For {{ query }}</h1>
+		<br/>
+
+		{% for book in books %}
+
+			<div class="card">
+  <div class="card-header">
+    Book
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ book }}</h5>
+    <p class="card-text">
+    	<ul>
+        {% if book.name %}
+          <li>{{ book.name }}</li>
+        {% endif %}
+	</ul>
+
+
+
+    </p>
+  </div>
+</div>
+	<br/>
+
+
+		{% endfor %}
+
+	{% else %}
+		<<h1></h1>>Please enter a search term</h1>
+	{% endif %}
+
+
+
+
+
+{% endblock %}
