@@ -14,7 +14,7 @@ class HomeViewTestCase(TestCase):
         self.user = User.objects.get(email='johndoe@bookclub.com')
 
     def test_home_url(self):
-        self.assertEqual(self.url,'/home/')
+        self.assertEqual(self.url, '/home/')
 
     def test_get_home(self):
         self.client.login(username=self.user.email, password='Password123')

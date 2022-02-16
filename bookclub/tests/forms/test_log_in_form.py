@@ -37,12 +37,12 @@ class LogInFormTestCase(TestCase):
         self.assertFalse(form.is_valid())
 
     def test_form_rejects_blank_password(self):
-        self.form_input['password']= ''
+        self.form_input['password'] = ''
         form = LogInForm(data=self.form_input)
         self.assertFalse(form.is_valid())
 
     def test_form_accepts_incorrect_email(self):
-        self.form_input['email']= 'ja'
+        self.form_input['email'] = 'ja'
         form = LogInForm(data=self.form_input)
         self.assertFalse(form.is_valid())
 
