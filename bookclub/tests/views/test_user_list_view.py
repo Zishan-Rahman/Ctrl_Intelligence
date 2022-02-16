@@ -11,7 +11,7 @@ class testUserListView(TestCase, LogInTester):
             last_name = "John",
             public_bio = "hfjdsvsk",
 	        email = "johndoe@bookclub.com",
-            date_joined = "Feb. 11, 2022, 12:19 a.m."
+            date_joined = "2022-09-04 06:00"
         )
 
     def test_user_list_url(self):
