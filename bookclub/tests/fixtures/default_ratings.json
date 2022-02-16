@@ -1,20 +1,20 @@
-
+[
   {
-    "model": "bookclub.club",
+    "model": "bookclub.rating",
     "pk": 1,
     "fields": {
-      "user": "1",
-      "isbn": "12345678910",
-      "rating": "5"
+      "user": 1,
+      "isbn": 1,
+      "rating": 5
     }
   },
     {
-    "model": "bookclub.club",
+    "model": "bookclub.rating",
     "pk": 2,
     "fields": {
-      "user": "2",
-      "isbn": "12345678911",
-      "rating": "10"
+      "user": 2,
+      "isbn": 2,
+      "rating": 10
     }
   }
 ]
