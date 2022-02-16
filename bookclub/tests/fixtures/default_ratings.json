@@ -1,4 +1,4 @@
-
+[
   {
     "model": "bookclub.club",
     "pk": 1,
@@ -17,3 +17,4 @@
       "rating": 10
     }
   }
+]  
