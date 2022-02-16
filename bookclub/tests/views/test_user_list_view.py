@@ -2,9 +2,9 @@ from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User
 from bookclub.tests.helpers import LogInTester, reverse_with_next
-from with_asserts.mixin import AssertHTMLMixin
 
-class testUserListView(TestCase, LogInTester, AssertHTMLMixin):
+
+class testUserListView(TestCase, LogInTester):
     def setUp(self):
         self.url = reverse('user_list')
         self.user = User.objects.create(
