@@ -31,7 +31,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     favourite_genre = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
-    
+
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -78,7 +78,7 @@ class Book(models.Model):
     isbn = models.CharField(unique=True, max_length=12, blank=False)
     title = models.CharField(unique=False, blank=False, max_length=512)
     author = models.CharField(blank=False, max_length=512)
-    pub_year = models.IntegerField(blank=False, validators = [MinValueValidator(1800), MaxValueValidator(2022)])
+    pub_year = models.IntegerField(blank=False, validators=[MinValueValidator(1800), MaxValueValidator(2022)])
     publisher = models.CharField(blank=False, max_length=512)
     small_url = models.URLField(unique=False, blank=False, max_length=512)
     medium_url = models.URLField(unique=False, blank=False, max_length=512)
@@ -106,7 +106,6 @@ class Book(models.Model):
         return self.large_url
 
 
-
 # Club Model adapted from Clucker user model and Chess club management system club model
 
 
@@ -117,7 +116,7 @@ class Club(models.Model):
     members = models.ManyToManyField(User, related_name="member_of")
     organisers = models.ManyToManyField(User, related_name="organiser_of")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
-    meeting_online = models.BooleanField(unique=False,blank=False,default=True)
+    meeting_online = models.BooleanField(unique=False, blank=False, default=True)
 
     def get_name(self):
         return self.name
@@ -179,7 +178,7 @@ class Club(models.Model):
 
     def get_owner(self):
         return self.owner
-    
+
     def meeting_type(self):
         if self.meeting_online:
             return "online"
@@ -188,8 +187,8 @@ class Club(models.Model):
     def get_all_users(self):
         return (
             self.get_members()
-            .union(self.get_organisers())
-            .union(User.objects.filter(email=self.get_owner().email))
+                .union(self.get_organisers())
+                .union(User.objects.filter(email=self.get_owner().email))
         )
 
     def remove_from_club(self, user):
