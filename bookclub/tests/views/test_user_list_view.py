@@ -12,7 +12,7 @@ class testUserListView(TestCase, LogInTester, AssertHTMLMixin):
             public_bio = "hfjdsvsk",
 	        email = "johndoe@bookclub.coms",
             date_joined = "2022-09-04 06:00",
-            self.url = reverse('users')
+            self.url = reverse('user_list')
         )
 
     def test_user_list_url(self):
