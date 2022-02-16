@@ -83,7 +83,7 @@ class Book(models.Model):
     isbn = models.CharField(unique=True, max_length=12, blank=False)
     title = models.CharField(unique=False, blank=False, max_length=512)
     author = models.CharField(blank=False, max_length=512)
-    pub_year = models.IntegerField(blank=False, validators = [MinValueValidator(1800), MaxValueValidator(2022)])
+    pub_year = models.IntegerField(blank=False, validators=[MinValueValidator(1800), MaxValueValidator(2022)])
     publisher = models.CharField(blank=False, max_length=512)
     small_url = models.URLField(unique=False, blank=False, max_length=512)
     medium_url = models.URLField(unique=False, blank=False, max_length=512)
@@ -116,7 +116,6 @@ class Book(models.Model):
         return self.large_url
 
 
-
 # Club Model adapted from Clucker user model and Chess club management system club model
 
 
@@ -127,7 +126,7 @@ class Club(models.Model):
     members = models.ManyToManyField(User, related_name="member_of")
     organisers = models.ManyToManyField(User, related_name="organiser_of")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
-    meeting_online = models.BooleanField(unique=False,blank=False,default=True)
+    meeting_online = models.BooleanField(unique=False, blank=False, default=True)
 
     class Meta:
         """Model options."""
@@ -194,7 +193,7 @@ class Club(models.Model):
 
     def get_owner(self):
         return self.owner
-    
+
     def meeting_type(self):
         if self.meeting_online:
             return "online"
@@ -203,8 +202,8 @@ class Club(models.Model):
     def get_all_users(self):
         return (
             self.get_members()
-            .union(self.get_organisers())
-            .union(User.objects.filter(email=self.get_owner().email))
+                .union(self.get_organisers())
+                .union(User.objects.filter(email=self.get_owner().email))
         )
 
     def remove_from_club(self, user):
@@ -234,6 +233,28 @@ class Application(models.Model):
         """Model options."""
 
         ordering = ['applicant']
+
+    def get_applicant(self):
+        return self.applicant
+
+    def get_application_club(self):
+        return self.club
+
+# Ratings model
+class Ratings(models.Model):
+    """A model for the book ratings"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    isbn = models.ForeignKey(Book, on_delete=models.CASCADE)
+    rating = models.IntegerField(validators = [MinValueValidator(0), MaxValueValidator(10)])
+
+    def get_user(self):
+        return self.user
+
+    def get_isbn(self):
+        return self.isbn
+
+    def get_ratings(self):
+        return self.ratings
 
     def get_applicant(self):
         return self.applicant

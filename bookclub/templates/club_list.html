@@ -2,19 +2,27 @@
 {% extends 'base_content.html' %}
 {% load bootstrap_pagination %}
 {% block content %}
-<div class="container-applications">
+<div class="container">
   <div class="application-title">
-    <h1>Clubs</h1>
-    <p></p>
-    <a href="{% url 'new_club' %}" style='text-decoration:none; color:brown;'>To create a new club, click here!</a>
-    <p></p>
+      <div class="row">
+          <div class="col">
+              <h1>Clubs</h1>
+          </div>
+
+          <div class="col">
+    <a class="btn float-end" href="{% url 'new_club' %}" style='padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-plus-circle"></i> Create club</a>
+          </div>
+
+      </div>
+
+
   </div>
   <div class="book-table">
     {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
       <table class="table">
         <thead>
       <tr>
-        <th scope="col">Gravatar</th>
+        <th scope="col">Profile Picture</th>
         <th scope="col">Name</th>
         <th scope="col">Description</th>
         <th scope="col">Location</th>
@@ -23,13 +31,16 @@
     </thead>
     <tbody>
       {% for entry in clubs %}
-      <tr scope="row">
-        <td><img src={{ entry.mini_gravatar }} alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></td>
-        <td>{{ entry.name }}</td>
-        <td>{{ entry.description }}</td>
+
+      <tr scope="row" role="button" data-href="#clubIDwillGoHere">
+
+        <td> <img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" >
+          <td> {{ entry.name }} </td>
+          <td>{{ entry.description }} </td>
         <td>{{ entry.location }}</td>
         <td style="text-transform: capitalize;">{% include 'partials/club_meeting_type.html' with club=entry %}</td>
       </tr>
+
       {% endfor %}
     </tbody>
       </table>

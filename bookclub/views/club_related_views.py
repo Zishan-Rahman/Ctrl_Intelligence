@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import ListView
 from bookclub.models import User, Club, Application
+from bookclub.views import club_views
 
 
 class ApplicationsView(LoginRequiredMixin, ListView):
@@ -64,6 +65,7 @@ def app_accept(request, pk):
     app.club.make_member(app.applicant)
     app.delete()
     messages.add_message(request, messages.SUCCESS, "User accepted!")
+    club_views.club_util(request)
     return redirect('applications')
 
 def app_remove(request, pk):
