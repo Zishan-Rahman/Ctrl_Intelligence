@@ -160,7 +160,7 @@ class ApplicationViewTestCase(TestCase):
         response = self.client.get(page_three_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'applications.html')
-        self.assertEqual(len(response.context['applicants']), 2)
+        self.assertEqual(len(response.context['applicants']), 6)
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())

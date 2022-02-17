@@ -1,3 +1,4 @@
+import email
 from django.db import models
 from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
@@ -199,12 +200,20 @@ class Club(models.Model):
             return "online"
         return "in person"
 
+    # def get_all_users(self):
+    #     return (
+    #         self.get_members()
+    #             .union(self.get_organisers())
+    #             .union(User.objects.filter(email=self.get_owner().email))
+    #         )
+
     def get_all_users(self):
-        return (
-            self.get_members()
-                .union(self.get_organisers())
-                .union(User.objects.filter(email=self.get_owner().email))
-        )
+        self.club_members = self.get_members()
+        self.club_organisers = self.get_organisers()
+        self.club_owner = User.objects.filter(email=self.get_owner().email)
+
+        return (self.club_members | self.club_organisers | self.club_owner).distinct()
+        
 
     def remove_from_club(self, user):
         if self.user_level(user) == "Member":
