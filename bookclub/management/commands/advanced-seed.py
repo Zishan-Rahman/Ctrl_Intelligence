@@ -26,7 +26,7 @@ class Command(BaseCommand):
             print()
             print('The database must first be unseeded.')
             print('To do this, enter the command below:')
-            print('>   python3 manage.py advanced-unseed')
+            print('> python3 manage.py unseed')
             print()
 
     def verify_seeding_possible(self):
@@ -44,7 +44,7 @@ class Command(BaseCommand):
 
 
     def load_users(self):
-        count = 1
+        count = 0
         file_path_users = "data/BX-Users.csv"
 
         with open(file_path_users, encoding='cp1252') as user_csv_file:
@@ -93,9 +93,8 @@ class Command(BaseCommand):
         print("Password: Password123")
         print()
 
-
     def load_books(self):
-        count = 1
+        count = 0
         file_path_users = "data/BX_Books.csv"
 
         with open(file_path_users, encoding='cp1252') as book_csv_file:
