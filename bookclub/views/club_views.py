@@ -47,8 +47,19 @@ def club_util(request):
 
 @login_required
 def club_list(request):
-    clubs = Club.objects.all()
-    return render(request, 'club_list.html', {'clubs': clubs})
+    memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
+    clubs = []
+    for club in Club.objects.all():
+        clubs.append({
+            "id": club.id,
+            "name": club.get_name,
+            "description": club.get_description,
+            "location": club.get_location,
+            "meeting_online": club.meeting_online,
+            "mini_gravatar": club.mini_gravatar(),
+            "gravatar": club.gravatar()
+        })
+    return render(request, 'club_list.html', {'clubs':clubs, "club_memberships": memberships})
 
 
 @login_required
@@ -90,3 +101,8 @@ class ClubsListView(LoginRequiredMixin, ListView):
         memberships = Club.objects.filter(members=self.request.user) | Club.objects.filter(organisers=self.request.user) | Club.objects.filter(owner=self.request.user)
         context['club_memberships'] = memberships
         return context
+@login_required
+def club_profile(request, club_id):
+    """ Individual Club's Profile Page """
+    club = Club.objects.get(id = club_id)
+    return render(request, 'club_profile.html',{'club':club})

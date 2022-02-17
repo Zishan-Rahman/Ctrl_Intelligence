@@ -1,0 +1,36 @@
+<!-- club profile page adapted from the chess club project -->
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="home-container">
+  <div class="row-home">
+      <div>
+          <table>
+              <tr>
+                <td>
+                  <img src="{{ club.gravatar }}" alt="Gravatar of {{ club.full_name }}" class="rounded-circle profile-image" >
+                </td>
+                      </tr>
+                    </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h3>{{ club.name }}</h3>
+                  <p>{{ club.description }}</p>
+                  <p>{{ club.location }}</p>
+                  <p>We meet {% include 'partials/club_meeting_type.html' with club=club %}</p>
+                </td>
+              </tr>
+              <tr>
+                <td class="club-info">
+                    <a href="{% url 'new_application' club.id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-primary" id="apply-button">Apply</button>
+                    </a>
+                </td>
+              </tr>
+          </table>
+      </div>
+  </div>
+</div>
+{% endblock %}

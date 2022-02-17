@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
-from bookclub.forms import  ApplicantForm
+from bookclub.forms import  ApplicantForm, ApplicationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -68,9 +68,22 @@ def app_accept(request, pk):
     club_views.club_util(request)
     return redirect('applications')
 
+
 def app_remove(request, pk):
     """Reject application"""
     app = Application.objects.all().get(pk=pk)
     app.delete()
     messages.add_message(request, messages.SUCCESS, "User rejected!")
     return redirect('applications')
+
+@login_required
+def new_application(request, club_id):
+    """ Create A New Application """
+    form = ApplicationForm(request.POST)
+    if form.is_valid():
+        application = form.save(request.user) #TODO: Get the application to save into the database and get read from the applications view
+        messages.add_message(request, messages.SUCCESS, f"Application to {Club.objects.get(pk=club_id).name} was successfully submitted!")
+    else:
+        messages.add_message(request, messages.ERROR, f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}")
+    return redirect('applications')
+

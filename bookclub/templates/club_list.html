@@ -14,12 +14,10 @@
           </div>
 
       </div>
-
-
   </div>
   <div class="book-table">
     {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
-      <table class="table">
+    <table class="table table-hover">
         <thead>
       <tr>
         <th scope="col">Profile Picture</th>
@@ -32,14 +30,15 @@
     <tbody>
       {% for entry in clubs %}
 
-      <tr scope="row" role="button" data-href="#clubIDwillGoHere">
 
-        <td> <img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" >
+      <tr>
+        <td><a href="{% url 'club_profile' entry.id %}"><img src={{ entry.mini_gravatar }} alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
           <td> {{ entry.name }} </td>
           <td>{{ entry.description }} </td>
         <td>{{ entry.location }}</td>
         <td style="text-transform: capitalize;">{% include 'partials/club_meeting_type.html' with club=entry %}</td>
       </tr>
+
 
       {% endfor %}
     </tbody>

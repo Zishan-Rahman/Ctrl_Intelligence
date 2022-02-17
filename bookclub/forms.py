@@ -179,3 +179,18 @@ class ClubForm(forms.ModelForm):
             owner=user,
             meeting_online=self.cleaned_data.get('meeting_type')
         )
+
+class ApplicationForm(forms.ModelForm):
+    class Meta:
+        model = Application
+        fields = "__all__"
+
+    def save(self, user):
+        """Create a new application."""
+        club = self.cleaned_data.get('applicants_dropdown')
+        app = Application.objects.create(
+            club=self.cleaned_data.get('club'),
+            applicant=self.cleaned_data.get('applicant'),
+        )
+        app.save()
+        return app
