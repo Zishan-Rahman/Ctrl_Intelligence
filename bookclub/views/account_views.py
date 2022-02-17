@@ -20,8 +20,7 @@ def landing_page(request):
 def user_list(request):
     users = User.objects.all()
     all_users = Club.get_all_users
-    memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
-    return render(request, 'user_list.html', {'users': users, "club_memberships": memberships})
+    return render(request, 'user_list.html', {'users': users})
 
 class UsersListView(LoginRequiredMixin, ListView):
     """View that shows a list of all books."""
@@ -31,14 +30,6 @@ class UsersListView(LoginRequiredMixin, ListView):
     context_object_name = "users"
     queryset = User.objects.all()
     paginate_by = settings.USERS_PER_PAGE
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        memberships = Club.objects.filter(members=self.request.user) | Club.objects.filter(organisers=self.request.user) | Club.objects.filter(owner=self.request.user)
-        context['club_memberships'] = memberships
-        return context
-
-
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
@@ -59,17 +50,15 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         current_user = request.user
-        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
         form = self.form_class(instance=current_user, data=request.POST)
         if form.is_valid():
             return self.form_valid(form)
-        return render(request, 'profile.html', {"form": form, "club_memberships": memberships})
+        return render(request, 'profile.html', {"form": form})
 
     def get(self, request, *args, **kwargs):
         current_user = request.user
-        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
         form = self.form_class(instance=current_user)
-        return render(request, 'profile.html', {"form": form, "club_memberships": memberships})
+        return render(request, 'profile.html', {"form": form})
 
 
 class PasswordView(LoginRequiredMixin, FormView):
@@ -100,15 +89,13 @@ class PasswordView(LoginRequiredMixin, FormView):
 
     def post(self, request, *args, **kwargs):
         current_user = request.user
-        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
         form = self.form_class(user=current_user,data=request.POST)
         if form.is_valid():
             return self.form_valid(form)
-        return render(request, 'password.html', {"form": form,"club_memberships": memberships})
+        return render(request, 'password.html', {"form": form})
 
 
     def get(self, request, *args, **kwargs):
         current_user = request.user
-        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
         form = self.form_class()
-        return render(request, 'password.html', {"form": form, "club_memberships": memberships})
+        return render(request, 'password.html', {"form": form})

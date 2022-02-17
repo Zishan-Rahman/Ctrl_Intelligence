@@ -86,4 +86,3 @@ def new_application(request, club_id):
     else:
         messages.add_message(request, messages.ERROR, f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}")
     return redirect('applications')
-

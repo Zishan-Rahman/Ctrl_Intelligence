@@ -47,7 +47,6 @@ def club_util(request):
 
 @login_required
 def club_list(request):
-    memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
     clubs = []
     for club in Club.objects.all():
         clubs.append({
@@ -59,7 +58,7 @@ def club_list(request):
             "mini_gravatar": club.mini_gravatar(),
             "gravatar": club.gravatar()
         })
-    return render(request, 'club_list.html', {'clubs':clubs, "club_memberships": memberships})
+    return render(request, 'club_list.html', {'clubs':clubs})
 
 
 @login_required
@@ -96,11 +95,7 @@ class ClubsListView(LoginRequiredMixin, ListView):
     queryset = Club.objects.all()
     paginate_by = settings.CLUBS_PER_PAGE
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        memberships = Club.objects.filter(members=self.request.user) | Club.objects.filter(organisers=self.request.user) | Club.objects.filter(owner=self.request.user)
-        context['club_memberships'] = memberships
-        return context
+
 @login_required
 def club_profile(request, club_id):
     """ Individual Club's Profile Page """

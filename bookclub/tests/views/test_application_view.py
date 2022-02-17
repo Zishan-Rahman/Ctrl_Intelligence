@@ -129,18 +129,14 @@ class ApplicationViewTestCase(TestCase):
 
     def test_get_application_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
-        #self._create_test_applications(settings.APPLICATIONS_PER_PAGE*2+3-1)
+        self._create_test_applications(settings.APPLICATIONS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
-        response.context['applicants'].clear()
-        #self._create_test_applications(settings.APPLICATIONS_PER_PAGE*2+3-1)
-        response.context['applicants'].extend(self._create_test_applications(settings.APPLICATIONS_PER_PAGE*2+3-1))
         print(response.context['applicants'])
         print(type(response.context['applicants']))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'applications.html')
-        self.assertTrue(response.context['is_paginated'])
         self.assertEqual(len(response.context['applicants']), settings.APPLICATIONS_PER_PAGE)
-        #self.assertTrue(response.context['is_paginated'])
+        self.assertTrue(response.context['is_paginated'])
         page_obj = response.context['page_obj']
         self.assertFalse(page_obj.has_previous())
         self.assertTrue(page_obj.has_next())
@@ -171,7 +167,6 @@ class ApplicationViewTestCase(TestCase):
 
 
     def _create_test_applications(self,application_count=10):
-        list_applications = []
         for id in range(1,application_count+1, 1):
             created_user = User.objects.create(
                 email=f'user{id}@test.org',
@@ -190,11 +185,7 @@ class ApplicationViewTestCase(TestCase):
                 description=f'Description {id}',
                 owner=created_user,
             )
-            a=Application.objects.create(
+            Application.objects.create(
                 applicant=created_user,
                 club=created_club,
             )
-            list_applications.append(a)
-        # print(list_applications)
-        # print(type(list_applications))
-        return list_applications

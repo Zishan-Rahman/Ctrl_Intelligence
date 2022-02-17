@@ -23,9 +23,3 @@ class BooksListView(LoginRequiredMixin, ListView):
     context_object_name = "books"
     queryset = Book.objects.all()
     paginate_by = settings.BOOKS_PER_PAGE
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        memberships = Club.objects.filter(members=self.request.user) | Club.objects.filter(organisers=self.request.user) | Club.objects.filter(owner=self.request.user)
-        context['club_memberships'] = memberships
-        return context
