@@ -17,7 +17,7 @@
                 <td>
                   <h3>{{ club.name }}</h3>
                   <p>{{ club.description }}</p>
-                  <p>{{ club.location }}</p>
+                  <p>We're based in {{ club.location }}</p>
                   <p>We meet {% include 'partials/club_meeting_type.html' with club=club %}</p>
                 </td>
               </tr>
