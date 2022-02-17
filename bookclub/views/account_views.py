@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
 from bookclub.forms import PasswordForm, UserForm
-from bookclub.models import Club
+from bookclub.models import Club, User
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,10 +16,10 @@ def landing_page(request):
 
 @login_required
 def user_list(request):
-
+    users = User.objects.all()
     all_users = Club.get_all_users
     memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
-    return render(request, 'user_list.html', {"club_memberships": memberships})
+    return render(request, 'user_list.html', {'users': users, "club_memberships": memberships})
 
 @login_required
 def club_list(request):
@@ -56,7 +56,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         current_user = request.user
         memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
         form = self.form_class(instance=current_user)
-        return render(request, 'profile.html', {"form": form,"club_memberships": memberships})
+        return render(request, 'profile.html', {"form": form, "club_memberships": memberships})
 
 
 class PasswordView(LoginRequiredMixin, FormView):

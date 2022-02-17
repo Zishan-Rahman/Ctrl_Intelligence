@@ -1,13 +1,32 @@
 {% extends 'base_content.html' %}
 {% block content %}
-    <div class="container">
-    <div class="row">
-        <div class="col-12">
-   <body>
-      <h1>Bookwise</h1>
-      <p>This is the user list page</p>
-   </body>
-        </div>
-</div>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>Users</h1>
+      <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Bio</th>
+                <th scope="col">Email</th>
+                <th scope="col">Date Joined</th>
+            </tr>
+          </thead>
+        <tbody>
+          {% for user in users %}
+              <tr>
+                <td>{{ user.first_name}}</td>
+                <td>{{ user.last_name}}</td>
+                <td>{{ user.public_bio}}</td>
+                <td>{{ user.email}}</td>
+                <td>{{ user.date_joined }}</td>
+              </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
+</div>
 {% endblock %}
