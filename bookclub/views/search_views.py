@@ -19,7 +19,7 @@ from django.views.generic.list import ListView
 def search_books(request):
 	if request.method == "POST":
 		query = request.POST['query']
-		books = Book.objects.filter(title__contains=query)
+		books = Book.objects.filter(title__contains=query) | Book.objects.filter(isbn__contains=query) | Book.objects.filter(author__contains=query) | Book.objects.filter(author__contains=query) | Book.objects.filter(pub_year__contains=query) | Book.objects.filter(publisher__contains=query)
 		return render(request,
 		'search_page.html',
 		{'query':query,
@@ -28,4 +28,3 @@ def search_books(request):
 		return render(request,
 		'search_page.html',
 		{})
-        
