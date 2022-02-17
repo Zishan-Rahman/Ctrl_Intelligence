@@ -19,7 +19,7 @@ class LogInViewTestCase(TestCase, LogInTester):
         self.assertEqual(self.url, '/log_in/')
 
     def test_log_in_uses_correct_template(self):
-        response = self.client.get(reverse('log_in'))
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'log_in.html')
 

@@ -4,14 +4,14 @@ from bookclub.models import User
 from bookclub.tests.helpers import LogInTester, reverse_with_next
 
 
-class testUserListView(TestCase, LogInTester):
+class TestUserListView(TestCase, LogInTester):
     def setUp(self):
         self.url = reverse('user_list')
         self.user = User.objects.create(
             first_name = "John",
             last_name = "John",
             public_bio = "hfjdsvsk",
-	        email = "johndoe@bookclub.coms",
+	        email = "johndoe@bookclub.com",
             date_joined = "2022-09-04 06:00"
         )
 
@@ -23,11 +23,11 @@ class testUserListView(TestCase, LogInTester):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed(response, 'user_list.html')
-        self.assertContains(response, user.first_name)
-        self.assertContains(response, user.last_name)
-        self.assertContains(response, user.public_bio)
-        self.assertContains(response, user.email)
-        self.assertContains(response, user.date_joined)
+        self.assertContains(response, self.user.first_name)
+        self.assertContains(response, self.user.last_name)
+        self.assertContains(response, self.user.public_bio)
+        self.assertContains(response, self.user.email)
+        self.assertContains(response, self.user.date_joined)
 
 
     def test_get_user_list_redirects_when_not_logged_in(self):
