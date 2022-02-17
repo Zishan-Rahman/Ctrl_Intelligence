@@ -1,5 +1,6 @@
 """Clubs related views."""
 from django.conf import settings
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
@@ -47,6 +48,7 @@ def club_util(request):
 
 @login_required
 def club_list(request):
+
     memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
     clubs = []
     for club in Club.objects.all():
