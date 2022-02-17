@@ -13,11 +13,9 @@
           </div>
 
       </div>
-
-
   </div>
   <div class="book-table">
-      <table class="table">
+      <table class="table table-hover">
         <thead>
       <tr>
         <th scope="col">Profile Picture</th>
@@ -31,13 +29,13 @@
       {% for entry in clubs %}
 
       <tr>
-
         <td> <img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" >
           <td> {{ entry.name }} </td>
           <td>{{ entry.description }} </td>
         <td>{{ entry.location }}</td>
         <td style="text-transform: capitalize;">{% include 'partials/club_meeting_type.html' with club=entry %}</td>
       </tr>
+
 
       {% endfor %}
     </tbody>
