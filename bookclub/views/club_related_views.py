@@ -47,6 +47,7 @@ def app_accept(request, pk):
     club_views.club_util(request)
     return redirect('applications')
 
+
 def app_remove(request, pk):
     """Reject application"""
     app = Application.objects.all().get(pk=pk)
