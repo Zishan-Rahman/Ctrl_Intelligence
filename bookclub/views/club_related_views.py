@@ -35,7 +35,7 @@ class ApplicationsView(LoginRequiredMixin, View):
         for a in Application.objects.all():
             if a.club in owned_clubs:
                 applicants.append(a)
-        paginator = Paginator(applicants, 1) 
+        paginator = Paginator(applicants, 1)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         return render(self.request, 'applications.html', {'page_obj': page_obj, 'applicants' : applicants})
@@ -106,7 +106,6 @@ def app_remove(request, pk):
 @login_required
 def new_application(request, club_id):
     """ Create A New Application """
-<<<<<<< HEAD
     form = ApplicationForm(request.POST)
     if form.is_valid():
         application = form.save(request.user) #TODO: Get the application to save into the database and get read from the applications view
@@ -114,7 +113,6 @@ def new_application(request, club_id):
     else:
         messages.add_message(request, messages.ERROR, f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}")
     return redirect('applications')
-=======
     club_applied_to = Club.objects.get(pk=club_id)
     application_is_possible = True
 
@@ -142,5 +140,3 @@ def new_application(request, club_id):
 
 
     return render(request, "club_list.html")
-
->>>>>>> 1e660e51e1c64b64a71442e7eb585ede3e499b4f
