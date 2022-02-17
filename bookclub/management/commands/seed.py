@@ -242,7 +242,7 @@ class Command(BaseCommand):
                 percent_complete = float((total_users/self.TOTAL_USERS)*100)
                 print(f'[ DONE: {round(percent_complete)}% | {total_users}/{self.TOTAL_USERS} ]', end='\r')
             except ValidationError:
-                print('User not unique')
+                pass
 
     def generate_clubs(self):
         total_clubs = 0
@@ -256,7 +256,7 @@ class Command(BaseCommand):
                 percent_complete = float((total_clubs / self.TOTAL_CLUBS) * 100)
                 print(f'[ DONE: {round(percent_complete)}% | {total_clubs}/{self.TOTAL_CLUBS} ]', end='\r')
             except ValidationError:
-                print('Club not unique')
+                pass
 
     def generate_limited_books_dataset(self):
         count = 0
