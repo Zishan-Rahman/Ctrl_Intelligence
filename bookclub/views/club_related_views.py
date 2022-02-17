@@ -106,6 +106,7 @@ def app_remove(request, pk):
 @login_required
 def new_application(request, club_id):
     """ Create A New Application """
+<<<<<<< HEAD
     form = ApplicationForm(request.POST)
     if form.is_valid():
         application = form.save(request.user) #TODO: Get the application to save into the database and get read from the applications view
@@ -113,3 +114,33 @@ def new_application(request, club_id):
     else:
         messages.add_message(request, messages.ERROR, f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}")
     return redirect('applications')
+=======
+    club_applied_to = Club.objects.get(pk=club_id)
+    application_is_possible = True
+
+    if request.method == 'POST':
+        current_members = club_applied_to.get_all_users()
+        if request.user in current_members:
+            application_is_possible = False
+
+        current_applications = Application.objects.filter(applicant=request.user, club=club_applied_to).count()
+        if current_applications:
+            application_is_possible = False
+
+        if application_is_possible:
+            Application.objects.create(
+                applicant=request.user,
+                club=club_applied_to
+            )
+            messages.add_message(request, messages.SUCCESS,
+                                 f"Application to {Club.objects.get(pk=club_id).name} was successfully submitted!")
+
+        else:
+            messages.add_message(request, messages.ERROR,
+                                 f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}. You have "
+                                 f"already applied.")
+
+
+    return render(request, "club_list.html")
+
+>>>>>>> 1e660e51e1c64b64a71442e7eb585ede3e499b4f
