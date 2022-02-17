@@ -10,6 +10,7 @@ from bookclub.forms import LogInForm, SignUpForm, PasswordForm
 from .mixins import LoginProhibitedMixin
 from django.contrib.auth.decorators import login_required
 from bookclub.helpers import login_prohibited
+from bookclub.views import club_views
 
 
 class LogInView(LoginProhibitedMixin, View):
@@ -32,6 +33,7 @@ class LogInView(LoginProhibitedMixin, View):
         user = form.get_user()
         if user is not None:
             form = login(request, user)
+            club_views.club_util(request)
             return redirect(self.next)
         messages.add_message(request, messages.ERROR, "The credentials provided were invalid!")
         return self.render()

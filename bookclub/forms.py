@@ -125,7 +125,7 @@ class PasswordForm(NewPasswordMixin):
             self.user.save()
         return self.user
 
-      
+
 class ApplicantForm(forms.Form):
     """Form enabling owners to choose which club applications to view."""
     applicants_dropdown = forms.ModelChoiceField(label="Select an applicant", queryset=None)
@@ -150,15 +150,21 @@ class ApplicantForm(forms.Form):
 
         self.fields['applicants_dropdown'].queryset = Application.objects.filter(pk__in=current_applicants_ids)
 
-  
 
 class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
-        fields = ['name', 'description', 'location']
+        fields = ['name', 'description', 'location', 'meeting_type']
+        widgets = {"description": forms.Textarea()}
 
-    CHOICES = ((True, 'Online'), (False, 'In Person'))
-    meeting_type = forms.ChoiceField(choices=CHOICES,widget=forms.RadioSelect)
+    CHOICES = [
+        (None, 'Choose meeting type'),
+        (True, 'Online'),
+        (False, 'In Person')]
+
+    meeting_type = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
+                                                                                       "online based or meets in "
+                                                                                       "person")
 
     def clean(self):
         super().clean()
@@ -166,10 +172,10 @@ class ClubForm(forms.ModelForm):
 
     def save(self, user):
         super().save(commit=False)
-        club = Club.objects.create(
-            name = self.cleaned_data.get('name'),
-            description = self.cleaned_data.get('description'),
-            location = self.cleaned_data.get('location'),
-            owner = user,
-            meeting_online = self.cleaned_data.get('meeting_type')
+        Club.objects.create(
+            name=self.cleaned_data.get('name'),
+            description=self.cleaned_data.get('description'),
+            location=self.cleaned_data.get('location'),
+            owner=user,
+            meeting_online=self.cleaned_data.get('meeting_type')
         )

@@ -4,6 +4,7 @@ from django.urls import reverse
 from bookclub.models import User, Club
 from bookclub.tests.helpers import reverse_with_next
 
+
 class NavbarViewTestCase(TestCase):
     """Tests of the navbar view."""
 
@@ -14,44 +15,45 @@ class NavbarViewTestCase(TestCase):
         self.bush_club = Club.objects.get(name='Bush House Book Club')
         self.bush_club.make_member(self.john)
 
-    def test_navbar_displays_correct_club_on_home_page(self):
+    def test_navbar_displays_my_club_on_home_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('home'))
-        self.assertTemplateUsed(response, 'partials/menu.html' )
+        self.assertTemplateUsed(response, 'partials/menu.html')
         html = response.content.decode('utf8')
-        self.assertIn('<a class="nav-link" href="1">1. Bush House Book Club</a>',  html)
+        self.assertIn('<a class="nav-link" href="/my_clubs/">My Clubs</a>',  html)
 
-    def test_navbar_displays_correct_club_on_clubs_page(self):
+    def test_navbar_displays_my_club_on_clubs_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_list'))
-        self.assertTemplateUsed(response, 'partials/menu.html' )
+        self.assertTemplateUsed(response, 'partials/menu.html')
         html = response.content.decode('utf8')
-        self.assertIn('<a class="nav-link" href="1">1. Bush House Book Club</a>',  html)
+        self.assertIn('<a class="nav-link" href="/my_clubs/">My Clubs</a>',  html)
 
-    def test_navbar_displays_correct_club_on_users_page(self):
+    def test_navbar_displays_my_club_on_users_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_list'))
-        self.assertTemplateUsed(response, 'partials/menu.html' )
+        self.assertTemplateUsed(response, 'partials/menu.html')
         html = response.content.decode('utf8')
-        self.assertIn('<a class="nav-link" href="1">1. Bush House Book Club</a>',  html)
+        self.assertIn('<a class="nav-link" href="/my_clubs/">My Clubs</a>',  html)
 
-    def test_navbar_displays_correct_club_on_books_page(self):
+    def test_navbar_displays_my_club_on_books_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('book_list'))
-        self.assertTemplateUsed(response, 'partials/menu.html' )
+        self.assertTemplateUsed(response, 'partials/menu.html')
         html = response.content.decode('utf8')
-        self.assertIn('<a class="nav-link" href="1">1. Bush House Book Club</a>',  html)
+        self.assertIn('<a class="nav-link" href="/my_clubs/">My Clubs</a>',  html)
 
     def test_navbar_displays_correct_club_on_edit_profile_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('profile'))
-        self.assertTemplateUsed(response, 'partials/menu.html' )
+        self.assertTemplateUsed(response, 'partials/menu.html')
         html = response.content.decode('utf8')
-        self.assertIn('<a class="nav-link" href="1">1. Bush House Book Club</a>',  html)
+        self.assertIn('<a class="nav-link" href="/my_clubs/">My Clubs</a>',  html)
 
     def test_navbar_displays_correct_club_on_edit_password_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('password'))
-        self.assertTemplateUsed(response, 'partials/menu.html' )
+        self.assertTemplateUsed(response, 'partials/menu.html')
         html = response.content.decode('utf8')
-        self.assertIn('<a class="nav-link" href="1">1. Bush House Book Club</a>',  html)
+        self.assertIn('<a class="nav-link" href="/my_clubs/">My Clubs</a>',  html)
+
