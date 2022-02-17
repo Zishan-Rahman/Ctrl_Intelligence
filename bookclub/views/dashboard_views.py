@@ -7,4 +7,4 @@ from bookclub.models import Club
 
 @login_required
 def home_page(request):
-    return render(request, "home.html")
+    return render(request, "home.html", {'user': request.user})
