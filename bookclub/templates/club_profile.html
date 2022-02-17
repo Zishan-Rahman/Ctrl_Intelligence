@@ -1,8 +1,8 @@
 <!-- club profile page adapted from the chess club project -->
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="home-container">
-  <div class="row-home">
+<div class="container">
+  <div class="row">
       <div>
           <table>
               <tr>
@@ -23,10 +23,10 @@
               </tr>
               <tr>
                 <td class="club-info">
-                    <a href="{% url 'new_application' club.id %}">
+                    <form action="{% url 'new_application' club.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="btn btn-primary" id="apply-button">Apply</button>
-                    </a>
+                    </form>
                 </td>
               </tr>
           </table>
@@ -34,3 +34,4 @@
   </div>
 </div>
 {% endblock %}
+
