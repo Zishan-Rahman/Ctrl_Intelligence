@@ -191,3 +191,7 @@ class MeetingScheduler(LoginRequiredMixin, View):
         current_club=Club.objects.get(pk=pk)
         form = ScheduleMeetingForm()
         return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
+<<<<<<< HEAD
+=======
+
+>>>>>>> 55c483f20883ff0b095f20a66203f2eddc8f3889
