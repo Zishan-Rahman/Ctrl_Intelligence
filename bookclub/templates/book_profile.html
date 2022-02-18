@@ -1,22 +1,24 @@
-<!-- club profile page adapted from the chess club project -->
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
-  <div class="row">
-      <div>
-          <table>
-              <tr>
-                <td>
-                  <a href="{% url 'club_profile' entry.id %}"><img src="{{ club.gravatar }}" alt="Gravatar of {{ club.full_name }}" class="rounded-circle profile-image" ></a>
-                </td>
-                <td> <img src="{{ book.medium_url }}" alt="a"></td>
-                <div class="profile-text">
-                  <td>{{ book.title }}</td>
-                  <td>{{ book.author }}</td>
-                  <td>{{ book.pub_year }}</td>
-
-          </table>
+<style>
+p {
+  line-height: 0.5em;
+  }
+</style>
+<div class="container mt-3">
+  <div class="row content">
+    <div class="col-12">
+      <div class="profile-text">
+        <center>
+          <img src="{{ book.medium_url }}" alt="a">
+          <h3 class="book-title">{{ book.title }}</h3>
+          <hr>
+          <p class="book-isbn">ISBN: {{ book.isbn }}</p>
+          <p class="book-author">Author: {{ book.author }}</p>
+          <p class="book-pub-year">Published Year: {{ book.pub_year }}</p>
+          <p class="book-publisher">Publisher: {{ book.publisher }}</p>
+        </center>
       </div>
+    </div>
   </div>
-</div>
 {% endblock %}
