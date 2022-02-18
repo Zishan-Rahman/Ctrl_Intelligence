@@ -45,14 +45,6 @@ class ApplicationModelTestCase(TestCase):
         self.application.club = None
         self._assert_application_is_invalid()
 
-    # You cannot test for the test below therefore it fails
-
-    '''
-    def test_club_owner_cannot_be_applicant(self) -> None:
-        """Test if a user cannot apply to their own club."""
-        self.application.applicant = self.user_two
-        self._assert_application_is_invalid() '''
-
     def test_club_itself_cannot_be_applicant(self) -> None:
         """Test if a club entity cannot apply to another club."""
         with self.assertRaises(ValueError):

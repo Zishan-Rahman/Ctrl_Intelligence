@@ -2,7 +2,9 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from bookclub.models import User, Club, Application
+from bookclub.models import User, Club, Application, Meeting
+from datetime import datetime
+from django.utils import timezone
 
 class UserForm(forms.ModelForm):
     """Form to update user profiles."""
@@ -125,7 +127,7 @@ class PasswordForm(NewPasswordMixin):
             self.user.save()
         return self.user
 
-      
+
 class ApplicantForm(forms.Form):
     """Form enabling owners to choose which club applications to view."""
     applicants_dropdown = forms.ModelChoiceField(label="Select an applicant", queryset=None)
@@ -150,13 +152,78 @@ class ApplicantForm(forms.Form):
 
         self.fields['applicants_dropdown'].queryset = Application.objects.filter(pk__in=current_applicants_ids)
 
-  
 
 class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
-        fields = ['name', 'description', 'location']
+        fields = ['name', 'description', 'location', 'meeting_type']
+        widgets = {"description": forms.Textarea()}
 
-    def save(self , user ):
+    CHOICES = [
+        (None, 'Choose meeting type'),
+        (True, 'Online'),
+        (False, 'In Person')]
+
+    meeting_type = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
+                                                                                       "online based or meets in "
+                                                                                       "person")
+
+    def clean(self):
+        super().clean()
+        meeting_type = self.cleaned_data.get('meeting_type')
+
+    def save(self, user):
         super().save(commit=False)
-        club = Club.objects.create(name = self.cleaned_data.get('name'),description = self.cleaned_data.get('description'),location = self.cleaned_data.get('location'), owner = user)
+        Club.objects.create(
+            name=self.cleaned_data.get('name'),
+            description=self.cleaned_data.get('description'),
+            location=self.cleaned_data.get('location'),
+            owner=user,
+            meeting_online=self.cleaned_data.get('meeting_type')
+        )
+
+class ApplicationForm(forms.ModelForm):
+    """Form that enables applicants to apply to clubs"""
+    class Meta:
+        model = Application
+        fields = "__all__"
+
+    def save(self, user):
+        """Create a new application."""
+        club = self.cleaned_data.get('applicants_dropdown')
+        app = Application.objects.create(
+            club=self.cleaned_data.get('club'),
+            applicant=self.cleaned_data.get('applicant'),
+        )
+        app.save()
+        return app
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class TimeInput(forms.DateInput):
+    input_type = 'time'
+
+class ScheduleMeetingForm(forms.ModelForm):
+
+    class Meta:
+        model = Meeting
+        fields = ['date', 'time']
+        widgets = { 'date': DateInput(), 'time': TimeInput(),}
+
+    def clean(self):
+        now = timezone.now()
+        date = self.cleaned_data['date']
+        time = self.cleaned_data['time']
+        if date < datetime.now().date():
+            raise forms.ValidationError("The meeting cannot be in the past!")
+        elif date == datetime.now().date() and time < datetime.now().time():
+            raise forms.ValidationError("The meeting cannot be in the past!")
+
+    def save(self, club):
+        super().save(commit=False)
+        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club)
+
+
+

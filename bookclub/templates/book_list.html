@@ -1,11 +1,15 @@
 <!-- club list page adapted from the chess club project -->
 {% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
 {% block content %}
-<div class="container-applications">
+
+<div class="container">
   <div class="book-table">
-      <table class="table">
+    {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+    <table class="table table-hover">
         <thead>
       <tr>
+        <th scope="col"></th>
         <th scope="col">Title</th>
         <th scope="col">Author</th>
         <th scope="col">Publication Year</th>
@@ -14,6 +18,7 @@
     <tbody>
       {% for entry in books %}
       <tr>
+        <td> <img src="{{ entry.medium_url }}" alt="a"></td>
         <td>{{ entry.title }}</td>
         <td>{{ entry.author }}</td>
         <td>{{ entry.pub_year }}</td>
@@ -21,6 +26,9 @@
       {% endfor %}
     </tbody>
       </table>
+      {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
   </div>
 </div>
+
+
 {% endblock %}

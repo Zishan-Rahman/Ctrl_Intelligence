@@ -6,17 +6,19 @@
       "name": "Bush House Book Club",
       "description": "Bush House Official Book Club!",
       "location": "Strand, London",
-      "owner": 1
+      "owner": 1,
+      "meeting_online": true
     }
   },
     {
     "model": "bookclub.club",
     "pk": 2,
     "fields": {
-      "name": "Somserset House Book Club",
+      "name": "Somerset House Book Club",
       "description": "Somerset House Official Book Club!",
       "location": "Strand, London",
-      "owner": 2
+      "owner": 2,
+      "meeting_online": true
     }
   },
   {
@@ -26,8 +28,8 @@
       "name": "Strand House Book Club",
       "description": "Strand House Official Book Club!",
       "location": "Strand, London",
-      "owner": 1
+      "owner": 1,
+      "meeting_online": false
     }
   }
 ]
-

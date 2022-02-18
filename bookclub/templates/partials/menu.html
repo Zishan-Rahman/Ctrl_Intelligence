@@ -6,27 +6,35 @@
     <li class="nav-item">
       <a class="nav-link" href="{% url 'user_list' %}">Users</a>
     </li>
-
+    <li class="nav-item">
+    <a class="nav-link" href="{% url 'book_list' %}">Books</a>
+  </li>
     <li class="nav-item">
       <a class="nav-link" href="{% url 'applications' %}">Applications</a>
     </li>
 
     {% for entry in club_memberships %}
     <li class="nav-item">
-      <a class="nav-link" href="#">{{ entry.get_name }}</a>
+      <a class="nav-link" href="{{ entry.id }}">{{ forloop.counter }}. {{ entry.get_name }}</a>
     </li>
     {% endfor %}
+<<<<<<< HEAD
 
       <li class="nav-item">
       <a class="nav-link" href="{% url 'book_list' %}">Books</a>
     </li>
+=======
+>>>>>>> 9a1ba4c6ddf0bed887d962562c16c2893279d1ce
   </ul>
   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    <li class="nav-item"><a class="nav-link" href="{% url 'club_selector' %}">My Clubs</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'my_applications' %}">My Applications</a></li>
     <li class="nav-item dropdown">
       <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="bi-person-circle"></span>
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-account-dropdown">
+        <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{% url 'profile' %}">Edit profile</a></li>
         <li><a class="dropdown-item" href="{% url 'password' %}">Edit password</a></li>
         <li><hr class="dropdown-divider"></li>

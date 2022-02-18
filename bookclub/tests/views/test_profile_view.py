@@ -37,7 +37,7 @@ class ProfileViewTest(TestCase):
         self.assertTemplateUsed(response, 'profile.html')
 
     def test_get_profile(self):
-        self.client.login(email='johndoe@bookclub.com', password='Password123')
+        self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'profile.html')

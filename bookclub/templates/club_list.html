@@ -1,34 +1,51 @@
 <!-- club list page adapted from the chess club project -->
 {% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
 {% block content %}
-<div class="container-applications">
+<div class="container">
   <div class="application-title">
-    <h1>Clubs</h1>
-    <p></p>
-    <a href="{% url 'new_club' %}" style='text-decoration:none; color:brown;'>To create a new club, click here!</a>
-    <p></p>
+      <div class="row">
+          <div class="col">
+              <h1>Clubs</h1>
+          </div>
+
+          <div class="col">
+    <a class="btn float-end" href="{% url 'new_club' %}" style='padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-plus-circle"></i> Create club</a>
+          </div>
+
+      </div>
   </div>
   <div class="book-table">
-      <table class="table">
+    {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+    <table class="table table-hover">
         <thead>
       <tr>
-        <th scope="col">#</th>
+        <th scope="col">Profile Picture</th>
         <th scope="col">Name</th>
+        <th scope="col">Owner</th>
         <th scope="col">Description</th>
         <th scope="col">Location</th>
+        <th scope="col">Meeting Type</th>
       </tr>
     </thead>
     <tbody>
       {% for entry in clubs %}
+
+
       <tr>
-        <td scope="row">{{ forloop.counter }}</td>
+        <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
         <td>{{ entry.name }}</td>
+        <td><a href="mailto:{{entry.owner.email}}">{{ entry.owner.first_name }} {{ entry.owner.last_name }}</a></td>
         <td>{{ entry.description }}</td>
         <td>{{ entry.location }}</td>
+        <td style="text-transform: capitalize;">{% include 'partials/club_meeting_type.html' with club=entry %}</td>
       </tr>
+
+
       {% endfor %}
     </tbody>
       </table>
+      {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
   </div>
 </div>
 {% endblock %}

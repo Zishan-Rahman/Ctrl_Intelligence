@@ -2,19 +2,21 @@
 {% load static %}
 {% block body %}
 <div id ="cover-image">
-  <div class="container vh-100">
     <div class="row h-100">
-      <div class="col-12 my-auto">
-        <div class="card cover-card mx-auto">
-          <h1 class="cover-heading fw-bold text-center" style="font-size: 36px"> <img src="{% static 'images/bookwise.svg' %}" height="60" width="40">ookwise</h1>
+
+        <div class="card cover-card vh-100 align-right">
+          <h1 class="cover-heading fw-bold text-left" style="font-size: 36px;color:white"> <img src="{% static 'images/bookwise.svg' %}" height="60" width="40">ookwise</h1>
+          <br><br>
+          <p class="cover-heading fw-bold text-left" style="font-size: 48px;color:white">Make reading social</p>
           <br>
-            <p class="cover-text fw-bold text-muted text-center" style="font-size: 14px;text-transform:uppercase;"><strong>Connect with Fellow Book Lovers</strong></p>
+          <div class="vertical-center-bottom">
+            <p class="cover-text fw-bold text-muted text-center" style="font-size: 14px;text-transform:uppercase"><strong>Connect with Fellow Book Lovers</strong></p>
             <br>
             <div class="container text-center">
             <a href="{% url 'log_in' %}" class="btn btn-lg btn-secondary" style="background-color: brown">
               Log in
             </a>
-            <div class="content" style="padding-top: 5px; padding-bottom: 5px">
+            <div class="content" style="padding-top: 5px; padding-bottom: 5px; color:white">
                 <div class="row">
                     <div class="col">
             <hr style="width: 100%">
@@ -29,14 +31,13 @@
             </div>
 
           <p>
-            <a href="{% url 'sign_up' %}" class="btn btn-lg btn-dark">
+            <a href="{% url 'sign_up' %}" class="btn btn-lg" style="background-color: white; color: brown">
               Sign up
             </a>
           </p>
             </div>
-        </div>
-      </div>
-    </div>
+          </div>
+        </div>  
   </div>
 </div>
 {% endblock%}

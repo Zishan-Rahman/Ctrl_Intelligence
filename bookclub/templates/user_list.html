@@ -1,13 +1,35 @@
 {% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
 {% block content %}
-    <div class="container">
-    <div class="row">
-        <div class="col-12">
-   <body>
-      <h1>Bookwise</h1>
-      <p>This is the user list page</p>
-   </body>
-        </div>
-</div>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>Users</h1>
+      {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+      <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Bio</th>
+                <th scope="col">Email</th>
+                <th scope="col">Favourite Genre</th>
+            </tr>
+          </thead>
+        <tbody>
+          {% for user in users %}
+              <tr>
+                <td>{{ user.first_name}}</td>
+                <td>{{ user.last_name}}</td>
+                <td>{{ user.public_bio}}</td>
+                <td>{{ user.email}}</td>
+                <td>{{ user.favourite_genre }}</td>
+              </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
     </div>
+  </div>
+</div>
 {% endblock %}
