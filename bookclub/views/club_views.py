@@ -60,4 +60,5 @@ def new_club(request):  # new club adapted from the chess club project
 def club_profile(request, club_id):
     """ Individual Club's Profile Page """
     club = Club.objects.get(id = club_id)
-    return render(request, 'club_profile.html',{'club':club})
+    current_user = request.user
+    return render(request, 'club_profile.html',{'club':club, 'current_user':current_user})
