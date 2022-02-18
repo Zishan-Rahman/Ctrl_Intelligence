@@ -37,6 +37,7 @@ urlpatterns = [
     path('club_profile/<int:club_id>/', club_views.club_profile, name='club_profile'),
     path('my_clubs/', club_views.club_selector, name='club_selector'),
     path('my_clubs1/', club_views.club_selector_alt, name="club_selector_alt"),
+    path('my_applications/', club_related_views.MyApplicationsView.as_view(), name='my_applications'),
     path('new_club/', club_views.new_club, name='new_club'),
     path('club_profile/<int:pk>/meeting/', club_related_views.MeetingScheduler.as_view(), name='schedule_meeting'),
 ]

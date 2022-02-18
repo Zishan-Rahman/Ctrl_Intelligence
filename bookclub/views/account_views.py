@@ -12,6 +12,8 @@ from django.urls import reverse
 from django.views.generic.edit import FormView, UpdateView
 
 def landing_page(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     return render(request, 'landing_page.html')
 
 @login_required
