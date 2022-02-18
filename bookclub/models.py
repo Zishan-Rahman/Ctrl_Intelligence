@@ -243,7 +243,6 @@ class Meeting(models.Model):
     date = models.DateField()
     time = models.TimeField()
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
-    
 
     def get_meeting_club(self):
         return self.club

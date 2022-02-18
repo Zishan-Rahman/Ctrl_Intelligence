@@ -22,7 +22,6 @@ class Command(BaseCommand):
         print('Please wait, the books are being unseeded...', end='\r')
         Book.objects.all().delete()
         print("[ COMPLETED: The books have successfully been unseeded ]")
-        print()
 
         print()
         print('Please wait, the ratings are being unseeded...', end='\r')
