@@ -1,0 +1,22 @@
+<!-- club profile page adapted from the chess club project -->
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+  <div class="row">
+      <div>
+          <table>
+              <tr>
+                <td>
+                  <a href="{% url 'club_profile' entry.id %}"><img src="{{ club.gravatar }}" alt="Gravatar of {{ club.full_name }}" class="rounded-circle profile-image" ></a>
+                </td>
+                <td> <img src="{{ book.medium_url }}" alt="a"></td>
+                <div class="profile-text">
+                  <td>{{ book.title }}</td>
+                  <td>{{ book.author }}</td>
+                  <td>{{ book.pub_year }}</td>
+
+          </table>
+      </div>
+  </div>
+</div>
+{% endblock %}
