@@ -6,7 +6,7 @@ from bookclub.models import Club, User, Meeting
 from datetime import timedelta, date, time, datetime
 
 
-class CreateClubTestForm(TestCase):
+class ScheduleMeetingTestCase(TestCase):
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
