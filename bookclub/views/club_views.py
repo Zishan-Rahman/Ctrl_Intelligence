@@ -60,7 +60,7 @@ def club_list(request):
             "mini_gravatar": club.mini_gravatar(),
             "gravatar": club.gravatar()
         })
-    return render(request, 'club_list.html', {'clubs':clubs})
+    return render(request, 'club_list.html', {'clubs': clubs})
 
 
 @login_required
