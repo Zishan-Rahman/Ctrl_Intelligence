@@ -14,7 +14,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """ Loads the given dataset into the database"""
+
         seed_possible = self.verify_seeding_possible()
+
+        seeder_disclaimer = input("This seeder can take almost 15 minutes to complete."
+                                  " If you simply need users, books and clubs then use"
+                                  "seed.py. Are you sure you want to continue? Y/N").lower()
+
+        if seeder_disclaimer != "y":
+            seed_possible = False
+
         if seed_possible:
             print()
             print('SEED USERS:')
@@ -27,7 +36,8 @@ class Command(BaseCommand):
             self.load_ratings()
         else:
             print()
-            print('The database must first be unseeded.')
+            print('You have either chosen to abort the advanced seeder or...')
+            print('the database must first be unseeded.')
             print('To do this, enter the command below:')
             print('> python3 manage.py unseed')
             print()
