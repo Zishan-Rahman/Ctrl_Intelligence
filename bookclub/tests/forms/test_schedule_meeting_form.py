@@ -28,25 +28,25 @@ class ScheduleMeetingTestCase(TestCase):
         }
 
     def test_schedule_meeting_form_has_necessary_fields(self):
-        form = ScheduleMeetingForm(club=self.bush_club)
+        form = ScheduleMeetingForm()
         self.assertIn('date', form.fields)
         self.assertIn('time', form.fields)
 
     def test_valid_schedule_meeting_form(self):
-        form = ScheduleMeetingForm(club=self.bush_club, data=self.form_input)
+        form = ScheduleMeetingForm(data=self.form_input)
         self.assertTrue(form.is_valid())
 
     def test_form_accepts_valid_date_time(self):
-        form = ScheduleMeetingForm(club=self.bush_club,data=self.form_input)
+        form = ScheduleMeetingForm(data=self.form_input)
         self.assertTrue(form.is_valid())
 
     def test_form_rejects_past_date(self):
         self.form_input['date'] = self.yesterday
-        form = ScheduleMeetingForm(club=self.bush_club,data=self.form_input)
+        form = ScheduleMeetingForm(data=self.form_input)
         self.assertFalse(form.is_valid())
 
     def test_form_rejects_current_date_past_time(self):
         self.form_input['date'] = self.today
         self.form_input['time'] = self.past_time
-        form = ScheduleMeetingForm(club=self.bush_club,data=self.form_input)
+        form = ScheduleMeetingForm(data=self.form_input)
         self.assertFalse(form.is_valid())

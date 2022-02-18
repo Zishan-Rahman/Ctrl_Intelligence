@@ -211,12 +211,6 @@ class ScheduleMeetingForm(forms.ModelForm):
         fields = ['date', 'time']
         widgets = { 'date': DateInput(), 'time': TimeInput(),}
 
-    def __init__(self, club, **kwargs):
-        """Construct new form instance with a club instance."""
-
-        super().__init__(**kwargs)
-        self.club=club
-
     def clean(self):
         now = timezone.now()
         date = self.cleaned_data['date']
@@ -228,7 +222,7 @@ class ScheduleMeetingForm(forms.ModelForm):
 
     def save(self, club):
         super().save(commit=False)
-        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=self.club)
+        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club)
 
 
 

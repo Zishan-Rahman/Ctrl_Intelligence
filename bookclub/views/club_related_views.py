@@ -99,9 +99,8 @@ class MeetingScheduler(LoginRequiredMixin, View):
     def post(self, request, pk):
         """Handle scheduling attempt."""
 
-        form = ScheduleMeetingForm(request.POST)
         current_club=Club.objects.get(pk=pk)
-        #current_club=Club.objects.all()[0] #Change as soon as club profile is done
+        form = ScheduleMeetingForm(request.POST)
         if form.is_valid():
             meeting = form.save(club=current_club)
             messages.add_message(request, messages.SUCCESS, "The meeting was scheduled!")
@@ -111,7 +110,7 @@ class MeetingScheduler(LoginRequiredMixin, View):
 
     def render(self, pk):
         """Render meeting scheduler form"""  
-
+        current_club=Club.objects.get(pk=pk)
         form = ScheduleMeetingForm()
         return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
 
