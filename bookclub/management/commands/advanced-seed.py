@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
-from bookclub.models import User, Club, Book
+from bookclub.models import User, Club, Book, Rating
 import csv
+from django.core.exceptions import ValidationError
 
 
 class Command(BaseCommand):
@@ -22,6 +23,8 @@ class Command(BaseCommand):
             self.default_superuser()
             print('SEED BOOKS:')
             self.load_books()
+            print('SEED RATINGS')
+            self.load_ratings()
         else:
             print()
             print('The database must first be unseeded.')
@@ -41,7 +44,6 @@ class Command(BaseCommand):
             seed_possible = False
 
         return seed_possible
-
 
     def load_users(self):
         count = 0
@@ -74,7 +76,7 @@ class Command(BaseCommand):
                 users.append(user)
 
                 count += 1
-                percent_complete = float((count/278859)*100)
+                percent_complete = float((count / 278859) * 100)
 
                 print(f'[ DONE: {round(percent_complete)}% | {count}/{self.TOTAL_USERS_IN_DATASET} ]', end='\r')
                 if len(users) > 5000:
@@ -114,7 +116,7 @@ class Command(BaseCommand):
                 )
                 books.append(book)
                 count += 1
-                percent_complete = float((count/271380)*100)
+                percent_complete = float((count / 271380) * 100)
 
                 print(f'[ DONE: {round(percent_complete)}% | {count}/{self.TOTAL_BOOKS_IN_DATASET} ]', end='\r')
 
@@ -127,3 +129,38 @@ class Command(BaseCommand):
             print("The books have been successfully seeded")
             print()
 
+    def load_ratings(self):
+        count = 0
+        file_path_users = "data/BX-Book-Ratings.csv"
+
+        with open(file_path_users, encoding='cp1252') as rating_csv_file:
+            data = csv.reader(rating_csv_file, delimiter=";")
+            next(data)
+            ratings = []
+            for row in data:
+                user_getter = int(row[0])
+                user = User.objects.filter(id=user_getter).get()
+
+                if not user:
+                    user = None
+
+                rating = Rating(
+                    user=user,
+                    isbn=row[1],
+                    rating=int(row[2])
+                )
+
+                ratings.append(rating)
+                count += 1
+                percent_complete = float((count / 1149780) * 100)
+
+                print(f'[ DONE: {round(percent_complete)}% | {count}/{1149780} ]', end='\r')
+
+                if len(ratings) > 5000:
+                    Rating.objects.bulk_create(ratings)
+                    ratings = []
+
+            if ratings:
+                Rating.objects.bulk_create(ratings)
+            print("The ratings have been successfully seeded")
+            print()

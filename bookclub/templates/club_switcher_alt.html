@@ -1,6 +1,6 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
+<div class="container" style="padding-bottom: 50px">
     <div class="row">
         <div class="col-3">
             <div class="text">
@@ -25,7 +25,7 @@
     {% for user_club in user_clubs %}
 
           <div class="col">
-            <div class="card h-100">
+            <div class="card h-100" style="border-color: brown">
                 <div class="row" style="margin-top: 5px">
                     <div class="col text-center">
                         <img src="{{ user_club.gravatar }}" class="card-img" style="height: 120px; width: 120px">
