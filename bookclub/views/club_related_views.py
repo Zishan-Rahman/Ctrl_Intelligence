@@ -32,7 +32,7 @@ class ApplicationsView(LoginRequiredMixin, View):
             if c.owner == current_user:
                 owned_clubs.append(c)
 
-        for a in Application.objects.all():
+        for a in Application.objects.all().order_by('applicant_id'):
             if a.club in owned_clubs:
                 applicants.append(a)
         paginator = Paginator(applicants, 1)
