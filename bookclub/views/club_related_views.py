@@ -35,11 +35,12 @@ from django.core.paginator import Paginator
 #         for a in Application.objects.all():
 #             if a.club in owned_clubs:
 #                 applicants.append(a)
+#
 #         paginator = Paginator(applicants, 1)
 #         page_number = self.request.GET.get('page')
 #         page_obj = paginator.get_page(page_number)
-#         return render(self.request, 'applications.html', {'page_obj': page_obj, 'applicants' : applicants})
-#
+#         return render(self.request, 'applications.html', {'applicants' : applicants, 'page_obj': page_obj})
+
 
 class ApplicationsView(LoginRequiredMixin, ListView):
     """View that handles club applications."""
@@ -66,7 +67,7 @@ class ApplicationsView(LoginRequiredMixin, ListView):
     #             applicants.append(a)
     #     context['applicants'] = applicants
     #     return context
-    
+
     def render(self):
         current_user = self.request.user
         """Render all applications of this user's owned clubs"""
