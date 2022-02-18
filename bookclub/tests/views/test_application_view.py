@@ -48,10 +48,13 @@ class ApplicationViewTestCase(TestCase):
 
     def test_no_applications(self):
         self.client.login(email=self.joe.email, password='Password123')
+        applications = Application.objects.all()
+        for a in applications:
+            a.delete()
+
         response = self.client.get(reverse('applications'))
-        html = response.content.decode('utf8')
-        print(response.context['applicants'])
-        self.assertIn('You have no pending applications.', html)
+        html = response.content.decode('utf8')        
+        self.assertIn('<h3>You have no pending applications.</h3>', html)
         self.assertNotIn('<td>', html)
         self.assertNotIn('</td>', html)
 
