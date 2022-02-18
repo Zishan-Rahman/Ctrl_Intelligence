@@ -57,10 +57,10 @@ class MyApplicationsView(LoginRequiredMixin, View):
                 clubs.append(c)
         
         for a in Application.objects.all():
-            if a.club not in clubs:
+            if a.club in clubs:
                 my_applications.append(a)
                                                                                                                                
-        return render(self.request, 'my_applications.html', {'applicants': my_applications})
+        return render(self.request, 'my_applications.html', {'applications': my_applications})
     
 
 def app_accept(request, pk):
