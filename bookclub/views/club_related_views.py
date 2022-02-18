@@ -109,5 +109,5 @@ def new_application(request, club_id):
                                  f"already applied.")
 
 
-    return render(request, "club_list.html")
+    return redirect('my_applications')
 
