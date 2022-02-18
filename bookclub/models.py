@@ -195,12 +195,18 @@ class Application(models.Model):
 
 class Meeting(models.Model):
     """A model for denoting and storing meetings."""
-    date = models.DateTimeField()
+    date = models.DateField()
     time = models.TimeField()
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
+    
 
     def get_meeting_club(self):
         return self.club
 
-    def get_meeting_date_time(self):
-        return self.date_time
+    def get_meeting_date(self):
+        return self.date
+
+    def get_meeting_time(self):
+        return self.time
+
+
