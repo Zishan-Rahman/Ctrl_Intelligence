@@ -9,7 +9,6 @@
       <h3>You have no pending applications.</h3>
       {% endif %}
       <div class=book-table>
-        {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
       <table class="table">
         <thead class="table-light">
           <tr>
@@ -40,7 +39,7 @@
       </tr>
     {% endfor %}
   </table>
-  {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+
     </div>
    </body>
         </div>
