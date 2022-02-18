@@ -1,10 +1,12 @@
 <!-- club list page adapted from the chess club project -->
 {% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
 {% block content %}
 
 <div class="container">
   <div class="book-table">
-      <table class="table table-hover">
+    {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+    <table class="table table-hover">
         <thead>
       <tr>
         <th scope="col"></th>
@@ -24,6 +26,7 @@
       {% endfor %}
     </tbody>
       </table>
+      {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
   </div>
 </div>
 
