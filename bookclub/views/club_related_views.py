@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
-from bookclub.forms import  ApplicantForm, ApplicationForm
+from bookclub.forms import  ApplicantForm, ApplicationForm, ScheduleMeetingForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -110,4 +110,32 @@ def new_application(request, club_id):
 
 
     return redirect('my_applications')
+
+
+class MeetingScheduler(LoginRequiredMixin, View):
+    """View that handles meeting scheduling."""
+
+    http_method_names = ['get', 'post']
+
+    def get(self, request, pk):
+        """Display meeting scheduler template"""
+        return self.render(pk)
+
+    def post(self, request, pk):
+        """Handle scheduling attempt."""
+
+        current_club=Club.objects.get(pk=pk)
+        form = ScheduleMeetingForm(request.POST)
+        if form.is_valid():
+            meeting = form.save(club=current_club)
+            messages.add_message(request, messages.SUCCESS, "The meeting was scheduled!")
+            return redirect('home')
+        messages.add_message(request, messages.ERROR, "The meeting was unable to be scheduled!")
+        return self.render(pk)
+
+    def render(self, pk):
+        """Render meeting scheduler form"""  
+        current_club=Club.objects.get(pk=pk)
+        form = ScheduleMeetingForm()
+        return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
 

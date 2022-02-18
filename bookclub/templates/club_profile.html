@@ -24,12 +24,17 @@
               </tr>
               <tr>
                 <td class="club-info">
+                    {% if current_user == club.owner %}
+                      <a class="btn btn-default" href="{% url 'schedule_meeting' pk=club.pk %}"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>
+                    {%else%}
                     <form action="{% url 'new_application' club.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="btn btn-primary" id="apply-button">Apply</button>
                     </form>
+                    {%endif%}
                 </td>
               </tr>
+              
           </table>
       </div>
   </div>
