@@ -1,0 +1,34 @@
+{% extends 'base_content.html' %}
+{% block content %}
+    <div class="container">
+    <div class="row">
+        <div class="col-12">
+   <body>
+      {% if not applicants %}
+      <h3>You have no pending applications.</h3>
+      {%endif%}
+      <table class="table">
+        <thead class="table-light">
+          <tr>
+            <th scope="col" style="width:15%">Club Applying To</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Date Joined</th>
+            <th scope="col" style="width:30%">Bio</th>
+            <th scope="col">Favourite Genre</th>
+            <th scope="col">Location</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+    {% for a in applicants %}
+      <tr>
+        <td>{{ a.club.name }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+   </body>
+        </div>
+</div>
+    </div>
+{% endblock %}

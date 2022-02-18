@@ -38,6 +38,31 @@ class ApplicationsView(LoginRequiredMixin, View):
         return render(self.request, 'applications.html', {'applicants': applicants})
 
 
+class MyApplicationsView(LoginRequiredMixin, View):
+    """View that handles the currently logged in user's applications (as opposed to applications of their own clubs"""
+
+    http_method_names = ['get']
+
+    def get(self, request):
+        """Display application template"""
+        return self.render()
+
+    def render(self):
+        current_user = self.request.user
+        """Render all applications of this user's owned clubs"""     
+        clubs = []
+        my_applications = []
+        for c in Club.objects.all():
+            if c.owner is not current_user:
+                clubs.append(c)
+        
+        for a in Application.objects.all():
+            if a.club not in clubs:
+                my_applications.append(a)
+                                                                                                                               
+        return render(self.request, 'my_applications.html', {'applicants': my_applications})
+    
+
 def app_accept(request, pk):
     """Accept application"""
     app = Application.objects.all().get(pk=pk)
