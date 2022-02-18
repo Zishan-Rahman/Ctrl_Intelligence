@@ -181,6 +181,7 @@ class ClubForm(forms.ModelForm):
         )
 
 class ApplicationForm(forms.ModelForm):
+    """Form that enables applicants to apply to clubs"""
     class Meta:
         model = Application
         fields = "__all__"
