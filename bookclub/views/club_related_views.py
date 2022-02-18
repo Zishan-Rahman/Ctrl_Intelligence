@@ -14,59 +14,13 @@ from bookclub.views import club_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
 
-# class ApplicationsView(LoginRequiredMixin, View):
-#     """View that handles club applications."""
-#
-#     http_method_names = ['get']
-#
-#     def get(self, request):
-#         """Display application template"""
-#         return self.render()
-#
-#     def render(self):
-#         current_user = self.request.user
-#         """Render all applications of this user's owned clubs"""
-#         owned_clubs = []
-#         applicants = []
-#         for c in Club.objects.all():
-#             if c.owner == current_user:
-#                 owned_clubs.append(c)
-#
-#         for a in Application.objects.all():
-#             if a.club in owned_clubs:
-#                 applicants.append(a)
-#
-#         paginator = Paginator(applicants, 1)
-#         page_number = self.request.GET.get('page')
-#         page_obj = paginator.get_page(page_number)
-#         return render(self.request, 'applications.html', {'applicants' : applicants, 'page_obj': page_obj})
-
-
 class ApplicationsView(LoginRequiredMixin, ListView):
     """View that handles club applications."""
 
     model = Application
     template_name = "applications.html"
     context_object_name = "applicants"
-    paginate_by = 10
-    #
-    # def get(self, request):
-    #     """Display application template"""
-    #     return self.render()
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     current_user = self.request.user
-    #     owned_clubs = []
-    #     applicants = []
-    #     for c in Club.objects.all():
-    #         if c.owner == current_user:
-    #             owned_clubs.append(c)
-    #     for a in Application.objects.all():
-    #         if a.club in owned_clubs:
-    #             applicants.append(a)
-    #     context['applicants'] = applicants
-    #     return context
+    paginate_by = settings.APPLICATIONS_PER_PAGE
 
     def render(self):
         current_user = self.request.user
@@ -191,7 +145,3 @@ class MeetingScheduler(LoginRequiredMixin, View):
         current_club=Club.objects.get(pk=pk)
         form = ScheduleMeetingForm()
         return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
-<<<<<<< HEAD
-=======
-
->>>>>>> 55c483f20883ff0b095f20a66203f2eddc8f3889
