@@ -5,11 +5,11 @@
     <div class="row">
         <div class="col-12">
    <body>
-     {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
       {% if not applicants %}
       <h3>You have no pending applications.</h3>
-      {%endif%}
+      {% endif %}
       <div class=book-table>
+        {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
       <table class="table">
         <thead class="table-light">
           <tr>

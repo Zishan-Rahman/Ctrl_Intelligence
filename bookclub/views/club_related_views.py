@@ -14,63 +14,15 @@ from bookclub.views import club_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
 
-class ApplicationsView(LoginRequiredMixin, View):
-    """View that handles club applications."""
-
-    http_method_names = ['get']
-
-    def get(self, request):
-        """Display application template"""
-        return self.render()
-
-    def render(self):
-        current_user = self.request.user
-        """Render all applications of this user's owned clubs"""
-        owned_clubs = []
-        applicants = []
-        for c in Club.objects.all():
-            if c.owner == current_user:
-                owned_clubs.append(c)
-
-        for a in Application.objects.all().order_by('applicant_id'):
-            if a.club in owned_clubs:
-                applicants.append(a)
-        paginator = Paginator(applicants, 1)
-        page_number = self.request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        return render(self.request, 'applications.html', {'page_obj': page_obj, 'applicants' : applicants})
-
-
-# class ApplicationsView(LoginRequiredMixin, ListView):
+# class ApplicationsView(LoginRequiredMixin, View):
 #     """View that handles club applications."""
 #
-#     model = Application
-#     template_name = "applications.html"
-#     context_object_name = "applicants"
-#     #queryset = Application.objects.all()
-#     paginate_by = settings.APPLICATIONS_PER_PAGE
+#     http_method_names = ['get']
 #
 #     def get(self, request):
 #         """Display application template"""
 #         return self.render()
 #
-#     # def get_context_data(self, **kwargs):
-#     #     context = super().get_context_data(**kwargs)
-#     #     current_user = self.request.user
-#     #     owned_clubs = []
-#     #     applicants = []
-#     #     for c in Club.objects.all():
-#     #         if c.owner == current_user:
-#     #             owned_clubs.append(c)
-#     #     for a in Application.objects.all():
-#     #         if a.club in owned_clubs:
-#     #             applicants.append(a)
-#     #     context['applicants'] = applicants
-#     #     memberships = Club.objects.filter(members=current_user) | Club.objects.filter(organisers=current_user) | Club.objects.filter(owner=current_user)
-#     #     context['club_memberships'] = memberships
-#     #     #context['applicants'] = applicants
-#     #     return context
-#     #
 #     def render(self):
 #         current_user = self.request.user
 #         """Render all applications of this user's owned clubs"""
@@ -84,7 +36,52 @@ class ApplicationsView(LoginRequiredMixin, View):
 #             if a.club in owned_clubs:
 #                 applicants.append(a)
 #
-#         return render(self.request, 'applications.html', {'applicants': applicants})
+#         paginator = Paginator(applicants, 1)
+#         page_number = self.request.GET.get('page')
+#         page_obj = paginator.get_page(page_number)
+#         return render(self.request, 'applications.html', {'applicants' : applicants, 'page_obj': page_obj})
+
+
+class ApplicationsView(LoginRequiredMixin, ListView):
+    """View that handles club applications."""
+
+    model = Application
+    template_name = "applications.html"
+    context_object_name = "applicants"
+    paginate_by = 10
+    #
+    # def get(self, request):
+    #     """Display application template"""
+    #     return self.render()
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     current_user = self.request.user
+    #     owned_clubs = []
+    #     applicants = []
+    #     for c in Club.objects.all():
+    #         if c.owner == current_user:
+    #             owned_clubs.append(c)
+    #     for a in Application.objects.all():
+    #         if a.club in owned_clubs:
+    #             applicants.append(a)
+    #     context['applicants'] = applicants
+    #     return context
+
+    def render(self):
+        current_user = self.request.user
+        """Render all applications of this user's owned clubs"""
+        owned_clubs = []
+        applicants = []
+        for c in Club.objects.all():
+            if c.owner == current_user:
+                owned_clubs.append(c)
+
+        for a in Application.objects.all():
+            if a.club in owned_clubs:
+                applicants.append(a)
+
+        return render(self.request, 'applications.html', {'applicants': applicants})
 
 def app_accept(request, pk):
     """Accept application"""
@@ -112,7 +109,8 @@ def new_application(request, club_id):
         messages.add_message(request, messages.SUCCESS, f"Application to {Club.objects.get(pk=club_id).name} was successfully submitted!")
     else:
         messages.add_message(request, messages.ERROR, f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}")
-    return redirect('applications')
+        return redirect('applications')
+        
     club_applied_to = Club.objects.get(pk=club_id)
     application_is_possible = True
 
