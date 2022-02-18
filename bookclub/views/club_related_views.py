@@ -57,7 +57,7 @@ class MyApplicationsView(LoginRequiredMixin, View):
                 clubs.append(c)
         
         for a in Application.objects.all():
-            if a.club in clubs:
+            if a.club in clubs and a.applicant == current_user:
                 my_applications.append(a)
                                                                                                                                
         return render(self.request, 'my_applications.html', {'applications': my_applications})
