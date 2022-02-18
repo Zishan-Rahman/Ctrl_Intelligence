@@ -1,0 +1,30 @@
+{% extends 'base_content.html' %}
+{% block content %}
+    <div class="container">
+    <div class="row">
+        <div class="col-12">
+   <body>
+      {% if not applications %}
+      <h3>You have no pending applications.</h3>
+      {%endif%}
+      <table class="table">
+        <thead class="table-light">
+          <tr>
+            <th scope="col" style="width:25%">Club Applying To</th>
+            <th scope="col" style="width:50%">Description</th>
+            <th scope="col">Location</th>
+          </tr>
+        </thead>
+    {% for a in applications %}
+      <tr>
+        <td>{{ a.club.name }}</td>
+        <td>{{ a.club.description }}</td>
+        <td>{{ a.club.location }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+   </body>
+        </div>
+</div>
+    </div>
+{% endblock %}

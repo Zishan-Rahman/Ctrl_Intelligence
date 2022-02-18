@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from bookclub.models import User, Club, Book
+from bookclub.models import User, Club, Book, Rating
 
 
 class Command(BaseCommand):
@@ -22,4 +22,9 @@ class Command(BaseCommand):
         print('Please wait, the books are being unseeded...', end='\r')
         Book.objects.all().delete()
         print("[ COMPLETED: The books have successfully been unseeded ]")
+
+        print()
+        print('Please wait, the ratings are being unseeded...', end='\r')
+        Rating.objects.all().delete()
+        print("[ COMPLETED: The ratings have successfully been unseeded ]")
         print()
