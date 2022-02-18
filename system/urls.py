@@ -21,15 +21,6 @@ from bookclub.views import account_views, authentication_views, dashboard_views,
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', account_views.landing_page, name='landing_page'),
-<<<<<<< HEAD
-    path('sign_up/', views.sign_up, name='sign_up'),
-    path('log_in/', views.LogInView.as_view(), name='log_in'),
-    path('log_out/', views.log_out, name='log_out'),
-    path('home/', dashboard_views.home_page , name = 'home'),
-    path('user/', account_views.user_list , name = 'user_list'),
-    path('club/', club_views.club_list , name = 'club_list'),
-    path('book/', book_views.BookListView , name = 'book_list'),
-=======
     path('users/', account_views.UsersListView.as_view() , name = 'user_list'),
     path('clubs/', club_views.ClubsListView.as_view() , name = 'club_list'),
     path('books/', book_views.BooksListView.as_view() , name = 'book_list'),
@@ -37,16 +28,11 @@ urlpatterns = [
     path('log_in/', authentication_views.LogInView.as_view(), name='log_in'),
     path('log_out/', authentication_views.log_out, name='log_out'),
     path('home/', dashboard_views.home_page, name='home'),
->>>>>>> 9a1ba4c6ddf0bed887d962562c16c2893279d1ce
     path('password/', account_views.PasswordView.as_view(), name='password'),
     path('profile/', account_views.ProfileUpdateView.as_view(), name='profile'),
     path('applications/', club_related_views.ApplicationsView.as_view(), name='applications'),
     path('applications/accept/<int:pk>/', club_related_views.app_accept, name='app_accept'),
     path('applications/remove/<int:pk>/', club_related_views.app_remove, name='app_remove'),
-<<<<<<< HEAD
-    path('clubs/', club_views.new_club , name = 'new_club'),
-    path('search/', search_views.search_books, name='search_page')
-=======
     path('new_application/<int:club_id>/', club_related_views.new_application, name='new_application'),
     path('club_profile/<int:club_id>/', club_views.club_profile, name='club_profile'),
     path('my_clubs/', club_views.club_selector, name='club_selector'),
@@ -54,5 +40,5 @@ urlpatterns = [
     path('my_applications/', club_related_views.MyApplicationsView.as_view(), name='my_applications'),
     path('new_club/', club_views.new_club, name='new_club'),
     path('club_profile/<int:pk>/meeting/', club_related_views.MeetingScheduler.as_view(), name='schedule_meeting'),
->>>>>>> 9a1ba4c6ddf0bed887d962562c16c2893279d1ce
+    path('search/', search_views.search_books, name='search_page')
 ]
