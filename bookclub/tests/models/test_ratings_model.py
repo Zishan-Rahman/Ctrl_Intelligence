@@ -43,15 +43,11 @@ class RatingsModelsTestCase(TestCase):
 
     def test_rating_must_have_all_fields_simultaneously(self):
         self.assertEqual(self.john, self.rating_one.user)
-        self.assertEqual(self.book_one.isbn, self.rating_one.isbn.isbn)
+        self.assertEqual(self.book_one.isbn, self.rating_one.isbn)
         self.assertEqual(5, self.rating_one.rating)
 
     def test_rating_user_exists(self):
         self.assertEqual(self.rating_one.user, self.john)
-
-    def test_rating_user_must_exist(self):
-        self.rating_one.user = None
-        self._assert_rating_is_invalid()
 
     def test_rating_isbn_must_exist(self):
         self.rating_one.isbn = None
@@ -62,7 +58,10 @@ class RatingsModelsTestCase(TestCase):
         self._assert_rating_is_invalid()
 
     def test_rating_isbn(self):
-        self.assertEqual(self.book_one.isbn, self.rating_one.isbn.isbn)
+        self.assertEqual(self.book_one.isbn, self.rating_one.isbn)
+
+    def test_rating_isbn_gets_correct_book(self):
+        self.assertEqual(self.rating_one.isbn, self.book_one.isbn)
 
     def _assert_rating_is_valid(self):
         try:

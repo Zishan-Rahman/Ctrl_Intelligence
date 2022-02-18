@@ -253,8 +253,8 @@ class Application(models.Model):
 # Ratings model
 class Rating(models.Model):
     """A model for the book ratings"""
-    user = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
-    isbn = models.ForeignKey(Book, blank=False,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    isbn = models.CharField(max_length=12, blank=False)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
 
     def get_user(self):
@@ -265,3 +265,19 @@ class Rating(models.Model):
 
     def get_rating(self):
         return self.rating
+
+
+class Meeting(models.Model):
+    """A model for denoting and storing meetings."""
+    date = models.DateField()
+    time = models.TimeField()
+    club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
+
+    def get_meeting_club(self):
+        return self.club
+
+    def get_meeting_date(self):
+        return self.date
+
+    def get_meeting_time(self):
+        return self.time

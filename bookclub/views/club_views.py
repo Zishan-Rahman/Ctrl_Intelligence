@@ -55,6 +55,7 @@ def club_list(request):
             "name": club.get_name,
             "description": club.get_description,
             "location": club.get_location,
+            "owner": club.get_owner,
             "meeting_online": club.meeting_online,
             "mini_gravatar": club.mini_gravatar(),
             "gravatar": club.gravatar()
@@ -101,4 +102,5 @@ class ClubsListView(LoginRequiredMixin, ListView):
 def club_profile(request, club_id):
     """ Individual Club's Profile Page """
     club = Club.objects.get(id = club_id)
-    return render(request, 'club_profile.html',{'club':club})
+    current_user = request.user
+    return render(request, 'club_profile.html',{'club':club, 'current_user':current_user})

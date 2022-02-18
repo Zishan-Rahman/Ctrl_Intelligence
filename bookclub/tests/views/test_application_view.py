@@ -51,9 +51,8 @@ class ApplicationViewTestCase(TestCase):
         applications = Application.objects.all()
         for a in applications:
             a.delete()
-
         response = self.client.get(reverse('applications'))
-        html = response.content.decode('utf8')        
+        html = response.content.decode('utf8')
         self.assertIn('<h3>You have no pending applications.</h3>', html)
         self.assertNotIn('<td>', html)
         self.assertNotIn('</td>', html)
