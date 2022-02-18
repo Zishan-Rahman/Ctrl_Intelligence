@@ -2,7 +2,9 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from bookclub.models import User, Club, Application
+from bookclub.models import User, Club, Application, Meeting
+from datetime import datetime
+from django.utils import timezone
 
 class UserForm(forms.ModelForm):
     """Form to update user profiles."""
@@ -194,3 +196,33 @@ class ApplicationForm(forms.ModelForm):
         )
         app.save()
         return app
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class TimeInput(forms.DateInput):
+    input_type = 'time'
+
+class ScheduleMeetingForm(forms.ModelForm):
+
+    class Meta:
+        model = Meeting
+        fields = ['date', 'time']
+        widgets = { 'date': DateInput(), 'time': TimeInput(),}
+
+    def clean(self):
+        now = timezone.now()
+        date = self.cleaned_data['date']
+        time = self.cleaned_data['time']
+        if date < datetime.now().date():
+            raise forms.ValidationError("The meeting cannot be in the past!")
+        elif date == datetime.now().date() and time < datetime.now().time():
+            raise forms.ValidationError("The meeting cannot be in the past!")
+
+    def save(self, club):
+        super().save(commit=False)
+        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club)
+
+
+
