@@ -6,7 +6,7 @@
    <body>
       {% if not applicants %}
       <h3>You have no pending applications.</h3>
-      {%endif%}
+      {% else %}
       <table class="table">
         <thead class="table-light">
           <tr>
@@ -37,6 +37,7 @@
       </tr>
     {% endfor %}
   </table>
+  {% endif %}
    </body>
         </div>
 </div>
