@@ -9,7 +9,9 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.views.generic import ListView
 from django.views.generic.edit import FormView, UpdateView
+
 
 def landing_page(request):
     if request.user.is_authenticated:
@@ -20,14 +22,16 @@ def landing_page(request):
 def user_list(request):
     users = User.objects.all()
     all_users = Club.get_all_users
-    memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
-    return render(request, 'user_list.html', {'users': users, "club_memberships": memberships})
+    return render(request, 'user_list.html', {'users': users})
 
-@login_required
-def club_list(request):
-    memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
-    return render(request, 'club_list.html', {"club_memberships": memberships})
+class UsersListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all books."""
 
+    model = User
+    template_name = "user_list.html"
+    context_object_name = "users"
+    queryset = User.objects.all()
+    paginate_by = settings.USERS_PER_PAGE
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
@@ -48,17 +52,15 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         current_user = request.user
-        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
         form = self.form_class(instance=current_user, data=request.POST)
         if form.is_valid():
             return self.form_valid(form)
-        return render(request, 'profile.html', {"form": form, "club_memberships": memberships})
+        return render(request, 'profile.html', {"form": form})
 
     def get(self, request, *args, **kwargs):
         current_user = request.user
-        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
         form = self.form_class(instance=current_user)
-        return render(request, 'profile.html', {"form": form, "club_memberships": memberships})
+        return render(request, 'profile.html', {"form": form})
 
 
 class PasswordView(LoginRequiredMixin, FormView):
@@ -89,15 +91,13 @@ class PasswordView(LoginRequiredMixin, FormView):
 
     def post(self, request, *args, **kwargs):
         current_user = request.user
-        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
         form = self.form_class(user=current_user,data=request.POST)
         if form.is_valid():
             return self.form_valid(form)
-        return render(request, 'password.html', {"form": form,"club_memberships": memberships})
+        return render(request, 'password.html', {"form": form})
 
 
     def get(self, request, *args, **kwargs):
         current_user = request.user
-        memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
         form = self.form_class()
-        return render(request, 'password.html', {"form": form, "club_memberships": memberships})
+        return render(request, 'password.html', {"form": form})

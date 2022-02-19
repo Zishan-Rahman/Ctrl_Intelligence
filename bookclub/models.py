@@ -1,3 +1,4 @@
+import email
 from django.db import models
 from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
@@ -31,6 +32,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     favourite_genre = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        """Model options."""
+
+        ordering = ['last_name', 'first_name']
 
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
@@ -84,6 +90,11 @@ class Book(models.Model):
     medium_url = models.URLField(unique=False, blank=False, max_length=512)
     large_url = models.URLField(unique=False, blank=False, max_length=512)
 
+    class Meta:
+        """Model options."""
+
+        ordering = ['title']
+
     def get_isbn(self):
         return self.isbn
 
@@ -117,6 +128,11 @@ class Club(models.Model):
     organisers = models.ManyToManyField(User, related_name="organiser_of")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
     meeting_online = models.BooleanField(unique=False, blank=False, default=True)
+
+    class Meta:
+        """Model options."""
+
+        ordering = ['name']
 
     def get_name(self):
         return self.name
@@ -184,12 +200,19 @@ class Club(models.Model):
             return "online"
         return "in person"
 
+    # def get_all_users(self):
+    #     return (
+    #         self.get_members()
+    #             .union(self.get_organisers())
+    #             .union(User.objects.filter(email=self.get_owner().email))
+    #         )
+
     def get_all_users(self):
-        return (
-            self.get_members()
-                .union(self.get_organisers())
-                .union(User.objects.filter(email=self.get_owner().email))
-        )
+        self.club_members = self.get_members()
+        self.club_organisers = self.get_organisers()
+        self.club_owner = User.objects.filter(email=self.get_owner().email)
+
+        return (self.club_members | self.club_organisers | self.club_owner).distinct()
 
     def remove_from_club(self, user):
         if self.user_level(user) == "Member":
@@ -214,6 +237,11 @@ class Application(models.Model):
     applicant = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
 
+    class Meta:
+        """Model options."""
+
+        ordering = ['applicant']
+
     def get_applicant(self):
         return self.applicant
 
@@ -224,8 +252,8 @@ class Application(models.Model):
 # Ratings model
 class Rating(models.Model):
     """A model for the book ratings"""
-    user = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
-    isbn = models.ForeignKey(Book, blank=False,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    isbn = models.CharField(max_length=12, blank=False)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
 
     def get_user(self):
@@ -243,7 +271,6 @@ class Meeting(models.Model):
     date = models.DateField()
     time = models.TimeField()
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
-    
 
     def get_meeting_club(self):
         return self.club
