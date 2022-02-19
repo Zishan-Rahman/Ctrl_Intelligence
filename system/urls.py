@@ -40,5 +40,5 @@ urlpatterns = [
     path('my_applications/', club_related_views.MyApplicationsView.as_view(), name='my_applications'),
     path('new_club/', club_views.new_club, name='new_club'),
     path('club_profile/<int:pk>/meeting/', club_related_views.MeetingScheduler.as_view(), name='schedule_meeting'),
-    path('search/', search_views.search_books, name='search_page')
+    path('search/', search_views.search, name='search_page')
 ]
