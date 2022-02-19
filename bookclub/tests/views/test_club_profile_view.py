@@ -2,20 +2,22 @@ from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User, Club
-from bookclub.tests.helpers import reverse_with_next
+from bookclub.tests.helpers import LogInTester , reverse_with_next
 
 """Tests for Club Profile """
 
-class ClubProfileTest(TestCase):
+class ClubProfileTest(TestCase , LogInTester):
 
-    fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
+    fixtures = ['bookclub/tests/fixtures/default_users.json' , 'bookclub/tests/fixtures/default_clubs.json', 'bookclub/tests/fixtures/default_applications.json']
 
     def setUp(self):
-        self.url = reverse('club_profile')
-        self.user = User.objects.get(pk=1)
+        self.user = User.objects.get(email='johndoe@bookclub.com')
+        self.bush_club = Club.objects.get(name='Bush House Book Club')
+        self.bush_club.make_member(self.user)
+        self.url = reverse('club_profile/<int:club_id>/')
 
     def test_club_profile_url(self):
-        self.assertEqual(self.url, 'club_profile/<int:club_id>/')
+        self.assertEqual(self.url,'club_profile/<int:club_id>/')
 
     def test_correct_club_profile_template(self):
         self.client.login(email=self.user.email, password="Password123")
