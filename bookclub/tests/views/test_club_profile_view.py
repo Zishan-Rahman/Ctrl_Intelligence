@@ -14,10 +14,10 @@ class ClubProfileTest(TestCase , LogInTester):
         self.user = User.objects.get(email='johndoe@bookclub.com')
         self.bush_club = Club.objects.get(name='Bush House Book Club')
         self.bush_club.make_member(self.user)
-        self.url = reverse('club_profile/<int:club_id>/')
+        self.url = reverse('club_profile', kwargs={'club_id': self.bush_club.id})
 
     def test_club_profile_url(self):
-        self.assertEqual(self.url,'club_profile/<int:club_id>/')
+        self.assertEqual(self.url,f'/club_profile/{self.bush_club.id}/')
 
     def test_correct_club_profile_template(self):
         self.client.login(email=self.user.email, password="Password123")
