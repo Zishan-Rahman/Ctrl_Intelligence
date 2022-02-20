@@ -37,11 +37,13 @@
 				<tr>
 					<th scope="col">Clubs</th>
 					<th scope="col"></th>
+					<th scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
 				{% for club in clubs %}
 				<tr>
+					<td><a href="{% url 'club_profile' club.id %}"><img src="{{ club.mini_gravatar }}" alt="Gravatar of club {{ club.name }}" class="rounded-circle" ></a></td>
 					<td>{{ club.name }}</td>
 					<td>{{ club.location }}</td>
 				</tr>

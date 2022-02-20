@@ -22,4 +22,5 @@ class SearchBarViewTest(TestCase):
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_queryset_filter(self):
-        self.assertQuerysetEqual(Book.objects.filter(title__contains='Harry Potter'), ['Harry Potter'])
+        response = self.client.get(reverse('log_in'))
+        self.assertQuerysetEqual(Book.objects.all(), Book.objects.filter(title__contains='Harry Potter'), transform= lambda x:x)
