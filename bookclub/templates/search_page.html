@@ -1,0 +1,84 @@
+{% extends 'base_content.html' %}
+{% load static %}
+{% block content %}
+
+
+{% if query %}
+	<h1>You Searched For {{ query }}</h1>
+	<br/>
+
+	<div class="container">
+	  <div class="book-results-table">
+			<table class="table table-hover">
+	        <thead>
+	      <tr>
+	        <th scope="col">Books</th>
+	        <th scope="col"></th>
+	        <th scope="col"></th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      {% for book in books %}
+	      <tr>
+	        <td><img src = {{ book.small_url }} height='180' width='120' BR CLEAR= 'left'></td>
+	        <td>{{ book.title }}</td>
+	        <td>{{ book.author }}</td>
+	      </tr>
+	      {% endfor %}
+	    </tbody>
+	      </table>
+	  </div>
+	</div>
+
+	<div class="container">
+		<div class="club-results-table">
+			<table class="table table-hover">
+					<thead>
+				<tr>
+					<th scope="col">Clubs</th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for club in clubs %}
+				<tr>
+					<td><a href="{% url 'club_profile' club.id %}"><img src="{{ club.mini_gravatar }}" alt="Gravatar of club {{ club.name }}" class="rounded-circle" ></a></td>
+					<td>{{ club.name }}</td>
+					<td>{{ club.location }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+				</table>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="user-results-table">
+			<table class="table table-hover">
+					<thead>
+				<tr>
+					<th scope="col">Users</th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user in users %}
+				<tr>
+					<td><img src = {{ user.gravatar_url }} height='180' width='120' BR CLEAR= 'left'></td>
+					<td>{{ user.first_name }}</td>
+					<td>{{ user.last_name }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+				</table>
+		</div>
+	</div>
+
+	{% else %}
+		<h1>Please enter a search term</h1>
+	{% endif %}
+
+
+{% endblock %}

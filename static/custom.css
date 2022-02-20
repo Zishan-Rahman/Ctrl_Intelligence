@@ -41,4 +41,6 @@
     opacity: 1
   }
 
-
+  img {
+    style="float:left";
+  }

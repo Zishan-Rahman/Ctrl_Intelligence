@@ -288,4 +288,3 @@ class Command(BaseCommand):
 
             if books:
                 Book.objects.bulk_create(books)
-
