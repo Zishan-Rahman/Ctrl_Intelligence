@@ -15,7 +15,7 @@ class UserForm(forms.ModelForm):
 
         model = User
         fields = ['first_name', 'last_name', 'email', 'public_bio', 'favourite_genre', 'location', 'age']
-        widgets = { 'public_bio': forms.Textarea() }
+        widgets = {'public_bio': forms.Textarea()}
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
