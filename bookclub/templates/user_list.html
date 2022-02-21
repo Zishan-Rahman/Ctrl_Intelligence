@@ -19,6 +19,7 @@
         <tbody>
           {% for user in users %}
               <tr>
+              <td><img src="{{ user.mini_gravatar }}" alt="Gravatar of user {{ user.email }}" class="rounded-circle" ></td>
                 <td>{{ user.first_name}}</td>
                 <td>{{ user.last_name}}</td>
                 <td>{{ user.public_bio}}</td>
