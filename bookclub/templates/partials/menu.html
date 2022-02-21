@@ -1,7 +1,14 @@
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'club_list' %}">Clubs</a>
+
+      <li class="nav-item dropdown">
+      <a class="nav-link" href="#" id="clubs-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Clubs
+      </a>
+      <ul class="dropdown-menu dropdown-menu" aria-labelledby="user-account-dropdown">
+        <li><a class="dropdown-item" href="{% url 'club_list' %}">View all clubs</a></li>
+        <li><a class="dropdown-item" href="{% url 'club_selector' %}">My Clubs</a></li>
+      </ul>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="{% url 'user_list' %}">Users</a>
@@ -9,25 +16,35 @@
     <li class="nav-item">
     <a class="nav-link" href="{% url 'book_list' %}">Books</a>
   </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'applications' %}">Applications</a>
+
+      <li class="nav-item dropdown">
+      <a class="nav-link" href="#" id="clubs-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Applications
+      </a>
+      <ul class="dropdown-menu dropdown-menu" aria-labelledby="user-account-dropdown">
+
+        <li><a class="dropdown-item" href="{% url 'applications' %}">Applications</a></li>
+        <li><a class="dropdown-item" href="{% url 'my_applications' %}">My applications</a></li>
+      </ul>
     </li>
 
-    {% for entry in club_memberships %}
-    <li class="nav-item">
-      <a class="nav-link" href="{{ entry.id }}">{{ forloop.counter }}. {{ entry.get_name }}</a>
-    </li>
-    {% endfor %}
   </ul>
-  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-    <li class="nav-item"><a class="nav-link" href="{% url 'club_selector' %}">My Clubs</a></li>
-    <li class="nav-item"><a class="nav-link" href="{% url 'my_applications' %}">My Applications</a></li>
+
+
+         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <li class="nav-item px-3">
+            <form class="d-flex justify-content-center" method=POST action="{% url 'search_page' %}">
+                {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
+      <button class="btn btn-outline-light" type="submit">Search</button>
+    </form>
+        </li>
     <li class="nav-item dropdown">
       <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <span class="bi-person-circle"></span>
+        <i class="bi bi-person-square"></i> {{request.user.first_name}} {{request.user.last_name}}
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-account-dropdown">
-        <li><a class="dropdown-item">{{request.user.first_name}} {{request.user.last_name}}</a></li>
+        <li><a class="dropdown-item" href="{% url 'profile' %}">My profile</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{% url 'profile' %}">Edit profile</a></li>
         <li><a class="dropdown-item" href="{% url 'password' %}">Edit password</a></li>
