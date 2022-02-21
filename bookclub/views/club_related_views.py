@@ -124,7 +124,7 @@ class MeetingScheduler(LoginRequiredMixin, View):
         """Handle scheduling attempt."""
 
         current_club=Club.objects.get(pk=pk)
-        form = ScheduleMeetingForm(request.POST)
+        form = ScheduleMeetingForm(club=current_club, data=request.POST)
         if form.is_valid():
             meeting = form.save(club=current_club)
             messages.add_message(request, messages.SUCCESS, "The meeting was scheduled!")
@@ -135,5 +135,5 @@ class MeetingScheduler(LoginRequiredMixin, View):
     def render(self, pk):
         """Render meeting scheduler form"""
         current_club=Club.objects.get(pk=pk)
-        form = ScheduleMeetingForm()
+        form = ScheduleMeetingForm(club=current_club)
         return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
