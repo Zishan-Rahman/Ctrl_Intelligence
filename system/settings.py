@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookclub',
     'widget_tweaks',
+    'recommender',
 
 ]
 
