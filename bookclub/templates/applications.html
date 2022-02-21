@@ -1,5 +1,4 @@
 {% extends 'base_content.html' %}
-{% load bootstrap_pagination %}
 {% block content %}
     <div class="container">
     <div class="row">
@@ -7,8 +6,7 @@
    <body>
       {% if not applicants %}
       <h3>You have no pending applications.</h3>
-      {% endif %}
-      <div class=book-table>
+      {% else %}
       <table class="table">
         <thead class="table-light">
           <tr>
@@ -39,8 +37,7 @@
       </tr>
     {% endfor %}
   </table>
-
-    </div>
+  {% endif %}
    </body>
         </div>
 </div>

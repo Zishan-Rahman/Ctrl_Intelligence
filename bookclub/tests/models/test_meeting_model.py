@@ -35,6 +35,10 @@ class MeetingModelTestCase(TestCase):
         self.meeting.club = None
         self._assert_meeting_is_invalid()
 
+    def test_address_cannot_be_null(self):
+        self.address = None
+        self._assert_meeting_is_invalid()
+
     def _assert_meeting_is_valid(self):
         try:
             self.meeting.full_clean()

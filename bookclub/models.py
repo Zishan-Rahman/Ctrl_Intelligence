@@ -200,13 +200,6 @@ class Club(models.Model):
             return "online"
         return "in person"
 
-    # def get_all_users(self):
-    #     return (
-    #         self.get_members()
-    #             .union(self.get_organisers())
-    #             .union(User.objects.filter(email=self.get_owner().email))
-    #         )
-
     def get_all_users(self):
         self.club_members = self.get_members()
         self.club_organisers = self.get_organisers()
@@ -271,6 +264,8 @@ class Meeting(models.Model):
     date = models.DateField()
     time = models.TimeField()
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
+    address = models.CharField(max_length=50)
+
 
     def get_meeting_club(self):
         return self.club
@@ -280,3 +275,6 @@ class Meeting(models.Model):
 
     def get_meeting_time(self):
         return self.time
+
+    def get_meeting_address(self):
+        return self.address

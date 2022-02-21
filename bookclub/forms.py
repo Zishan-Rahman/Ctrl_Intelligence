@@ -6,6 +6,7 @@ from bookclub.models import User, Club, Application, Meeting
 from datetime import datetime
 from django.utils import timezone
 
+
 class UserForm(forms.ModelForm):
     """Form to update user profiles."""
 
@@ -14,7 +15,7 @@ class UserForm(forms.ModelForm):
 
         model = User
         fields = ['first_name', 'last_name', 'email', 'public_bio', 'favourite_genre', 'location', 'age']
-        widgets = { 'public_bio': forms.Textarea() }
+        widgets = {'public_bio': forms.Textarea()}
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
@@ -209,8 +210,18 @@ class ScheduleMeetingForm(forms.ModelForm):
 
     class Meta:
         model = Meeting
-        fields = ['date', 'time']
+        fields = ['date', 'time', 'address']
         widgets = { 'date': DateInput(), 'time': TimeInput(),}
+
+    def __init__(self, club, *args, **kwargs):
+        """Construct new form instance with a user instance."""
+        self.club = club
+        super(ScheduleMeetingForm, self).__init__(**kwargs)
+        if self.club != None and self.club.meeting_type() == "in person":
+             self.fields['address'].label = 'Meeting address'
+        elif self.club != None and self.club.meeting_type() == "online":
+            self.fields['address'].label = 'Meeting link'
+
 
     def clean(self):
         now = timezone.now()
@@ -223,7 +234,7 @@ class ScheduleMeetingForm(forms.ModelForm):
 
     def save(self, club):
         super().save(commit=False)
-        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club)
+        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club, address = self.cleaned_data.get('address'))
 
 
 

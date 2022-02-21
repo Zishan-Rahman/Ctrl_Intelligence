@@ -27,9 +27,15 @@ class MeetingViewTestCase(TestCase):
         self.past_time = time(last_hour_date_time.hour, 0)
         self.future_time = time(next_hour_date_time.hour, 0)
 
-        self.form_input = {
+        self.online_form_input = {
             'date':self.tomorrow,
-            'time':self.future_time
+            'time':self.future_time,
+            'address':'https://www.teams.com/thismeeting'
+        }
+        self.in_person_form_input = {
+            'date':self.tomorrow,
+            'time':self.future_time,
+            'address':'123 Road London'
         }
 
     def test_schedule_meeting_url(self):
@@ -61,10 +67,10 @@ class MeetingViewTestCase(TestCase):
         form = response.context['form']
         self.assertTrue(isinstance(form, ScheduleMeetingForm))
 
-    def test_successful_meeting_scheduling(self):
+    def test_successful_online_meeting_scheduling(self):
         self.client.login(email=self.john.get_email(), password='Password123')
         beforeCount = Meeting.objects.all().count()
-        response = self.client.post('/club_profile/1/meeting/', self.form_input, follow=True)       
+        response = self.client.post('/club_profile/1/meeting/', self.online_form_input, follow=True)       
         redirect_url = reverse('home')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
@@ -73,11 +79,38 @@ class MeetingViewTestCase(TestCase):
         afterCount = Meeting.objects.all().count()
         self.assertEqual(beforeCount, afterCount-1)
 
-    def test_unsuccessful_meeting_scheduling(self):
+    def test_successful_in_person_meeting_scheduling(self):
         self.client.login(email=self.john.get_email(), password='Password123')
         beforeCount = Meeting.objects.all().count()
-        self.form_input['date'] = self.yesterday
-        response = self.client.post('/club_profile/1/meeting/', self.form_input, follow=True)    
+        response = self.client.post('/club_profile/3/meeting/', self.in_person_form_input, follow=True)       
+        redirect_url = reverse('home')
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        afterCount = Meeting.objects.all().count()
+        self.assertEqual(beforeCount, afterCount-1)
+
+    def test_unsuccessful_online_meeting_scheduling(self):
+        self.client.login(email=self.john.get_email(), password='Password123')
+        beforeCount = Meeting.objects.all().count()
+        self.online_form_input['date'] = self.yesterday
+        response = self.client.post('/club_profile/1/meeting/', self.online_form_input, follow=True)    
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'schedule_meeting.html')
+        form = response.context['form']
+        self.assertTrue(isinstance(form, ScheduleMeetingForm))
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        afterCount = Meeting.objects.all().count()
+        self.assertEqual(beforeCount, afterCount)
+
+    def test_unsuccessful_in_person_meeting_scheduling(self):
+        self.client.login(email=self.john.get_email(), password='Password123')
+        beforeCount = Meeting.objects.all().count()
+        self.in_person_form_input['date'] = self.yesterday
+        response = self.client.post('/club_profile/3/meeting/', self.in_person_form_input, follow=True)    
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'schedule_meeting.html')
         form = response.context['form']
