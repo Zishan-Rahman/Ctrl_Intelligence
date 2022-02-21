@@ -66,7 +66,7 @@
 			<tbody>
 				{% for user in users %}
 				<tr>
-					<td><img src = {{ user.gravatar_url }} height='180' width='120' BR CLEAR= 'left'></td>
+					<td><img src = {{ user.gravatar }}  BR CLEAR= 'left' class="rounded-circle"></td>
 					<td>{{ user.first_name }}</td>
 					<td>{{ user.last_name }}</td>
 				</tr>
