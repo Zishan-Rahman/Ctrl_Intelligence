@@ -12,6 +12,7 @@
     <li class="nav-item">
       <a class="nav-link" href="{% url 'applications' %}">Applications</a>
     </li>
+
     {% for entry in club_memberships %}
     <li class="nav-item">
       <a class="nav-link" href="{{ entry.id }}">{{ forloop.counter }}. {{ entry.get_name }}</a>
@@ -26,6 +27,7 @@
         <span class="bi-person-circle"></span>
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-account-dropdown">
+        <li><a class="dropdown-item">{{request.user.first_name}} {{request.user.last_name}}</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{% url 'profile' %}">Edit profile</a></li>
         <li><a class="dropdown-item" href="{% url 'password' %}">Edit password</a></li>

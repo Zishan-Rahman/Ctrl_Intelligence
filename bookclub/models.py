@@ -213,7 +213,6 @@ class Club(models.Model):
         self.club_owner = User.objects.filter(email=self.get_owner().email)
 
         return (self.club_members | self.club_organisers | self.club_owner).distinct()
-        
 
     def remove_from_club(self, user):
         if self.user_level(user) == "Member":
