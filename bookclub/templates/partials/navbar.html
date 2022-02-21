@@ -15,10 +15,5 @@
     {% if user.is_authenticated %}
       {% include 'partials/menu.html' %}
     {% endif %}
-    <form class="d-flex" method=POST action="{% url 'search_page' %}">
-      {% csrf_token %}
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
-      <button class="btn btn-outline-secondary" type="submit">Search</button>
-    </form>
   </div>
 </nav>
