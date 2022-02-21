@@ -264,7 +264,8 @@ class Meeting(models.Model):
     date = models.DateField()
     time = models.TimeField()
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
-    address = models.CharField(max_length=50, blank=True, null=True, default=None)
+    address = models.CharField(max_length=50)
+
 
     def get_meeting_club(self):
         return self.club
@@ -274,3 +275,6 @@ class Meeting(models.Model):
 
     def get_meeting_time(self):
         return self.time
+
+    def get_meeting_address(self):
+        return self.address
