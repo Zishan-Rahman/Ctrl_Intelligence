@@ -36,10 +36,14 @@ class ClubProfileTest(TestCase , LogInTester):
         html = response.content.decode('utf8')
         self.assertIn(f'alt="Gravatar of {self.bush_club.name}" class="rounded-circle profile-image" >', html)
         self.assertIn(f'<h3>{self.bush_club.name}</h3>', html)
-        self.assertIn(f'<p>Owned by <a href="mailto:{self.bush_club.owner.email}">{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}</a> </p>', html)
         self.assertIn(f'<p>{self.bush_club.description}</p>', html)
-        self.assertIn(f'<p>{self.bush_club.description}</p>', html)
-        self.assertIn(f"<p>We're based in {self.bush_club.location}</p>", html)
+        self.assertIn(f'<h5 class="card-title" style="text-align: center;"><a href="mailto:{self.bush_club.owner.email}">{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}</a></h5>', html)
+        self.assertIn('<h6 class="card-title" style="text-transform: lowercase; text-align: center;">Owner</h6>', html)
+        self.assertIn(f'<h5 class="card-title" style="text-align: center;">{self.bush_club.location}</h5>', html)
+        self.assertIn('<h6 class="card-title" style="text-transform: lowercase; text-align: center;">Location</h6>', html)
+        self.assertIn(f"""<span style="text-align: center; padding: 70px 0;">
+<i class="bi bi-wifi" style="color: green"> Online</i>
+</span>""", html)
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
