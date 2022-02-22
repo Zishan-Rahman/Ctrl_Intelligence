@@ -20,7 +20,6 @@
                   <p>{{ club.description }}</p>
                   <p>We're based in {{ club.location }}</p>
                   <p>We have {{ club.get_all_users|length }} members</p>
-                  <p>We have had {{ club.get_meetings|length }} meetings so far</p>
                   <p>We meet {% include 'partials/club_meeting_type.html' with club=club %}</p>
                 </td>
               </tr>
@@ -31,7 +30,7 @@
                     {%else%}
                     <form action="{% url 'new_application' club.id %}" method="post">
                       {% csrf_token %}
-                      <button type="submit" class="btn btn-primary" id="apply-button">Apply</button>
+                      <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply to {{ club.name }}</button>
                     </form>
                     {%endif%}
                 </td>

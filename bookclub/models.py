@@ -200,7 +200,7 @@ class Club(models.Model):
         return "in person"
     
     def get_meetings(self):
-        return Meeting.objects.filter(id=self.id)
+        return Meeting.objects.filter(club_id=self.id)
 
     def get_all_users(self):
         self.club_members = self.get_members()
