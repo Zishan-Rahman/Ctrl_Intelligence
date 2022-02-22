@@ -15,7 +15,7 @@ class ProfileViewTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.get(email='johndoe@bookclub.com')
-        self.url = reverse('profile')
+        self.url = reverse('edit_profile')
         self.form_input = {
             'first_name': 'John2',
             'last_name': 'Doe2',
@@ -27,20 +27,20 @@ class ProfileViewTest(TestCase):
         }
 
     def test_profile_url(self):
-        self.assertEqual(self.url, '/profile/')
+        self.assertEqual(self.url, '/profile/edit/')
 
     def test_profile_uses_correct_template(self):
         login = self.client.login(email='johndoe@bookclub.com', password='Password123')
-        response = self.client.get(reverse('profile'))
+        response = self.client.get(self.url)
         self.assertEqual(str(response.context['user']), 'johndoe@bookclub.com')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'profile.html')
+        self.assertTemplateUsed(response, 'edit_profile.html')
 
     def test_get_profile(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'profile.html')
+        self.assertTemplateUsed(response, 'edit_profile.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, UserForm))
         self.assertEqual(form.instance, self.user)
@@ -58,7 +58,7 @@ class ProfileViewTest(TestCase):
         after_count = User.objects.count()
         self.assertEqual(after_count, before_count)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'profile.html')
+        self.assertTemplateUsed(response, 'edit_profile.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, UserForm))
         self.assertTrue(form.is_bound)
@@ -66,7 +66,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(self.user.email, 'johndoe@bookclub.com')
         self.assertEqual(self.user.first_name, 'John')
         self.assertEqual(self.user.last_name, 'Doe')
-        self.assertEqual(self.user.public_bio, "I'm just an abstract concept!")
+        self.assertEqual(self.user.public_bio, "Im just an abstract concept!")
         self.assertEqual(self.user.favourite_genre, "Science fiction")
         self.assertEqual(self.user.location, "London")
         self.assertEqual(self.user.age, 39)
@@ -79,7 +79,7 @@ class ProfileViewTest(TestCase):
         after_count = User.objects.count()
         self.assertEqual(after_count, before_count)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'profile.html')
+        self.assertTemplateUsed(response, 'edit_profile.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, UserForm))
         self.assertTrue(form.is_bound)
@@ -87,7 +87,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(self.user.email, 'johndoe@bookclub.com')
         self.assertEqual(self.user.first_name, 'John')
         self.assertEqual(self.user.last_name, 'Doe')
-        self.assertEqual(self.user.public_bio, "I'm just an abstract concept!")
+        self.assertEqual(self.user.public_bio, "Im just an abstract concept!")
         self.assertEqual(self.user.favourite_genre, "Science fiction")
         self.assertEqual(self.user.location, "London")
         self.assertEqual(self.user.age, 39)
