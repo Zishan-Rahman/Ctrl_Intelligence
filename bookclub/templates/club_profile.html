@@ -1,4 +1,3 @@
-<!-- club profile page adapted from the chess club project -->
 {% extends 'base_content.html' %}
 {% block content %}
 <div class="container">
@@ -9,19 +8,50 @@
                 <td>
                   <img src="{{ club.gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle profile-image" >
                 </td>
-                      </tr>
-                    </table>
-                </td>
               </tr>
               <tr>
                 <td>
                   <h3>{{ club.name }}</h3>
-                  <p>Owned by <a href="mailto:{{club.owner.email}}">{{ club.owner.first_name }} {{ club.owner.last_name }}</a> </p>
                   <p>{{ club.description }}</p>
-                  <p>We're based in {{ club.location }}</p>
-                  <p>We meet {% include 'partials/club_meeting_type.html' with club=club %}</p>
                 </td>
               </tr>
+              <tr>
+              <td>
+                <div class="row">
+                  <div class="col">
+                    <div class="card w-100">
+                      <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">{{club.get_all_users|length}}</h5>
+                        <h6 class="card-title" style="text-transform: lowercase; text-align: center;">Members</h6>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="card w-100">
+                      <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;"><a href="mailto:{{club.owner.email}}">{{ club.owner.first_name }} {{ club.owner.last_name }}</a></h5>
+                        <h6 class="card-title" style="text-transform: lowercase; text-align: center;">Owner</h6>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card w-100">
+                      <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;">{{club.location}}</h5>
+                        <h6 class="card-title" style="text-transform: lowercase; text-align: center;">Location</h6>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card">
+                      <div class="card-body">
+                        <span style="text-align: center; padding: 70px 0;">{% include 'partials/club_meeting_type.html' with club=club %}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
               <tr>
                 <td class="club-info">
                     {% if current_user == club.owner %}
@@ -29,12 +59,16 @@
                     {%else%}
                     <form action="{% url 'new_application' club.id %}" method="post">
                       {% csrf_token %}
-                      <button type="submit" class="btn btn-primary" id="apply-button">Apply</button>
+                      <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply to {{ club.name }}</button>
                     </form>
                     {%endif%}
                 </td>
               </tr>
-
+              <tr>
+                <td>
+                    
+                </td>
+              </tr>
           </table>
       </div>
   </div>
