@@ -34,6 +34,7 @@ class ClubProfileTest(TestCase , LogInTester):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
+        self.assertIn('<img src=', html)
         self.assertIn(f'alt="Gravatar of {self.bush_club.name}" class="rounded-circle profile-image" >', html)
         self.assertIn(f'<h3>{self.bush_club.name}</h3>', html)
         self.assertIn(f'<p>{self.bush_club.description}</p>', html)
