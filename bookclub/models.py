@@ -1,4 +1,3 @@
-import email
 from django.db import models
 from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
@@ -199,6 +198,9 @@ class Club(models.Model):
         if self.meeting_online:
             return "online"
         return "in person"
+    
+    def get_meetings(self):
+        return Meeting.objects.filter(id=self.id)
 
     def get_all_users(self):
         self.club_members = self.get_members()

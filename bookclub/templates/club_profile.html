@@ -19,8 +19,8 @@
                   <p>Owned by <a href="mailto:{{club.owner.email}}">{{ club.owner.first_name }} {{ club.owner.last_name }}</a> </p>
                   <p>{{ club.description }}</p>
                   <p>We're based in {{ club.location }}</p>
-                  <p>We have {{ club.get_members|length }} regular members</p>
-                  <p>{{ club.get_organisers|length }} people organise meetings in our group</p>
+                  <p>We have {{ club.get_all_users|length }} members</p>
+                  <p>We have had {{ club.get_meetings|length }} meetings so far</p>
                   <p>We meet {% include 'partials/club_meeting_type.html' with club=club %}</p>
                 </td>
               </tr>
