@@ -74,8 +74,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertIn('<td>John</td>', html)
         self.assertIn('<td>Doe</td>', html)
         self.assertIn('<td>39</td>', html)
-        self.assertIn("<td>I&#x27;m just an abstract concept!</td>",
-                      html)  # Apostrophe converted to &#x27;m in html source code
+        self.assertIn("<td>Im just an abstract concept!</td>", html) 
         self.assertIn('<td>Science fiction</td>', html)
         self.assertIn('<td>London</td>', html)
         self.assertIn('<a class="btn btn-default"', html)

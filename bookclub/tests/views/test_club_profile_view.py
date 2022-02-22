@@ -30,8 +30,16 @@ class ClubProfileTest(TestCase , LogInTester):
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
+    def test_club_profile_has_correct_details(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'alt="Gravatar of {self.bush_club.name}" class="rounded-circle profile-image" >', html)
+        self.assertIn(f'<h3>{self.bush_club.name}</h3>', html)
+        self.assertIn(f'<p>Owned by <a href="mailto:{self.bush_club.owner.email}">{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}</a> </p>', html)
+        self.assertIn(f'<p>{self.bush_club.description}</p>', html)
+        self.assertIn(f'<p>{self.bush_club.description}</p>', html)
+        self.assertIn(f"<p>We're based in {self.bush_club.location}</p>", html)
+
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
-
-
-

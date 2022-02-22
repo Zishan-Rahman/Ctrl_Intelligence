@@ -9,32 +9,6 @@ from bookclub.forms import ClubForm
 from bookclub.models import Club
 from bookclub.views import config
 
-# @login_required
-# def club_list(request):
-#     memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
-#     clubs = []
-#     for club in Club.objects.all():
-#         clubs.append({
-#             "name": club.get_name,
-#             "description": club.get_description,
-#             "location": club.get_location,
-#         })
-#     return render(request, 'club_list.html', {'clubs':clubs, "club_memberships": memberships})
-
-# @login_required
-# def club_list(request):
-#     memberships = Club.objects.filter(members=request.user) | Club.objects.filter(organisers=request.user) | Club.objects.filter(owner=request.user)
-#     clubs = []
-#     for club in Club.objects.all():
-#         clubs.append({
-#             "name": club.get_name,
-#             "description": club.get_description,
-#             "location": club.get_location,
-#             "mini_gravatar": club.mini_gravatar(),
-#             "gravatar": club.gravatar()
-#         })
-#     return render(request, 'club_list.html', {'clubs':clubs, "club_memberships": memberships})
-
 def club_util(request):
     user_clubs_list = []
     clubs = Club.objects.all()

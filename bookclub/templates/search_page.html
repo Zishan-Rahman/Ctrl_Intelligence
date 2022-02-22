@@ -34,8 +34,8 @@
 	    </thead>
 	    <tbody>
 	      {% for book in books %}
-	      <tr>
-	        <td><img src = "{{ book.medium_url }}" alt="{{ book.name }} cover page"> </td>
+	      <tr class="clickable-row" data-href="{% url 'book_profile' book.id %}">
+	        <td><img src = {{ book.medium_url }} BR CLEAR= 'left'></td>
 	        <td>{{ book.title }}</td>
 	        <td>{{ book.author }}</td>
 	      </tr>
@@ -75,8 +75,8 @@
 			</thead>
 			<tbody>
 				{% for club in clubs %}
-				<tr>
-					<td><a href="{% url 'club_profile' club.id %}"><img src="{{ club.mini_gravatar }}" alt="Gravatar of club {{ club.name }}" class="rounded-circle" ></a></td>
+				<tr class="clickable-row" data-href="{% url 'club_profile' club.id %}">
+					<td><img src="{{ club.mini_gravatar }}" alt="Gravatar of club {{ club.name }}" class="rounded-circle" ></td>
 					<td>{{ club.name }}</td>
 					<td>{{ club.location }}</td>
 				</tr>
@@ -138,7 +138,13 @@
 	{% else %}
 		<h1>Please enter a search term</h1>
 	{% endif %}
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script>
+	  jQuery(document).ready(function($) {
+	      $(".clickable-row").click(function() {
+	          window.location = $(this).data("href");
+	      });
+	  });
+	</script>
 
 {% endblock %}
-
