@@ -29,16 +29,14 @@
     </li>
 
   </ul>
-
-
-         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-      <li class="nav-item px-3">
-            <form class="d-flex justify-content-center" method=POST action="{% url 'search_page' %}">
-                {% csrf_token %}
+  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    <li class="nav-item px-3">
+      <form class="d-flex justify-content-center" method=POST action="{% url 'search_page' %}">
+      {% csrf_token %}
       <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
       <button class="btn btn-outline-light" type="submit">Search</button>
-    </form>
-        </li>
+      </form>
+    </li>
     <li class="nav-item dropdown">
       <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-person-square"></i> {{request.user.first_name}} {{request.user.last_name}}
