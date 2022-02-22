@@ -44,6 +44,17 @@ class ClubProfileTest(TestCase , LogInTester):
         self.assertIn(f"""<span style="text-align: center; padding: 70px 0;">
 <i class="bi bi-wifi" style="color: green"> Online</i>
 </span>""", html)
+        
+    def test_club_profile_view_has_cards(self):
+        """Checks for card-specific (NOT club-specific) details in the club profile template."""
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn('<div class="card">', html)
+        self.assertIn('<div class="card w-100">', html)
+        self.assertIn('<div class="card-body">', html)
+        self.assertIn('<h5 class="card-title" style="text-align: center;">', html)
+        self.assertIn('<h6 class="card-title" style="text-transform: lowercase; text-align: center;">', html)
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
