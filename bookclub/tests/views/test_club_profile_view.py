@@ -56,6 +56,19 @@ class ClubProfileTest(TestCase , LogInTester):
         self.assertIn('<div class="card-body">', html)
         self.assertIn('<h5 class="card-title" style="text-align: center;">', html)
         self.assertIn('<h6 class="card-title" style="text-transform: lowercase; text-align: center;">', html)
+        
+    def test_club_profile_view_has_apply_button_for_non_member(self):
+        self.user2 = User.objects.get(email="janedoe@bookclub.com")
+        self.client.login(email=self.user2.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply to {self.bush_club.name}</button>', html)
+        
+    def test_club_profile_view_has_meeting_button_for_club_member(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<a class="btn btn-default" href="/club_profile/{self.bush_club.id}/meeting/"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>', html)
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
