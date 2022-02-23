@@ -92,8 +92,9 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
             return redirect('home')
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         current_club_id = self.request.GET.get('club_id')
-        context['club'] = Club.objects.get(id = kwargs['club_id'])
+        context['club'] = User.objects.all()
         return context
 
 
