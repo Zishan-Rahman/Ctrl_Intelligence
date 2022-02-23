@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db.models import Q
+from django.contrib import messages
 from bookclub.templates import *
 from django.shortcuts import render, redirect
 from bookclub.models import User
