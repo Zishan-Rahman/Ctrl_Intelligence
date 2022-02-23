@@ -11,7 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.edit import FormView, UpdateView
-
+from django.views.generic.detail import DetailView
+from django.views.generic.list import MultipleObjectMixin
 
 def landing_page(request):
     if request.user.is_authenticated:
@@ -23,6 +24,14 @@ def user_list(request):
     users = User.objects.all()
     all_users = Club.get_all_users
     return render(request, 'user_list.html', {'users': users})
+
+@login_required
+def user_profile(request):
+    """ Individual User's Profile Page """
+    user = User.objects.get(id = request.user.id)
+    current_user = request.user
+    return render(request, 'user_profile.html',{'user': user})
+
 
 class UsersListView(LoginRequiredMixin, ListView):
     """View that shows a list of all books."""
@@ -37,7 +46,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
 
     model = UserForm
-    template_name = "profile.html"
+    template_name = "edit_profile.html"
     form_class = UserForm
 
     def get_object(self):
@@ -55,12 +64,12 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         form = self.form_class(instance=current_user, data=request.POST)
         if form.is_valid():
             return self.form_valid(form)
-        return render(request, 'profile.html', {"form": form})
+        return render(request, 'edit_profile.html', {"form": form})
 
     def get(self, request, *args, **kwargs):
         current_user = request.user
         form = self.form_class(instance=current_user)
-        return render(request, 'profile.html', {"form": form})
+        return render(request, 'edit_profile.html', {"form": form})
 
 
 class PasswordView(LoginRequiredMixin, FormView):

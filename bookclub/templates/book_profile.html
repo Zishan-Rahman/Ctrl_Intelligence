@@ -1,0 +1,24 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<style>
+p {
+  line-height: 0.5em;
+  }
+</style>
+<div class="container mt-3">
+  <div class="row content">
+    <div class="col-12">
+      <div class="profile-text">
+        <center>
+          <img src="{{ book.medium_url }}" alt="a">
+          <h3 class="book-title">{{ book.title }}</h3>
+          <hr>
+          <p class="book-isbn">ISBN: {{ book.isbn }}</p>
+          <p class="book-author">Author: {{ book.author }}</p>
+          <p class="book-pub-year">Published Year: {{ book.pub_year }}</p>
+          <p class="book-publisher">Publisher: {{ book.publisher }}</p>
+        </center>
+      </div>
+    </div>
+  </div>
+{% endblock %}

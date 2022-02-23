@@ -30,9 +30,7 @@
     </thead>
     <tbody>
       {% for entry in clubs %}
-
-
-      <tr>
+      <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
         <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
         <td>{{ entry.name }}</td>
         <td><a href="mailto:{{entry.owner.email}}">{{ entry.owner.first_name }} {{ entry.owner.last_name }}</a></td>
@@ -40,12 +38,18 @@
         <td>{{ entry.location }}</td>
         <td style="text-transform: capitalize;">{% include 'partials/club_meeting_type.html' with club=entry %}</td>
       </tr>
-
-
       {% endfor %}
     </tbody>
       </table>
       {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
   </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+  jQuery(document).ready(function($) {
+      $(".clickable-row").click(function() {
+          window.location = $(this).data("href");
+      });
+  });
+</script>
 {% endblock %}

@@ -18,11 +18,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        books = pd.read_csv('data/BX_Books.csv', sep=';', on_bad_lines='skip', encoding="ISO-8859-1")
+        books = pd.read_csv('data/BX_Books.csv', sep=';', on_bad_lines='skip', encoding="latin-1")
         books.columns = ['ISBN', 'bookTitle', 'bookAuthor', 'yearOfPublication', 'publisher', 'imageUrlS', 'imageUrlM', 'imageUrlL']
-        users = pd.read_csv('data/BX-Users.csv', sep=';', on_bad_lines='skip', encoding="ISO-8859-1")
+        users = pd.read_csv('data/BX-Users.csv', sep=';', on_bad_lines='skip', encoding="latin-1")
         users.columns = ['userID', 'Location', 'Age']
-        ratings = pd.read_csv('data/BX-Book-Ratings.csv', sep=';', on_bad_lines='skip', encoding="ISO-8859-1")
+        ratings = pd.read_csv('data/BX-Book-Ratings.csv', sep=';', on_bad_lines='skip', encoding="latin-1")
         ratings.columns = ['userID', 'ISBN', 'bookRating']
 
 
