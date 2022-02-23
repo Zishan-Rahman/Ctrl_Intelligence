@@ -61,7 +61,7 @@ class MyApplicationsView(LoginRequiredMixin, View):
         return render(self.request, 'my_applications.html', {'applications': my_applications})
 
 class ClubMemberListView(LoginRequiredMixin, View):
-    """"""
+    """Gets the members of each club"""
     
     http_method_names = ['get']
     
@@ -69,7 +69,7 @@ class ClubMemberListView(LoginRequiredMixin, View):
         return self.render()
     
     def render(self, **kwargs):
-        club = Club.objects.get(pk=kwargs['club_id'])
+        club = Club.objects.get(pk=self.kwargs['club_id'])
         return render(self.request, 'club_members.html', {'club': club})
         
 
