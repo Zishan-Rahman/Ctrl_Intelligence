@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import ListView
-from bookclub.models import User, Club, Application
+from bookclub.models import Meeting, User, Club, Application
 from bookclub.views import club_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
@@ -109,6 +109,11 @@ def new_application(request, club_id):
 
 
     return redirect('my_applications')
+
+@login_required
+def meetings_list(request, club_id):
+    club = Club.objects.get(id=club_id)
+    meetings = Meeting.objects.get(club=club)
 
 
 class MeetingScheduler(LoginRequiredMixin, View):
