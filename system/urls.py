@@ -16,12 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, dashboard_views, club_related_views, book_views, club_views, search_views
+from bookclub.views import account_views, authentication_views, dashboard_views, club_related_views, book_views, club_views, user_views, search_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', account_views.landing_page, name='landing_page'),
-    path('users/', account_views.UsersListView.as_view() , name = 'user_list'),
+    path('users/', user_views.UsersListView.as_view() , name = 'user_list'),
     path('clubs/', club_views.ClubsListView.as_view() , name = 'club_list'),
     path('books/', book_views.BooksListView.as_view() , name = 'book_list'),
     path('sign_up/', authentication_views.sign_up, name='sign_up'),
@@ -30,12 +30,13 @@ urlpatterns = [
     path('home/', dashboard_views.home_page, name='home'),
     path('password/', account_views.PasswordView.as_view(), name='password'),
     path('profile/', account_views.user_profile, name='profile'),
-    path('profile/edit/', account_views.ProfileUpdateView.as_view(), name='edit_profile'),
+    path('profile/edit/', user_views.ProfileUpdateView.as_view(), name='edit_profile'),
     path('applications/', club_related_views.ApplicationsView.as_view(), name='applications'),
     path('applications/accept/<int:pk>/', club_related_views.app_accept, name='app_accept'),
     path('applications/remove/<int:pk>/', club_related_views.app_remove, name='app_remove'),
     path('new_application/<int:club_id>/', club_related_views.new_application, name='new_application'),
     path('club_profile/<int:club_id>/', club_views.club_profile, name='club_profile'),
+    path('user_profile/<int:user_id>/', user_views.user_profile, name='user_profile'),
     path('book_profile/<int:book_id>/', book_views.ShowBookView.as_view(), name='book_profile'),
     path('my_clubs/', club_views.club_selector, name='club_selector'),
     path('my_clubs1/', club_views.club_selector_alt, name="club_selector_alt"),

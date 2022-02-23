@@ -6,26 +6,36 @@
     <div class="col-12">
       <h1>Users</h1>
       {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
-      <table class="table table-striped">
+      <table class="table table-hover">
         <thead>
             <tr>
+                <th scope="col">Profile Picture</th>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
                 <th scope="col">Bio</th>
                 <th scope="col">Email</th>
                 <th scope="col">Favourite Genre</th>
             </tr>
-          </thead>
+        </thead>
         <tbody>
           {% for user in users %}
-              <tr>
+
+          <tr class="clickable-row" data-href="{% url 'user_profile' user.id %}">
+              <td><a href="{% url 'user_profile' user.id %}"><img src="{{ user.mini_gravatar }}" alt="Gravatar of user {{ user.name }}" class="rounded-circle" ></a></td>
+              <td>{{ user.first_name}}</td>
+              <td>{{ user.last_name}}</td>
+              <td>{{ user.public_bio}}</td>
+              <td>{{ user.email}}</td>
+              <td>{{ user.favourite_genre }}</td>
+
+                <!-- </tr>
               <td><img src="{{ user.mini_gravatar }}" alt="Gravatar of user {{ user.email }}" class="rounded-circle" ></td>
                 <td>{{ user.first_name}}</td>
                 <td>{{ user.last_name}}</td>
                 <td>{{ user.public_bio}}</td>
                 <td>{{ user.email}}</td>
-                <td>{{ user.favourite_genre }}</td>
-              </tr>
+                <td>{{ user.favourite_genre }}</td> -->
+          </tr>
           {% endfor %}
         </tbody>
       </table>
@@ -33,4 +43,12 @@
     </div>
   </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+  jQuery(document).ready(function($) {
+      $(".clickable-row").click(function() {
+          window.location = $(this).data("href");
+      });
+  });
+</script>
 {% endblock %}
