@@ -65,12 +65,8 @@ class ClubMemberListView(LoginRequiredMixin, View):
     
     http_method_names = ['get']
     
-    def __init__(self, club_id) -> None:
-        super().__init__()
-        self.club_id = club_id
-    
-    def get(self, request):
-        return self.render(self.club_id)
+    def get(self, request, club_id):
+        return self.render(club_id)
     
     def render(self, club_id):
         club = Club.objects.get(pk=club_id)
