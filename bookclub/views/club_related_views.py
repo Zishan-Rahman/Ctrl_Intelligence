@@ -80,10 +80,6 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
     pk_url_kwarg = 'club_id'
     object_list = "club"
     
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['club'] = Club.objects.get(id=kwargs[self.pk_url_kwarg])
-    
     def get(self, request, *args, **kwargs):
         """Handle get request, and redirect to book_list if book_id invalid."""
         try:
