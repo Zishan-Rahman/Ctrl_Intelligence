@@ -60,6 +60,18 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
         return render(self.request, 'my_applications.html', {'applications': my_applications})
 
+class ClubMemberListView(LoginRequiredMixin, View):
+    """"""
+    
+    http_method_names = ['get']
+    
+    def get(self, request):
+        return self.render()
+    
+    def render(self, **kwargs):
+        club = Club.objects.get(pk=kwargs['club_id'])
+        return render(self.request, 'club_members.html', {'club': club})
+        
 
 def app_accept(request, pk):
     """Accept application"""
