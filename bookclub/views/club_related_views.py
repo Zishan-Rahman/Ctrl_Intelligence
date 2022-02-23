@@ -60,17 +60,17 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
         return render(self.request, 'my_applications.html', {'applications': my_applications})
 
-class ClubMemberListView(LoginRequiredMixin, View):
+class ClubMemberListView(LoginRequiredMixin, ListView):
     """Gets the members of each club"""
     
-    http_method_names = ['get']
+    model = Club
+    template_name = "club_members.html"
+    context_object_name = "club"
+    paginate_by = settings.CLUBS_PER_PAGE
     
-    def get(self, request, club_id):
-        return self.render(club_id)
+    def get_queryset(self):
+        return Club.objects.filter(id=self.kwargs['club_id'])
     
-    def render(self, club_id):
-        club = Club.objects.get(pk=club_id)
-        return render(self.request, 'club_members.html', {'club': club})
         
 
 def app_accept(request, pk):
