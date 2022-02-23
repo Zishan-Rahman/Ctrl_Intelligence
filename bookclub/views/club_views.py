@@ -78,3 +78,12 @@ def club_profile(request, club_id):
     club = Club.objects.get(id = club_id)
     current_user = request.user
     return render(request, 'club_profile.html',{'club':club, 'current_user':current_user})
+
+def leave_club(request , club_id):
+    club = Club.objects.get(pk=club_id)
+    current_user = request.user
+    current_user.clubs.remove(club)
+    return redirect(reverse('club_profile', kwargs={'club_id': club_id, 'current_user': request.user}))
+
+
+
