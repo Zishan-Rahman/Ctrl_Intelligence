@@ -7,6 +7,7 @@ from bookclub.forms import ApplicantForm, ApplicationForm, ScheduleMeetingForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.urls import reverse
 from django.views.generic import ListView
 from bookclub.models import User, Club, Application
@@ -65,11 +66,16 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
     
     model = Club
     template_name = "club_members.html"
-    context_object_name = "club"
-    paginate_by = settings.CLUBS_PER_PAGE
+    paginate_by = settings.USERS_PER_PAGE
+    pk_url_kwarg = 'club_id'
+    object_list = "clubs"
     
-    def get_queryset(self):
-        return Club.objects.filter(id=self.kwargs['club_id'])
+    def get(self, request, *args, **kwargs):
+        """Handle get request, and redirect to book_list if book_id invalid."""
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            return redirect('home')
     
         
 
