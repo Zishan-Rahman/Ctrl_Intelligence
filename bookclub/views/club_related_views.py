@@ -61,23 +61,41 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
         return render(self.request, 'my_applications.html', {'applications': my_applications})
 
+
+@login_required
+def club_members(request, club_id):
+    club = Club.objects.get(id=club_id)
+    paginator = Paginator(club.get_all_users(), 2)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'club_members.html', {'club': club, 'page_obj': page_obj})
+
+
 class ClubMemberListView(LoginRequiredMixin, ListView):
     """Gets the members of each club"""
-    
+
     model = Club
     template_name = "club_members.html"
     paginate_by = settings.USERS_PER_PAGE
     pk_url_kwarg = 'club_id'
-    object_list = "clubs"
-    
+    context_object_name = "club"
+
+    # def get(self, request, *args, **kwargs):
+    #     """Display application template"""
+    #     return self.render()
+
     def get(self, request, *args, **kwargs):
         """Handle get request, and redirect to book_list if book_id invalid."""
         try:
             return super().get(request, *args, **kwargs)
         except Http404:
             return redirect('home')
-    
-        
+
+    def get_context_data(self, **kwargs):
+        current_club_id = self.request.GET.get('club_id')
+        context['club'] = Club.objects.get(id = kwargs['club_id'])
+        return context
+
 
 def app_accept(request, pk):
     """Accept application"""
