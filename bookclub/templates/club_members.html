@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for member in club.members %}
+                    {% for member in club.get_all_users %}
                         <tr>
                             <td><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></td>
                             <td>{{member.first_name}} {{member.last_name}}</td>
