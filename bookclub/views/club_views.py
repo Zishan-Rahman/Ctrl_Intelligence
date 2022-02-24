@@ -63,7 +63,7 @@ def new_club(request):  # new club adapted from the chess club project
 
 
 class ClubsListView(LoginRequiredMixin, ListView):
-    """View that shows a list of all books."""
+    """View that shows a list of all clubs."""
 
     model = Club
     template_name = "club_list.html"
