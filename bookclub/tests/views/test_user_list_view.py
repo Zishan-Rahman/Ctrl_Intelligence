@@ -11,7 +11,16 @@ class TestUserListView(TestCase, LogInTester):
 
     def setUp(self):
         self.url = reverse('user_list')
-        self.user = User.objects.get(email='johndoe@bookclub.com')
+        self.user = User.objects.create(
+            first_name="Jim",
+            last_name="Doe",
+            email="jimdoe@bookclub.com",
+            public_bio="I am definitely an abstract concept...",
+            favourite_genre="Mystery",
+            location="Lancashire",
+            age=47,
+            password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0="
+        )
 
     def test_user_list_url(self):
         self.assertEqual(self.url,'/users/')
