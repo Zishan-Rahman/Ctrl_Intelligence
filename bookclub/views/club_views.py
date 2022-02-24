@@ -79,6 +79,7 @@ def club_profile(request, club_id):
     current_user = request.user
     return render(request, 'club_profile.html',{'club':club, 'current_user':current_user})
 
+@login_required
 def leave_club(request , club_id):
     club = Club.objects.get(pk=club_id)
     current_user = request.user
