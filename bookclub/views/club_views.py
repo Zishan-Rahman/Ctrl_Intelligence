@@ -8,6 +8,7 @@ from django.views.generic import ListView
 from bookclub.forms import ClubForm
 from bookclub.models import Club
 from bookclub.views import config
+from django.urls import reverse
 
 def club_util(request):
     user_clubs_list = []
