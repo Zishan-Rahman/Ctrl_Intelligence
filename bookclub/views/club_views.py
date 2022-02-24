@@ -85,7 +85,4 @@ def leave_club(request , club_id):
     club = Club.objects.get(pk=club_id)
     current_user = request.user
     club.remove_from_club(current_user)
-    return redirect(reverse('club_profile', kwargs={'club_id': club_id, 'current_user': request.user}))
-
-
-
+    return redirect('club_selector')
