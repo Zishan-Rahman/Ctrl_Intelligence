@@ -262,7 +262,7 @@ class Command(BaseCommand):
         count = 0
         file_path_users = "data/BX_Books.csv"
 
-        with open(file_path_users, encoding='cp1252') as book_csv_file:
+        with open(file_path_users, encoding='latin-1') as book_csv_file:
             data = csv.reader(book_csv_file, delimiter=";")
             next(data)
             books = []

@@ -1,65 +1,97 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
-  <div class="row">
-      <div>
-          <table>
-              <tr>
-                <td>
-                  <img src="{{ club.gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle profile-image" >
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h3>{{ club.name }}</h3>
+
+<div class="container" style="padding-top: 25px">
+    <div class="row">
+        <div class="col-3 text-center">
+             <img src="{{ club.gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle profile-image" >
+            <br>
+            <br>
+            <h3>{{ club.name }}</h3>
                   <p>{{ club.description }}</p>
-                </td>
-              </tr>
-              <tr>
-              <td>
-                <div class="row">
-                  <div class="col">
+
+        </div>
+        <div class="col-6 text-center">
+
+            <h5>PUT CLUB POSTS HERE</h5>
+
+        </div>
+
+        <div class="col-3">
+
+            <div class="card w-100">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-3">
+                              <h6 class="card-title"><i class="bi bi-geo-alt"></i></h6>
+                          </div>
+                          <div class="col">
+                              <h6 class="card-title">{{club.location}}</h6>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  <div class="card w-100">
+                      <div class="card-body">
+                          <div class="row">
+                              <div class="col-3">
+                                  <h6 class="card-title"><i class="bi bi-person-badge"></i></h6>
+                              </div>
+                              <div class="col">
+                                  <h6 class="card-title">{{club.get_all_users|length}} members</h6>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                      <div class="card w-100">
+                      <div class="card-body">
+                          <div class="row">
+                              <div class="col-3">
+                                  <h6 class="card-title"><i class="bi bi-person"></i></h6>
+                              </div>
+                              <div class="col">
+                                  <h6 class="card-title" ><a href="mailto:{{club.owner.email}}">{{ club.owner.first_name }} {{ club.owner.last_name }}</a></h6>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
                     <div class="card w-100">
                       <div class="card-body">
-                        <h5 class="card-title" style="text-align: center;">{{club.get_all_users|length}}</h5>
-                        <h6 class="card-title" style="text-transform: lowercase; text-align: center;">Members</h6>
+                      <div class="row">
+                          <div class="col-3">
+
+                        {% if club.meeting_online == True %}
+                            <h6 class="card-title"><i class="bi bi-wifi" style="color: green"></i></h6>
+                            {% else %}
+                            <h6 class="card-title"><i class="bi bi-people-fill" style="color: purple"></i></h6>
+                            {% endif %}
+                        </div>
+
+                          <div class="col">
+                              {% if club.meeting_online == True %}
+                            <h6 class="card-title" style="color: green">Online</h6>
+                            {% else %}
+                            <h6 class="card-title" style="color: purple">In-Person</h6>
+                            {% endif %}
+
+                          </div>
                       </div>
+
+
+
                     </div>
-                  </div>
-                  <div class="col-6">
+                    </div>
                     <div class="card w-100">
-                      <div class="card-body">
-                        <h5 class="card-title" style="text-align: center;"><a href="mailto:{{club.owner.email}}">{{ club.owner.first_name }} {{ club.owner.last_name }}</a></h5>
-                        <h6 class="card-title" style="text-transform: lowercase; text-align: center;">Owner</h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="card w-100">
-                      <div class="card-body">
-                        <h5 class="card-title" style="text-align: center;">{{club.location}}</h5>
-                        <h6 class="card-title" style="text-transform: lowercase; text-align: center;">Location</h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="card">
-                      <div class="card-body">
-                        <span style="text-align: center; padding: 70px 0;">{% include 'partials/club_meeting_type.html' with club=club %}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-              <tr>
-                <td class="club-info">
-                    {% if current_user == club.owner %}
+                        <div class="card-body text-center">
+                            {% if current_user == club.owner %}
                       <a class="btn btn-default" href="{% url 'schedule_meeting' pk=club.pk %}"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>
-                    {%else%}
+                            {% elif current_user in club.get_all_users%}
+                                <a class="btn btn-default">Placeholder</a>
+                            {%else%}
                     <form action="{% url 'new_application' club.id %}" method="post">
                       {% csrf_token %}
-                      <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply to {{ club.name }}</button>
+                        <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply</span></button>
                     </form>
                     {%endif%}
                 </td>
@@ -84,4 +116,5 @@
       </div>
   </div>
 </div>
+
 {% endblock %}

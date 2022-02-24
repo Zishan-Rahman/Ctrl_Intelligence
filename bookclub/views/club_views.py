@@ -64,7 +64,7 @@ def new_club(request):  # new club adapted from the chess club project
 
 
 class ClubsListView(LoginRequiredMixin, ListView):
-    """View that shows a list of all books."""
+    """View that shows a list of all clubs."""
 
     model = Club
     template_name = "club_list.html"
@@ -76,7 +76,7 @@ class ClubsListView(LoginRequiredMixin, ListView):
 @login_required
 def club_profile(request, club_id):
     """ Individual Club's Profile Page """
-    club = Club.objects.get(id = club_id)
+    club = Club.objects.get(id=club_id)
     current_user = request.user
     return render(request, 'club_profile.html',{'club':club, 'current_user':current_user})
 
