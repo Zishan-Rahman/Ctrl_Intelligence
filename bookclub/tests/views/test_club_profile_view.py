@@ -34,12 +34,35 @@ class ClubProfileTest(TestCase , LogInTester):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
+        self.assertIn('<img src=', html)
         self.assertIn(f'alt="Gravatar of {self.bush_club.name}" class="rounded-circle profile-image" >', html)
         self.assertIn(f'<h3>{self.bush_club.name}</h3>', html)
-        self.assertIn(f'<p>Owned by <a href="mailto:{self.bush_club.owner.email}">{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}</a> </p>', html)
         self.assertIn(f'<p>{self.bush_club.description}</p>', html)
-        self.assertIn(f'<p>{self.bush_club.description}</p>', html)
-        self.assertIn(f"<p>We're based in {self.bush_club.location}</p>", html)
+        self.assertIn(f'<h6 class="card-title" ><a href="mailto:{self.bush_club.owner.email}">{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}</a></h6>', html)
+        self.assertIn(f'<h6 class="card-title">{self.bush_club.location}</h6>', html)
+
+
+    def test_club_profile_view_has_cards(self):
+        """Checks for card-specific (NOT club-specific) details in the club profile template."""
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn('<div class="card w-100">', html)
+        self.assertIn('<div class="card-body">', html)
+        self.assertIn('<h6 class="card-title">', html)
+        
+    def test_club_profile_view_has_apply_button_for_non_member(self):
+        self.user2 = User.objects.get(email="janedoe@bookclub.com")
+        self.client.login(email=self.user2.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply</span></button>', html)
+
+    def test_club_profile_view_has_meeting_button_for_club_member(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<a class="btn btn-default" href="/club_profile/{self.bush_club.id}/meeting/"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>', html)
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
