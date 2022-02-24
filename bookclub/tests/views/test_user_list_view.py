@@ -33,6 +33,7 @@ class TestUserListView(TestCase, LogInTester):
 
     def test_get_user_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
+        self._create_more_test_users(settings.USERS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_list.html')
@@ -44,7 +45,7 @@ class TestUserListView(TestCase, LogInTester):
         page_one_url = reverse('user_list') + '?page=1'
         response = self.client.get(page_one_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'club_list.html')
+        self.assertTemplateUsed(response, 'user_list.html')
         self.assertEqual(len(response.context['users']), settings.USERS_PER_PAGE)
         page_obj = response.context['page_obj']
         self.assertFalse(page_obj.has_previous())
@@ -61,7 +62,7 @@ class TestUserListView(TestCase, LogInTester):
         response = self.client.get(page_three_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_list.html')
-        self.assertEqual(len(response.context['users']), 2)
+        self.assertEqual(len(response.context['users']), 7)
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())
@@ -74,3 +75,19 @@ class TestUserListView(TestCase, LogInTester):
         redirect_url = reverse_with_next('log_in', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        
+    def _create_more_test_users(self, club_count=10):
+        """Adapted from Fathima Jamaal-Deen's club list view test(s).
+        
+        Her original method was _create_test_clubs."""
+        for id in range(1, club_count+1, 1):
+            User.objects.create(
+                email=f'user{id}@test.org',
+                password='Password123',
+                first_name=f'First{id}',
+                last_name=f'Last{id}',
+                public_bio=f'Bio {id}',
+                favourite_genre=f'genre {id}',
+                location=f'City {id}',
+                age=18+id
+            )
