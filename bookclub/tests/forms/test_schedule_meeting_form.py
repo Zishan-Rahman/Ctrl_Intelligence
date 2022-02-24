@@ -67,4 +67,4 @@ class ScheduleMeetingTestCase(TestCase):
         self.online_form_input['date'] = self.today
         self.online_form_input['time'] = self.past_time
         form = ScheduleMeetingForm(data=self.online_form_input ,club=self.bush_club)
-        self.assertTrue(form.is_valid())
+        self.assertFalse(form.is_valid())

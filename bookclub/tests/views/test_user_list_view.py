@@ -31,8 +31,8 @@ class testUserListView(TestCase, LogInTester):
     def test_user_profile_uses_correct_template(self):
         login = self.client.login(email='johndoe@bookclub.com', password='Password123')
         response = self.client.get(self.url)
-            self.assertEqual(response.status_code, 200)
-            self.assertTemplateUsed(response, 'user_profile.html')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'user_profile.html')
 
 
     def test_get_user_list_redirects_when_not_logged_in(self):

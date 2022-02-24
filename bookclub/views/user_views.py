@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.contrib import messages
 from bookclub.templates import *
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from bookclub.models import User
 from bookclub.forms import UserForm
 from django.contrib.auth import login
