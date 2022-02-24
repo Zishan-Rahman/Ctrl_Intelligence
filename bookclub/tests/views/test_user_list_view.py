@@ -5,6 +5,9 @@ from bookclub.tests.helpers import LogInTester, reverse_with_next
 
 
 class testUserListView(TestCase, LogInTester):
+
+    fixtures = ['bookclub/tests/fixtures/default_users.json']
+
     def setUp(self):
         self.url = reverse('user_list')
         self.user = User.objects.create(
@@ -21,17 +24,17 @@ class testUserListView(TestCase, LogInTester):
     def test_get_user_list(self):
         self.client.login(username=self.user.email, password='Password123')
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, 'user_list.html')
         self.assertContains(response, user.first_name)
         self.assertContains(response, user.last_name)
         self.assertContains(response, user.public_bio)
         self.assertContains(response, user.email)
         self.assertContains(response, user.date_joined)
+        self.assertTemplateUsed(response, 'user_list.html')
 
     def test_user_profile_uses_correct_template(self):
         login = self.client.login(email='johndoe@bookclub.com', password='Password123')
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.target_status_code, 200)
         self.assertTemplateUsed(response, 'user_profile.html')
 
 
