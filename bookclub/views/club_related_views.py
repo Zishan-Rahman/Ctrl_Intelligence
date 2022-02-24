@@ -71,27 +71,27 @@ def club_members(request, club_id):
     return render(request, 'club_members.html', {'club': club, 'page_obj': page_obj})
 
 
-class ClubMemberListView(LoginRequiredMixin, ListView):
-    """Gets the members of each club"""
+# class ClubMemberListView(LoginRequiredMixin, ListView):
+#     """Gets the members of each club"""
 
-    model = Club
-    template_name = "club_members.html"
-    paginate_by = settings.USERS_PER_PAGE
-    pk_url_kwarg = 'club_id'
-    object_list = "club"
+#     model = Club
+#     template_name = "club_members.html"
+#     paginate_by = settings.USERS_PER_PAGE
+#     pk_url_kwarg = 'club_id'
+#     object_list = "club"
     
-    def get(self, request, *args, **kwargs):
-        """Handle get request, and redirect to book_list if book_id invalid."""
-        try:
-            return super().get(request, *args, **kwargs)
-        except Http404:
-            return redirect('home')
+#     def get(self, request, *args, **kwargs):
+#         """Handle get request, and redirect to book_list if book_id invalid."""
+#         try:
+#             return super().get(request, *args, **kwargs)
+#         except Http404:
+#             return redirect('home')
 
-    def get_context_data(self, **kwargs):
-        current_club_id = self.request.GET.get('club_id')
-        context = super().get_context_data(**kwargs)
-        context['club'] = Club.objects.get(id = current_club_id)
-        return context
+#     def get_context_data(self, **kwargs):
+#         current_club_id = self.request.GET.get('club_id')
+#         context = super().get_context_data(**kwargs)
+#         context['club'] = Club.objects.get(id = current_club_id)
+#         return context
 
 
 def app_accept(request, pk):
