@@ -82,6 +82,7 @@ def club_profile(request, club_id):
 
 @login_required
 def leave_club(request , club_id):
+    """Leave A Club """
     club = Club.objects.get(pk=club_id)
     current_user = request.user
     club.remove_from_club(current_user)
