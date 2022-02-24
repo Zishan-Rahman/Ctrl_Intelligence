@@ -70,12 +70,16 @@ class ClubProfileTest(TestCase , LogInTester):
         html = response.content.decode('utf8')
         self.assertIn(f'<a class="btn btn-default" href="/club_profile/{self.bush_club.id}/meeting/"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>', html)
 
+    """ Test if the club profile page doesn't have a leave button for a non-member of the club """
+
     def test_club_profile_view_doesnt_have_a_leave_button_for_non_member(self):
         self.user2 = User.objects.get(email="janedoe@bookclub.com")
         self.client.login(email=self.user2.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertNotIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {self.bush_club.name}</button>', html )
+
+    """Test if the club profile page has a leave button for a member of the club """
 
     def test_club_profile_view_has_a_leave_button_for_club_member(self):
         self.client.login(email=self.user.email, password='Password123')
