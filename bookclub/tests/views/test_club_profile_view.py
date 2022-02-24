@@ -41,7 +41,6 @@ class ClubProfileTest(TestCase , LogInTester):
         self.assertIn(f'<h6 class="card-title" ><a href="mailto:{self.bush_club.owner.email}">{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}</a></h6>', html)
         self.assertIn(f'<h6 class="card-title">{self.bush_club.location}</h6>', html)
 
-
     def test_club_profile_view_has_cards(self):
         """Checks for card-specific (NOT club-specific) details in the club profile template."""
         self.client.login(email=self.user.email, password='Password123')
@@ -63,6 +62,23 @@ class ClubProfileTest(TestCase , LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<a class="btn btn-default" href="/club_profile/{self.bush_club.id}/meeting/"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>', html)
+
+    """ Test if the club profile page doesn't have a leave button for a non-member of the club """
+
+    def test_club_profile_view_doesnt_have_a_leave_button_for_non_member(self):
+        self.user2 = User.objects.get(email="janedoe@bookclub.com")
+        self.client.login(email=self.user2.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertNotIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {self.bush_club.name}</button>', html )
+
+    """Test if the club profile page has a leave button for a member of the club """
+
+    def test_club_profile_view_has_a_leave_button_for_club_member(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {self.bush_club.name}</button>', html)
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
