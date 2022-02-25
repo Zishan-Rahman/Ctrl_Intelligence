@@ -38,7 +38,9 @@ class ClubProfileTest(TestCase , LogInTester):
         self.assertIn(f'alt="Gravatar of {self.bush_club.name}" class="rounded-circle profile-image" >', html)
         self.assertIn(f'<h3>{self.bush_club.name}</h3>', html)
         self.assertIn(f'<p>{self.bush_club.description}</p>', html)
-        self.assertIn(f'<h6 class="card-title" ><a href="mailto:{self.bush_club.owner.email}">{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}</a></h6>', html)
+        self.assertIn(f'<a href="/user_profile/{self.bush_club.owner.id}/">', html)
+        self.assertIn(f'<h6 class="card-title" >{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}</h6>', html)
+        self.assertIn(f'</a>', html)
         self.assertIn(f'<h6 class="card-title">{self.bush_club.location}</h6>', html)
 
     def test_club_profile_view_has_cards(self):
