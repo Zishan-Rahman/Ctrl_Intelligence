@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.views.generic import ListView
 from bookclub.models import User, Club, Application
 from bookclub.views import club_views
-from django.views.generic.edit import View
+from django.views.generic.edit import View, UpdateView
 from django.core.paginator import Paginator
 
 
@@ -60,6 +60,31 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
         return render(self.request, 'my_applications.html', {'applications': my_applications})
 
+class MeetingUpdateView(LoginRequiredMixin, UpdateView):
+    """View to update a scheduled club meeting
+    
+    Adapted from Raisa Ahmed's ProfileUpdateView"""
+    
+    model = ScheduleMeetingForm
+    template_name = "edit_meeting.html"
+    form_class = ScheduleMeetingForm
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        messages.add_message(self.request, messages.SUCCESS, "Meeting updated!")
+        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+    def post(self, request, *args, **kwargs):
+        current_user = request.user
+        form = self.form_class(instance=current_user, data=request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
+        return render(request, 'edit_meeting.html', {"form": form})
+
+    def get(self, request, *args, **kwargs):
+        current_user = request.user
+        form = self.form_class(instance=current_user)
+        return render(request, 'edit_meeting.html', {"form": form})
 
 def app_accept(request, pk):
     """Accept application"""
