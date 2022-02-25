@@ -19,7 +19,7 @@
                     <tbody>
                         {% for member in page_obj %}
                             <tr>
-                                <td><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></td>
+                                <td><a href="{% url 'user_profile' member.id %}"><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></a></td>
                                 <td>{{member.first_name}} {{member.last_name}}</td>
                                 <td>{{member.public_bio}}</td>
                                 <td>{{member.favourite_genre}}</td>
