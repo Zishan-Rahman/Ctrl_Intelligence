@@ -46,14 +46,16 @@
                     </div>
                       <div class="card w-100">
                       <div class="card-body">
+                        <a href="{% url 'user_profile' club.owner.id %}">
                           <div class="row">
                               <div class="col-3">
                                   <h6 class="card-title"><i class="bi bi-person"></i></h6>
                               </div>
                               <div class="col">
-                                  <h6 class="card-title" ><a href="mailto:{{club.owner.email}}">{{ club.owner.first_name }} {{ club.owner.last_name }}</a></h6>
+                                  <h6 class="card-title" >{{ club.owner.first_name }} {{ club.owner.last_name }}</h6>
                               </div>
                           </div>
+                        </a>
                       </div>
                     </div>
                     <div class="card w-100">
