@@ -38,11 +38,6 @@ class MeetingUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "edit_meeting.html"
     form_class = ScheduleMeetingForm
 
-    def get_object(self):
-        """Return the object (user) to be updated."""
-        user = self.request.user
-        return user
-
     def get_success_url(self):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Meeting updated!")
