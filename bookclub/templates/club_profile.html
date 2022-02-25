@@ -34,6 +34,7 @@
                     </div>
                   <div class="card w-100">
                       <div class="card-body">
+                        <a href="{% url 'club_members' club.id %}">
                           <div class="row">
                               <div class="col-3">
                                   <h6 class="card-title"><i class="bi bi-person-badge"></i></h6>
@@ -42,6 +43,7 @@
                                   <h6 class="card-title">{{club.get_all_users|length}} members</h6>
                               </div>
                           </div>
+                        </a>
                       </div>
                     </div>
                       <div class="card w-100">
