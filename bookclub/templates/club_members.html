@@ -17,6 +17,7 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         {% for member in club.get_all_users %}
                             <tr>
                                 <td><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></td>
@@ -25,6 +26,7 @@
                                 <td>{{member.favourite_genre}}</td>
                             </tr>
                         {% endfor %}
+
                     </tbody>
                 </table>
                 {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}

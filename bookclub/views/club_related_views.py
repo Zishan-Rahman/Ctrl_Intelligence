@@ -78,23 +78,25 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
     template_name = "club_members.html"
     paginate_by = settings.USERS_PER_PAGE
     pk_url_kwarg = 'club_id'
-    context_object_name = "club"
+    context_object_name = 'club'
+    ordering = ['-name']
 
     # def get(self, request, *args, **kwargs):
-    #     """Display application template"""
-    #     return self.render()
+    #     """Handle get request, and redirect to book_list if book_id invalid."""
+    #     try:
+    #         return super().get(request, *args, **kwargs)
+    #     except Http404:
+    #         return redirect('home')
+    #
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return Club.objects.get(id = self.kwargs['club_id']).get_all_users()
 
-    def get(self, request, *args, **kwargs):
-        """Handle get request, and redirect to book_list if book_id invalid."""
-        try:
-            return super().get(request, *args, **kwargs)
-        except Http404:
-            return redirect('home')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        current_club_id = self.request.GET.get('club_id')
-        context['club'] = User.objects.all()
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        current_club_id = self.kwargs['club_id']
+        current_club = Club.objects.get(id = current_club_id)
+        context['club'] = current_club
         return context
 
 
