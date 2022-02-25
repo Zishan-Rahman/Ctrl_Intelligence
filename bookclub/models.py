@@ -264,7 +264,8 @@ class Rating(models.Model):
 class Meeting(models.Model):
     """A model for denoting and storing meetings."""
     date = models.DateField()
-    time = models.TimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
     address = models.CharField(max_length=50)
 
@@ -275,8 +276,11 @@ class Meeting(models.Model):
     def get_meeting_date(self):
         return self.date
 
-    def get_meeting_time(self):
-        return self.time
+    def get_meeting_start_time(self):
+        return self.start_time
+    
+    def get_meeting_end_time(self):
+        return self.end_time
 
     def get_meeting_address(self):
         return self.address
