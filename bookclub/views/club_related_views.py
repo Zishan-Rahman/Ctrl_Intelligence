@@ -104,6 +104,7 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
 
 class ClubMeetingsListView(LoginRequiredMixin, ListView):
     """Gets the meetings history of each club"""
+    """Adapted from ClubMembersListView"""
 
     model = Club
     template_name = "club_meetings.html"
