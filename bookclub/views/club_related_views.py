@@ -103,7 +103,7 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
         context['page_obj'] = page_obj
         return context
 
-class ClubMeetingListView(LoginRequiredMixin, ListView):
+class ClubMeetingsListView(LoginRequiredMixin, ListView):
     """Gets the meetings history of each club"""
 
     model = Club
