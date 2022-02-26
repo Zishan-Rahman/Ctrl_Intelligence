@@ -16,7 +16,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for meeting in meeting %}
+                  {% for meeting in club.get_meetings %}
                   <tr class="clickable-row" data-href="#">
                     <td>{{ meeting.date }}</td>
                     <td>{{ meeting.address }}</td>
