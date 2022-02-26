@@ -12,6 +12,7 @@
                   <tr>
                       <th scope="col">Date</th>
                       <th scope="col">Address</th>
+                      <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -19,6 +20,7 @@
                   <tr class="clickable-row" data-href="#">
                     <td>{{ meeting.date }}</td>
                     <td>{{ meeting.address }}</td>
+                    <td><a class="btn btn-default" href="#"><span class="btn btn-dark">Edit</span></a></td>
                   </tr>
                   {% endfor %}
                 </tbody>
