@@ -103,6 +103,37 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
         context['page_obj'] = page_obj
         return context
 
+class ClubMeetingListView(LoginRequiredMixin, ListView):
+    """Gets the members of each club"""
+
+    model = Meeting
+    template_name = "club_meetings.html"
+    paginate_by = settings.USERS_PER_PAGE
+    pk_url_kwarg = 'club_id'
+    context_object_name = 'club'
+    ordering = ['-name']
+
+    def get(self, request, *args, **kwargs):
+        """Handle get request, and redirect to clubs list if club_id invalid."""
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            return redirect('home')
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return Club.objects.get(id = self.kwargs['club_id']).get_all_users()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        current_club_id = self.kwargs['club_id']
+        current_club = Club.objects.get(id = current_club_id)
+        paginator = Paginator(current_club.get_all_users(), settings.USERS_PER_PAGE)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['club'] = current_club
+        context['page_obj'] = page_obj
+        return context
 
 def app_accept(request, pk):
     """Accept application"""
