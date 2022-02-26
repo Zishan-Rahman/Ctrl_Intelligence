@@ -89,7 +89,6 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
             return redirect('home')
 
     def get_queryset(self):
-        queryset = super().get_queryset()
         return Club.objects.get(id = self.kwargs['club_id']).get_all_users()
 
     def get_context_data(self, *args, **kwargs):
@@ -121,7 +120,6 @@ class ClubMeetingsListView(LoginRequiredMixin, ListView):
             return redirect('home')
 
     def get_queryset(self):
-        queryset = super().get_queryset()
         return Club.objects.get(id = self.kwargs['club_id']).get_meetings()
 
     def get_context_data(self, *args, **kwargs):
