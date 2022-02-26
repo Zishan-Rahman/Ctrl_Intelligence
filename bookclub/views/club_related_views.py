@@ -87,15 +87,6 @@ class MeetingUpdateView(LoginRequiredMixin, UpdateView):
         form = self.form_class(instance=current_user)
         return render(request, 'edit_meeting.html', {"form": form})
 
-@login_required
-def club_members(request, club_id):
-    club = Club.objects.get(id=club_id)
-    paginator = Paginator(club.get_all_users(), 2)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'club_members.html', {'club': club, 'page_obj': page_obj})
-
-
 class ClubMemberListView(LoginRequiredMixin, ListView):
     """Gets the members of each club"""
 
