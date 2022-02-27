@@ -17,10 +17,10 @@ class SearchBarViewTest(TestCase):
         self.assertEqual(self.url, '/search/')
 
     def test_redirect_if_not_logged_in(self):
-        redirect_url = reverse_with_next('log_in', self.url)
+        redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_queryset_filter(self):
-        response = self.client.get(reverse('log_in'))
+        response = self.client.get(reverse('login'))
         self.assertQuerysetEqual(Book.objects.all(), Book.objects.filter(title__contains='Harry Potter'), transform= lambda x:x)
