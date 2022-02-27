@@ -38,7 +38,7 @@ class ClubProfileTest(TestCase , LogInTester):
         self.assertIn(f'alt="Gravatar of {self.bush_club.name}" class="rounded-circle profile-image" >', html)
         self.assertIn(f'<h3>{self.bush_club.name}</h3>', html)
         self.assertIn(f'<p>{self.bush_club.description}</p>', html)
-        self.assertIn(f'<a href="/user_profile/{self.bush_club.owner.id}/">', html)
+        self.assertIn(f'<a href="/user_profile/{self.bush_club.owner.id}/" style="text-decoration: none;">', html)
         self.assertIn(f'<h6 class="card-title" >{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}</h6>', html)
         self.assertIn(f'</a>', html)
         self.assertIn(f'<h6 class="card-title">{self.bush_club.location}</h6>', html)
@@ -64,6 +64,12 @@ class ClubProfileTest(TestCase , LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<a class="btn btn-default" href="/club_profile/{self.bush_club.id}/meeting/"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>', html)
+        
+    def test_club_profile_view_has_meetings_list_button_for_all_user(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<a class="btn btn-default" href="/club_profile/{self.bush_club.id}/meetings"><span class="btn btn-dark" style="background-color: brown">See meeting history</span></a>', html)
 
     """ Test if the club profile page doesn't have a leave button for a non-member of the club """
 
