@@ -59,7 +59,7 @@ def password_reset_request(request):
 						send_mail(subject, email, 'bookwise0000@gmail.com' , [user.email], fail_silently=False)
 					except BadHeaderError:
 						return HttpResponse('Invalid header found.')
-					messages.success(request, 'A message with reset password instructions has been sent to your inbox.')
+					messages.success(request, 'A message with reset password instructions has been sent to your inbox. Please check your spam folder.')
 					return redirect ("home")
 			messages.error(request, 'An invalid email has been entered.')
 	password_reset_form = PasswordResetForm()
