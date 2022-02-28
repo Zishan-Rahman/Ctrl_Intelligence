@@ -28,6 +28,12 @@ class MyApplicationViewTestCase(TestCase):
     def test_my_application_url(self):
         self.assertEqual(self.url,'/my_applications/')
 
+    def test_home_uses_correct_template(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'my_applications.html')
+
     def test_single_application_has_correct_details(self):
         self.client.login(email=self.john.email, password="Password123")
         response, html = self.get_response_and_html()
@@ -65,6 +71,7 @@ class MyApplicationViewTestCase(TestCase):
         self.assertIn('<td>Bush House Book Club</td>', html)
         self.assertIn('<td>Bush House Official Book Club!</td>', html)
         self.assertIn('<td>Strand, London</td>', html)
+<<<<<<< HEAD
 
     def test_get_application_list_with_pagination(self):
         self.client.login(email=self.john.email, password='Password123')
@@ -124,3 +131,5 @@ class MyApplicationViewTestCase(TestCase):
                 applicant=self.john,
                 club=created_club,
             ))
+=======
+>>>>>>> 4cb01ae4468d79ae4ae3eaadab60a255cd1d5e5c

@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 class PasswordResetViewTest(TestCase):
-    """Test suite for the password view."""
+    """Test suite for the reset password view."""
 
     def setUp(self):
         self.url = reverse('password_reset')

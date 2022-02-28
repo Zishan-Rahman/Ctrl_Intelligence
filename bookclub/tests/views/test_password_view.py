@@ -26,6 +26,12 @@ class PasswordViewTest(TestCase):
     def test_password_url(self):
         self.assertEqual(self.url, '/password/')
 
+    def test_home_uses_correct_template(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'password.html')
+
     def test_get_password(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
