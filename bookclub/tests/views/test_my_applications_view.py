@@ -71,7 +71,6 @@ class MyApplicationViewTestCase(TestCase):
         self.assertIn('<td>Bush House Book Club</td>', html)
         self.assertIn('<td>Bush House Official Book Club!</td>', html)
         self.assertIn('<td>Strand, London</td>', html)
-<<<<<<< HEAD
 
     def test_get_application_list_with_pagination(self):
         self.client.login(email=self.john.email, password='Password123')
