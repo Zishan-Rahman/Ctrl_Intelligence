@@ -130,5 +130,3 @@ class MyApplicationViewTestCase(TestCase):
                 applicant=self.john,
                 club=created_club,
             ))
-=======
->>>>>>> 4cb01ae4468d79ae4ae3eaadab60a255cd1d5e5c
