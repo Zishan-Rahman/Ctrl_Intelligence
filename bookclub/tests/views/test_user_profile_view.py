@@ -11,7 +11,7 @@ class UserProfileTest(TestCase):
         self.user = User.objects.get(email='johndoe@bookclub.com')
         self.url = reverse('profile')
 
-    def test_book_profile_url(self):
+    def test_user_profile_url(self):
         self.assertEqual(self.url,'/profile/')
 
     def test_user_profile_uses_correct_template(self):

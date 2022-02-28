@@ -16,6 +16,12 @@ class SearchBarViewTest(TestCase):
     def test_search_page_url(self):
         self.assertEqual(self.url, '/search/')
 
+    def test_home_uses_correct_template(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'search_page.html')
+
     def test_redirect_if_not_logged_in(self):
         redirect_url = reverse_with_next('log_in', self.url)
         response = self.client.get(self.url)
