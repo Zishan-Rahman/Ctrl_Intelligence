@@ -1,0 +1,35 @@
+{% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>Members of {{ club.get_name }}</h1>
+            <div class="book-table">
+                {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Bio</th>
+                            <th scope="col">Favourite Genre</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in page_obj %}
+                            <tr>
+                                <td><a href="{% url 'user_profile' member.id %}"><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></a></td>
+                                <td>{{member.first_name}} {{member.last_name}}</td>
+                                <td>{{member.public_bio}}</td>
+                                <td>{{member.favourite_genre}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

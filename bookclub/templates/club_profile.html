@@ -34,6 +34,7 @@
                     </div>
                   <div class="card w-100">
                       <div class="card-body">
+                        <a href="{% url 'club_members' club.id %}" style="text-decoration: none;">
                           <div class="row">
                               <div class="col-3">
                                   <h6 class="card-title"><i class="bi bi-person-badge"></i></h6>
@@ -42,18 +43,21 @@
                                   <h6 class="card-title">{{club.get_all_users|length}} members</h6>
                               </div>
                           </div>
+                        </a>
                       </div>
                     </div>
                       <div class="card w-100">
                       <div class="card-body">
+                        <a href="{% url 'user_profile' club.owner.id %}" style="text-decoration: none;">
                           <div class="row">
                               <div class="col-3">
                                   <h6 class="card-title"><i class="bi bi-person"></i></h6>
                               </div>
                               <div class="col">
-                                  <h6 class="card-title" ><a href="mailto:{{club.owner.email}}">{{ club.owner.first_name }} {{ club.owner.last_name }}</a></h6>
+                                  <h6 class="card-title" >{{ club.owner.first_name }} {{ club.owner.last_name }}</h6>
                               </div>
                           </div>
+                        </a>
                       </div>
                     </div>
                     <div class="card w-100">
@@ -89,11 +93,12 @@
                             {% elif current_user in club.get_all_users%}
                                 <a class="btn btn-default">Placeholder</a>
                             {%else%}
-                    <form action="{% url 'new_application' club.id %}" method="post">
-                      {% csrf_token %}
-                        <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply</span></button>
-                    </form>
-                    {%endif%}
+                            <form action="{% url 'new_application' club.id %}" method="post">
+                              {% csrf_token %}
+                                <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply</span></button>
+                            </form>
+                            {%endif%}
+                            <a class="btn btn-default" href="{% url 'club_meetings' club.id %}"><span class="btn btn-dark" style="background-color: brown">See meeting history</span></a>
                 </td>
               </tr>
 
