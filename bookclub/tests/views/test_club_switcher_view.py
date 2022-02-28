@@ -28,6 +28,18 @@ class ClubSwitcherViewTestCase(TestCase):
     def test_redirect_to_my_clubs_alt(self):
         self.assertEqual(self.url2, "/my_clubs1/")
 
+    def test_my_clubs_uses_correct_template(self):
+        self.client.login(email=self.joe.email, password='Password123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'club_switcher.html')
+
+    def test_my_clubs_alt_uses_correct_template(self):
+        self.client.login(email=self.joe.email, password='Password123')
+        response = self.client.get(self.url2)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'club_switcher_alt.html')
+
     def test_get_my_clubs(self):
         self.client.login(email=self.john.email, password="Password123")
         response = self.client.get(reverse("club_selector"))
@@ -118,4 +130,3 @@ class ClubSwitcherViewTestCase(TestCase):
         self.assertNotIn('<p class="card-text text-left">Somerset House Official Book Club!</p>', html)
         self.assertNotIn('<p class="card-text text-left">Strand House Official Book Club!</p>', html)
         self.client.logout()
-
