@@ -1,4 +1,5 @@
 """Tests of the individual applications view."""
+from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User, Club, Application
@@ -70,3 +71,62 @@ class MyApplicationViewTestCase(TestCase):
         self.assertIn('<td>Bush House Book Club</td>', html)
         self.assertIn('<td>Bush House Official Book Club!</td>', html)
         self.assertIn('<td>Strand, London</td>', html)
+
+    def test_get_application_list_with_pagination(self):
+        self.client.login(email=self.john.email, password='Password123')
+        self._create_test_my_applications(settings.APPLICATIONS_PER_PAGE*2+3-1)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'my_applications.html')
+        self.assertEqual(len(response.context['page_obj']), settings.APPLICATIONS_PER_PAGE)
+        page_obj = response.context['page_obj']
+        self.assertFalse(page_obj.has_previous())
+        self.assertTrue(page_obj.has_next())
+        page_one_url = reverse('my_applications') + '?page=1'
+        response = self.client.get(page_one_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'my_applications.html')
+        self.assertEqual(len(response.context['page_obj']), settings.APPLICATIONS_PER_PAGE)
+        page_obj = response.context['page_obj']
+        self.assertFalse(page_obj.has_previous())
+        self.assertTrue(page_obj.has_next())
+        page_two_url = reverse('my_applications') + '?page=2'
+        response = self.client.get(page_two_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'my_applications.html')
+        self.assertEqual(len(response.context['page_obj']), settings.APPLICATIONS_PER_PAGE)
+        page_obj = response.context['page_obj']
+        self.assertTrue(page_obj.has_previous())
+        self.assertTrue(page_obj.has_next())
+        page_three_url = reverse('my_applications') + '?page=3'
+        response = self.client.get(page_three_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'my_applications.html')
+        self.assertEqual(len(response.context['page_obj']), 3)
+        page_obj = response.context['page_obj']
+        self.assertTrue(page_obj.has_previous())
+        self.assertFalse(page_obj.has_next())
+
+    def _create_test_my_applications(self, my_applications_count=10):
+        my_apps = []
+        for id in range(1, my_applications_count + 1, 1):
+            created_club = Club.objects.create(
+                owner_id=id,
+                name=f'The {id} Book Club',
+                location=f'City {id}',
+                description=f'Description {id}',
+                owner=User.objects.create(
+                    email=f'user{id}@test.org',
+                    password='Password123',
+                    first_name=f'First{id}',
+                    last_name=f'Last{id}',
+                    public_bio=f'Bio {id}',
+                    favourite_genre=f'genre {id}',
+                    location=f'City {id}',
+                    age=18 + id
+                ),
+            )
+            my_apps.append(Application.objects.create(
+                applicant=self.john,
+                club=created_club,
+            ))

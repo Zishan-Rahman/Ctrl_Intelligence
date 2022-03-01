@@ -34,7 +34,11 @@ class ApplicationsView(LoginRequiredMixin, View):
             if a.club in owned_clubs:
                 applicants.append(a)
 
-        return render(self.request, 'applications.html', {'applicants': applicants})
+        paginator = Paginator(applicants, settings.APPLICATIONS_PER_PAGE)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        return render(self.request, 'applications.html', {'applicants': applicants, 'page_obj': page_obj})
 
 
 class MyApplicationsView(LoginRequiredMixin, View):
@@ -59,8 +63,11 @@ class MyApplicationsView(LoginRequiredMixin, View):
             if a.club in clubs and a.applicant == current_user:
                 my_applications.append(a)
 
-        return render(self.request, 'my_applications.html', {'applications': my_applications})
+        paginator = Paginator(my_applications, settings.APPLICATIONS_PER_PAGE)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
+        return render(self.request, 'my_applications.html', {'applications': my_applications, 'page_obj': page_obj})
 
 @login_required
 def club_members(request, club_id):
@@ -191,7 +198,7 @@ def meetings_list(request, club_id):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'club_meetings.html', {'club': club, 'page_obj': page_obj})
-    
+
 
 
 class MeetingScheduler(LoginRequiredMixin, View):
