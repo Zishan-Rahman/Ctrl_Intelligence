@@ -127,6 +127,7 @@ class Club(models.Model):
     organisers = models.ManyToManyField(User, related_name="organiser_of")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
     meeting_online = models.BooleanField(unique=False, blank=False, default=True)
+    organiser_owner = models.BooleanField(unique=False, blank = False, default = True)
 
     class Meta:
         """Model options."""
@@ -198,7 +199,7 @@ class Club(models.Model):
         if self.meeting_online:
             return "online"
         return "in person"
-    
+
     def get_meetings(self):
         return Meeting.objects.filter(club_id=self.id)
 
@@ -215,6 +216,12 @@ class Club(models.Model):
             self.save()
         else:
             raise ValueError
+    
+    def organiser_has_owner_privilege(self):
+        if self.organiser_owner:
+            return "Organiser has owner privileges."
+        else:
+            return "Organiser does not have owner privileges."
 
     def gravatar(self, size=120):
         """Return a URL to the user's gravatar."""
