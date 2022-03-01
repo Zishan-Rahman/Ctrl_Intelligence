@@ -236,5 +236,13 @@ class ScheduleMeetingForm(forms.ModelForm):
         super().save(commit=False)
         meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club, address = self.cleaned_data.get('address'))
 
+class InviteForm(forms.ModelForm):
+    email_address = forms.EmailField()
 
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user")
+        super().__init__(*args, **kwargs)
 
+    def clean(self):
+        super().clean()
+        email = self.cleaned_data["email_address"]

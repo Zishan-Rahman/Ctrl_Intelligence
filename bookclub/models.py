@@ -198,7 +198,7 @@ class Club(models.Model):
         if self.meeting_online:
             return "online"
         return "in person"
-    
+
     def get_meetings(self):
         return Meeting.objects.filter(club_id=self.id)
 
@@ -266,7 +266,7 @@ class Meeting(models.Model):
     date = models.DateField()
     time = models.TimeField()
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
-    address = models.CharField(max_length=50)
+    address = models.CharField(max_length=50, default=True)
 
 
     def get_meeting_club(self):

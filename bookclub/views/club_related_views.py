@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
-from bookclub.forms import ApplicantForm, ApplicationForm, ScheduleMeetingForm
+from bookclub.forms import ApplicantForm, ApplicationForm, ScheduleMeetingForm, InviteForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -137,3 +137,18 @@ class MeetingScheduler(LoginRequiredMixin, View):
         current_club=Club.objects.get(pk=pk)
         form = ScheduleMeetingForm(club=current_club)
         return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
+
+def invite_users(request, self):
+    """Sends an email to invite users to clubs."""
+    
+     if request.method == "GET":
+         form = InviteForm(data={"from_user": str(request.user.email), "to_user": str(invitee.email)})
+     else:
+         form = InviteForm(data=request.POST)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.add_message(request, messages.SUCCESS, f"Invite sent to {username}.")
+        return redirect(self.request, "my_clubs.html")
+
+    return render(request, "invites/send.html", context)
