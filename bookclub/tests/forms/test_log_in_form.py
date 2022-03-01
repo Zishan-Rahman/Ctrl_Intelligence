@@ -20,7 +20,7 @@ class LogInFormTestCase(TestCase):
             password='Password123',
         )
 
-    def test_valid_log_in_form(self):
+    def test_valid_login_form(self):
         form = LogInForm(data = self.form_input)
         self.assertTrue(form.is_valid())
 

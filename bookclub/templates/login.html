@@ -6,12 +6,13 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-  <form class="modal-content animate" action="{% url 'log_in' %}" method="post">
+  <form class="modal-content animate" action="{% url 'login' %}" method="post">
     <h3><strong>Log in</strong></h3>
    {%  csrf_token  %}
         <input type ="hidden" name="next" value ="{{ next }}">
          {%  include 'partials/bootstrap_form.html' with form=form %}
         <input type ="submit" value ="Log in" class ="btn btn-primary">
+        <a href="/password_reset">Forgot password?</a>
      </form>
      </div>
      </div>

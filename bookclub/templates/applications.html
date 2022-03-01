@@ -1,4 +1,5 @@
 {% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
 {% block content %}
     <div class="container">
     <div class="row">
@@ -8,6 +9,7 @@
       <h3>You have no pending applications.</h3>
       {% else %}
       <table class="table">
+        {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
         <thead class="table-light">
           <tr>
             <th scope="col" style="width:15%">Club Applying To</th>
@@ -22,7 +24,7 @@
             <th scope="col">Reject</th>
           </tr>
         </thead>
-    {% for a in applicants %}
+    {% for a in page_obj %}
       <tr>
         <td>{{ a.club.name }}</td>
         <td>{{ a.applicant.first_name }}</td>
@@ -37,6 +39,7 @@
       </tr>
     {% endfor %}
   </table>
+  {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
   {% endif %}
    </body>
         </div>

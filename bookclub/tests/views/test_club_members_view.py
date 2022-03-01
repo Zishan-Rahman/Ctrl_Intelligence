@@ -8,12 +8,12 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
     """Tests of the club members view."""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json","bookclub/tests/fixtures/default_clubs.json"]
-    
+
     def setUp(self):
         self.club = Club.objects.get(pk=2)
         self.user = User.objects.get(id=self.club.owner.id)
         self.url = reverse('club_members', kwargs={'club_id':self.club.id})
-        
+
     def test_club_members_url(self):
         self.assertEqual(self.url,f'/club_profile/{self.club.id}/members')
 
@@ -22,13 +22,13 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "club_members.html")
-    
+
     def test_get_club_members_list_redirects_when_not_logged_in(self):
-        redirect_url = reverse_with_next('log_in', self.url)
+        redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertFalse(self._is_logged_in())
-    
+
     def test_club_members_list_view_shows_club_name(self):
         self.client.login(email=self.user.email, password="Password123")
         response = self.client.get(self.url)
@@ -36,7 +36,7 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
         self.assertTrue(self._is_logged_in())
         html = response.content.decode('utf8')
         self.assertIn(f'<h1>Members of {self.club.name}</h1>', html)
-        
+
     def test_club_members_list_view_contains_user_details(self):
         """Test some test users' details to see if they actually show up at all."""
         self.client.login(email=self.user.email, password="Password123")
@@ -62,7 +62,7 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
             self.assertIn(f'<td>{test_user.get_full_name()}</td>', html)
             self.assertIn(f'<td>{test_user.get_bio()}</td>', html)
             self.assertIn(f'<td>{test_user.get_favourite_genre()}</td>', html)
-    
+
     def test_get_club_members_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_club_members(settings.USERS_PER_PAGE*2+3-1)
@@ -98,7 +98,7 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())
-        
+
     def _create_test_club_members(self, user_count=10):
         for id in range(1, user_count+1, 1):
             self.club.make_member(
@@ -113,6 +113,6 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
                     age=18+id
                 )
             )
-    
+
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
