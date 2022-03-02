@@ -237,4 +237,5 @@ class ScheduleMeetingForm(forms.ModelForm):
         meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club, address = self.cleaned_data.get('address'))
 
 
-
+class FilterForm(forms.Form):
+    selected_status = forms.ModelChoiceField(queryset=Club.objects.all(), required=True)

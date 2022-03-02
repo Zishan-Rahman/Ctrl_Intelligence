@@ -23,7 +23,6 @@ def club_util(request):
 
 @login_required
 def club_list(request):
-    clubs = []
     for club in Club.objects.all():
         clubs.append({
             "id": club.id,
@@ -36,6 +35,35 @@ def club_list(request):
             "gravatar": club.gravatar()
         })
     return render(request, 'club_list.html', {'clubs': clubs})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # selected = None
+    # clubs = Club.objects.all()
+    # if request.method == POST:
+    #     selected = request.POST.get('status')
+    #     clubs = Club.objects.filter(status=selected)
+    #
+    # status = Club.objects.order_by('status').values_list('status', flat=True)
+    # context = {
+    # 'status' : status,
+    # 'clubs' : clubs,
+    # 'selected' : selected
+    #
+    # }
+    #
+    # return render(request, 'club_selector.html', context)
 
 
 @login_required
@@ -87,3 +115,14 @@ def leave_club(request , club_id):
     current_user = request.user
     club.remove_from_club(current_user)
     return redirect('club_selector')
+
+def index(request, template_name='club_switcher.html'):
+
+    if request.GET.get('Owner'):
+        featured_filter = request.GET.get('Owner')
+        clubs = Club.objects.filter(featured_choices=featured_filter)
+    else:
+        clubs = Club.objects.all()
+
+    context_dict = {'clubs': clubs}
+    return render(request, template_name, context_dict)
