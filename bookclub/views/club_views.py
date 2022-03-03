@@ -18,15 +18,6 @@ def club_util(request):
     for temp_club in clubs:
         if request.user in temp_club.get_all_users():
             user_clubs_list.append(temp_club)
-            user_level = temp_club.user_level(request.user)
-        for request.user in user_clubs_list:
-            if user_level == "Owner":
-                config.user_level = "Owner"
-            elif user_level == "Organiser":
-                config.user_level = "Organiser"
-            else:
-                config.user_level = "Member"
-
 
     config.user_clubs = user_clubs_list
 
@@ -68,13 +59,13 @@ def club_list(request):
 @login_required
 def club_selector(request):
     club_util(request)
-    return render(request, "club_switcher.html", {'user_clubs': config.user_clubs, 'user_level': config.user_level})
+    return render(request, "club_switcher.html", {'user_clubs': config.user_clubs,'user':request.user})
 
 
 @login_required
 def club_selector_alt(request):
     club_util(request)
-    return render(request, "club_switcher_alt.html", {"user_clubs": config.user_clubs})
+    return render(request, "club_switcher_alt.html", {"user_clubs": config.user_clubs, 'user': request.user})
 
 @login_required
 def new_club(request):  # new club adapted from the chess club project

@@ -19,7 +19,20 @@
         </div>
     </div>
 
-
+    <div id="top-content">
+      <span id="clubs-selection-title">Clubs:</span>
+      <select name="clubs", id="clubs-selection">
+        {% for cm in user_clubs %}
+          {% if user in cm.get_members%}
+            <option value="{{ cm.name }}">{{ cm.name }} (Member)</option>
+          {% elif user in cm.get_organisers %}
+            <option value="{{ cm.name }}">{{ cm.name }} (Organiser)</option>
+          {% else %}
+            <option value="{{ cm.name }}">{{ cm.name }} (Owner)</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for user_club in user_clubs %}
