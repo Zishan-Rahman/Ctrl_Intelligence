@@ -20,25 +20,13 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-6">
-      <form method="post">
-        {% csrf_token %}
-        <select name="status">
-          {% for status in status %}
-             <option value=""></option>
-         {% endfor %}
-    </select>
-    <input type="submit" value="Select">
-</form>
-{% if selected %}
-  <ul>
-     {% for clubs in clubs %}
-       <li>{{ club.user_level }}</li>
-     {% endfor %}
-  </ul>
-{% endif %}
-    </div>
+<div id="top-content">
+  <span id="clubs-selection-title">Clubs:</span>
+  <select name="clubs", id="clubs-selection">
+    {% for cm in user_clubs %}
+    <option value="{{ cm.name }}">{{ cm.name }} ({{ user_level }})</option>
+    {% endfor %}
+  </select>
 </div>
 
 <div class="row row-cols-1">
