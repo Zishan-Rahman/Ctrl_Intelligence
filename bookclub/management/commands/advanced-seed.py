@@ -59,7 +59,7 @@ class Command(BaseCommand):
         count = 0
         file_path_users = "data/BX-Users.csv"
 
-        with open(file_path_users, encoding='cp1252') as user_csv_file:
+        with open(file_path_users, encoding='latin-1') as user_csv_file:
             data = csv.reader(user_csv_file, delimiter=";")
             next(data)
             users = []
@@ -99,7 +99,16 @@ class Command(BaseCommand):
             print()
 
     def default_superuser(self):
-        User.objects.create_superuser(email="ctrl@intelligence.com", password='Password123')
+        User.objects.create_superuser(
+            first_name="Ctrl",
+            last_name="Intelligence",
+            email="ctrl@intelligence.com",
+            password='Password123',
+            public_bio="Pop Will Eat Itself! This is the day, this is the hour, this is this!",
+            favourite_genre="Science Fiction",
+            location="Greater London",
+            age=20
+        )
         print("Default superuser created with details:")
         print("Email: ctrl@intelligence.com")
         print("Password: Password123")
@@ -109,7 +118,7 @@ class Command(BaseCommand):
         count = 0
         file_path_users = "data/BX_Books.csv"
 
-        with open(file_path_users, encoding='cp1252') as book_csv_file:
+        with open(file_path_users, encoding='latin-1') as book_csv_file:
             data = csv.reader(book_csv_file, delimiter=";")
             next(data)
             books = []
@@ -143,7 +152,7 @@ class Command(BaseCommand):
         count = 0
         file_path_users = "data/BX-Book-Ratings.csv"
 
-        with open(file_path_users, encoding='cp1252') as rating_csv_file:
+        with open(file_path_users, encoding='latin-1') as rating_csv_file:
             data = csv.reader(rating_csv_file, delimiter=";")
             next(data)
             ratings = []

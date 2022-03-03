@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookclub',
     'widget_tweaks',
+    'recommender',
+    'crispy_forms',
 
 ]
 
@@ -138,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'bookclub.User'
 
 # Login URL for redirecting users from login protected views
-LOGIN_URL = 'log_in'
+LOGIN_URL = 'login'
 
 # URL where @login_prohibited redirects to
 REDIRECT_URL_WHEN_LOGGED_IN = 'home'
@@ -154,3 +156,12 @@ USERS_PER_PAGE = 10
 BOOKS_PER_PAGE = 10
 APPLICATIONS_PER_PAGE = 10
 CLUBS_PER_PAGE = 10
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'bookwise0000@gmail.com'
+EMAIL_HOST_PASSWORD = 'Bookwise123!'
+DEFAULT_FROM_EMAIL = 'bookwise0000@gmail.com'
+SERVER_EMAIL = 'bookwise0000@gmail.com'

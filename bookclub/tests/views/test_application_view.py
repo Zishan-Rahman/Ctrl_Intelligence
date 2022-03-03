@@ -74,7 +74,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertIn('<td>John</td>', html)
         self.assertIn('<td>Doe</td>', html)
         self.assertIn('<td>39</td>', html)
-        self.assertIn("<td>Im just an abstract concept!</td>", html) 
+        self.assertIn("<td>Im just an abstract concept!</td>", html)
         self.assertIn('<td>Science fiction</td>', html)
         self.assertIn('<td>London</td>', html)
         self.assertIn('<a class="btn btn-default"', html)
@@ -126,19 +126,17 @@ class ApplicationViewTestCase(TestCase):
         self.assertEqual(beforeCount, afterCount)
 
     def test_get_applications_list_redirects_when_not_logged_in(self):
-        redirect_url = reverse_with_next('log_in', self.url)
+        redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
-
-    """ def test_get_application_list_with_pagination(self):
+    def test_get_application_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_applications(settings.APPLICATIONS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'applications.html')
-        self.assertEqual(len(response.context['applicants']), settings.APPLICATIONS_PER_PAGE)
-        self.assertTrue(response.context['is_paginated'])
+        self.assertEqual(len(response.context['page_obj']), settings.APPLICATIONS_PER_PAGE)
         page_obj = response.context['page_obj']
         self.assertFalse(page_obj.has_previous())
         self.assertTrue(page_obj.has_next())
@@ -146,7 +144,7 @@ class ApplicationViewTestCase(TestCase):
         response = self.client.get(page_one_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'applications.html')
-        self.assertEqual(len(response.context['applicants']), settings.APPLICATIONS_PER_PAGE)
+        self.assertEqual(len(response.context['page_obj']), settings.APPLICATIONS_PER_PAGE)
         page_obj = response.context['page_obj']
         self.assertFalse(page_obj.has_previous())
         self.assertTrue(page_obj.has_next())
@@ -154,7 +152,7 @@ class ApplicationViewTestCase(TestCase):
         response = self.client.get(page_two_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'applications.html')
-        self.assertEqual(len(response.context['applicants']), settings.APPLICATIONS_PER_PAGE)
+        self.assertEqual(len(response.context['page_obj']), settings.APPLICATIONS_PER_PAGE)
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertTrue(page_obj.has_next())
@@ -162,13 +160,21 @@ class ApplicationViewTestCase(TestCase):
         response = self.client.get(page_three_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'applications.html')
-        self.assertEqual(len(response.context['applicants']), 6)
+        self.assertEqual(len(response.context['page_obj']), 4)
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
-        self.assertFalse(page_obj.has_next()) """
+        self.assertFalse(page_obj.has_next())
 
-    def _create_test_applications(self, application_count=10):
-        for id in range(1, application_count + 1, 1):
+    def _create_test_applications(self, my_applications_count=10):
+        apps = []
+        created_club = Club.objects.create(
+            owner_id=1,
+            name=f'The test Book Club',
+            location=f'City of London',
+            description=f'Description',
+            owner=self.john,
+        )
+        for id in range(1, my_applications_count + 1, 1):
             created_user = User.objects.create(
                 email=f'user{id}@test.org',
                 password='Password123',
@@ -179,14 +185,7 @@ class ApplicationViewTestCase(TestCase):
                 location=f'City {id}',
                 age=18 + id
             )
-            created_club = Club.objects.create(
-                owner_id=id,
-                name=f'The {id} Book Club',
-                location=f'City {id}',
-                description=f'Description {id}',
-                owner=created_user,
-            )
-            Application.objects.create(
+            apps.append(Application.objects.create(
                 applicant=created_user,
                 club=created_club,
-            )
+            ))

@@ -28,6 +28,18 @@ class ClubSwitcherViewTestCase(TestCase):
     def test_redirect_to_my_clubs_alt(self):
         self.assertEqual(self.url2, "/my_clubs1/")
 
+    def test_my_clubs_uses_correct_template(self):
+        self.client.login(email=self.joe.email, password='Password123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'club_switcher.html')
+
+    def test_my_clubs_alt_uses_correct_template(self):
+        self.client.login(email=self.joe.email, password='Password123')
+        response = self.client.get(self.url2)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'club_switcher_alt.html')
+
     def test_get_my_clubs(self):
         self.client.login(email=self.john.email, password="Password123")
         response = self.client.get(reverse("club_selector"))
@@ -41,12 +53,12 @@ class ClubSwitcherViewTestCase(TestCase):
         self.client.logout()
 
     def test_get_my_clubs_redirects_when_not_logged_in(self):
-        redirect_url = reverse_with_next('log_in', self.url)
+        redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_get_my_clubs_alt_redirects_when_not_logged_in(self):
-        redirect_url = reverse_with_next('log_in', self.url2)
+        redirect_url = reverse_with_next('login', self.url2)
         response = self.client.get(self.url2)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
@@ -118,4 +130,3 @@ class ClubSwitcherViewTestCase(TestCase):
         self.assertNotIn('<p class="card-text text-left">Somerset House Official Book Club!</p>', html)
         self.assertNotIn('<p class="card-text text-left">Strand House Official Book Club!</p>', html)
         self.client.logout()
-

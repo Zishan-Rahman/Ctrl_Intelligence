@@ -46,7 +46,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(form.instance, self.user)
 
     def test_get_profile_redirects_when_not_logged_in(self):
-        redirect_url = reverse_with_next('log_in', self.url)
+        redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
@@ -114,6 +114,6 @@ class ProfileViewTest(TestCase):
         self.assertEqual(self.user.age, 39)
 
     def test_post_profile_redirects_when_not_logged_in(self):
-        redirect_url = reverse_with_next('log_in', self.url)
+        redirect_url = reverse_with_next('login', self.url)
         response = self.client.post(self.url, self.form_input)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
