@@ -69,15 +69,6 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
         return render(self.request, 'my_applications.html', {'applications': my_applications, 'page_obj': page_obj})
 
-@login_required
-def club_members(request, club_id):
-    club = Club.objects.get(id=club_id)
-    paginator = Paginator(club.get_all_users(), 2)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'club_members.html', {'club': club, 'page_obj': page_obj})
-
-
 class ClubMemberListView(LoginRequiredMixin, ListView):
     """Gets the members of each club"""
 
@@ -105,8 +96,16 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
         paginator = Paginator(current_club.get_all_users(), settings.USERS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+        for each in page_obj:
+            if current_club.user_level(each) == "Member":
+                user_level = "Member"
+            elif current_club.user_level(each) == "Organiser":
+                user_level = "Organiser"
+            else:
+                user_level = "Owner"
         context['club'] = current_club
         context['page_obj'] = page_obj
+        context['user_level'] = user_level
         return context
 
 class ClubMeetingsListView(LoginRequiredMixin, ListView):
