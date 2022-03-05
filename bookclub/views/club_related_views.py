@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
-from bookclub.forms import ApplicantForm, ApplicationForm, ScheduleMeetingForm
+from bookclub.forms import ApplicantForm, ApplicationForm, ScheduleMeetingForm, EditClubForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.views.generic import ListView
 from bookclub.models import Meeting, User, Club, Application
 from bookclub.views import club_views
-from django.views.generic.edit import View
+from django.views.generic.edit import View, UpdateView
 from django.core.paginator import Paginator
 
 
@@ -91,21 +91,31 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        current_user = self.request.user
+        current_user_is_owner = False
         current_club_id = self.kwargs['club_id']
         current_club = Club.objects.get(id = current_club_id)
         paginator = Paginator(current_club.get_all_users(), settings.USERS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         for each in page_obj:
+            u_id = each.pk
             if current_club.user_level(each) == "Member":
                 user_level = "Member"
             elif current_club.user_level(each) == "Organiser":
                 user_level = "Organiser"
             else:
                 user_level = "Owner"
+                if each == current_user:
+                    current_user_is_owner = True
+
         context['club'] = current_club
         context['page_obj'] = page_obj
         context['user_level'] = user_level
+        context['c_pk'] = current_club_id
+        context['u_pk'] = u_id
+        context['is_owner'] = current_user_is_owner
+
         return context
 
 class ClubMeetingsListView(LoginRequiredMixin, ListView):
@@ -226,3 +236,49 @@ class MeetingScheduler(LoginRequiredMixin, View):
         current_club=Club.objects.get(pk=pk)
         form = ScheduleMeetingForm(club=current_club)
         return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
+
+
+def promote_member_to_organiser(request, c_pk, u_pk):
+    """Promote member to organiser"""
+    club = Club.objects.all().get(pk = c_pk)
+    new_organiser = User.objects.all().get(pk=u_pk)
+    club.make_organiser(new_organiser)
+    messages.add_message(request, messages.SUCCESS, "User promoted!")
+    return redirect('club_members', club_id=c_pk)
+
+def demote_organiser_to_member(request, c_pk, u_pk):
+    """Demote organiser to member"""
+    club = Club.objects.all().get(pk = c_pk)
+    new_member = User.objects.all().get(pk=u_pk)
+    club.demote_organiser(new_member)
+    messages.add_message(request, messages.SUCCESS, "User demoted!")
+    return redirect('club_members', club_id=c_pk)
+
+class ClubUpdateView(LoginRequiredMixin, UpdateView):
+    """View to update club profile."""
+
+    model = EditClubForm
+    template_name = "edit_club.html"
+    form_class = EditClubForm
+
+    def get_object(self, c_pk):
+        """Return the object (user) to be updated."""
+        club_to_edit = Club.objects.all().get(pk=c_pk)
+        return club_to_edit
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        messages.add_message(self.request, messages.SUCCESS, "Club updated!")
+        return reverse('club_selector')
+
+    def post(self, request, c_pk, *args, **kwargs):
+        club_to_edit = Club.objects.all().get(pk=c_pk)
+        form = self.form_class(instance=club_to_edit, data=request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
+        return render(request, 'edit_club.html', {"form": form})
+
+    def get(self, request, c_pk, *args, **kwargs):
+        club_to_edit = Club.objects.all().get(pk=c_pk)
+        form = self.form_class(instance=club_to_edit)
+        return render(request, 'edit_club.html', {"form": form})
