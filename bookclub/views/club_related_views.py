@@ -255,7 +255,7 @@ def demote_organiser_to_member(request, c_pk, u_pk):
     return redirect('club_members', club_id=c_pk)
 
 class ClubUpdateView(LoginRequiredMixin, UpdateView):
-    """View to update logged-in user's profile."""
+    """View to update club profile."""
 
     model = EditClubForm
     template_name = "edit_club.html"
@@ -269,7 +269,7 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Club updated!")
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+        return reverse('club_selector')
 
     def post(self, request, c_pk, *args, **kwargs):
         club_to_edit = Club.objects.all().get(pk=c_pk)
