@@ -54,5 +54,6 @@ urlpatterns = [
     path('search/', search_views.search, name='search_page'),
     path('leave_club/<int:club_id>/', club_views.leave_club, name='leave_club'),
     path('club_profile/<int:c_pk>/members/<int:u_pk>/promote', club_related_views.promote_member_to_organiser, name='promote_member_to_organiser'),
-    path('club_profile/<int:c_pk>/members/<int:u_pk>/demote', club_related_views.demote_organiser_to_member, name='demote_organiser_to_member')
+    path('club_profile/<int:c_pk>/members/<int:u_pk>/demote', club_related_views.demote_organiser_to_member, name='demote_organiser_to_member'),
+    path('club_profile/<int:c_pk>/edit/', club_related_views.ClubUpdateView.as_view(), name='edit_club'),
 ]

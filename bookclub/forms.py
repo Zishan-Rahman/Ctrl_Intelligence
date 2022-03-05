@@ -236,5 +236,22 @@ class ScheduleMeetingForm(forms.ModelForm):
         super().save(commit=False)
         meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club, address = self.cleaned_data.get('address'))
 
+class EditClubForm(forms.ModelForm):
+    """Form to update clubs."""
 
+    class Meta:
+        """Form options."""
+
+        model = Club
+        fields = ['name', 'description', 'location', 'meeting_online']
+        widgets = {'description': forms.Textarea()}
+
+    CHOICES = [
+        (None, 'Choose meeting type'),
+        (True, 'Online'),
+        (False, 'In Person')]
+
+    meeting_online = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
+                                                                                       "online based or meets in "
+                                                                                       "person")
 

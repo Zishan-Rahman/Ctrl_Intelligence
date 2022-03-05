@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
-from bookclub.forms import ApplicantForm, ApplicationForm, ScheduleMeetingForm
+from bookclub.forms import ApplicantForm, ApplicationForm, ScheduleMeetingForm, EditClubForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.views.generic import ListView
 from bookclub.models import Meeting, User, Club, Application
 from bookclub.views import club_views
-from django.views.generic.edit import View
+from django.views.generic.edit import View, UpdateView
 from django.core.paginator import Paginator
 
 
@@ -253,3 +253,32 @@ def demote_organiser_to_member(request, c_pk, u_pk):
     club.demote_organiser(new_member)
     messages.add_message(request, messages.SUCCESS, "User demoted!")
     return redirect('club_members', club_id=c_pk)
+
+class ClubUpdateView(LoginRequiredMixin, UpdateView):
+    """View to update logged-in user's profile."""
+
+    model = EditClubForm
+    template_name = "edit_club.html"
+    form_class = EditClubForm
+
+    def get_object(self, c_pk):
+        """Return the object (user) to be updated."""
+        club_to_edit = Club.objects.all().get(pk=c_pk)
+        return club_to_edit
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        messages.add_message(self.request, messages.SUCCESS, "Club updated!")
+        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+    def post(self, request, c_pk, *args, **kwargs):
+        club_to_edit = Club.objects.all().get(pk=c_pk)
+        form = self.form_class(instance=club_to_edit, data=request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
+        return render(request, 'edit_club.html', {"form": form})
+
+    def get(self, request, c_pk, *args, **kwargs):
+        club_to_edit = Club.objects.all().get(pk=c_pk)
+        form = self.form_class(instance=club_to_edit)
+        return render(request, 'edit_club.html', {"form": form})

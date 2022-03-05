@@ -99,6 +99,9 @@
                             </form>
                             {%endif%}
                             <a class="btn btn-default" href="{% url 'club_meetings' club.id %}"><span class="btn btn-dark" style="background-color: brown">See meeting history</span></a>
+                            {%if is_owner%}
+                            <a class="btn btn-default" href="{% url 'edit_club' c_pk=club.id %}"><span class="btn btn-dark" style="background-color: brown">Edit club details</span></a>
+                            {%endif%}
                 </td>
               </tr>
 
