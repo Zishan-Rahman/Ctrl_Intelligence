@@ -91,21 +91,31 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        current_user = self.request.user
+        current_user_is_owner = False
         current_club_id = self.kwargs['club_id']
         current_club = Club.objects.get(id = current_club_id)
         paginator = Paginator(current_club.get_all_users(), settings.USERS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         for each in page_obj:
+            u_id = each.pk
             if current_club.user_level(each) == "Member":
                 user_level = "Member"
             elif current_club.user_level(each) == "Organiser":
                 user_level = "Organiser"
             else:
                 user_level = "Owner"
+                if each == current_user:
+                    current_user_is_owner = True
+
         context['club'] = current_club
         context['page_obj'] = page_obj
         context['user_level'] = user_level
+        context['c_pk'] = current_club_id
+        context['u_pk'] = u_id
+        context['is_owner'] = current_user_is_owner
+
         return context
 
 class ClubMeetingsListView(LoginRequiredMixin, ListView):
@@ -226,3 +236,20 @@ class MeetingScheduler(LoginRequiredMixin, View):
         current_club=Club.objects.get(pk=pk)
         form = ScheduleMeetingForm(club=current_club)
         return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
+
+
+def promote_member_to_organiser(request, c_pk, u_pk):
+    """Promote member to organiser"""
+    club = Club.objects.all().get(pk = c_pk)
+    new_organiser = User.objects.all().get(pk=u_pk)
+    club.make_organiser(new_organiser)
+    messages.add_message(request, messages.SUCCESS, "User promoted!")
+    return redirect('club_members', club_id=c_pk)
+
+def demote_organiser_to_member(request, c_pk, u_pk):
+    """Demote organiser to member"""
+    club = Club.objects.all().get(pk = c_pk)
+    new_member = User.objects.all().get(pk=u_pk)
+    club.demote_organiser(new_member)
+    messages.add_message(request, messages.SUCCESS, "User demoted!")
+    return redirect('club_members', club_id=c_pk)
