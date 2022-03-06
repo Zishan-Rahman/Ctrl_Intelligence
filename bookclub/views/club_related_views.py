@@ -83,17 +83,19 @@ class MeetingUpdateView(LoginRequiredMixin, UpdateView):
         messages.add_message(self.request, messages.SUCCESS, "Meeting updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
-    def post(self, request, *args, **kwargs):
-        current_user = request.user
-        form = self.form_class(instance=current_user, data=request.POST)
+    def post(self, request, club_id, meeting_id, *args, **kwargs):
+        club = Club.objects.get(id=club_id)
+        meeting = Meeting.objects.get(id=meeting_id)
+        form = self.form_class(instance=meeting, club=club, data=request.POST)
         if form.is_valid():
             return self.form_valid(form)
-        return render(request, 'edit_meeting.html', {"form": form})
+        return render(request, 'edit_meeting.html', {"club": club, "form": form})
 
-    def get(self, request, *args, **kwargs):
-        current_user = request.user
-        form = self.form_class(instance=current_user)
-        return render(request, 'edit_meeting.html', {"form": form})
+    def get(self, request, club_id, meeting_id, *args, **kwargs):
+        club = Club.objects.get(id=club_id)
+        meeting = Meeting.objects.get(id=meeting_id)
+        form = self.form_class(instance=meeting, club=club)
+        return render(request, 'edit_meeting.html', {"club": club,"form": form})
 
 class ClubMemberListView(LoginRequiredMixin, ListView):
     """Gets the members of each club"""
