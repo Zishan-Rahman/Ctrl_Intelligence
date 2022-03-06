@@ -153,7 +153,7 @@ class ClubMeetingsListView(LoginRequiredMixin, ListView):
     paginate_by = settings.USERS_PER_PAGE
     pk_url_kwarg = 'club_id'
     context_object_name = 'club'
-    ordering = ['-meeting.date']
+    ordering = ['-meeting.date', '-meeting.time']
 
     def get(self, request, *args, **kwargs):
         """Handle get request, and redirect to clubs list if club_id invalid."""
