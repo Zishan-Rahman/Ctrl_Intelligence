@@ -157,7 +157,7 @@ class ApplicantForm(forms.Form):
 class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
-        fields = ['name', 'description', 'location', 'meeting_type']
+        fields = ['name', 'description', 'location', 'meeting_type', 'organiser_has_owner_privilege']
         widgets = {"description": forms.Textarea()}
 
     CHOICES = [
@@ -168,6 +168,12 @@ class ClubForm(forms.ModelForm):
     meeting_type = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
                                                                                        "online based or meets in "
                                                                                        "person")
+
+    CHOICES1 = [
+        (True, 'Yes'),
+        (False, 'No')]
+        
+    organiser_has_owner_privilege = forms.ChoiceField(choices=CHOICES1, widget=forms.Select())
 
     def clean(self):
         super().clean()
