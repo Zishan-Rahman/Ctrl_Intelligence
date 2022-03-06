@@ -66,6 +66,7 @@ class MyApplicationsView(LoginRequiredMixin, View):
         paginator = Paginator(my_applications, settings.APPLICATIONS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+        
         return render(self.request, 'my_applications.html', {'applications': my_applications, 'page_obj': page_obj})
 
 class MeetingUpdateView(LoginRequiredMixin, UpdateView):
