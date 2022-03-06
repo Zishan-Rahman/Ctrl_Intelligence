@@ -88,19 +88,16 @@
       <div class="card w-100">
         <div class="card-body text-center">
           {% if current_user == club.owner %}
-          <a class="btn btn-default" href="{% url 'schedule_meeting' pk=club.pk %}"><span class="btn btn-dark"
-              style="background-color: brown">Schedule meeting</span></a>
+          <a class="btn btn-default" href="{% url 'schedule_meeting' pk=club.pk %}"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>
           {% elif current_user in club.get_all_users%}
           <a class="btn btn-default">Placeholder</a>
           {%else%}
           <form action="{% url 'new_application' club.id %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark"
-                style="background-color: brown;">Apply</span></button>
+            <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply</span></button>
           </form>
           {%endif%}
-          <a class="btn btn-default" href="{% url 'club_meetings' club.id %}"><span class="btn btn-dark"
-              style="background-color: brown">See meeting history</span></a>
+          <a class="btn btn-default" href="{% url 'club_meetings' club.id %}"><span class="btn btn-dark" style="background-color: brown">See meeting history</span></a>
           </td>
           </tr>
 
@@ -109,8 +106,7 @@
               {% if current_user in club.get_members %}
               <form action="{% url 'leave_club' club.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark"
-                    style="background-color: brown;">Leave {{ club.name }}</button>
+                <button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {{ club.name }}</button>
               </form>
               {%endif%}
             </td>
