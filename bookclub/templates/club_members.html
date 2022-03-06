@@ -14,15 +14,30 @@
                             <th scope="col">Name</th>
                             <th scope="col">Bio</th>
                             <th scope="col">Favourite Genre</th>
+                            <th scope="col">User Level</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for member in page_obj %}
-                            <tr>
-                                <td><a href="{% url 'user_profile' member.id %}"><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></a></td>
+                            <tr class="clickable-row" data-href="{% url 'user_profile' member.id %}">
+                                <td><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></td>
                                 <td>{{member.first_name}} {{member.last_name}}</td>
                                 <td>{{member.public_bio}}</td>
                                 <td>{{member.favourite_genre}}</td>
+                                {% if member in club.get_members%}
+                                  <td>Member</td>
+                                  {% if is_owner %}
+                                    <td><a class="btn btn-default" href="{% url 'promote_member_to_organiser' c_pk=c_pk u_pk=u_pk %}"><span class="btn btn-dark" style="background-color: green">Promote</span></a></td>
+                                {%endif%}
+                                    {% elif member in club.get_organisers %}
+                                  <td>Organiser</td>
+                                  {% if is_owner %}
+                                     <td><a class="btn btn-default" href="{% url 'demote_organiser_to_member' c_pk=c_pk u_pk=u_pk %}"><span class="btn btn-dark" style="background-color: red">Demote</span></a></td>
+                                     {%endif%}
+                                     {% else %}
+                                  <td>Owner</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -32,4 +47,12 @@
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+  jQuery(document).ready(function($) {
+      $(".clickable-row").click(function() {
+          window.location = $(this).data("href");
+      });
+  });
+</script>
 {% endblock %}

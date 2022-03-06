@@ -10,7 +10,20 @@
         <h3><strong>Sign up</strong></h3>
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Sign up" class="btn btn-primary">
+        <input type="submit" value="Sign up" class="btn btn-primary" style="background-color: brown">
+        <table>
+          <thead>
+              <tr>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+              </tr>
+          </thead>
+          <tbody>
+            <td style='text-align:left; vertical-align:middle'><a class="btn btn-default" href="/"><span class="btn btn-dark" style="background-color: brown">Back</span></a></td>
+            <td style='text-align:right; vertical-align:middle'><a class="btn btn-default" href="/login/"><span class="btn btn-dark" style="background-color: brown">Already a user?</span></a></td>
+          </tbody>
+        </table>
+
       </form>
     </div>
   </div>

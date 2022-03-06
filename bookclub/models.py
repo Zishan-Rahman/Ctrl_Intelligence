@@ -175,6 +175,14 @@ class Club(models.Model):
         else:
             raise ValueError
 
+    def demote_organiser(self, user):
+        if self.user_level(user) == "Organiser":
+            self.organisers.remove(user)
+            self.members.add(user)
+            self.save()
+        else:
+            raise ValueError
+
     def make_member(self, user):
         self.members.add(user)
         self.save()
