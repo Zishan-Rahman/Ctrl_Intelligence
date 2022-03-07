@@ -7,6 +7,8 @@ from datetime import datetime
 from django.utils import timezone
 
 
+
+
 class UserForm(forms.ModelForm):
     """Form to update user profiles."""
 
@@ -235,7 +237,3 @@ class ScheduleMeetingForm(forms.ModelForm):
     def save(self, club):
         super().save(commit=False)
         meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club, address = self.cleaned_data.get('address'))
-
-
-class FilterForm(forms.Form):
-    selected_status = forms.ModelChoiceField(queryset=Club.objects.all(), required=True)
