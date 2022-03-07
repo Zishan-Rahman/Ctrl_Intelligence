@@ -54,7 +54,7 @@
                                   {% if user in user_club.get_organisers%}
                                     <p> <i class="bi bi-clipboard"></i><strong> Organiser </strong></p>
                                       {% endif %}
-                                  {% if user in user_club.get_owner%}
+                                  {% if user == user_club.get_owner%}
                                     <p> <i class="bi bi-person-check"></i><strong> Owner </strong></p>
                                       {% endif %}
                                   {% if user in user_club.get_members%}
