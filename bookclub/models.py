@@ -9,6 +9,46 @@ from django.core.validators import RegexValidator, MaxValueValidator, MinValueVa
 from libgravatar import Gravatar
 
 
+
+# books model
+
+class Book(models.Model):
+    isbn = models.CharField(unique=True, max_length=12, blank=False)
+    title = models.CharField(unique=False, blank=False, max_length=512)
+    author = models.CharField(blank=False, max_length=512)
+    pub_year = models.IntegerField(blank=False, validators=[MinValueValidator(1800), MaxValueValidator(2022)])
+    publisher = models.CharField(blank=False, max_length=512)
+    small_url = models.URLField(unique=False, blank=False, max_length=512)
+    medium_url = models.URLField(unique=False, blank=False, max_length=512)
+    large_url = models.URLField(unique=False, blank=False, max_length=512)
+
+    class Meta:
+        """Model options."""
+
+        ordering = ['title']
+
+    def get_isbn(self):
+        return self.isbn
+
+    def get_title(self):
+        return self.title
+
+    def get_pub_year(self):
+        return self.pub_year
+
+    def get_pub_company(self):
+        return self.publisher
+
+    def get_small_url(self):
+        return self.small_url
+
+    def get_medium_url(self):
+        return self.medium_url
+
+    def get_large_url(self):
+        return self.large_url
+
+
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255, blank=False)
@@ -31,6 +71,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     favourite_genre = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
+    favourite_books = models.ManyToManyField(Book)
 
     class Meta:
         """Model options."""
@@ -74,46 +115,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-
-
-# books model
-
-
-class Book(models.Model):
-    isbn = models.CharField(unique=True, max_length=12, blank=False)
-    title = models.CharField(unique=False, blank=False, max_length=512)
-    author = models.CharField(blank=False, max_length=512)
-    pub_year = models.IntegerField(blank=False, validators=[MinValueValidator(1800), MaxValueValidator(2022)])
-    publisher = models.CharField(blank=False, max_length=512)
-    small_url = models.URLField(unique=False, blank=False, max_length=512)
-    medium_url = models.URLField(unique=False, blank=False, max_length=512)
-    large_url = models.URLField(unique=False, blank=False, max_length=512)
-
-    class Meta:
-        """Model options."""
-
-        ordering = ['title']
-
-    def get_isbn(self):
-        return self.isbn
-
-    def get_title(self):
-        return self.title
-
-    def get_pub_year(self):
-        return self.pub_year
-
-    def get_pub_company(self):
-        return self.publisher
-
-    def get_small_url(self):
-        return self.small_url
-
-    def get_medium_url(self):
-        return self.medium_url
-
-    def get_large_url(self):
-        return self.large_url
 
 
 # Club Model adapted from Clucker user model and Chess club management system club model

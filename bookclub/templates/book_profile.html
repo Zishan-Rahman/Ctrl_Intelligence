@@ -17,6 +17,17 @@ p {
           <p class="book-author">Author: {{ book.author }}</p>
           <p class="book-pub-year">Published Year: {{ book.pub_year }}</p>
           <p class="book-publisher">Publisher: {{ book.publisher }}</p>
+
+          {% if book in request.user.favourite_books.all %}
+          <form action="{% url 'UnFavourite' book.id %}" method="get">
+            <input type="submit" value="Unfavourite">
+          </form>
+          {% else %}
+           <form action="{% url 'MakeFavourite' book.id %}" method="get">
+            <input type="submit" value="Make Favourite">
+          </form>
+          {% endif %}
+          
         </center>
       </div>
     </div>
