@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
@@ -280,7 +281,7 @@ class Meeting(models.Model):
     """A model for denoting and storing meetings."""
     date = models.DateField()
     start_time = models.TimeField()
-    end_time = models.TimeField()
+    end_time = models.TimeField(blank=True, null=True)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
     address = models.CharField(max_length=50)
 
@@ -294,6 +295,9 @@ class Meeting(models.Model):
     def get_meeting_start_time(self):
         return self.start_time
     
+    def set_default_meeting_end_time(self):
+        self.end_time = self.start_time.replace(hour=(self.start_time.hour + 1) % 24)
+        
     def get_meeting_end_time(self):
         return self.end_time
 

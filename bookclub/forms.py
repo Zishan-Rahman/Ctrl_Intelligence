@@ -216,8 +216,8 @@ class ScheduleMeetingForm(forms.ModelForm):
 
     class Meta:
         model = Meeting
-        fields = ['date', 'time', 'address']
-        widgets = { 'date': DateInput(), 'time': TimeInput(),}
+        fields = ['date', 'start_time', 'end_time', 'address']
+        widgets = { 'date': DateInput(), 'start_time': TimeInput(), 'end_time': TimeInput()}
 
     def __init__(self, club, *args, **kwargs):
         """Construct new form instance with a user instance."""
@@ -232,15 +232,19 @@ class ScheduleMeetingForm(forms.ModelForm):
     def clean(self):
         now = timezone.now()
         date = self.cleaned_data['date']
-        time = self.cleaned_data['time']
+        start_time = self.cleaned_data['start_time']
+        end_time = self.cleaned_data['end_time'] 
         if date < datetime.now().date():
             raise forms.ValidationError("The meeting cannot be in the past!")
-        elif date == datetime.now().date() and time < datetime.now().time():
+        elif date == datetime.now().date() and start_time < datetime.now().time():
             raise forms.ValidationError("The meeting cannot be in the past!")
 
     def save(self, club):
         super().save(commit=False)
-        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club, address = self.cleaned_data.get('address'))
+        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), end_time=self.cleaned_data.get('end_time'), club=club, address = self.cleaned_data.get('address'))
+        if meeting.end_time == None:
+            meeting.set_default_meeting_end_time()
+        return meeting
 
 class EditClubForm(forms.ModelForm):
     """Form to update clubs."""
