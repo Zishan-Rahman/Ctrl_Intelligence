@@ -11,7 +11,8 @@ class CreateClubTestForm(TestCase):
             'name': 'BookBusters',
             'description': 'Crime and Mystery',
             'location': 'Cardiff',
-            'meeting_type': False
+            'meeting_type': False,
+            'organiser_has_owner_privilege': True
         }
 
     def test_club_form_has_necessary_fields(self):
@@ -19,6 +20,8 @@ class CreateClubTestForm(TestCase):
         self.assertIn('name', form.fields)
         self.assertIn('description', form.fields)
         self.assertIn('location', form.fields)
+        self.assertIn('meeting_type', form.fields)
+        self.assertIn('organiser_has_owner_privilege', form.fields)
 
     def test_valid_create_club_form(self):
         form = ClubForm(data=self.form_input)
