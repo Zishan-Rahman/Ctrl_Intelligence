@@ -22,6 +22,7 @@ def club_util(request):
 
 @login_required
 def club_list(request):
+    clubs = []
     for club in Club.objects.all():
         clubs.append({
             "id": club.id,
