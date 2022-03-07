@@ -77,7 +77,8 @@ def club_profile(request, club_id):
     """ Individual Club's Profile Page """
     club = Club.objects.get(id=club_id)
     current_user = request.user
-    return render(request, 'club_profile.html',{'club':club, 'current_user':current_user})
+    is_owner = club.user_level(current_user) == "Owner"
+    return render(request, 'club_profile.html',{'club':club, 'current_user':current_user, 'is_owner':is_owner})
 
 @login_required
 def leave_club(request , club_id):

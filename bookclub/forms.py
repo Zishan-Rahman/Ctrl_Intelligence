@@ -159,7 +159,7 @@ class ApplicantForm(forms.Form):
 class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
-        fields = ['name', 'description', 'location', 'meeting_type']
+        fields = ['name', 'description', 'location', 'meeting_type', 'organiser_has_owner_privilege']
         widgets = {"description": forms.Textarea()}
 
     CHOICES = [
@@ -170,6 +170,12 @@ class ClubForm(forms.ModelForm):
     meeting_type = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
                                                                                        "online based or meets in "
                                                                                        "person")
+
+    CHOICES1 = [
+        (True, 'Yes'),
+        (False, 'No')]
+        
+    organiser_has_owner_privilege = forms.ChoiceField(choices=CHOICES1, widget=forms.Select())
 
     def clean(self):
         super().clean()
@@ -237,3 +243,23 @@ class ScheduleMeetingForm(forms.ModelForm):
     def save(self, club):
         super().save(commit=False)
         meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club, address = self.cleaned_data.get('address'))
+
+
+class EditClubForm(forms.ModelForm):
+    """Form to update clubs."""
+
+    class Meta:
+        """Form options."""
+
+        model = Club
+        fields = ['name', 'description', 'location', 'meeting_online']
+        widgets = {'description': forms.Textarea()}
+
+    CHOICES = [
+        (None, 'Choose meeting type'),
+        (True, 'Online'),
+        (False, 'In Person')]
+
+    meeting_online = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
+                                                                                       "online based or meets in "
+                                                                                       "person")
