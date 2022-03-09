@@ -59,4 +59,4 @@ def add_to_books_read(request, book_id):
     book = Book.objects.get(id=book_id)
     user.already_read_books.add(book)
     user.save()
-    return render(request, "books_read.html")
+    return render(request, "home.html")
