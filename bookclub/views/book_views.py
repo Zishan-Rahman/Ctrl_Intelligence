@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
-from bookclub.models import Book, Club
+from bookclub.models import Book, Club, User
 
 class BooksListView(LoginRequiredMixin, ListView):
     """View that shows a list of all books."""
@@ -34,3 +34,29 @@ class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
             return super().get(request, *args, **kwargs)
         except Http404:
             return redirect('book_list')
+
+@login_required
+def current_reads(request):
+    user = User.objects.get(id = request.user.id)
+    books = user.currently_reading_books.all()
+    return render(request, "current_reads.html", {'books':books})
+
+def add_to_current_reads(request, book_id):
+    user = User.objects.get(id = request.user.id)
+    book = Book.objects.get(id=book_id)
+    user.currently_reading_books.add(book)
+    user.save()
+    return render(request, "home.html")
+
+@login_required
+def books_read(request):
+    user = User.objects.get(id = request.user.id)
+    books = user.already_read_books.all()
+    return render(request, "books_read.html", {'books':books})
+
+def add_to_books_read(request, book_id):
+    user = User.objects.get(id = request.user.id)
+    book = Book.objects.get(id=book_id)
+    user.already_read_books.add(book)
+    user.save()
+    return render(request, "books_read.html")

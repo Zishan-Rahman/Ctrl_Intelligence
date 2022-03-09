@@ -1,0 +1,26 @@
+{% extends 'base_content.html' %}
+{% block content %}
+
+
+    <div class="container">
+    <div class="row">
+        <div class="col-12">
+   <body>
+      <h1>Current Reads</h1>
+   </body>
+        </div>
+</div>
+<div>
+  <table>
+  {% for entry in books %}
+  <tr class="clickable-row" data-href="{% url 'book_profile' entry.id %}">
+    <td><img src="{{ entry.medium_url }}" alt="a"></td>
+    <td>{{ entry.title }}</td>
+    <td>{{ entry.author }}</td>
+    <td>{{ entry.pub_year }}</td>
+  </tr>
+  {% endfor %}
+  </table>
+</div>
+</div>
+{% endblock %}

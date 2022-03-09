@@ -1,27 +1,37 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container mt-3">
-  <div class="row content">
-    <div class="col-12">
-      <center><img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}" class="rounded-circle profile-image"></center>
-      <div class="profile-text">
-        <center>
-        <h3 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h3>
-        <p class="profile-email">{{ user.email }}</p>
-      </center>
-      </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-3">
+      <h6 style="background-color: brown; padding: 10px; color: white;text-align: center;">Current Reads</h6>
+        <img src="{{ current_reads.1.small_url }}" alt="a"/>
+        <p>{{ current_reads.1.title }}</p>
+        <img src="{{ current_reads.2.small_url }}" alt="a"/>
+        <p>{{ current_reads.2.title }}</p>
+        <a href="/current_reads/">See More</a>
+      <hr>
+      <h6 style= "background-color: brown; padding: 10px; color: white;text-align: center;">Books Read</h6>
+        <img src="{{ books_read.1.small_url }}" alt="a"/>
+        <p>{{ books_read.1.title }}</p>
+        <img src="{{ books_read.2.small_url }}" alt="a"/>
+        <p>{{ books_read.2.title }}</p>
+        <a href="/books_read/">See More</a>
     </div>
-  </div>
-  <hr>
-  <div class="row content">
-    <div class="col-12">
-      <center>
-        <p class="profile-bio">Public Bio: {{ user.public_bio }}</p>
+    <div class="col-7" text-center >
+        <img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}" class="rounded-circle profile-image"
+        style="float:left;">
+        <h2 class="profile-name" style= "text-align: center;">{{ user.first_name }} {{ user.last_name }} </h2>
+        <p class="profile-email" style= "text-align: center;">{{ user.email }}</p>
+        <p class="profile-name" style= "text-align: center;">Age: {{ user.age }}</p>
+        <br> <p Public Bio </p> <hr>
+        <p class="profile-bio">{{ user.public_bio }}</p>
         <p class="profile-ps">Favourite Genre: {{ user.favourite_genre }}</p>
         <p class="profile-name">Location: {{ user.location }}</p>
-        <p class="profile-name">Age: {{ user.age }}</p>
-      </center>
-    </div>
   </div>
+  <div class="col-3">
+
+  </div>
+ </div>
 </div>
 {% endblock %}
