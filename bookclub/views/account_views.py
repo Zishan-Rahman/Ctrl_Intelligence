@@ -33,6 +33,7 @@ def user_profile(request):
     """ Individual User's Profile Page """
     user = User.objects.get(id = request.user.id)
     current_reads = user.currently_reading_books.all()
+    current_reads = user.already_read_books.all()
     current_user = request.user
     return render(request, 'user_profile.html',{'user': user, 'current_reads': current_reads})
 

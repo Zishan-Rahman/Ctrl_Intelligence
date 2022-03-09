@@ -12,8 +12,8 @@ p {
         <center>
           <img src="{{ book.medium_url }}" alt="a">
           <h3 class="book-title">{{ book.title }}</h3>
-          <a class="btn" href="{% url 'add_to_current_reads' book.id %}" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'> Add to Current Reads</a>
-          <a class="btn" href="{% url 'add_to_books_read' book.id %}" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'> Add to Books Read </a>
+          <a class="btn btn-default" href="{% url 'add_to_current_reads' book.id %}" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'> Add to Current Reads</a>
+          <a class="btn btn-default" href="{% url 'add_to_books_read' book.id %}" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'> Add to Books Read </a>
           <hr>
           <p class="book-isbn">ISBN: {{ book.isbn }}</p>
           <p class="book-author">Author: {{ book.author }}</p>

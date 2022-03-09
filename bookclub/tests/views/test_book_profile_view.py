@@ -60,3 +60,19 @@ class BookProfileTest(TestCase):
 </div>
 <script id="dsq-count-scr" src="//localhost-8000-b6e1mwjp94.disqus.com/count.js" async></script>"""
         self.assertIn(assertString,html)
+
+
+    def test_book_profile_view_has_add_to_current_reads_button(self):
+        self.user2 = User.objects.get(email="janedoe@bookclub.com")
+        self.client.login(email=self.user2.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<a class="btn btn-default" href="/current_reads/{self.book.id %}/home/"><a class="btn btn-dark" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">Add to Current Reads</a>', html)
+
+
+    def test_book_profile_view_has_add_to_books_read_button(self):
+        self.user2 = User.objects.get(email="janedoe@bookclub.com")
+        self.client.login(email=self.user2.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<a class="btn btn-default" href="/books_read/{self.book.id %}/home/"><a class="btn btn-dark" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">Add to Books Read</a>', html)
