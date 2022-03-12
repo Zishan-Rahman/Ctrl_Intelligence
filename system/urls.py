@@ -56,4 +56,8 @@ urlpatterns = [
     path('club_profile/<int:c_pk>/members/<int:u_pk>/promote', club_related_views.promote_member_to_organiser, name='promote_member_to_organiser'),
     path('club_profile/<int:c_pk>/members/<int:u_pk>/demote', club_related_views.demote_organiser_to_member, name='demote_organiser_to_member'),
     path('club_profile/<int:c_pk>/edit/', club_related_views.ClubUpdateView.as_view(), name='edit_club'),
+    path('favourites/', book_views.Favourites.as_view(), name='favourites'),
+    path('book_profile/<int:book_id>/favourite', book_views.make_favourite, name="make_favourite"),
+    path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),
+    path('book_profile/<int:book_id>/rating', book_views.update_ratings, name="update_ratings"),
 ]
