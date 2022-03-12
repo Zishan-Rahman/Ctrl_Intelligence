@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
-from bookclub.models import Book, Club, User
+from bookclub.models import Book, Club, User, Rating
 from django.contrib import messages
 
 class BooksListView(LoginRequiredMixin, ListView):
@@ -50,9 +50,15 @@ class Favourites(LoginRequiredMixin, ListView):
         return self.request.user.favourite_books.all()
 
 
-    
+def update_ratings(request, book_id):
+    user = User.objects.get(pk = request.user.id)
+    book = Book.objects.get(pk = book_id)
+    Rating.objects.create(user = user, book = book, rating = request.POST.get('ratings', "0"))
+    messages.add_message(request, messages.SUCCESS, "You have given " + book.title + " a rating of " + request.POST.get('ratings', "0"))
+    return redirect('book_profile', book_id = book_id)
+   
 
-def MakeFavourite(request,book_id):
+def make_favourite(request,book_id):
     user = User.objects.get(pk = request.user.id)
     book = Book.objects.get(pk = book_id)
     user.favourite_books.add(book)

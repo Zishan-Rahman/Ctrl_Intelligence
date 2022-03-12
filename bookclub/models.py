@@ -264,14 +264,14 @@ class Application(models.Model):
 class Rating(models.Model):
     """A model for the book ratings"""
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
-    isbn = models.CharField(max_length=12, blank=False)
+    book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.CASCADE)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
 
     def get_user(self):
         return self.user
 
-    def get_isbn(self):
-        return self.isbn
+    def get_book(self):
+        return self.book
 
     def get_rating(self):
         return self.rating
