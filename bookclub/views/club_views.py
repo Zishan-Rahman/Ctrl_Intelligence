@@ -20,7 +20,6 @@ def club_util(request):
 
     config.user_clubs = user_clubs_list
 
-
 @login_required
 def club_list(request):
     clubs = []
@@ -35,19 +34,19 @@ def club_list(request):
             "mini_gravatar": club.mini_gravatar(),
             "gravatar": club.gravatar()
         })
-    return render(request, 'club_list.html', {'clubs': clubs})
+    return render(request, 'club_list.html', {'clubs':clubs})
 
 
 @login_required
 def club_selector(request):
     club_util(request)
-    return render(request, "club_switcher.html", {'user_clubs': config.user_clubs})
+    return render(request, "club_switcher.html", {'user_clubs': config.user_clubs,'user':request.user})
 
 
 @login_required
 def club_selector_alt(request):
     club_util(request)
-    return render(request, "club_switcher_alt.html", {"user_clubs": config.user_clubs})
+    return render(request, "club_switcher_alt.html", {"user_clubs": config.user_clubs, 'user': request.user})
 
 @login_required
 def new_club(request):  # new club adapted from the chess club project
