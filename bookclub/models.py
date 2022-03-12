@@ -135,6 +135,9 @@ class Club(models.Model):
 
         ordering = ['name']
 
+    def __str__(self):
+        return self.name
+        
     def get_name(self):
         return self.name
 
@@ -225,7 +228,7 @@ class Club(models.Model):
             self.save()
         else:
             raise ValueError
-    
+
     def organiser_has_owner_privilege(self):
         if self.organiser_owner:
             return "Organiser has owner privileges."

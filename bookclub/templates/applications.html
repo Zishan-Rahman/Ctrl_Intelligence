@@ -8,8 +8,8 @@
       {% if not applicants %}
       <h3>You have no pending applications.</h3>
       {% else %}
-      <table class="table">
-        {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+      <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp
+      <table id="myTable" class="table">
         <thead class="table-light">
           <tr>
             <th scope="col" style="width:15%">Club Applying To</th>
@@ -45,4 +45,39 @@
         </div>
 </div>
     </div>
+    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $('#txt_searchall').keyup(function(){
+    var search = $(this).val();
+    $('table tbody tr').hide();
+    var len = $('table tbody tr:not(.notfound) td:contains("'+search+'")').length;
+    if(len > 0){
+      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
+        $(this).closest('tr').show();
+      });
+    }else{
+      $('.notfound').show();
+    }
+  });
+  $('#txt_name').keyup(function(){
+    var search = $(this).val();
+    $('table tbody tr').hide();
+    var len = $('table tbody tr:not(.notfound) td:nth-child(2):contains("'+search+'")').length;
+    if(len > 0){
+      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
+         $(this).closest('tr').show();
+      });
+    }else{
+      $('.notfound').show();
+    }
+  });
+});
+$.expr[":"].contains = $.expr.createPseudo(function(arg) {
+   return function( elem ) {
+     return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+   };
+});
+</script>
 {% endblock %}
