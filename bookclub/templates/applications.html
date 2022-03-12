@@ -8,8 +8,8 @@
       {% if not applicants %}
       <h3>You have no pending applications.</h3>
       {% else %}
-      <table class="table">
-        {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+      <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for clubs and applicants.." title="Type in a name" size="30">
+      <table id="myTable" class="table">
         <thead class="table-light">
           <tr>
             <th scope="col" style="width:15%">Club Applying To</th>
@@ -45,4 +45,61 @@
         </div>
 </div>
     </div>
+<script>
+function myFunction() {
+    var input = document.getElementById("myInput");
+    var filter = input.value.toUpperCase();
+    var table = document.getElementById("myTable");
+    var tr = table.getElementsByTagName("tr");
+    var tds = tr.getElementsByTagName("td");
+
+    for (var i = 0; i < tr.length; i++) {
+        var firstCol = tds[0].textContent.toUpperCase();
+        var secondCol = tds[1].textContent.toUpperCase();
+        if (firstCol.indexOf(filter) > -1 || secondCol.indexOf(filter) > -1) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+}
+// function myFunction() {
+//   var input, filter, table, tr, td, i, txtValue;
+//   input = document.getElementById("myInput");
+//   filter = input.value.toUpperCase();
+//   table = document.getElementById("myTable");
+//   tr = table.getElementsByTagName("tr");
+//   for (i = 0; i < tr.length; i++) {
+//     td = tr[i].getElementsByTagName("td")[0];
+//     if (td) {
+//       txtValue = td.textContent || td.innerText;
+//       if (txtValue.toUpperCase().indexOf(filter) > -1) {
+//         tr[i].style.display = "";
+//       } else {
+//         tr[i].style.display = "none";
+//       }
+//     }
+//   }
+// }
+
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+</script>
 {% endblock %}
