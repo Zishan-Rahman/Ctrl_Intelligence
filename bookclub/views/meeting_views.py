@@ -3,16 +3,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
-from bookclub.forms import ApplicantForm, ApplicationForm, ScheduleMeetingForm, EditClubForm
-from django.contrib.auth import login
+from bookclub.forms import ScheduleMeetingForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.urls import reverse
 from django.views.generic import ListView
-from bookclub.models import Meeting, User, Club, Application
+from bookclub.models import Meeting, Club
 from bookclub.views import club_views
-from django.views.generic.edit import View, UpdateView
+from django.views.generic.edit import View
 from django.core.paginator import Paginator
 
 class ClubMeetingsListView(LoginRequiredMixin, ListView):

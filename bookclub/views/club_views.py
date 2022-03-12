@@ -1,6 +1,5 @@
 """Clubs related views."""
 from django.conf import settings
-from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
@@ -12,10 +11,9 @@ from django.urls import reverse
 from django.contrib import messages
 from bookclub.templates import *
 from bookclub.forms import EditClubForm
-from django.contrib.auth import login
 from django.http import Http404
 from bookclub.models import User, Club
-from django.views.generic.edit import View, UpdateView
+from django.views.generic.edit import UpdateView
 from django.core.paginator import Paginator
 
 class ClubMemberListView(LoginRequiredMixin, ListView):
