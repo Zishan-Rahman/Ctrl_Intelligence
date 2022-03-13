@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, dashboard_views, club_related_views, book_views, club_views, user_views, search_views
+from bookclub.views import account_views, authentication_views, dashboard_views, club_related_views, book_views, club_views, user_views, search_views, messaging_views
 from django.contrib.auth import views as auth_views
 
 
@@ -52,5 +52,9 @@ urlpatterns = [
     path('new_club/', club_views.new_club, name='new_club'),
     path('club_profile/<int:pk>/meeting/', club_related_views.MeetingScheduler.as_view(), name='schedule_meeting'),
     path('search/', search_views.search, name='search_page'),
-    path('leave_club/<int:club_id>/', club_views.leave_club, name='leave_club')
+    path('leave_club/<int:club_id>/', club_views.leave_club, name='leave_club'),
+    path('inbox/', messaging_views.ListChatsView.as_view(), name='inbox'),
+    path('inbox/create_chat', messaging_views.CreateChatView.as_view(), name='create_chat'),
+    path('inbox/<int:pk>/', messaging_views.ChatView.as_view(), name='chat'),
+    path('inbox/<int:pk>/create_message/', messaging_views.CreateMessageView.as_view(), name='create_message')
 ]

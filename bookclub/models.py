@@ -280,3 +280,17 @@ class Meeting(models.Model):
 
     def get_meeting_address(self):
         return self.address
+
+
+class Chat(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  has_unread = models.BooleanField(default=False)
+
+class Message(models.Model):
+  chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+  sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  body = models.CharField(max_length=1000)
+  date = models.DateTimeField(default=timezone.now)
+  is_read = models.BooleanField(default=False)
