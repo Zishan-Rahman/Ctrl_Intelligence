@@ -282,6 +282,7 @@ class Meeting(models.Model):
         return self.address
 
 
+#Chat and Message models adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class Chat(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
   receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
