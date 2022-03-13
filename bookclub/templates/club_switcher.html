@@ -2,91 +2,88 @@
 {% block content %}
 <div class="container">
 
-    <div class="row">
-        <div class="col-3">
-            <div class="text">
-                <h4>My Clubs </h4>
-            </div>
-        </div>
-        <div class="col-6">
-
-        </div>
-        <div class="col-3">
-            <div class="text float-end">
-                <h4>
-                    <a href="{% url 'club_selector_alt' %}"> <i class="bi bi-layout-three-columns"
-                            style="color: cornflowerblue"></i></a>
-                </h4>
-            </div>
+<div class="row">
+    <div class="col-3">
+        <div class="text">
+            <h4>My Clubs </h4>
         </div>
     </div>
+    <div class="col-6">
 
-    <div class="row row-cols-1">
-        {% for user_club in user_clubs %}
+    </div>
+    <div class="col-3">
+        <div class="text float-end">
+            <h4>
+                <a href="{% url 'club_selector_alt' %}"> <i class="bi bi-layout-three-columns" style="color: cornflowerblue"></i></a>
+            </h4>
+        </div>
+    </div>
+</div>
 
-        <div class="card w-100" style="margin-bottom: 10px; border-color: brown">
-            <div class="row" style="margin-top: 5px">
+<div class="row row-cols-1">
+            {% for user_club in user_clubs %}
 
-                <div class="col-2">
-                    <div class="container">
-                        <img src="{{ user_club.gravatar }}">
-                    </div>
+                <div class="card w-100" style="margin-bottom: 10px; border-color: brown">
+                    <div class="row" style="margin-top: 5px">
 
-                </div>
-                <div class="col" style="padding-top: 20px">
-                    <div class="card-title">
-                        <p class="card-text text-left">{{ user_club.description }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-9">
-                    <div class="card-body">
-                        <h4 class="card-title fw-bold text-left"><strong>{{ user_club.name }}</strong></h4>
-                        <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-person-fill"></i>
-                            {{ user_club.owner }}</p>
+                        <div class="col-2">
+                            <div class="container">
+                                <img src="{{ user_club.gravatar }}">
+                            </div>
 
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="card-body">
-                        <div class="card-text">
-                            <p> <i class="bi bi-geo-alt"></i><strong> {{ user_club.location }}</strong></p>
+                        </div>
+                        <div class="col" style="padding-top: 20px">
+                            <div class="card-title">
+                                <p class="card-text text-left">{{ user_club.description }}</p>
+                            </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="card-body">
+                            <h4 class="card-title fw-bold text-left"><strong>{{ user_club.name }}</strong></h4>
+                                <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-person-fill"></i> {{ user_club.owner }}</p>
+
+                        </div>
+                            </div>
+                        <div class="col-3">
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <p> <i class="bi bi-geo-alt"></i><strong> {{ user_club.location }}</strong></p>
+                                    {% if user in user_club.get_organisers%}
+                                    <p> <i class="bi bi-clipboard"></i><strong> Organiser </strong></p>
+                                      {% endif %}
+                                  {% if user == user_club.get_owner%}
+                                    <p> <i class="bi bi-person-check"></i><strong> Owner </strong></p>
+                                      {% endif %}
+                                  {% if user in user_club.get_members%}
+                                    <p> <i class="bi bi-file-person"></i><strong> Member </strong></p>
+                                      {% endif %}
+                                </div>
+                        </div>
+                            </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-3">
-                    <div class="card-body">
-                        <p class="card-text">{% include 'partials/club_meeting_type.html' with club=user_club %}</p>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="card-body">
+                            <p class="card-text">{% include 'partials/club_meeting_type.html' with club=user_club %}</p>
+                        </div>
+
                     </div>
+                    <div class="col-6">
 
-                </div>
-                <div class="col-6">
-
-                </div>
-                <div class="col-3">
-                    <div class="card-body">
-                        <a class="btn m-auto" style="background-color: brown; color: white;"
-                            href="{% url 'club_profile' user_club.id %}">View</a>
                     </div>
+                    <div class="col-3">
+                        <div class="card-body">
+                            <a class="btn m-auto" style="background-color: brown; color: white;" href="{% url 'club_profile' user_club.id %}">View</a>
+                        </div>
+
+                    </div>
+                </div>
 
                 </div>
-            </div>
-            {% if current_user == club.owner %}
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    Organiser has owner privileges
-                </label>
-            </div>
-            {%endif%}
 
-
-        </div>
-
-        {% endfor %}
-    </div>
+            {% endfor %}
+  </div>
 </div>
 {% endblock %}

@@ -7,6 +7,8 @@ from datetime import datetime
 from django.utils import timezone
 
 
+
+
 class UserForm(forms.ModelForm):
     """Form to update user profiles."""
 
@@ -246,6 +248,7 @@ class ScheduleMeetingForm(forms.ModelForm):
             meeting.set_default_meeting_end_time()
         return meeting
 
+
 class EditClubForm(forms.ModelForm):
     """Form to update clubs."""
 
@@ -264,4 +267,3 @@ class EditClubForm(forms.ModelForm):
     meeting_online = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
                                                                                        "online based or meets in "
                                                                                        "person")
-
