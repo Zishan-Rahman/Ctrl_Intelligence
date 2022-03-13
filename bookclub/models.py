@@ -288,8 +288,8 @@ class Meeting(models.Model):
     address = models.CharField(max_length=50)
 
     class Meta:
-        """Model options"""
-        
+        """Model options."""
+
         ordering = ['date', 'time']
 
     def get_meeting_club(self):
