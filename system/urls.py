@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, dashboard_views, club_related_views, book_views, club_views, user_views, search_views
+from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views
 from django.contrib.auth import views as auth_views
 
 
@@ -37,25 +37,25 @@ urlpatterns = [
     path('password/', account_views.PasswordView.as_view(), name='password'),
     path('profile/', account_views.user_profile, name='profile'),
     path('profile/edit/', user_views.ProfileUpdateView.as_view(), name='edit_profile'),
-    path('applications/', club_related_views.ApplicationsView.as_view(), name='applications'),
-    path('applications/accept/<int:pk>/', club_related_views.app_accept, name='app_accept'),
-    path('applications/remove/<int:pk>/', club_related_views.app_remove, name='app_remove'),
-    path('new_application/<int:club_id>/', club_related_views.new_application, name='new_application'),
+    path('applications/', application_views.ApplicationsView.as_view(), name='applications'),
+    path('applications/accept/<int:pk>/', application_views.app_accept, name='app_accept'),
+    path('applications/remove/<int:pk>/', application_views.app_remove, name='app_remove'),
+    path('new_application/<int:club_id>/', application_views.new_application, name='new_application'),
     path('club_profile/<int:club_id>/', club_views.club_profile, name='club_profile'),
-    path('club_profile/<int:club_id>/members', club_related_views.ClubMemberListView.as_view(), name='club_members'),
-    path('club_profile/<int:club_id>/meetings', club_related_views.ClubMeetingsListView.as_view(), name='club_meetings'),
+    path('club_profile/<int:club_id>/members', club_views.ClubMemberListView.as_view(), name='club_members'),
+    path('club_profile/<int:club_id>/meetings', meeting_views.ClubMeetingsListView.as_view(), name='club_meetings'),
     path('user_profile/<int:user_id>/', user_views.user_profile, name='user_profile'),
     path('book_profile/<int:book_id>/', book_views.ShowBookView.as_view(), name='book_profile'),
     path('my_clubs/', club_views.club_selector, name='club_selector'),
     path('my_clubs1/', club_views.club_selector_alt, name="club_selector_alt"),
-    path('my_applications/', club_related_views.MyApplicationsView.as_view(), name='my_applications'),
+    path('my_applications/', application_views.MyApplicationsView.as_view(), name='my_applications'),
     path('new_club/', club_views.new_club, name='new_club'),
-    path('club_profile/<int:pk>/meeting/', club_related_views.MeetingScheduler.as_view(), name='schedule_meeting'),
+    path('club_profile/<int:pk>/meeting/', meeting_views.MeetingScheduler.as_view(), name='schedule_meeting'),
     path('search/', search_views.search, name='search_page'),
     path('leave_club/<int:club_id>/', club_views.leave_club, name='leave_club'),
-    path('club_profile/<int:c_pk>/members/<int:u_pk>/promote', club_related_views.promote_member_to_organiser, name='promote_member_to_organiser'),
-    path('club_profile/<int:c_pk>/members/<int:u_pk>/demote', club_related_views.demote_organiser_to_member, name='demote_organiser_to_member'),
-    path('club_profile/<int:c_pk>/edit/', club_related_views.ClubUpdateView.as_view(), name='edit_club'),
+    path('club_profile/<int:c_pk>/members/<int:u_pk>/promote', club_views.promote_member_to_organiser, name='promote_member_to_organiser'),
+    path('club_profile/<int:c_pk>/members/<int:u_pk>/demote', club_views.demote_organiser_to_member, name='demote_organiser_to_member'),
+    path('club_profile/<int:c_pk>/edit/', club_views.ClubUpdateView.as_view(), name='edit_club'),
     path('favourites/', book_views.Favourites.as_view(), name='favourites'),
     path('book_profile/<int:book_id>/favourite', book_views.make_favourite, name="make_favourite"),
     path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),
