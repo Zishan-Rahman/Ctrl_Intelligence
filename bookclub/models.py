@@ -292,7 +292,7 @@ class Meeting(models.Model):
     class Meta:
         """Model options."""
 
-        ordering = ['date', 'time']
+        ordering = ['date', 'start_time', 'end_time']
 
     def get_meeting_club(self):
         return self.club

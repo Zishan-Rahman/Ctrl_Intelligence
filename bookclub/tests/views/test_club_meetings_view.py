@@ -100,7 +100,7 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
         for id in range(1, meeting_count+1, 1):
             Meeting.objects.create(
                 date=datetime.datetime(2022, 5, id),
-                time=datetime.time(12, id),
+                start_time=datetime.time(12, id),
                 club=self.club,
                 address=f"{id} Melrose Place"
             )

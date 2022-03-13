@@ -25,25 +25,25 @@ class ScheduleMeetingTestCase(TestCase):
 
         self.online_form_input = {
             'date':self.tomorrow,
-            'time':self.future_time,
+            'start_time':self.future_time,
             'address':'https://www.teams.com/thismeeting'
         }
         self.in_person_form_input = {
             'date':self.tomorrow,
-            'time':self.future_time,
+            'start_time':self.future_time,
             'address':'123 Road London'
         }
 
     def test_online_schedule_meeting_form_has_necessary_fields(self):
         form = ScheduleMeetingForm(club=self.bush_club)
         self.assertIn('date', form.fields)
-        self.assertIn('time', form.fields)
+        self.assertIn('start_time', form.fields)
         self.assertIn('address', form.fields)
 
     def test_in_person_schedule_meeting_form_has_necessary_fields(self):
         form = ScheduleMeetingForm(club=self.strand_club)
         self.assertIn('date', form.fields)
-        self.assertIn('time', form.fields)
+        self.assertIn('start_time', form.fields)
         self.assertIn('address', form.fields)
 
     def test_valid_online_schedule_meeting_form(self):
@@ -65,6 +65,6 @@ class ScheduleMeetingTestCase(TestCase):
 
     def test_form_rejects_current_date_past_time(self):
         self.online_form_input['date'] = self.today
-        self.online_form_input['time'] = self.past_time
+        self.online_form_input['start_time'] = self.past_time
         form = ScheduleMeetingForm(data=self.online_form_input ,club=self.bush_club)
         self.assertFalse(form.is_valid())
