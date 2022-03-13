@@ -30,8 +30,12 @@
         <li><a class="dropdown-item" href="{% url 'my_applications' %}">My applications</a></li>
       </ul>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'inbox' %}">Inbox</a>
+    </li>
 
   </ul>
+  
   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
     <li class="nav-item px-3">
       <form class="d-flex justify-content-center" method=POST action="{% url 'search_page' %}">

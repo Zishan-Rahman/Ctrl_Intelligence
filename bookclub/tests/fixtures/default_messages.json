@@ -1,0 +1,22 @@
+[
+    {
+      "model": "bookclub.message",
+      "pk": 1,
+      "fields": {
+        "chat": 1,
+        "sender_user": 1,
+        "receiver_user": 2,
+        "body": "A message"
+      }
+    },
+    {
+        "model": "bookclub.message",
+        "pk": 2,
+        "fields": {
+          "chat": 1,
+          "sender_user": 1,
+          "receiver_user": 2,
+          "body": "Another message"
+        }
+      }
+  ]
