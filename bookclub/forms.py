@@ -249,6 +249,13 @@ class ScheduleMeetingForm(forms.ModelForm):
         return meeting
 
 
+#Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
+class ChatForm(forms.Form):
+  email = forms.CharField(label='', max_length=100)
+
+class MessageForm(forms.Form):
+  message = forms.CharField(label='', max_length=1000)
+ 
 class EditClubForm(forms.ModelForm):
     """Form to update clubs."""
 

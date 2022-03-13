@@ -311,3 +311,18 @@ class Meeting(models.Model):
 
     def get_meeting_address(self):
         return self.address
+
+
+#Chat and Message models adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
+class Chat(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  has_unread = models.BooleanField(default=False)
+
+class Message(models.Model):
+  chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+  sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  body = models.CharField(max_length=1000)
+  date = models.DateTimeField(default=timezone.now)
+  is_read = models.BooleanField(default=False)

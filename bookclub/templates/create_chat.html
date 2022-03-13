@@ -1,0 +1,26 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-3 col-sm-6">
+      <a href="{% url 'inbox' %}" class="btn btn-secondary" style="background-color: brown">Back to Your Inbox</a>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-5 col-sm-12">
+      <h5>Start a Conversation!</h5>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-3 mb-5">
+    <div class="col-md-5 col-sm-12">
+      <form method="POST">
+        {% csrf_token %}
+        <p>Enter the email of the person you would like to talk to.</p>
+        {% include 'partials/bootstrap_form.html' with form=form %}
+        <input type="submit" value="Continue" class="btn btn-primary" style="background-color: brown">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}
