@@ -289,6 +289,10 @@ class Meeting(models.Model):
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
     address = models.CharField(max_length=50)
 
+    class Meta:
+        """Model options."""
+
+        ordering = ['date', 'time']
 
     def get_meeting_club(self):
         return self.club
