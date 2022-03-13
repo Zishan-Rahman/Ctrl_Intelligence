@@ -38,6 +38,25 @@ class BookProfileTest(TestCase):
         self.assertIn(f'<p class="book-pub-year">Published Year: {str(self.book.pub_year)}</p>', html)
         self.assertIn(f'<p class="book-publisher">Publisher: {self.book.publisher}</p>', html)
 
+    def test_book_profile_has_favourite_button_when_book_is_not_in_favourites(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<input type="submit" value="Make Favourite">', html)
+
+    def test_book_profile_has_unfavourite_button_when_book_is_in_favourites(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self.user.favourite_books.add(self.book)
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<input type="submit" value="Unfavourite">', html)
+
+    def test_book_profile_has_dropdown_to_rate_book(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<select name="ratings" id="ratings">', html)
+
     def test_book_profile_view_has_disqus_comments_section(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
