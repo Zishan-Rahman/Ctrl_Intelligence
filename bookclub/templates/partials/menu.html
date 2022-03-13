@@ -10,12 +10,15 @@
         <li><a class="dropdown-item" href="{% url 'club_selector' %}">My Clubs</a></li>
       </ul>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'user_list' %}">Users</a>
+    <li class="nav-item dropdown">
+      <a class="nav-link" href="#" id="books-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Books
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="user-account-dropdown">
+        <li><a class="dropdown-item" href="{% url 'book_list' %}">View all Books</a></li>
+        <li><a class="dropdown-item" href="{% url 'favourites' %}">My Favourites</a></li>
+      </ul>
     </li>
-    <li class="nav-item">
-    <a class="nav-link" href="{% url 'book_list' %}">Books</a>
-  </li>
 
       <li class="nav-item dropdown">
       <a class="nav-link" href="#" id="clubs-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

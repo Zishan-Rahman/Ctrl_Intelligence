@@ -17,6 +17,38 @@ p {
           <p class="book-author">Author: {{ book.author }}</p>
           <p class="book-pub-year">Published Year: {{ book.pub_year }}</p>
           <p class="book-publisher">Publisher: {{ book.publisher }}</p>
+
+          <form action="{% url 'update_ratings' book.id %}" method="post">
+            {% csrf_token %}
+            <label for="ratings">Rate this Book!</label>
+            <select name="ratings" id="ratings">
+              <option value=0>0</option>
+              <option value=1>1</option>
+              <option value=2>2</option>
+              <option value=3>3</option>
+              <option value=4>4</option>
+              <option value=5>5</option>
+              <option value=6>6</option>
+              <option value=7>7</option>
+              <option value=8>8</option>
+              <option value=9>9</option>
+              <option value=10>10</option>
+            </select>
+            <br>
+            <input type="submit" value="Submit">
+          </form>
+
+          <br>
+
+          {% if book in request.user.favourite_books.all %}
+          <form action="{% url 'Unfavourite' book.id %}" method="post">
+            <input type="submit" value="Unfavourite">
+          </form>
+          {% else %}
+           <form action="{% url 'make_favourite' book.id %}" method="post">
+            <input type="submit" value="Make Favourite">
+          </form>
+          {% endif %}
         </center>
       </div>
     </div>
