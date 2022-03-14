@@ -76,7 +76,12 @@ def user_profile(request, user_id):
     user = User.objects.get(id = user_id)
     current_user = request.user
     following = request.user.is_following(user)
-    return render(request, 'user_profile.html',{'user': user, 'current_user':current_user, 'following': following})
+    followable = request.user != user
+    return render(request, 'user_profile.html',{'user': user, 
+                            'current_user':current_user, 
+                            'following': following, 
+                            'followable':followable}
+    )
 
 @login_required
 def follow_toggle(request, user_id):
