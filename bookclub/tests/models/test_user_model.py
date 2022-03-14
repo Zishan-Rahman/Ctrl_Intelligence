@@ -15,6 +15,10 @@ class UserModelTestCase(TestCase):
         self.user_three = User.objects.get(pk=3)
         self.user_four = User.objects.get(pk=4)
 
+        self.user = User.objects.get(email = 'johndoe@bookclub.com')
+        self.user2 = User.objects.get(email = 'janedoe@bookclub.com')
+        
+
 
 
     # first name tests
@@ -97,8 +101,8 @@ class UserModelTestCase(TestCase):
         self._assert_user_is_invalid()
 
     def test_toggle_follow_user(self):
-        john = self.user_one.email
-        jane = self.user_two.email
+        john = self.user
+        jane = self.user2
         self.assertFalse(john.is_following(jane))
         self.assertFalse(jane.is_following(john))
         john.toggle_follow(jane)
@@ -109,24 +113,19 @@ class UserModelTestCase(TestCase):
         self.assertFalse(jane.is_following(john))
     
     def test_follow_counters(self):
-        john = self.user_one.email
-        jane = self.user_two.email
-        joe = self.user_three.email
-        sam = self.user_four.email
+        john = self.user
+        jane = self.user2
         john.toggle_follow(jane)
-        john.toggle_follow(joe)
-        john.toggle_follow(sam)
-        jane.toggle_follow(joe)
-        jane.toggle_follow(sam)
-        self.assertEqual(john.follower_count(), 0 )
-        self.assertEqual(john.followee_count(), 3 )
-        self.assertEqual(jane.user.follower_count(), 1 )
-        self.assertEqual(jane.user.followee_count(), 2 )
-        self.assertEqual(joe.user.follower_count(), 2 )
-        self.assertEqual(joe.user.followee_count(), 0 )
-        self.assertEqual(sam.user.follower_count(), 2 )
-        self.assertEqual(sam.user.followee_count(), 0 )
+        jane.toggle_follow(john)
+        self.assertEqual(john.follower_count(), 1 )
+        self.assertEqual(john.followee_count(), 1 )
+        self.assertEqual(jane.follower_count(), 1 )
+        self.assertEqual(jane.followee_count(), 1)
 
+    def test_user_cant_follow_self(self):
+        self.user.toggle_follow(self.user)
+        self.assertEqual(self.user.follower_count(), 0 )
+        self.assertEqual(self.user.followee_count(), 0 )
 
     def _assert_user_is_valid(self):
         try:
