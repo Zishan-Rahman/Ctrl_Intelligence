@@ -9,6 +9,46 @@ from django.core.validators import RegexValidator, MaxValueValidator, MinValueVa
 from libgravatar import Gravatar
 
 
+
+# books model
+
+class Book(models.Model):
+    isbn = models.CharField(unique=True, max_length=12, blank=False)
+    title = models.CharField(unique=False, blank=False, max_length=512)
+    author = models.CharField(blank=False, max_length=512)
+    pub_year = models.IntegerField(blank=False, validators=[MinValueValidator(1800), MaxValueValidator(2022)])
+    publisher = models.CharField(blank=False, max_length=512)
+    small_url = models.URLField(unique=False, blank=False, max_length=512)
+    medium_url = models.URLField(unique=False, blank=False, max_length=512)
+    large_url = models.URLField(unique=False, blank=False, max_length=512)
+
+    class Meta:
+        """Model options."""
+
+        ordering = ['title']
+
+    def get_isbn(self):
+        return self.isbn
+
+    def get_title(self):
+        return self.title
+
+    def get_pub_year(self):
+        return self.pub_year
+
+    def get_pub_company(self):
+        return self.publisher
+
+    def get_small_url(self):
+        return self.small_url
+
+    def get_medium_url(self):
+        return self.medium_url
+
+    def get_large_url(self):
+        return self.large_url
+
+
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255, blank=False)
@@ -31,6 +71,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     favourite_genre = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
+    favourite_books = models.ManyToManyField(Book)
 
     class Meta:
         """Model options."""
@@ -76,46 +117,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
 
 
-# books model
-
-
-class Book(models.Model):
-    isbn = models.CharField(unique=True, max_length=12, blank=False)
-    title = models.CharField(unique=False, blank=False, max_length=512)
-    author = models.CharField(blank=False, max_length=512)
-    pub_year = models.IntegerField(blank=False, validators=[MinValueValidator(1800), MaxValueValidator(2022)])
-    publisher = models.CharField(blank=False, max_length=512)
-    small_url = models.URLField(unique=False, blank=False, max_length=512)
-    medium_url = models.URLField(unique=False, blank=False, max_length=512)
-    large_url = models.URLField(unique=False, blank=False, max_length=512)
-
-    class Meta:
-        """Model options."""
-
-        ordering = ['title']
-
-    def get_isbn(self):
-        return self.isbn
-
-    def get_title(self):
-        return self.title
-
-    def get_pub_year(self):
-        return self.pub_year
-
-    def get_pub_company(self):
-        return self.publisher
-
-    def get_small_url(self):
-        return self.small_url
-
-    def get_medium_url(self):
-        return self.medium_url
-
-    def get_large_url(self):
-        return self.large_url
-
-
 # Club Model adapted from Clucker user model and Chess club management system club model
 
 
@@ -127,11 +128,15 @@ class Club(models.Model):
     organisers = models.ManyToManyField(User, related_name="organiser_of")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
     meeting_online = models.BooleanField(unique=False, blank=False, default=True)
+    organiser_owner = models.BooleanField(unique=False, blank = False, default = True)
 
     class Meta:
         """Model options."""
 
         ordering = ['name']
+
+    def __str__(self):
+        return self.name
 
     def get_name(self):
         return self.name
@@ -171,6 +176,14 @@ class Club(models.Model):
         if self.user_level(user) == "Member":
             self.members.remove(user)
             self.organisers.add(user)
+            self.save()
+        else:
+            raise ValueError
+
+    def demote_organiser(self, user):
+        if self.user_level(user) == "Organiser":
+            self.organisers.remove(user)
+            self.members.add(user)
             self.save()
         else:
             raise ValueError
@@ -216,6 +229,12 @@ class Club(models.Model):
         else:
             raise ValueError
 
+    def organiser_has_owner_privilege(self):
+        if self.organiser_owner:
+            return "Organiser has owner privileges."
+        else:
+            return "Organiser does not have owner privileges."
+
     def gravatar(self, size=120):
         """Return a URL to the user's gravatar."""
         gravatar_object = Gravatar(self.name)
@@ -248,14 +267,14 @@ class Application(models.Model):
 class Rating(models.Model):
     """A model for the book ratings"""
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
-    isbn = models.CharField(max_length=12, blank=False)
+    book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.CASCADE)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
 
     def get_user(self):
         return self.user
 
-    def get_isbn(self):
-        return self.isbn
+    def get_book(self):
+        return self.book
 
     def get_rating(self):
         return self.rating
@@ -268,6 +287,10 @@ class Meeting(models.Model):
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
     address = models.CharField(max_length=50, default=True)
 
+    class Meta:
+        """Model options."""
+
+        ordering = ['date', 'time']
 
     def get_meeting_club(self):
         return self.club
@@ -280,3 +303,18 @@ class Meeting(models.Model):
 
     def get_meeting_address(self):
         return self.address
+
+
+#Chat and Message models adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
+class Chat(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  has_unread = models.BooleanField(default=False)
+
+class Message(models.Model):
+  chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+  sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+  body = models.CharField(max_length=1000)
+  date = models.DateTimeField(default=timezone.now)
+  is_read = models.BooleanField(default=False)

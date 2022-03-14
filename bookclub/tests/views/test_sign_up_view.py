@@ -25,6 +25,10 @@ class SignUpViewTestCase(TestCase, LogInTester):
     def test_sign_up_url(self):
         self.assertEqual(self.url, '/sign_up/')
 
+    def test_home_uses_correct_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'sign_up.html')
+
     def test_successful_sign_up(self):
         before_count = User.objects.count()
         response = self.client.post(self.url, self.form_input, follow=True)

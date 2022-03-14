@@ -26,6 +26,12 @@ class PasswordViewTest(TestCase):
     def test_password_url(self):
         self.assertEqual(self.url, '/password/')
 
+    def test_home_uses_correct_template(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'password.html')
+
     def test_get_password(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
@@ -35,7 +41,7 @@ class PasswordViewTest(TestCase):
         self.assertTrue(isinstance(form, PasswordForm))
 
     def test_get_password_redirects_when_not_logged_in(self):
-        redirect_url = reverse_with_next('log_in', self.url)
+        redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
@@ -74,7 +80,7 @@ class PasswordViewTest(TestCase):
         self.assertTrue(is_password_correct)
 
     def test_post_profile_redirects_when_not_logged_in(self):
-        redirect_url = reverse_with_next('log_in', self.url)
+        redirect_url = reverse_with_next('login', self.url)
         response = self.client.post(self.url, self.form_input)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         is_password_correct = check_password('Password123', self.user.password)

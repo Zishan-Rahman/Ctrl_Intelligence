@@ -7,6 +7,8 @@ from datetime import datetime
 from django.utils import timezone
 
 
+
+
 class UserForm(forms.ModelForm):
     """Form to update user profiles."""
 
@@ -157,7 +159,7 @@ class ApplicantForm(forms.Form):
 class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
-        fields = ['name', 'description', 'location', 'meeting_type']
+        fields = ['name', 'description', 'location', 'meeting_type', 'organiser_has_owner_privilege']
         widgets = {"description": forms.Textarea()}
 
     CHOICES = [
@@ -168,6 +170,12 @@ class ClubForm(forms.ModelForm):
     meeting_type = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
                                                                                        "online based or meets in "
                                                                                        "person")
+
+    CHOICES1 = [
+        (True, 'Yes'),
+        (False, 'No')]
+
+    organiser_has_owner_privilege = forms.ChoiceField(choices=CHOICES1, widget=forms.Select())
 
     def clean(self):
         super().clean()
@@ -246,3 +254,30 @@ class InviteForm(forms.ModelForm):
     def clean(self):
         super().clean()
         email = self.cleaned_data["email_address"]
+
+
+#Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
+class ChatForm(forms.Form):
+  email = forms.CharField(label='', max_length=100)
+
+class MessageForm(forms.Form):
+  message = forms.CharField(label='', max_length=1000)
+
+class EditClubForm(forms.ModelForm):
+    """Form to update clubs."""
+
+    class Meta:
+        """Form options."""
+
+        model = Club
+        fields = ['name', 'description', 'location', 'meeting_online']
+        widgets = {'description': forms.Textarea()}
+
+    CHOICES = [
+        (None, 'Choose meeting type'),
+        (True, 'Online'),
+        (False, 'In Person')]
+
+    meeting_online = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
+                                                                                       "online based or meets in "
+                                                                                       "person")

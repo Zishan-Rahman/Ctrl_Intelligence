@@ -50,6 +50,15 @@
                             <div class="card-body">
                                 <div class="card-text">
                                     <p> <i class="bi bi-geo-alt"></i><strong> {{ user_club.location }}</strong></p>
+                                    {% if user in user_club.get_organisers%}
+                                    <p> <i class="bi bi-clipboard"></i><strong> Organiser </strong></p>
+                                      {% endif %}
+                                  {% if user == user_club.get_owner%}
+                                    <p> <i class="bi bi-person-check"></i><strong> Owner </strong></p>
+                                      {% endif %}
+                                  {% if user in user_club.get_members%}
+                                    <p> <i class="bi bi-file-person"></i><strong> Member </strong></p>
+                                      {% endif %}
                                 </div>
                         </div>
                             </div>
@@ -78,4 +87,3 @@
   </div>
 </div>
 {% endblock %}
-

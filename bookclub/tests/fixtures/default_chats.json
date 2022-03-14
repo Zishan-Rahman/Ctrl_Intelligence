@@ -1,0 +1,18 @@
+[
+    {
+      "model": "bookclub.chat",
+      "pk": 1,
+      "fields": {
+        "user": 1,
+        "receiver": 2
+      }
+    },
+    {
+      "model": "bookclub.chat",
+      "pk": 2,
+      "fields": {
+        "user": 2,
+        "receiver": 3
+      }
+    }
+  ]
