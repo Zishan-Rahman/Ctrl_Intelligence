@@ -75,4 +75,13 @@ def user_profile(request, user_id):
     """ Individual User's Profile Page """
     user = User.objects.get(id = user_id)
     current_user = request.user
-    return render(request, 'user_profile.html',{'user': user, 'current_user':current_user})
+    following = request.user.is_following(user)
+    return render(request, 'user_profile.html',{'user': user, 'current_user':current_user, 'following': following})
+
+@login_required
+def follow_toggle(request, user_id):
+    current_user = request.user
+    followee = User.objects.get(id = user_id)
+    current_user.toggle_follow(followee)
+    return redirect('user_profile', user_id = user_id)
+
