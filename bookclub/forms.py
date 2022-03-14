@@ -236,6 +236,8 @@ class ScheduleMeetingForm(forms.ModelForm):
         date = self.cleaned_data['date']
         start_time = self.cleaned_data['start_time']
         end_time = self.cleaned_data['end_time'] 
+        if end_time == None:
+            end_time = start_time.replace(hour=(start_time.hour + 1) % 24)
         if date < datetime.now().date():
             raise forms.ValidationError("The meeting cannot be in the past!")
         elif date == datetime.now().date() and start_time < datetime.now().time():
@@ -243,9 +245,10 @@ class ScheduleMeetingForm(forms.ModelForm):
 
     def save(self, club):
         super().save(commit=False)
-        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), end_time=self.cleaned_data.get('end_time'), club=club, address = self.cleaned_data.get('address'))
-        if meeting.end_time == None:
-            meeting.set_default_meeting_end_time()
+        if self.cleaned_data.get('end_time') != None:
+            meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), end_time=self.cleaned_data.get('end_time'), club=club, address = self.cleaned_data.get('address'))
+        else:
+            meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), end_time=self.cleaned_data.get('start_time').replace(hour=(self.cleaned_data.get('start_time').hour + 1) % 24), club=club, address = self.cleaned_data.get('address'))
         return meeting
 
 
