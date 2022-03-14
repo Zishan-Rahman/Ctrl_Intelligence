@@ -29,12 +29,12 @@ class MeetingViewTestCase(TestCase):
 
         self.online_form_input = {
             'date':self.tomorrow,
-            'time':self.future_time,
+            'start_time':self.future_time,
             'address':'https://www.teams.com/thismeeting'
         }
         self.in_person_form_input = {
             'date':self.tomorrow,
-            'time':self.future_time,
+            'start_time':self.future_time,
             'address':'123 Road London'
         }
 

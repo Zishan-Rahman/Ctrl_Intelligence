@@ -90,7 +90,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date', models.DateField()),
-                ('time', models.TimeField()),
+                ('start_time', models.TimeField()),
+                ('end_time', models.TimeField(blank=True, null=True)),
                 ('address', models.CharField(max_length=50)),
                 ('club', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='bookclub.club')),
             ],
