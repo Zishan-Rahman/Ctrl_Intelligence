@@ -242,6 +242,8 @@ class ScheduleMeetingForm(forms.ModelForm):
             raise forms.ValidationError("The meeting cannot be in the past!")
         elif date == datetime.now().date() and start_time < datetime.now().time():
             raise forms.ValidationError("The meeting cannot be in the past!")
+        elif end_time < start_time:
+            raise forms.ValidationError("You cannot have the meeting start after it ends!")
 
     def save(self, club):
         super().save(commit=False)
