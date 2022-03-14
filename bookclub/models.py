@@ -75,9 +75,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     followers = models.ManyToManyField(
         'self', symmetrical=False, related_name='followees'
     )
-    following = models.ManyToManyField(
-        'self', symmetrical=False, related_name='follow'
-    )
 
     class Meta:
         """Model options."""
@@ -119,6 +116,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.gravatar(size=60)
 
     def toggle_follow(self, followee):
+        if followee == self:
+            return
         if self.is_following(followee):
             self._unfollow(followee)
         else:
@@ -133,14 +132,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_following(self, user):
         return user in self.followees.all()
     
-    def is_follow(self, user):
-        return user in self.follow.all()
-    
     def follower_count(self):
         return self.followers.count()
 
     def followee_count(self):
-        return self.follow.count()
+        return self.followees.count()
 
     objects = UserManager()
 
