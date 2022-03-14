@@ -97,13 +97,20 @@ class MeetingUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Meeting updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+    
+    def form_vaild(self, form):
+        club = form.instance.club
+        form.save(club)
+        return super().form_valid(form)
 
     def post(self, request, club_id, meeting_id, *args, **kwargs):
         club = Club.objects.get(id=club_id)
         meeting = Meeting.objects.get(id=meeting_id)
         form = self.form_class(instance=meeting, club=club, data=request.POST)
         if form.is_valid():
-            return self.form_valid(form)
+            Meeting.objects.filter(id=meeting_id).delete()
+            form.save(club)
+            return redirect(reverse('club_meetings',kwargs={'club_id':club_id}))
         return render(request, 'edit_meeting.html', {"club": club, "form": form})
 
     def get(self, request, club_id, meeting_id, *args, **kwargs):

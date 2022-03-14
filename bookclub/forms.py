@@ -243,6 +243,7 @@ class ScheduleMeetingForm(forms.ModelForm):
     def save(self, club):
         super().save(commit=False)
         meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club, address = self.cleaned_data.get('address'))
+        return meeting
 
 
 #Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
