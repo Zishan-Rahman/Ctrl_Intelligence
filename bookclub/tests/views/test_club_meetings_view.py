@@ -98,12 +98,21 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
 
     def _create_test_club_meetings(self, meeting_count=10):
         for id in range(1, meeting_count+1, 1):
-            Meeting.objects.create(
-                date=datetime.datetime(2022, 5, id),
-                start_time=datetime.time(12, id),
-                club=self.club,
-                address=f"{id} Melrose Place"
-            )
+            if id % 2 != 0:
+                Meeting.objects.create(
+                    date=datetime.datetime(2022, 5, id),
+                    start_time=datetime.time(12, id),
+                    club=self.club,
+                    address=f"{id} Melrose Place"
+                )
+            else:
+                Meeting.objects.create(
+                    date=datetime.datetime(2022, 5, id),
+                    start_time=datetime.time(12, id),
+                    end_time=datetime.time(12, id).replace(hour=(datetime.time(12, id).hour + 2) % 24),
+                    club=self.club,
+                    address=f"{id} Melrose Place"
+                )
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
