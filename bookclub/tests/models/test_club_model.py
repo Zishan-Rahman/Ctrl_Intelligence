@@ -16,6 +16,8 @@ class ClubModelTestCase(TestCase):
         self.club_bush_house = Club.objects.get(pk=1)
         self.club_somerset_house = Club.objects.get(pk=2)
         self.club_strand_house = Club.objects.get(pk=3)
+        self.club_temple_house = Club.objects.get(pk=4)
+
 
     def test_name_cannot_be_blank(self):
         self.club_bush_house.name = ''
@@ -90,6 +92,22 @@ class ClubModelTestCase(TestCase):
         self.assertEqual(self.club_bush_house.owner, self.user_two)
         self.assertEqual(self.club_bush_house.get_organisers().get(pk=1), self.user_one)
 
+
+    def test_remove_member_from_club(self):
+        self.club_temple_house.make_member(self.user_two)
+        self.assertEqual(club_temple_house.member, self.user_two)
+        self.club_temple_house.remove_from_club(self.user_two)
+        self.assertNotEqual(club_bush_house.member , self.user_two)
+
+
+    def test_remove_organiser_from_club(self):
+        self.club_temple_house.make_member(self.user_two)
+        self.club_temple_house.make_organiser(self.user_two)
+        self.assertEqual(club_bush_house.owner, self.user_two)
+        self.club_temple_house.remove_from_club(self.user_two)
+        self.assertNotEqual(club_bush_house.owner, self.user_two)
+
+
     def _assert_book_club_is_valid(self):
         try:
             self.club_bush_house.full_clean()
@@ -99,3 +117,9 @@ class ClubModelTestCase(TestCase):
     def _assert_book_club_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.club_bush_house.full_clean()
+
+
+
+
+
+
