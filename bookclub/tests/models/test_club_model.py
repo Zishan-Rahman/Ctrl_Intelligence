@@ -97,7 +97,7 @@ class ClubModelTestCase(TestCase):
         self.club_temple_house.make_member(self.user_two)
         self.assertEqual(club_temple_house.member, self.user_two)
         self.club_temple_house.remove_from_club(self.user_two)
-        self.assertNotEqual(club_bush_house.member , self.user_two)
+        self.assertNotEqual(club_temple_house.member , self.user_two)
 
 
     def test_remove_organiser_from_club(self):
@@ -105,7 +105,7 @@ class ClubModelTestCase(TestCase):
         self.club_temple_house.make_organiser(self.user_two)
         self.assertEqual(club_temple_house.owner, self.user_two)
         self.club_temple_house.remove_from_club(self.user_two)
-        self.assertNotEqual(club_bush_house.owner, self.user_two)
+        self.assertNotEqual(club_temple_house.owner, self.user_two)
 
 
     def _assert_book_club_is_valid(self):
