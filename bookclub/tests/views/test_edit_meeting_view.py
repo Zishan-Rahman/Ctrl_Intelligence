@@ -23,14 +23,14 @@ class EditMeetingViewTestCase(TestCase):
         self.club = Club.objects.get(name="Bush House Book Club")
         self.meeting = Meeting.objects.create(
             date="2023-03-03",
-            time="22:30:00",
+            start_time="22:30:00",
             club=self.club,
             address="youtube.com"
         )
         self.url = reverse('edit_meeting', kwargs={'club_id':self.club.id, 'meeting_id':self.meeting.id})
         self.form_input = {
             'date': '2024-02-21',
-            'time': '23:30:00',
+            'start_time': '23:30:00',
             'address': 'example.com'
         }
 
