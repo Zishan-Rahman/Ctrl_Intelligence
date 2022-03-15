@@ -94,18 +94,21 @@ class ClubModelTestCase(TestCase):
 
 
     def test_remove_member_from_club(self):
-        self.club_temple_house.make_member(self.user_two)
-        self.assertEqual(club_temple_house.member, self.user_two)
-        self.club_temple_house.remove_from_club(self.user_two)
-        self.assertNotEqual(club_temple_house.member , self.user_two)
+        self.club_temple_house.make_member(self.user_one)
+        self.assertEqual(self.club_temple_house.get_members().get(pk=1), self.user_one)
+        self.club_temple_house.remove_from_club(self.user_one)
+        with self.assertRaises(User.DoesNotExist):
+            self.club_temple_house.get_members().get(pk = 1)
 
 
     def test_remove_organiser_from_club(self):
-        self.club_temple_house.make_member(self.user_two)
-        self.club_temple_house.make_organiser(self.user_two)
-        self.assertEqual(club_temple_house.organiser, self.user_two)
-        self.club_temple_house.remove_from_club(self.user_two)
-        self.assertNotEqual(club_temple_house.organiser, self.user_two)
+        self.club_temple_house.make_member(self.user_one)
+        self.club_temple_house.make_organiser(self.user_one)
+        self.assertEqual(self.club_temple_house.user_level(self.user_one),"Organiser")
+        self.assertEqual(self.club_temple_house.get_organisers().get(pk=1) , self.user_one)
+        self.club_temple_house.remove_from_club(self.user_one)
+        with self.assertRaises(User.DoesNotExist):
+            self.club_temple_house.get_organisers().get(pk = 1)
 
 
     def _assert_book_club_is_valid(self):
@@ -114,9 +117,11 @@ class ClubModelTestCase(TestCase):
         except ValidationError:
             self.fail('Test club should be valid')
 
+
     def _assert_book_club_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.club_bush_house.full_clean()
+
 
 
 
