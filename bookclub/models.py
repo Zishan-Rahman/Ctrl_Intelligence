@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
@@ -226,6 +227,11 @@ class Club(models.Model):
         if self.user_level(user) == "Member":
             self.members.remove(user)
             self.save()
+
+        elif self.user_level(user) == "Organiser":
+            self.organisers.remove(user)
+            self.save()
+
         else:
             raise ValueError
 
@@ -283,14 +289,15 @@ class Rating(models.Model):
 class Meeting(models.Model):
     """A model for denoting and storing meetings."""
     date = models.DateField()
-    time = models.TimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField(blank=True, null=True)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
     address = models.CharField(max_length=50)
 
     class Meta:
         """Model options."""
 
-        ordering = ['date', 'time']
+        ordering = ['date', 'start_time', 'end_time']
 
     def get_meeting_club(self):
         return self.club
@@ -298,8 +305,14 @@ class Meeting(models.Model):
     def get_meeting_date(self):
         return self.date
 
-    def get_meeting_time(self):
-        return self.time
+    def get_meeting_start_time(self):
+        return self.start_time
+    
+    def set_default_meeting_end_time(self):
+        self.end_time = self.start_time.replace(hour=(self.start_time.hour + 1) % 24)
+        
+    def get_meeting_end_time(self):
+        return self.end_time
 
     def get_meeting_address(self):
         return self.address

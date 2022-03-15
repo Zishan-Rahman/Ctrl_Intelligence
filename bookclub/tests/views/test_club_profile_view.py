@@ -88,5 +88,15 @@ class ClubProfileTest(TestCase , LogInTester):
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {self.bush_club.name}</button>', html)
 
+    """Test if the club profile page has a leave button for a organiser of a club """
+    def test_club_profile_view_has_a_leave_button_for_club_organiser(self):
+        self.user3 = User.objects.get(email="joedoe@bookclub.com")
+        self.client.login(email=self.user3.email, password='Password123')
+        self.bush_club.make_member(self.user3)
+        self.bush_club.make_organiser(self.user3)
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {self.bush_club.name}</button>', html)
+
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()

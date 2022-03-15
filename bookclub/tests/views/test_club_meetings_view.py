@@ -56,6 +56,16 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
                 self.assertIn(f'<td>12:0{i} p.m.</td>', html)
             else:
                 self.assertIn(f'<td>12:{i} p.m.</td>', html)
+            if i % 2 == 0:
+                if i != 10:
+                    self.assertIn(f'<td>2:0{i} p.m.</td>', html)
+                else:
+                    self.assertIn(f'<td>2:{i} p.m.</td>', html)
+            else:
+                if i != 10:
+                    self.assertIn(f'<td>1:0{i} p.m.</td>', html)
+                else:
+                    self.assertIn(f'<td>1:{i} p.m.</td>', html)
             self.assertIn(f'<td>{test_meeting.address}</td>', html)
             self.assertIn(f"""<td><a class="btn btn-default" href="/club_profile/{self.club.id}/meetings/{test_meeting.id}/edit"><span class="btn btn-dark" style="background-color: brown">Edit meeting details</span></a></td>""", html)
 
@@ -97,12 +107,22 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
 
     def _create_test_club_meetings(self, meeting_count=10):
         for id in range(1, meeting_count+1, 1):
-            Meeting.objects.create(
-                date=datetime.datetime(2022, 5, id),
-                time=datetime.time(12, id),
-                club=self.club,
-                address=f"{id} Melrose Place"
-            )
+            if id % 2 != 0:
+                Meeting.objects.create(
+                    date=datetime.datetime(2022, 5, id),
+                    start_time=datetime.time(12, id),
+                    end_time=datetime.time(12, id).replace(hour=(datetime.time(12, id).hour + 1) % 24),
+                    club=self.club,
+                    address=f"{id} Melrose Place"
+                )
+            else:
+                Meeting.objects.create(
+                    date=datetime.datetime(2022, 5, id),
+                    start_time=datetime.time(12, id),
+                    end_time=datetime.time(12, id).replace(hour=(datetime.time(12, id).hour + 2) % 24),
+                    club=self.club,
+                    address=f"{id} Melrose Place"
+                )
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()

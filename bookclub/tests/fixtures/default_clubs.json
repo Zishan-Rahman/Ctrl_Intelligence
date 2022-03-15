@@ -31,5 +31,16 @@
       "owner": 1,
       "meeting_online": false
     }
+  },
+  {
+    "model": "bookclub.club",
+    "pk": 4,
+    "fields": {
+      "name": "Temple Book Club",
+      "description": "Temple House Official Book Club!",
+      "location": "Temple, London",
+      "owner": 2,
+      "meeting_online": true
+    }
   }
 ]
