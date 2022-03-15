@@ -227,6 +227,11 @@ class Club(models.Model):
         if self.user_level(user) == "Member":
             self.members.remove(user)
             self.save()
+
+        elif self.user_level(user) == "Organiser":
+            self.organisers.remove(user)
+            self.save()
+
         else:
             raise ValueError
 
