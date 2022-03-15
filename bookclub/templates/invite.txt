@@ -1,8 +1,8 @@
-Hi {{ name }},
+Hi {{ invitee }},
 
-{{ sender }} invited you to join the club {{club}}.
+{{ inviter }} invited you to join the club {{ club.name }}.
 
-To accept the invitation, please click the link below:
+To view the club page, please click the link below:
 {{ link }}
 
 -- Bookwise

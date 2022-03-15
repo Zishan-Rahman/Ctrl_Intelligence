@@ -6,8 +6,8 @@ from bookclub.templates import *
 from bookclub.forms import ApplicantForm, ApplicationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404
-from bookclub.models import Club, Application
+from django.http import Http404, JsonResponse
+from bookclub.models import Club, Application, User
 from bookclub.views import club_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
@@ -114,17 +114,40 @@ def new_application(request, club_id):
 
     return redirect('my_applications')
 
-def invite_users(request, self):
-    """Sends an message to invite users to clubs."""
 
-    if request.method == "GET":
-        form = InviteForm(data={"from_user": str(request.user.email), "to_user": str(invitee.email)})
-    else:
-        form = InviteForm(data=request.POST)
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        messages.add_message(request, messages.SUCCESS, f"Invite sent to {username}.")
-        return redirect(self.request, "my_clubs.html")
+def invite(request):
+    if 'term' in request.GET:
+        query = User.objects.filter(first_name__icontains=request.GET.get('term'))
+        emails = list()
+        for user in query:
+            emails.append(user.email)
+        return JsonResponse(emails, safe=False)
+    return render(request, 'club_profile.html')
 
-    return render(request, "invites/send.html", context)
+
+# def inviteMessage(request, self):
+
+
+        # """Sends an message to invite users to clubs."""
+        # users=User.objects.all()
+    # if request.method == "POST":
+    #     query = request.POST['query']
+    #     users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(full_name__icontains=query)
+    #     return render(request,'home.html',{"users":users})
+    # else:
+    #     return render(request, 'home.html', {})
+    #     users = query
+
+    #
+    # if request.method == "GET":
+    #     form = InviteForm(data={"from_user": str(request.user.email), "to_user": str(invitee.email)})
+    # else:
+    #     form = InviteForm(data=request.POST)
+    #
+    # if request.method == "POST" and form.is_valid():
+    #     form.save()
+    #     messages.add_message(request, messages.SUCCESS, f"Invite sent to {username}.")
+    #     return redirect(self.request, "my_clubs.html")
+    #
+    # return render(request, "invites/send.html", context)

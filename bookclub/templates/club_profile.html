@@ -17,7 +17,6 @@
     </div>
 
     <div class="col-3">
-
       <div class="card w-100">
         <div class="card-body">
           <div class="row">
@@ -81,41 +80,12 @@
             </div>
           </div>
 
-
-                    </div>
-                    </div>
-                    <div class="card w-100">
-                        <div class="card-body text-center">
-                            {% if current_user == club.owner %}
-                      <a class="btn btn-default" href="{% url 'schedule_meeting' pk=club.pk %}"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>
-                            {% elif current_user in club.get_all_users%}
-                                <a class="btn btn-default">Placeholder</a>
-                            {%else%}
-                    <form action="{% url 'new_application' club.id %}" method="post">
-                      {% csrf_token %}
-                        <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply</span></button>
-                    </form>
-                    {%endif%}
-                        </div>
-                    </div>
-                    <div class="card-body text-center">
         </div>
       </div>
       <div class="card w-100">
         <div class="card-body text-center">
           {% if current_user == club.owner %}
           <a class="btn btn-default" href="{% url 'schedule_meeting' pk=club.pk %}"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>
-          <form class="d-flex justify-content-center" method=POST action="{% url 'schedule_meeting' pk=club.pk %}">
-            {% csrf_token %}
-            <input class="form-control me-2" style="width: 4px" type="invite" placeholder="Enter Email" aria-label="Invite" name="query">
-            <a class="btn btn-default" type="submit"><span class="btn btn-dark" style="background-color: brown">Invite User</span></a>
-          </form>
-          {% elif current_user in club.get_organisers%}
-          <form class="d-flex justify-content-center" method=POST action="{% url 'schedule_meeting' pk=club.pk %}">
-            {% csrf_token %}
-            <input class="form-control me-2" style="width: 500px" type="invite" placeholder="Enter Email" aria-label="Invite" name="query">
-            <a class="btn btn-default" type="submit"><span class="btn btn-dark" style="background-color: brown">Invite User</span></a>
-          </form>
           {% elif current_user in club.get_all_users%}
           <a class="btn btn-default">Placeholder</a>
           {%else%}
@@ -128,6 +98,7 @@
           </td>
           </tr>
 
+
           <tr>
             <td class="leave-club">
               {% if current_user in club.get_members %}
@@ -135,6 +106,52 @@
                 {% csrf_token %}
                 <button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {{ club.name }}</button>
               </form>
+              {% elif current_user in club.get_organisers %}
+              <form action="{% url 'leave_club' club.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {{ club.name }}</button>
+              </form>
+              {%endif%}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <br>
+
+
+          <tr>
+            <td class="leave-club">
+              {% if current_user == club.get_owner %}
+              <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+              <form>
+                <input name="user_name" placeholder = "Enter name" class="form-control" id="invite_users">
+              </form>
+              <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+              <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+              <script>
+                $(function () {
+                  $( "#invite_users" ).autocomplete({
+                    source: '{% url 'invite' %}',
+                    minLength: 4
+                  });
+                });
+              </script>
+              {% elif current_user in club.get_organisers %}
+              <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+              <form>
+                <input name="user_name" placeholder = "Enter name" class="form-control" id="invite_users">
+                <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Invite</span></button>
+              </form>
+              <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+              <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+              <script>
+                $(function () {
+                  $( "#invite_users" ).autocomplete({
+                    source: '{% url 'invite' %}',
+                    minLength: 4
+                  });
+                });
+              </script>
               {%endif%}
             </td>
           </tr>

@@ -64,4 +64,6 @@ urlpatterns = [
     path('book_profile/<int:book_id>/favourite', book_views.make_favourite, name="make_favourite"),
     path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),
     path('book_profile/<int:book_id>/rating', book_views.update_ratings, name="update_ratings"),
+    path('invite/', application_views.invite, name='invite'),
+
 ]
