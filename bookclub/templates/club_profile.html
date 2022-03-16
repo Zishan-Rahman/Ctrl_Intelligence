@@ -118,6 +118,14 @@
 
             </td>
           </tr>
+          <td class="disband-club">
+              {% if current_user == club.get_owner %}
+              <form action="{% url 'disband_club' club.id %}" method=post>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Disband {{ club.name }}</button>
+                </form>
+              {% endif %}
+            </td>
           <tr>
             <td>
 

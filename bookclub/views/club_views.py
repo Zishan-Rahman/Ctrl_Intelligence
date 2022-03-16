@@ -187,3 +187,10 @@ def leave_club(request , club_id):
     current_user = request.user
     club.remove_from_club(current_user)
     return redirect('club_selector')
+
+@login_required
+def disband_club(request, c_pk): 
+    """Disband a club"""
+    Club.objects.get(pk=c_pk).delete()
+    messages.add_message(request, messages.SUCCESS, "Club Disbanded!")
+    return redirect('club_selector')
