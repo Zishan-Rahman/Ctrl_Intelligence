@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from bookclub.models import User, Club, Application, Meeting
+from bookclub.models import User, Club, Application, Meeting , Post
 from datetime import datetime
 from django.utils import timezone
 
@@ -279,3 +279,25 @@ class EditClubForm(forms.ModelForm):
     meeting_online = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
                                                                                        "online based or meets in "
                                                                                        "person")
+
+class PostForm(forms.ModelForm):
+    """Form to ask user for post text.
+    The post author must be by the post creator.
+    """
+
+    class Meta:
+        """Form options."""
+
+        model = Post
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea()
+        }
+
+    def save(self , club ):
+        super().save(commit=False)
+        Post.objects.create(
+            author=request.user,
+            club=club,
+            text = self.cleaned_data['text']
+            )
