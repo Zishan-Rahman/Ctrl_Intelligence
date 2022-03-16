@@ -46,7 +46,7 @@ def add_to_current_reads(request, book_id):
     book = Book.objects.get(id=book_id)
     user.currently_reading_books.add(book)
     user.save()
-    return render(request, "home.html")
+    return render(request, "book_profile.html")
 
 @login_required
 def books_read(request):
@@ -59,4 +59,4 @@ def add_to_books_read(request, book_id):
     book = Book.objects.get(id=book_id)
     user.already_read_books.add(book)
     user.save()
-    return render(request, "home.html")
+    return render(request, "book_list.html")

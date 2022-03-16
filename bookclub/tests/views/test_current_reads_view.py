@@ -42,3 +42,6 @@ class CurrentReadsTestCase(TestCase):
         self.assertIn(f'<h3 class="book-title">{self.book.title}</h3>', html)
         self.assertIn(f'<p class="book-author">Author: {self.book.author}</p>', html)
         self.assertIn(f'<p class="book-pub-year">Published Year: {str(self.book.pub_year)}</p>', html)
+
+    def test_add_to_current_reads_url(self):
+        self.assertEqual(self.url, '/book_profile/')

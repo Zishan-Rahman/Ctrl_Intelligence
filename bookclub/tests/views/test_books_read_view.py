@@ -4,29 +4,29 @@ from django.urls import reverse
 from bookclub.models import User, Book
 from bookclub.tests.helpers import reverse_with_next
 
-class CurrentReadsTestCase(TestCase):
+class BooksReadTestCase(TestCase):
     """Tests of the current reads view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 
     def setUp(self):
-        self.url = reverse('current_reads')
+        self.url = reverse('books_read')
         self.user = User.objects.get(email='johndoe@bookclub.com')
 
-    def test_current_reads__url(self):
-        self.assertEqual(self.url, '/current_reads/')
+    def test_books_read(self):
+        self.assertEqual(self.url, '/books_read/')
 
-    def test_get_current_reads(self):
+    def test_get_books_read(self):
         self.client.login(username=self.user.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'current_reads.html')
+        self.assertTemplateUsed(response, 'books_read.html')
 
-    def test_current_reads_uses_correct_template(self):
+    def test_books_read_uses_correct_template(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'current_reads.html')
+        self.assertTemplateUsed(response, 'books_read.html')
 
     def test_get_current_reads_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)
@@ -44,4 +44,4 @@ class CurrentReadsTestCase(TestCase):
         self.assertIn(f'<p class="book-pub-year">Published Year: {str(self.book.pub_year)}</p>', html)
 
     def test_add_to_books_read_url(self):
-        self.assertEqual(self.url, '/home/')
+        self.assertEqual(self.url, '/book_profile/')
