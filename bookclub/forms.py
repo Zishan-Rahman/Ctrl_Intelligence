@@ -294,10 +294,10 @@ class PostForm(forms.ModelForm):
             'text': forms.Textarea()
         }
 
-    def save(self , club ):
+    def save(self):
         super().save(commit=False)
         Post.objects.create(
-            author=request.user,
-            club=club,
-            text = self.cleaned_data['text']
-            )
+            author=self.cleaned_data.get('author'),
+            club=self.cleaned_data.get('club'),
+            text=self.cleaned_data.get('text')
+        )

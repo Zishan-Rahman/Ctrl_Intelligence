@@ -32,9 +32,9 @@ class NewPostView(LoginRequiredMixin, CreateView):
         form = self.form_class(instance=club, data=request.POST)
         if form.is_valid():
             return self.form_valid(form)
-        return render(request, 'feed.html', {"club": club, "form": form})
+        return render(request, 'feed.html', {"author" : author , "club": club, "form": form})
 
     def get(self, request, club_id, *args, **kwargs):
         club = Club.objects.all().get(pk=club_id)
         form = self.form_class(instance=club)
-        return render(request, 'feed.html', {"club": club, "form": form})
+        return render(request, 'feed.html', {"author" :author ,  "club": club, "form": form})
