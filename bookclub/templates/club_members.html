@@ -15,6 +15,7 @@
                             <th scope="col">Bio</th>
                             <th scope="col">Favourite Genre</th>
                             <th scope="col">User Level</th>
+                            <th scope="col">Action</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -25,7 +26,23 @@
                                 <td>{{member.first_name}} {{member.last_name}}</td>
                                 <td>{{member.public_bio}}</td>
                                 <td>{{member.favourite_genre}}</td>
-                                {% if member in club.get_members%}
+                                {% if member in club.get_members %}
+                                <td>Member</td>
+                                {% if is_owner %}
+                                <td><a class="btn btn-default" href="{% url 'promote_member_to_organiser' c_pk=c_pk u_pk=u_pk %}"><span class="btn btn-dark" style="background-color: green">Promote</span></a>
+                                <a class="btn btn-default" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=u_pk %}"><span class="btn btn-dark" style="background-color: blue">Transfer Ownership</span></a></td>                                
+                                {% endif %}
+                                {% elif member in club.get_organisers%}
+                                <td>Organiser</td>
+                                {% if is_owner %}
+                                <td><a class="btn btn-default" href="{% url 'demote_organiser_to_member' c_pk=c_pk u_pk=u_pk %}"><span class="btn btn-dark" style="background-color: red">Demote</span></a>
+                                <a class="btn btn-default" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=u_pk %}"><span class="btn btn-dark" style="background-color: blue">Transfer Ownership</span></a></td>
+
+                                {% endif %}
+                                {% else %}
+                                <td>Owner</td>
+                                {% endif %}
+                                {% comment %} {% if member in club.get_members%}
                                   <td>Member</td>
                                   {% if is_owner %}
                                     <td><a class="btn btn-default" href="{% url 'promote_member_to_organiser' c_pk=c_pk u_pk=u_pk %}"><span class="btn btn-dark" style="background-color: green">Promote</span></a></td>
@@ -37,7 +54,7 @@
                                      {%endif%}
                                      {% else %}
                                   <td>Owner</td>
-                                {% endif %}
+                                {% endif %} {% endcomment %}
                             </tr>
                         {% endfor %}
                     </tbody>

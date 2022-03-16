@@ -59,6 +59,7 @@ urlpatterns = [
     path('inbox/<int:pk>/create_message/', messaging_views.CreateMessageView.as_view(), name='create_message'),
     path('club_profile/<int:c_pk>/members/<int:u_pk>/promote', club_views.promote_member_to_organiser, name='promote_member_to_organiser'),
     path('club_profile/<int:c_pk>/members/<int:u_pk>/demote', club_views.demote_organiser_to_member, name='demote_organiser_to_member'),
+    path('club_profile/<int:c_pk>/members/<int:u_pk>/transfer', club_views.transfer_ownership, name='transfer_ownership'),
     path('club_profile/<int:c_pk>/edit/', club_views.ClubUpdateView.as_view(), name='edit_club'),
     path('favourites/', book_views.Favourites.as_view(), name='favourites'),
     path('book_profile/<int:book_id>/favourite', book_views.make_favourite, name="make_favourite"),

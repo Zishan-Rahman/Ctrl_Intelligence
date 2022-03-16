@@ -53,8 +53,9 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
                 user_level = "Organiser"
             else:
                 user_level = "Owner"
-                if each == current_user:
-                    current_user_is_owner = True
+        
+        if current_club.user_level(current_user):
+            current_user_is_owner = True
 
         context['club'] = current_club
         context['page_obj'] = page_obj
@@ -80,6 +81,13 @@ def demote_organiser_to_member(request, c_pk, u_pk):
     club.demote_organiser(new_member)
     messages.add_message(request, messages.SUCCESS, "User demoted!")
     return redirect('club_members', club_id=c_pk)
+
+def transfer_ownership(request, c_pk, u_pk):
+    """Transfer ownership to specific member"""
+    club = Club.objects.all().get(pk=c_pk)
+    new_owner = User.objects.all().get(pk=u_pk)
+    club.make_owner(new_owner)
+    messages.add_message(request, messages.SUCCESS, "Transferred Ownership!")
 
 class ClubUpdateView(LoginRequiredMixin, UpdateView):
     """View to update club profile."""
