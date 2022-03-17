@@ -1,13 +1,24 @@
 <!-- adapted from clucker project -->
 {% extends 'base_content.html' %}
 {% block content %}
+<style>
+.box {
+  margin-top : 50px;
+  border : 1px solid #000;
+  padding : 15px;
+  width : 500px;
+  margin-left : auto;
+  margin-right : auto;
+  position : relative;
+}
+</style>
 <div class="container">
   <div class="row">
       <div class="col-9">
       <h3>New Club Post</h3>
         <h6>Club: {{club.get_name}}</h6>
         <h6>Author: {{author.get_full_name}}</h6>
-          <div class="w-25 p-3" ;">
+          <div class="w-25 p-3">
         <form action="{% url 'new_post' club.id %}" method="post">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
@@ -21,11 +32,14 @@
         <h1>Feed</h1>
             <br>
               {% for post in posts %}
+              <div class="box">
                 <p>Post: {{post.text}}</p>
                 <p>User: {{post.author.get_full_name}}</p>
                 <p>Date: {{post.created_at}}</p>
                 <br>
+              </div>
               {% endfor %}
+
       </div>
     </div>
 
