@@ -1,6 +1,8 @@
 from django.conf import settings
+from django.shortcuts import redirect
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib import messages
 from bookclub.models import User, Club
 from bookclub.tests.helpers import LogInTester , reverse_with_next
 
@@ -24,6 +26,19 @@ class ClubProfileTest(TestCase , LogInTester):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "club_profile.html")
+
+    def test_correct_club_profile_redirects_with_error_message_when_given_id_to_a_club_which_does_not_exist(self):
+        self.client.login(email=self.user.email, password="Password123")
+        url = reverse('club_profile', kwargs={'club_id': 500})
+        redirect_url = reverse('club_list')
+        response = self.client.get(url, follow=True)
+
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        
+        my_messages = list(response.context['messages'])
+        self.assertEqual(len(my_messages), 1)
+        self.assertEqual(my_messages[0].level, messages.ERROR)
+        self.assertEqual(my_messages[0].message, "Club does not exist!")
 
     def test_get_club_profile_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)
@@ -97,6 +112,57 @@ class ClubProfileTest(TestCase , LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {self.bush_club.name}</button>', html)
+    
+    def test_disband_button_not_visible_for_owner(self):
+        self.user3 = User.objects.get(email="joedoe@bookclub.com")
+        self.client.login(email=self.user3.email, password='Password123')
+        self.bush_club.make_member(self.user3)
+        self.bush_club.make_owner(self.user3)
+        response = self.client.get(self.url)
+
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Disband { self.bush_club.name }</button>', html)
+
+    def test_disband_button_not_visible_for_member(self):
+        self.user3 = User.objects.get(email="joedoe@bookclub.com")
+        self.client.login(email=self.user3.email, password='Password123')
+        self.bush_club.make_member(self.user3)
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+
+        self.assertNotIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Disband { self.bush_club.name }</button>', html)
+        self.assertNotIn('Disband', html)
+
+    def test_disband_button_not_visible_for_organiser(self):
+        self.user3 = User.objects.get(email="joedoe@bookclub.com")
+        self.client.login(email=self.user3.email, password='Password123')
+        self.bush_club.make_member(self.user3)
+        self.bush_club.make_organiser(self.user3)
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+
+        self.assertNotIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Disband { self.bush_club.name }</button>', html)
+        self.assertNotIn('Disband', html)
+
+    def test_successful_disband(self):
+        self.user3 = User.objects.get(email="joedoe@bookclub.com")
+        self.client.login(email=self.user3.email, password='Password123')
+        self.bush_club.make_member(self.user3)
+        self.bush_club.make_owner(self.user3)
+        club_id = self.bush_club.id
+        response = self.client.get(self.url+'disband', follow=True)
+
+        redirect_url = reverse('club_selector')
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+
+        my_messages = list(response.context['messages'])
+        self.assertEqual(len(my_messages), 1)
+        self.assertEqual(my_messages[0].level, messages.SUCCESS)
+        self.assertEqual(my_messages[0].message, "Club Disbanded!")
+
+        self.assertFalse(Club.objects.filter(pk=club_id).exists())
+    
+        
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
