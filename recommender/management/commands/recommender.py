@@ -2,6 +2,7 @@ from surprise import SVD
 from surprise import Dataset
 from surprise import Reader
 from surprise.model_selection import cross_validate
+from surprise.model_selection import train_test_split
 
 import pandas as pd
 from collections import defaultdict
@@ -69,13 +70,15 @@ class Command(BaseCommand):
 
         data = Dataset.load_from_df(user_item_rating, reader)
 
-        trainset = data.build_full_trainset()
+        trainset, testset = train_test_split(data, test_size=0.25)
         algo = SVD()
 
-        algo.fit(trainset)
+        algo_fit = algo.fit(trainset)
+        predictions = algo_fit.test(testset)
 
-        testset = trainset.build_anti_testset()
-        predictions = algo.test(testset)
+        #print(predictions)
+
+
 
         def get_top_n(predictions, n=10):
             """Return the top-N recommendation for each user from a set of predictions.
