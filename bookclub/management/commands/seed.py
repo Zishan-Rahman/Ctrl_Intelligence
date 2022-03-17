@@ -15,7 +15,8 @@ def create_set_users():
         favourite_genre="Science fiction",
         location="London",
         age=39,
-        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0="
+        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
+        is_email_verified = True
     )
     User.objects.create(
         first_name="Jane",
@@ -25,7 +26,8 @@ def create_set_users():
         favourite_genre="Adventure",
         location="Oxford",
         age=32,
-        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0="
+        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
+        is_email_verified = True
     )
     User.objects.create(
         first_name="Joe",
@@ -35,7 +37,8 @@ def create_set_users():
         favourite_genre="Romance",
         location="London",
         age=52,
-        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0="
+        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
+        is_email_verified = True
     )
 
 
