@@ -67,5 +67,6 @@ urlpatterns = [
     path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),
     path('book_profile/<int:book_id>/rating', book_views.update_ratings, name="update_ratings"),
     path('follow_toggle/<int:user_id>', user_views.follow_toggle , name = 'follow_toggle'),
-    path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club'),
+    path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club')
+    ]
 
