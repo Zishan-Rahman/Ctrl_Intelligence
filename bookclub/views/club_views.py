@@ -37,6 +37,7 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
         return Club.objects.get(id=self.kwargs['club_id']).get_all_users()
 
     def get_context_data(self, *args, **kwargs):
+        current_user_is_owner = False
         context = super().get_context_data(*args, **kwargs)
         current_club_id = self.kwargs['club_id']
         current_club = Club.objects.get(id=current_club_id)
