@@ -22,7 +22,6 @@ p {
             {% csrf_token %}
             <label for="ratings">Rate this Book!</label>
             <select name="ratings" id="ratings">
-              <option value=0>0</option>
               <option value=1>1</option>
               <option value=2>2</option>
               <option value=3>3</option>
@@ -42,10 +41,12 @@ p {
 
           {% if book in request.user.favourite_books.all %}
           <form action="{% url 'Unfavourite' book.id %}" method="post">
+            {% csrf_token %}
             <input type="submit" value="Unfavourite">
           </form>
           {% else %}
            <form action="{% url 'make_favourite' book.id %}" method="post">
+             {% csrf_token %}
             <input type="submit" value="Make Favourite">
           </form>
           {% endif %}

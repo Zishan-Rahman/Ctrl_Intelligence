@@ -7,7 +7,7 @@ from bookclub.tests.helpers import reverse_with_next
 from django.contrib import messages
 
 
-class PromoteDemoveViewsTestCase(TestCase):
+class KickFromClubViewTestCase(TestCase):
     """Tests of the promote and demote views."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
@@ -22,74 +22,48 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.bush_club.make_member(self.joe)
         self.bush_club.make_organiser(self.jane)
 
-    def test_promote_button_visible_for_owner(self):
+    def test_kick_button_visible_for_owner(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
         self.assertIn('<a class="btn btn-default"', html)
-        self.assertIn('Promote', html)
+        self.assertIn('Kick', html)
 
-    def test_demote_button_visible_for_owner(self):
-        self.client.login(email=self.john.email, password='Password123')
-        response = self.client.get('/club_profile/1/members')
-        html = response.content.decode('utf8')
-        self.assertIn('<a class="btn btn-default"', html)
-        self.assertIn('Demote', html)
-
-    def test_promote_button_not_visible_for_member(self):
+    def test_kick_button_not_visible_for_member(self):
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
         self.assertNotIn('<a class="btn btn-default"', html)
-        self.assertNotIn('Promote', html)
+        self.assertNotIn('Kick', html)
 
-    def test_demote_button_not_visible_for_member(self):
-        self.client.login(email=self.joe.email, password='Password123')
-        response = self.client.get('/club_profile/1/members')
-        html = response.content.decode('utf8')
-        self.assertNotIn('<a class="btn btn-default"', html)
-        self.assertNotIn('Demote', html)
-
-    def test_promote_button_not_visible_for_organiser(self):
+    def test_kick_button_not_visible_for_organiser(self):
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
         self.assertNotIn('<a class="btn btn-default"', html)
-        self.assertNotIn('Promote', html)
+        self.assertNotIn('Kick', html)
 
-    def test_demote_button_not_visible_for_organiser(self):
-        self.client.login(email=self.jane.email, password='Password123')
-        response = self.client.get('/club_profile/1/members')
-        html = response.content.decode('utf8')
-        self.assertNotIn('<a class="btn btn-default"', html)
-        self.assertNotIn('Demote', html)
-
-    def test_successful_promotion(self):
+    def test_successful_member_kick(self):
         self.client.login(email=self.john.email, password='Password123')
         beforeMemberCount = self.bush_club.get_number_of_members()
-        beforeOrganiserCount = self.bush_club.get_number_organisers()
-        response = self.client.get('/club_profile/1/members/3/promote', follow=True)
+        response = self.client.get('/club_profile/1/members/3/kick', follow=True)
         redirect_url = '/club_profile/1/members'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
         afterMemberCount = self.bush_club.get_number_of_members()
-        afterOrganiserCount = self.bush_club.get_number_organisers()
         self.assertEqual(beforeMemberCount, afterMemberCount + 1)
-        self.assertEqual(beforeOrganiserCount, afterOrganiserCount - 1)
-    
-    def test_successful_demotion(self):
+
+    def test_successful_organiser_kick(self):
         self.client.login(email=self.john.email, password='Password123')
-        beforeMemberCount = self.bush_club.get_number_of_members()
         beforeOrganiserCount = self.bush_club.get_number_organisers()
-        response = self.client.get('/club_profile/1/members/2/demote', follow=True)
+        response = self.client.get('/club_profile/1/members/2/kick', follow=True)
         redirect_url = '/club_profile/1/members'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
-        afterMemberCount = self.bush_club.get_number_of_members()
         afterOrganiserCount = self.bush_club.get_number_organisers()
-        self.assertEqual(beforeMemberCount, afterMemberCount - 1)
         self.assertEqual(beforeOrganiserCount, afterOrganiserCount + 1)
+    
