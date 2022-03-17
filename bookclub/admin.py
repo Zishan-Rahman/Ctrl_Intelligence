@@ -31,12 +31,9 @@ class ApplicationAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    """Configuration of the admin interface for posts."""
 
     list_display = [
-        'get_author', 'text', 'created_at',
+        'created_at', 'author', 'club', 'text'
     ]
 
-    def get_author(self, post):
-        """Return the author of a given post."""
-        return post.author.username
+    
