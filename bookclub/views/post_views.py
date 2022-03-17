@@ -11,7 +11,7 @@ class NewPostView(LoginRequiredMixin, CreateView):
     """Class-based generic view for new post handling."""
 
     model = Post
-    template_name = 'feed.html'
+    template_name = 'posts.html'
     form_class = PostForm
     http_method_names = ['post']
     pk_url_kwarg = 'club_id'
