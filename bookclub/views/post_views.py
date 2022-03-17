@@ -22,7 +22,7 @@ class NewPostView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         """Return URL to redirect the user too after valid form handling."""
-        return reverse('club_selector')
+        return reverse('feed')
 
     def handle_no_permission(self):
         return redirect('login')
@@ -30,12 +30,17 @@ class NewPostView(LoginRequiredMixin, CreateView):
     def post(self, request, club_id, *args, **kwargs):
         club = Club.objects.all().get(pk=club_id)
         form = self.form_class(instance=club , data=request.POST)
+        # authors = self.request.user
+        posts = Post.objects.filter(club=club)
         if form.is_valid():
             form.save(club , request.user)
-            return redirect('club_selector')
-        return render(request,'feed.html', {"author": request.user, "club": club, "form": form})
+            # return render('feed')
+        return render(request,'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
 
     def get(self, request, club_id, *args, **kwargs):
+        authors = self.request.user
+
         club = Club.objects.all().get(pk=club_id)
+        posts = Post.objects.filter(club=club)
         form = self.form_class(instance=club)
-        return render(request,'feed.html', {"author": request.user,  "club": club, "form": form})
+        return render(request,'feed.html', {"author": request.user,  "club": club, "form": form, "posts": posts})
