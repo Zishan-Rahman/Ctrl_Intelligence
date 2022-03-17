@@ -6,7 +6,7 @@
         <div class="col-12">
             <h1>Members of {{ club.get_name }}</h1>
             <div class="book-table">
-                <input type='text' id='txt_searchall' placeholder="Search for users.." size="30">&nbsp
+                {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -19,7 +19,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for member in all_users %}
+                        {% for member in page_obj %}
                             <tr class="clickable-row" data-href="{% url 'user_profile' member.id %}">
                                 <td><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></td>
                                 <td>{{member.first_name}} {{member.last_name}}</td>
@@ -44,45 +44,13 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
             </div>
         </div>
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
-$(document).ready(function(){
-  $('#txt_searchall').keyup(function(){
-    var search = $(this).val();
-    $('table tbody tr').hide();
-    var len = $('table tbody tr:not(.notfound) td:contains("'+search+'")').length;
-    if(len > 0){
-      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
-        $(this).closest('tr').show();
-      });
-    }else{
-      $('.notfound').show();
-    }
-  });
-  $('#txt_name').keyup(function(){
-    var search = $(this).val();
-    $('table tbody tr').hide();
-    var len = $('table tbody tr:not(.notfound) td:nth-child(2):contains("'+search+'")').length;
-    if(len > 0){
-      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
-         $(this).closest('tr').show();
-      });
-    }else{
-      $('.notfound').show();
-    }
-  });
-});
-
-$.expr[":"].contains = $.expr.createPseudo(function(arg) {
-   return function( elem ) {
-     return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-   };
-});
-
   jQuery(document).ready(function($) {
       $(".clickable-row").click(function() {
           window.location = $(this).data("href");
