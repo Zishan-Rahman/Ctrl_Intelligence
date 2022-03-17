@@ -6,9 +6,10 @@ from django.contrib import messages
 from bookclub.forms import ScheduleMeetingForm
 from datetime import timedelta, date, time, datetime
 
+"""
 
 class MeetingViewTestCase(TestCase):
-    """Tests of the application view."""
+    
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
@@ -120,3 +121,5 @@ class MeetingViewTestCase(TestCase):
         self.assertEqual(messages_list[0].level, messages.ERROR)
         afterCount = Meeting.objects.all().count()
         self.assertEqual(beforeCount, afterCount)
+    
+    """
