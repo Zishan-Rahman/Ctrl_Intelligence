@@ -15,7 +15,17 @@
     </div>
     <div class="col-xs-12 col-lg-6 col-xl-8">
       <h1>Feed</h1>
-      <p><b></b>This page will contain the feed of this club.</p>
+       <div class="col-6 text-center">
+        {% if club.get_queryset.count > 0 %}
+          <br>
+            {% for post in posts %}
+              <p>{{ post }}</p>
+              <br>
+            {% endfor %}
+        {% else %}
+            <h5 style="text-transform: capitalize;">This club hasn't posted yet</h5>
+        {% endif %}
+        </div>
     </div>
   </div>
 </div>

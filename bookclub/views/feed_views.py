@@ -18,16 +18,20 @@ class FeedView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         """Return the user's feed."""
         current_user = self.request.user
-        authors = [current_user]
-        posts = Post.objects.filter(author__in=authors)
+        authors = current_user
+        posts = Post.objects.filter(author=authors)
         return posts
 
     def get_context_data(self, **kwargs):
         """Return context data, including new post form."""
         current_club_id = self.kwargs['club_id']
         current_club = Club.objects.get(id=current_club_id)
+        current_user = self.request.user
+        authors = current_user
+        posts = Post.objects.filter(author=authors)
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         context['form'] = PostForm()
         context['club'] = current_club_id
+        context['posts'] = posts
         return context
