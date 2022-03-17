@@ -159,7 +159,7 @@ class Command(BaseCommand):
             print('Clubs successfully seeded')
             print()
             self.load_books()
-            print("Books (smaller dataset) successfully seeded")
+            print("Books successfully seeded")
             print()
             print('Seeder has successfully completed')
 
