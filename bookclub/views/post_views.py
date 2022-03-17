@@ -14,6 +14,7 @@ class NewPostView(LoginRequiredMixin, CreateView):
     template_name = 'feed.html'
     form_class = PostForm
     http_method_names = ['post']
+    pk_url_kwarg = 'club_id'
 
     def form_valid(self, form):
         """Process a valid form."""
@@ -27,20 +28,22 @@ class NewPostView(LoginRequiredMixin, CreateView):
     def handle_no_permission(self):
         return redirect('login')
 
-    def post(self, request, club_id, *args, **kwargs):
-        club = Club.objects.all().get(pk=club_id)
-        form = self.form_class(instance=club , data=request.POST)
+    def post(self, request, *args, **kwargs):
+        current_club_id = self.kwargs['club_id']
+        club = Club.objects.all().get(pk=current_club_id)
+        form = self.form_class(instance=club, data=request.POST)
         # authors = self.request.user
         posts = Post.objects.filter(club=club)
         if form.is_valid():
-            form.save(club , request.user)
+            form.save(club, request.user)
+            form = PostForm()
             # return render('feed')
-        return render(request,'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
+        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
 
-    def get(self, request, club_id, *args, **kwargs):
+    def get(self, request , *args, **kwargs):
         authors = self.request.user
-
-        club = Club.objects.all().get(pk=club_id)
+        current_club_id = self.kwargs['club_id']
+        club = Club.objects.all().get(pk=current_club_id)
         posts = Post.objects.filter(club=club)
         form = self.form_class(instance=club)
-        return render(request,'feed.html', {"author": request.user,  "club": club, "form": form, "posts": posts})
+        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
