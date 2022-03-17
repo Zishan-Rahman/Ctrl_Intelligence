@@ -2,7 +2,7 @@
 {% load humanize %}
 <tr>
   <td>
-    <img src="{{ post.author.mini_gravatar }}" alt="Gravatar of author {{ post.author.username }}" class="rounded-circle">
+    <img src="{{ post.author.mini_gravatar }}" alt="Gravatar of author {{ post.author.email }}" class="rounded-circle">
   </td>
   <td>
     <p class="post-author">
@@ -10,7 +10,7 @@
         {{ post.author.full_name }}
       </span>
       <span class="post-author-user-details">
-        {{ post.author.username }}
+        {{ post.author.email }}
         &nbsp;&middot;&nbsp;
         {{ post.created_at|naturaltime }}
       </span>
