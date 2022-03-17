@@ -1,5 +1,4 @@
 """system URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
 Examples:
@@ -20,11 +19,10 @@ from bookclub.views import account_views, authentication_views, dashboard_views,
 from django.contrib.auth import views as auth_views
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='main/password/password_reset_done.html'), name='password_reset_done'),
-    path('reset/<x64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="main/password/password_reset_confirm.html"), name='password_reset_confirm'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="main/password/password_reset_confirm.html"), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='main/password/password_reset_complete.html'), name='password_reset_complete'),
     path("password_reset", account_views.password_reset_request, name="password_reset"),
     path('', account_views.landing_page, name='landing_page'),
@@ -66,7 +64,6 @@ urlpatterns = [
     path('book_profile/<int:book_id>/favourite', book_views.make_favourite, name="make_favourite"),
     path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),
     path('book_profile/<int:book_id>/rating', book_views.update_ratings, name="update_ratings"),
+    path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club'),
     path('follow_toggle/<int:user_id>', user_views.follow_toggle , name = 'follow_toggle'),
-    path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club')
-    ]
-
+]
