@@ -10,17 +10,6 @@
             <p>{{ club.description }}</p>
 
         </div>
-        <div class="col-6 text-center">
-        {% if club.get_posts %}
-          <br>
-            {% for post in club.get_posts %}
-              <p>{{ post.text }}</p>
-              <br>
-            {% endfor %}
-        {% else %}
-            <h5 style="text-transform: capitalize;">This club hasn't posted yet</h5>
-        {% endif %}
-        </div>
 
     <div class="col-3">
 
