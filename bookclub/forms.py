@@ -297,7 +297,7 @@ class PostForm(forms.ModelForm):
     def save(self):
         super().save(commit=False)
         Post.objects.create(
-            author=self.cleaned_data.get('author'),
-            club=self.cleaned_data.get('club'),
+            author= self.request.user ,
+            club = self.club ,
             text=self.cleaned_data.get('text')
         )
