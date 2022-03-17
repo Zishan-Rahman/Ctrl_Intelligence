@@ -3,6 +3,7 @@ from django.urls import reverse
 from bookclub.models import User
 from bookclub.tests.helpers import reverse_with_next
 
+
 class ShowUserTest(TestCase):
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
