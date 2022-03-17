@@ -3,29 +3,31 @@
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-xs-12 col-lg-6 col-xl-4">
-      <div class="col-xs-12 col-lg-6 col-xl-8">
-        <h1>Feed</h1>
-         <div class="col-6 text-center">
-
-            <br>
-              {% for post in posts %}
-                <p>{{ post.text }}</p>
-                <br>
-              {% endfor %}
-
-          </div>
-      </div>
+      <div class="col-9">
       <h3>New Club Post</h3>
         <h6>Club: {{club.get_name}}</h6>
         <h6>Author: {{author.get_full_name}}</h6>
+          <div class="w-25 p-3" ;">
         <form action="{% url 'new_post' club.id %}" method="post">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
         <button type="submit" class="btn btn-primary">Send</button>
       </form>
+          </div>
+      </div>
+
+    <div class="row">
+      <div class="col-3">
+        <h1>Feed</h1>
+            <br>
+              {% for post in posts %}
+                <p>Post: {{post.text}}</p>
+                <p>User: {{post.author.get_full_name}}</p>
+                <p>Date: {{post.created_at}}</p>
+                <br>
+              {% endfor %}
+      </div>
     </div>
 
-  </div>
-</div>
+    </div>
 {% endblock %}
