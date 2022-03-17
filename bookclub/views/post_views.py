@@ -31,8 +31,8 @@ class NewPostView(LoginRequiredMixin, CreateView):
         club = Club.objects.all().get(pk=club_id)
         form = self.form_class(instance=club , data=request.POST)
         if form.is_valid():
-            form.save()
-            return self.form_valid(form)
+            form.save(club , request.user)
+            return redirect('club_selector')
         return render(request,'feed.html', {"author": request.user, "club": club, "form": form})
 
     def get(self, request, club_id, *args, **kwargs):

@@ -36,4 +36,8 @@ class PostAdmin(admin.ModelAdmin):
         'created_at', 'author', 'club', 'text'
     ]
 
-    
+    def get_author(self, post):
+        """Return the author of a given post."""
+        return post.author.email
+
+
