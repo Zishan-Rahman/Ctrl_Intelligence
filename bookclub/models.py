@@ -73,6 +73,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
     favourite_books = models.ManyToManyField(Book)
+    followers = models.ManyToManyField(
+        'self', symmetrical=False, related_name='followees'
+    )
 
     class Meta:
         """Model options."""
@@ -80,7 +83,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ordering = ['last_name', 'first_name']
 
     def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f'{self.first_name} {self.last_name}'
 
     def get_first_name(self):
         return self.first_name
@@ -112,6 +115,29 @@ class User(AbstractBaseUser, PermissionsMixin):
     def mini_gravatar(self):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=60)
+
+    def toggle_follow(self, followee):
+        if followee == self:
+            return
+        if self.is_following(followee):
+            self._unfollow(followee)
+        else:
+            self._follow(followee)
+
+    def _follow(self, user):    
+        user.followers.add(self)
+
+    def _unfollow(self,user):
+        user.followers.remove(self)
+
+    def is_following(self, user):
+        return user in self.followees.all()
+    
+    def follower_count(self):
+        return self.followers.count()
+
+    def followee_count(self):
+        return self.followees.count()
 
     objects = UserManager()
 

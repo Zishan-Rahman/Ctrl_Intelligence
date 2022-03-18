@@ -1,5 +1,4 @@
 """system URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
 Examples:
@@ -67,5 +66,5 @@ urlpatterns = [
     path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),
     path('book_profile/<int:book_id>/rating', book_views.update_ratings, name="update_ratings"),
     path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club'),
-
+    path('follow_toggle/<int:user_id>', user_views.follow_toggle , name = 'follow_toggle'),
 ]

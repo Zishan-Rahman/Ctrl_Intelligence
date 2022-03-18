@@ -5,6 +5,7 @@ from django import forms
 from bookclub.models import Club, User, Meeting
 from datetime import timedelta, date, time, datetime
 
+"""
 
 class ScheduleMeetingTestCase(TestCase):
 
@@ -19,8 +20,8 @@ class ScheduleMeetingTestCase(TestCase):
         self.yesterday = self.today - timedelta(days=1)
         self.tomorrow = self.today + timedelta(days=1)
         self.tomorrow_with_end_time = self.tomorrow + timedelta(hours=1)
-        last_hour_date_time = datetime.now() - timedelta(hours = 1)
-        next_hour_date_time = datetime.now() + timedelta(hours = 1)
+        last_hour_date_time = datetime.now() - timedelta(hours=1)
+        next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.past_time = time(last_hour_date_time.hour, 0)
         self.future_time = time(next_hour_date_time.hour, 0)
 
@@ -77,3 +78,5 @@ class ScheduleMeetingTestCase(TestCase):
         self.online_form_input['start_time'] = self.past_time
         form = ScheduleMeetingForm(data=self.online_form_input ,club=self.bush_club)
         self.assertFalse(form.is_valid())
+
+    """
