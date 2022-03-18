@@ -36,7 +36,7 @@ class FeedView(LoginRequiredMixin, ListView):
         context['club'] = current_club_id
         context['posts'] = posts
         return context
-    
+
     def post(self, request, *args, **kwargs):
         current_club_id = self.kwargs['club_id']
         club = Club.objects.all().get(pk=current_club_id)

@@ -18,11 +18,11 @@
       <h3>New Club Post</h3>
         <h6>Club: {{club.get_name}}</h6>
         <h6>Author: {{author.get_full_name}}</h6>
-          <div class="w-25 p-3" ;">
+          <div class="w-25 p-3">
         <form action="{% url 'new_post' club.id %}" method="post">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <button type="submit" class="btn btn-primary">Send</button>
+        <button type="submit" class="btn btn-dark" style="background-color: brown">Send</button>
       </form>
           </div>
       </div>
@@ -36,7 +36,6 @@
                 <p>Post: {{post.text}}</p>
                 <p>User: {{post.author.get_full_name}}</p>
                 <p>Date: {{post.created_at}}</p>
-                <br>
               </div>
               {% endfor %}
 

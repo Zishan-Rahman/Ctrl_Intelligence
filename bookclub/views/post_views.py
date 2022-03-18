@@ -36,16 +36,16 @@ class NewPostView(LoginRequiredMixin, CreateView):
         """Process a valid form."""
         current_club_id = self.kwargs['club_id']
         club = Club.objects.get(id=current_club_id)
-        current_user = self.request.user
-        form.instance.author = current_user
+        form.instance.author = self.request.user
         form.instance.club = club
-        form.save(club , current_user)
+        # form.save(form.instance.author, form.instance.club)
         return super().form_valid(form)
 
     def get_success_url(self ,**kwargs):
         """Return URL to redirect the user too after valid form handling."""
+        current_club_id = self.kwargs['club_id']
         club = Club.objects.all().get(pk=current_club_id)
-        return reverse('feed', {"club": club})
+        return reverse('feed', kwargs={'club_id': current_club_id})
 
     def handle_no_permission(self):
         return redirect('login')
