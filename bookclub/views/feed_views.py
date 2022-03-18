@@ -43,7 +43,7 @@ class FeedView(LoginRequiredMixin, ListView):
         form = PostForm()
         # authors = self.request.user
         posts = Post.objects.filter(club=club)
-        if form.is_valid(club , self.request.user):
+        if form.is_valid():
             form.save(request.user , club)
             form = PostForm()
             # return render('feed')

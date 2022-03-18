@@ -31,13 +31,15 @@ class NewPostView(LoginRequiredMixin, CreateView):
         context['posts'] = posts
         return context
 
-    def form_valid(self, form , **kwargs):
+    def form_valid(self, form ,**kwargs):
         """Process a valid form."""
         current_club_id = self.kwargs['club_id']
         club = Club.objects.get(id=current_club_id)
         current_user = self.request.user
         form.instance.author = current_user
+        form.instance.club = club
         form.save(club , current_user)
+        #form.save( club , current_user)
         return super().form_valid(form)
 
     def get_success_url(self ,**kwargs):
