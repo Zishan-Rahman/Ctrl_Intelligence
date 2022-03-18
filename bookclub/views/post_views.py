@@ -15,6 +15,7 @@ class NewPostView(LoginRequiredMixin, CreateView):
     form_class = PostForm
     http_method_names = ['post']
     context_object_name = 'club'
+    pk_url_kwarg = 'club_id'
 
 
     def get_context_data(self, **kwargs):
@@ -39,7 +40,6 @@ class NewPostView(LoginRequiredMixin, CreateView):
         form.instance.author = current_user
         form.instance.club = club
         form.save(club , current_user)
-        #form.save( club , current_user)
         return super().form_valid(form)
 
     def get_success_url(self ,**kwargs):
