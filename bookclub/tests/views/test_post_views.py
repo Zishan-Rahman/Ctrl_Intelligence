@@ -4,10 +4,10 @@ from django.test import TestCase
 from django.urls import reverse
 from bookclub.forms import PostForm
 from bookclub.models import User , Club
-from bookclub.tests.helpers import create_posts, reverse_with_next
+from bookclub.tests.helpers import create_posts, reverse_with_next ,LogInTester
 
 
-class PostViewTestCase(TestCase):
+class PostViewTestCase(TestCase , LogInTester):
     """Tests of the feed view."""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json",
@@ -29,5 +29,8 @@ class PostViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed(response, 'feed.html')
         form = response.context['form']
-        self.assertTrue(isinstance(form, PostForm))
+        self.assertTrue(isinstance(form,PostForm))
         self.assertFalse(form.is_bound)
+
+    def _is_logged_in(self):
+        return '_auth_user_id' in self.client.session.keys()
