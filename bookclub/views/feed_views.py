@@ -2,7 +2,8 @@
 """Feed related views."""
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
+from django.shortcuts import redirect, render
+from django.views.generic import ListView , FormView
 from bookclub.forms import PostForm
 from bookclub.models import Club, Post
 
@@ -35,3 +36,23 @@ class FeedView(LoginRequiredMixin, ListView):
         context['club'] = current_club_id
         context['posts'] = posts
         return context
+    
+    def post(self, request, *args, **kwargs):
+        current_club_id = self.kwargs['club_id']
+        club = Club.objects.all().get(pk=current_club_id)
+        form = PostForm()
+        # authors = self.request.user
+        posts = Post.objects.filter(club=club)
+        if form.is_valid(club , self.request.user):
+            form.save(request.user , club)
+            form = PostForm()
+            # return render('feed')
+        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
+
+    def get(self, request , *args, **kwargs):
+        authors = self.request.user
+        current_club_id = self.kwargs['club_id']
+        club = Club.objects.all().get(pk=current_club_id)
+        posts = Post.objects.filter(club=club)
+        form = PostForm()
+        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})

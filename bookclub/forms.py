@@ -301,4 +301,3 @@ class PostForm(forms.ModelForm):
             club=club,
             text=self.cleaned_data.get('text')
         )
-

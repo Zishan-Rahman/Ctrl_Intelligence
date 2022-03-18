@@ -19,7 +19,7 @@
         <h6>Club: {{club.get_name}}</h6>
         <h6>Author: {{author.get_full_name}}</h6>
           <div class="w-25 p-3" ;">
-        <form action="{% url 'posts' club.id %}" method="post">
+        <form action="{% url 'new_post' club.id %}" method="post">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
         <button type="submit" class="btn btn-primary">Send</button>
