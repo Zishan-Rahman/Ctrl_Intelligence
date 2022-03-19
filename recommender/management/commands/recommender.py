@@ -1,3 +1,5 @@
+import sqlite3
+from bookclub.models import User, Rating, Club
 from surprise import SVD
 from surprise import Dataset
 from surprise import Reader
@@ -19,7 +21,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         processed_df = self.pre_process()
-        self.recommender_model(processed_df)
+        algo = self.recommender_model(processed_df)
+        self.get_user_ratings(algo)
 
     def pre_process(self):
         books = pd.read_csv('data/BX_Books.csv', sep=';', on_bad_lines='skip', encoding="latin-1")
@@ -72,54 +75,12 @@ class Command(BaseCommand):
 
         data = Dataset.load_from_df(user_item_rating, reader)
 
-        trainset, testset = train_test_split(data, test_size=0.25)
+        trainset = data.build_full_trainset()
         algo = SVD()
 
         algo.fit(trainset)
-        #predictions = algo_fit.test(testset)
 
-        #print(predictions)
-
-        valid_df = pd.DataFrame({'user_id': np.random.choice(['1', '2', '3', '4'], 100),
-                                 'item_id': np.random.choice(['101', '102', '103', '104'], 100),
-                                 'rating': np.random.randint(1, 10)})
-
-        valid_Dataset = Dataset.load_from_df(valid_df[['user_id', 'item_id', 'rating']], reader)
-
-        testset = [valid_Dataset.df.loc[i].to_list() for i in range(len(valid_Dataset.df))]
-
-        predictions = (algo.test(testset))
-
-        def get_top_n(predictions, n=10):
-            """Return the top-N recommendation for each user from a set of predictions.
-
-            Args:
-                predictions(list of Prediction objects): The list of predictions, as
-                    returned by the test method of an algorithm.
-                n(int): The number of recommendation to output for each user. Default
-                    is 10.
-
-            Returns:
-            A dict where keys are user (raw) ids and values are lists of tuples:
-                [(raw item id, rating estimation), ...] of size n.
-            """
-
-            # First map the predictions to each user.
-            top_n = defaultdict(list)
-            for uid, iid, true_r, est, _ in predictions:
-                top_n[uid].append((iid, est))
-
-            # Then sort the predictions for each user and retrieve the k highest ones.
-            for uid, user_ratings in top_n.items():
-                user_ratings.sort(key=lambda x: x[1], reverse=True)
-                top_n[uid] = user_ratings[:n]
-
-            return top_n
-
-        top_n = get_top_n(predictions, n=10)
-
-        for uid, user_ratings in top_n.items():
-            print(uid, [iid for (iid, _) in user_ratings])
+        return algo
 
         # train_set, test_set = train_test_split(data, test_size=0.2)
 
@@ -168,7 +129,51 @@ class Command(BaseCommand):
             pickle.dump(predicted_books, f)
         """
 
-        def
+    def get_user_ratings(self, algo):
+        user_ratings_df = pd.DataFrame(list(Rating.objects.all().values("user_id", "book_id", "rating")))
+        print(user_ratings_df.head())
+
+        reader = Reader(rating_scale=(1, 10))
+
+        user_ratings_dataset = Dataset.load_from_df(user_ratings_df[['user_id', 'book_id', 'rating']], reader)
+
+        testset = [user_ratings_dataset.df.loc[i].to_list() for i in range(len(user_ratings_dataset.df))]
+
+        predictions = (algo.test(testset))
+
+        def get_top_n(predictions, n=10):
+            """Return the top-N recommendation for each user from a set of predictions.
+
+            Args:
+                predictions(list of Prediction objects): The list of predictions, as
+                    returned by the test method of an algorithm.
+                n(int): The number of recommendation to output for each user. Default
+                    is 10.
+
+            Returns:
+            A dict where keys are user (raw) ids and values are lists of tuples:
+                [(raw item id, rating estimation), ...] of size n.
+            """
+
+            # First map the predictions to each user.
+            top_n = defaultdict(list)
+            for uid, iid, true_r, est, _ in predictions:
+                top_n[uid].append((iid, est))
+
+            # Then sort the predictions for each user and retrieve the k highest ones.
+            for uid, user_ratings in top_n.items():
+                user_ratings.sort(key=lambda x: x[1], reverse=True)
+                top_n[uid] = user_ratings[:n]
+
+            return top_n
+
+        top_n = get_top_n(predictions, n=10)
+
+        for uid, user_ratings in top_n.items():
+            print(uid, [iid for (iid, _) in user_ratings])
+
+
+
 
 
 
