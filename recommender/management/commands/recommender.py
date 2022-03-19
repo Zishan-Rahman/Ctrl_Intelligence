@@ -18,7 +18,8 @@ from django.core.management.base import BaseCommand, CommandError
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        self.pre_process()
+        processed_df = self.pre_process()
+        self.recommender_model(processed_df)
 
     def pre_process(self):
         books = pd.read_csv('data/BX_Books.csv', sep=';', on_bad_lines='skip', encoding="latin-1")
@@ -61,10 +62,11 @@ class Command(BaseCommand):
 
         user_item_rating = books_users_ratings[['user_id', 'isbn', 'book_rating']]
 
-        print(user_item_rating.shape)
+        return user_item_rating
 
-        """ RECOMMENDER SECTION """
-        """ Adapted from Kaggle.com """
+    """ RECOMMENDER SECTION """
+
+    def recommender_model(self, user_item_rating):
 
         reader = Reader(rating_scale=(1, 10))
 
@@ -73,12 +75,20 @@ class Command(BaseCommand):
         trainset, testset = train_test_split(data, test_size=0.25)
         algo = SVD()
 
-        algo_fit = algo.fit(trainset)
-        predictions = algo_fit.test(testset)
+        algo.fit(trainset)
+        #predictions = algo_fit.test(testset)
 
         #print(predictions)
 
+        valid_df = pd.DataFrame({'user_id': np.random.choice(['1', '2', '3', '4'], 100),
+                                 'item_id': np.random.choice(['101', '102', '103', '104'], 100),
+                                 'rating': np.random.randint(1, 10)})
 
+        valid_Dataset = Dataset.load_from_df(valid_df[['user_id', 'item_id', 'rating']], reader)
+
+        testset = [valid_Dataset.df.loc[i].to_list() for i in range(len(valid_Dataset.df))]
+
+        predictions = (algo.test(testset))
 
         def get_top_n(predictions, n=10):
             """Return the top-N recommendation for each user from a set of predictions.
@@ -139,7 +149,6 @@ class Command(BaseCommand):
         # accuracy.rmse(pred)
 
         """
-
         recommend = algo.trainset
 
         books_list = list(set(user_item_rating['isbn'].to_list()))
@@ -157,8 +166,9 @@ class Command(BaseCommand):
         books.to_pickle("books.pkl")
         with open('predicted_books.pkl', 'wb') as f:
             pickle.dump(predicted_books, f)
-
         """
+
+        def
 
 
 

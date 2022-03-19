@@ -115,13 +115,13 @@ def get_all_clubs_users(club):
 
 def generate_club_hierarchy(club):
     users = get_all_users_list()
-    for i in range(0, 50):
+    for i in range(0, 30):
         random_user = random.choice(users)
         all_clubs_users = get_all_clubs_users(club)
         if random_user not in all_clubs_users:
             club.make_member(random_user)
 
-    for i in range(0, 20):
+    for i in range(0, 10):
         random_user = random.choice(users)
         all_clubs_users = get_all_clubs_users(club)
         if random_user not in all_clubs_users:
@@ -158,8 +158,8 @@ class Command(BaseCommand):
             self.generate_clubs()
             print('Clubs successfully seeded')
             print()
-            self.generate_limited_books_dataset()
-            print("Books (smaller dataset) successfully seeded")
+            self.load_books()
+            print("Books successfully seeded")
             print()
             print('Seeder has successfully completed')
 
@@ -267,7 +267,7 @@ class Command(BaseCommand):
             except ValidationError:
                 pass
 
-    def generate_limited_books_dataset(self):
+    def load_books(self):
         count = 0
         file_path_users = "data/BX_Books.csv"
 
@@ -288,12 +288,13 @@ class Command(BaseCommand):
                 )
                 books.append(book)
                 count += 1
-                percent_complete = float((count/5000)*100)
+                percent_complete = float((count / 271380) * 100)
 
-                print(f'[ DONE: {round(percent_complete)}% | {count}/{5000} ]', end='\r')
+                print(f'[ DONE: {round(percent_complete)}% | {count}/271380 ]', end='\r')
 
                 if len(books) > 5000:
-                    break
+                    Book.objects.bulk_create(books)
+                    books = []
 
             if books:
                 Book.objects.bulk_create(books)

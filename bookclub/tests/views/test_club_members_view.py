@@ -1,120 +1,224 @@
+"""Clubs related views."""
 from django.conf import settings
-from django.test import TestCase
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect, render
+from django.views.generic import ListView
+from bookclub.forms import ClubForm
+from bookclub.models import Club
+from bookclub.views import config
 from django.urls import reverse
+from django.contrib import messages
+from bookclub.templates import *
+from bookclub.forms import EditClubForm
+from django.http import Http404
 from bookclub.models import User, Club
-from bookclub.tests.helpers import LogInTester, reverse_with_next
+from django.views.generic.edit import UpdateView
+from django.core.paginator import Paginator
 
-class ClubMembersViewTestCase(TestCase, LogInTester):
-    """Tests of the club members view."""
 
-    fixtures = ["bookclub/tests/fixtures/default_users.json","bookclub/tests/fixtures/default_clubs.json"]
+class ClubMemberListView(LoginRequiredMixin, ListView):
+    """Gets the members of each club"""
 
-    def setUp(self):
-        self.club = Club.objects.get(pk=2)
-        self.user = User.objects.get(id=self.club.owner.id)
-        self.url = reverse('club_members', kwargs={'club_id':self.club.id})
+    model = Club
+    template_name = "club_members.html"
+    paginate_by = settings.USERS_PER_PAGE
+    pk_url_kwarg = 'club_id'
+    context_object_name = 'club'
+    ordering = ['-name']
 
-    def test_club_members_url(self):
-        self.assertEqual(self.url,f'/club_profile/{self.club.id}/members')
+    def get(self, request, *args, **kwargs):
+        """Handle get request, and redirect to book_list if book_id invalid."""
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            return redirect('home')
 
-    def test_correct_club_members_list_template(self):
-        self.client.login(email=self.user.email, password="Password123")
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "club_members.html")
+    def get_queryset(self):
+        return Club.objects.get(id=self.kwargs['club_id']).get_all_users()
 
-    def test_get_club_members_list_redirects_when_not_logged_in(self):
-        redirect_url = reverse_with_next('login', self.url)
-        response = self.client.get(self.url)
-        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        self.assertFalse(self._is_logged_in())
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        current_user = self.request.user
+        current_user_is_owner = False
+        current_club_id = self.kwargs['club_id']
+        current_club = Club.objects.get(id=current_club_id)
+        if current_club.owner == current_user:
+            current_user_is_owner = True
+        paginator = Paginator(current_club.get_all_users(), settings.USERS_PER_PAGE)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        for each in page_obj:
+            u_id = each.pk
+            if current_club.user_level(each) == "Member":
+                user_level = "Member"
+                u_id = each.pk
+            elif current_club.user_level(each) == "Organiser":
+                user_level = "Organiser"
+                u_id = each.pk
+            else:
+                user_level = "Owner"
+                u_id = each.pk
+                if each == current_user:
+                    current_user_is_owner = True
 
-    def test_club_members_list_view_shows_club_name(self):
-        self.client.login(email=self.user.email, password="Password123")
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(self._is_logged_in())
-        html = response.content.decode('utf8')
-        self.assertIn(f'<h1>Members of {self.club.name}</h1>', html)
+        context['u_pk'] = u_id
+        context['club'] = current_club
+        context['page_obj'] = page_obj
+        context['user_level'] = user_level
+        context['c_pk'] = current_club_id
+        context['is_owner'] = current_user_is_owner
 
-    """
-    def test_club_members_list_view_contains_user_details(self):
-        '''Test some test users' details to see if they actually show up at all.'''
-        self.client.login(email=self.user.email, password="Password123")
-        self._create_test_club_members(settings.USERS_PER_PAGE - 1) # Total: 10 test users
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(self._is_logged_in())
-        self.assertEqual(len(response.context['page_obj']), settings.USERS_PER_PAGE)
-        html = response.content.decode('utf8')
-        '''Test the club owner's details (they should show up).'''
-        self.assertIn(f'alt="Gravatar of {self.user.get_full_name()}" class="rounded-circle" ></td>', html)
-        self.assertIn(f'<td>{self.user.get_full_name()}</td>', html)
-        self.assertIn(f'<td>{self.user.get_bio()}</td>', html)
-        self.assertIn(f'<td>{self.user.get_favourite_genre()}</td>', html)
-        self.assertIn(f'<td>{self.club.user_level(self.user)}</td>', html)
-        '''Test the details of the 9 test users created earlier.'''
-        for i in range(1, settings.USERS_PER_PAGE, 1):
-            test_user = User.objects.get(email=f'user{i}@test.org')
-            self.assertIn(f'alt="Gravatar of {test_user.get_full_name()}" class="rounded-circle" ></td>', html)
-            self.assertIn(f'<td>{test_user.get_full_name()}</td>', html)
-            self.assertIn(f'<td>{test_user.get_bio()}</td>', html)
-            self.assertIn(f'<td>{test_user.get_favourite_genre()}</td>', html)
-            self.assertIn(f'<td>{self.club.user_level(test_user)}</td>', html)
-    """
+        return context
 
-    """
-    def test_get_club_members_list_with_pagination(self):
-        self.client.login(email=self.user.email, password='Password123')
-        self._create_test_club_members(settings.USERS_PER_PAGE*2+3-1)
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'club_members.html')
-        self.assertEqual(len(response.context['page_obj']), settings.USERS_PER_PAGE)
-        self.assertTrue(response.context['is_paginated'])
-        page_obj = response.context['page_obj']
-        self.assertFalse(page_obj.has_previous())
-        self.assertTrue(page_obj.has_next())
-        page_one_url = self.url + '?page=1'
-        response = self.client.get(page_one_url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'club_members.html')
-        self.assertEqual(len(response.context['page_obj']), settings.USERS_PER_PAGE)
-        page_obj = response.context['page_obj']
-        self.assertFalse(page_obj.has_previous())
-        self.assertTrue(page_obj.has_next())
-        page_two_url = self.url + '?page=2'
-        response = self.client.get(page_two_url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'club_members.html')
-        self.assertEqual(len(response.context['page_obj']), settings.USERS_PER_PAGE)
-        page_obj = response.context['page_obj']
-        self.assertTrue(page_obj.has_previous())
-        self.assertTrue(page_obj.has_next())
-        page_three_url = self.url + '?page=3'
-        response = self.client.get(page_three_url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'club_members.html')
-        self.assertEqual(len(response.context['page_obj']), 3)
-        page_obj = response.context['page_obj']
-        self.assertTrue(page_obj.has_previous())
-        self.assertFalse(page_obj.has_next())
-        """
 
-    def _create_test_club_members(self, user_count=10):
-        for id in range(1, user_count+1, 1):
-            self.club.make_member(
-                User.objects.create(
-                    email=f'user{id}@test.org',
-                    password='Password123',
-                    first_name=f'First{id}',
-                    last_name=f'Last{id}',
-                    public_bio=f'Bio {id}',
-                    favourite_genre=f'genre {id}',
-                    location=f'City {id}',
-                    age=18+id
-                )
-            )
+def promote_member_to_organiser(request, c_pk, u_pk):
+    """Promote member to organiser"""
+    club = Club.objects.all().get(pk=c_pk)
+    new_organiser = User.objects.all().get(pk=u_pk)
+    club.make_organiser(new_organiser)
+    messages.add_message(request, messages.SUCCESS, "User promoted!")
+    return redirect('club_members', club_id=c_pk)
 
-    def _is_logged_in(self):
-        return '_auth_user_id' in self.client.session.keys()
+
+def demote_organiser_to_member(request, c_pk, u_pk):
+    """Demote organiser to member"""
+    club = Club.objects.all().get(pk=c_pk)
+    new_member = User.objects.all().get(pk=u_pk)
+    club.demote_organiser(new_member)
+    messages.add_message(request, messages.SUCCESS, "User demoted!")
+    return redirect('club_members', club_id=c_pk)
+
+
+def kick_user_from_club(request, c_pk, u_pk):
+    """Promote member to organiser"""
+    club = Club.objects.all().get(pk=c_pk)
+    user_to_kick = User.objects.all().get(pk=u_pk)
+    club.remove_from_club(user_to_kick)
+    messages.add_message(request, messages.SUCCESS, "User kicked!")
+    return redirect('club_members', club_id=c_pk)
+
+
+class ClubUpdateView(LoginRequiredMixin, UpdateView):
+    """View to update club profile."""
+
+    model = EditClubForm
+    template_name = "edit_club.html"
+    form_class = EditClubForm
+
+    def get_object(self, c_pk):
+        """Return the object (user) to be updated."""
+        club_to_edit = Club.objects.all().get(pk=c_pk)
+        return club_to_edit
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        messages.add_message(self.request, messages.SUCCESS, "Club updated!")
+        return reverse('club_selector')
+
+    def post(self, request, c_pk, *args, **kwargs):
+        club_to_edit = Club.objects.all().get(pk=c_pk)
+        form = self.form_class(instance=club_to_edit, data=request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
+        return render(request, 'edit_club.html', {"form": form})
+
+    def get(self, request, c_pk, *args, **kwargs):
+        club_to_edit = Club.objects.all().get(pk=c_pk)
+        form = self.form_class(instance=club_to_edit)
+        return render(request, 'edit_club.html', {"form": form})
+
+
+def club_util(request):
+    user_clubs_list = []
+    clubs = Club.objects.all()
+
+    for temp_club in clubs:
+        if request.user in temp_club.get_all_users():
+            user_clubs_list.append(temp_club)
+
+    config.user_clubs = user_clubs_list
+
+
+@login_required
+def club_list(request):
+    clubs = []
+    for club in Club.objects.all():
+        clubs.append({
+            "id": club.id,
+            "name": club.get_name,
+            "description": club.get_description,
+            "location": club.get_location,
+            "owner": club.get_owner,
+            "meeting_online": club.meeting_online,
+            "mini_gravatar": club.mini_gravatar(),
+            "gravatar": club.gravatar()
+        })
+    return render(request, 'club_list.html', {'clubs': clubs})
+
+
+@login_required
+def club_selector(request):
+    club_util(request)
+    return render(request, "club_switcher.html", {'user_clubs': config.user_clubs, 'user': request.user})
+
+
+@login_required
+def club_selector_alt(request):
+    club_util(request)
+    return render(request, "club_switcher_alt.html", {"user_clubs": config.user_clubs, 'user': request.user})
+
+
+@login_required
+def new_club(request):  # new club adapted from the chess club project
+    """ Create New Club """
+    if request.method == 'POST':
+        form = ClubForm(request.POST)
+        if form.is_valid():
+            form.save(request.user)
+            club_util(request)
+            return redirect('club_list')
+    else:
+        form = ClubForm()
+    return render(request, 'new_club.html', {'form': form})
+
+
+class ClubsListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all clubs."""
+
+    model = Club
+    template_name = "club_list.html"
+    context_object_name = "clubs"
+    queryset = Club.objects.all()
+    paginate_by = settings.CLUBS_PER_PAGE
+
+
+@login_required
+def club_profile(request, club_id):
+    """ Individual Club's Profile Page """
+    try:
+        club = Club.objects.get(id=club_id)
+    except:
+        messages.add_message(request, messages.ERROR, "Club does not exist!")
+        return redirect('club_list')
+
+    current_user = request.user
+    is_owner = club.user_level(current_user) == "Owner"
+    return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner})
+
+
+@login_required
+def leave_club(request, club_id):
+    """Leave A Club """
+    club = Club.objects.get(pk=club_id)
+    current_user = request.user
+    club.remove_from_club(current_user)
+    return redirect('club_selector')
+
+
+@login_required
+def disband_club(request, c_pk):
+    """Disband a club"""
+    Club.objects.get(pk=c_pk).delete()
+    messages.add_message(request, messages.SUCCESS, "Club Disbanded!")
+    return redirect('club_selector')

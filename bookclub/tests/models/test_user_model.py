@@ -12,6 +12,14 @@ class UserModelTestCase(TestCase):
     def setUp(self):
         self.user_one = User.objects.get(pk=1)
         self.user_two = User.objects.get(pk=2)
+        self.user_three = User.objects.get(pk=3)
+        self.user_four = User.objects.get(pk=4)
+
+        self.user = User.objects.get(email = 'johndoe@bookclub.com')
+        self.user2 = User.objects.get(email = 'janedoe@bookclub.com')
+        
+
+
 
     # first name tests
     def test_first_name_must_not_be_blank(self):
@@ -92,6 +100,33 @@ class UserModelTestCase(TestCase):
         self.user_one.email = self.user_two.email
         self._assert_user_is_invalid()
 
+    def test_toggle_follow_user(self):
+        john = self.user
+        jane = self.user2
+        self.assertFalse(john.is_following(jane))
+        self.assertFalse(jane.is_following(john))
+        john.toggle_follow(jane)
+        self.assertTrue(john.is_following(jane))
+        self.assertFalse(jane.is_following(john))
+        john.toggle_follow(jane)
+        self.assertFalse(john.is_following(jane))
+        self.assertFalse(jane.is_following(john))
+    
+    def test_follow_counters(self):
+        john = self.user
+        jane = self.user2
+        john.toggle_follow(jane)
+        jane.toggle_follow(john)
+        self.assertEqual(john.follower_count(), 1 )
+        self.assertEqual(john.followee_count(), 1 )
+        self.assertEqual(jane.follower_count(), 1 )
+        self.assertEqual(jane.followee_count(), 1)
+
+    def test_user_cant_follow_self(self):
+        self.user.toggle_follow(self.user)
+        self.assertEqual(self.user.follower_count(), 0 )
+        self.assertEqual(self.user.followee_count(), 0 )
+
     def _assert_user_is_valid(self):
         try:
             self.user_one.full_clean()
@@ -101,3 +136,5 @@ class UserModelTestCase(TestCase):
     def _assert_user_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.user_one.full_clean()
+    
+
