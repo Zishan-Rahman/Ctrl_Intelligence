@@ -1,0 +1,47 @@
+<!-- adapted from clucker project -->
+<nav aria-label="pager">
+  <ul class="pagination">
+    {% if page_obj.has_other_pages %}
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+      {% else %}
+        <li class="page-item disabled">
+      {% endif %}
+          <a class="page-link" href="?page=1">
+            Newest
+          </a>
+        </li>
+    {% endif %}
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+    {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#">
+    {% endif %}
+          Newer
+        </a>
+      </li>
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+    {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#">
+    {% endif %}
+          Older
+        </a>
+      </li>
+    {% if page_obj.has_other_pages %}
+      {% if page_obj.has_next %}
+        <li class="page-item">
+      {% else %}
+        <li class="page-item disabled">
+      {% endif %}
+          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+            Oldest
+          </a>
+        </li>
+    {% endif %}
+  </ul>
+</nav>
