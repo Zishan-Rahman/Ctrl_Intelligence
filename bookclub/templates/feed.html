@@ -22,7 +22,7 @@
         <form action="{% url 'new_post' club.id %}" method="post">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <button type="submit" class="btn btn-dark" style="background-color: brown">Send</button>
+        <button type="submit" class="btn btn-dark" style="background-color: brown">Submit post</button>
       </form>
           </div>
       </div>

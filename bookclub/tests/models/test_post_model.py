@@ -41,3 +41,6 @@ class PostTest(TestCase):
         with self.assertRaises(ValidationError):
             self.post.full_clean()
 
+
+
+

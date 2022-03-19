@@ -1,3 +1,5 @@
+#Adapted from Clucker project
+
 """Tests of the feed view."""
 from django.conf import settings
 from django.test import TestCase
@@ -7,11 +9,13 @@ from bookclub.models import User , Club
 from bookclub.tests.helpers import create_posts, reverse_with_next ,LogInTester
 
 
+
 class FeedViewTestCase(TestCase , LogInTester):
     """Tests of the feed view."""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json",
                 "bookclub/tests/fixtures/default_clubs.json"]
+
 
 
     def setUp(self):
@@ -20,9 +24,11 @@ class FeedViewTestCase(TestCase , LogInTester):
         self.bush_club.make_member(self.user)
         self.url = reverse('feed', kwargs={'club_id': self.bush_club.id})
 
+
     def test_feed_url(self):
         self.assertEqual(self.url, f'/club_profile/{self.bush_club.id}/feed/')
         
+
     def test_get_feed(self):
         self.client.login(email = 'johndoe@bookclub.com', password="Password123")
         response = self.client.get(self.url)
