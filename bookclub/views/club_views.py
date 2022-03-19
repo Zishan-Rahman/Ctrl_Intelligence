@@ -95,6 +95,8 @@ def transfer_ownership(request, c_pk, u_pk):
     new_owner = User.objects.all().get(pk=u_pk)
     club.make_owner(new_owner)
     messages.add_message(request, messages.SUCCESS, "Transferred Ownership!")
+    return redirect('club_members', club_id=c_pk)
+    
 
 def kick_user_from_club(request, c_pk, u_pk):
     """Promote member to organiser"""
