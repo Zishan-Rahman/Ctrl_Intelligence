@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
@@ -72,6 +73,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
     favourite_books = models.ManyToManyField(Book)
+    followers = models.ManyToManyField(
+        'self', symmetrical=False, related_name='followees'
+    )
 
     class Meta:
         """Model options."""
@@ -79,7 +83,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ordering = ['last_name', 'first_name']
 
     def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f'{self.first_name} {self.last_name}'
 
     def get_first_name(self):
         return self.first_name
@@ -111,6 +115,29 @@ class User(AbstractBaseUser, PermissionsMixin):
     def mini_gravatar(self):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=60)
+
+    def toggle_follow(self, followee):
+        if followee == self:
+            return
+        if self.is_following(followee):
+            self._unfollow(followee)
+        else:
+            self._follow(followee)
+
+    def _follow(self, user):    
+        user.followers.add(self)
+
+    def _unfollow(self,user):
+        user.followers.remove(self)
+
+    def is_following(self, user):
+        return user in self.followees.all()
+    
+    def follower_count(self):
+        return self.followers.count()
+
+    def followee_count(self):
+        return self.followees.count()
 
     objects = UserManager()
 
@@ -226,6 +253,11 @@ class Club(models.Model):
         if self.user_level(user) == "Member":
             self.members.remove(user)
             self.save()
+
+        elif self.user_level(user) == "Organiser":
+            self.organisers.remove(user)
+            self.save()
+
         else:
             raise ValueError
 
@@ -283,14 +315,15 @@ class Rating(models.Model):
 class Meeting(models.Model):
     """A model for denoting and storing meetings."""
     date = models.DateField()
-    time = models.TimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField(blank=True, null=True)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
     address = models.CharField(max_length=50, default=True)
 
     class Meta:
         """Model options."""
 
-        ordering = ['date', 'time']
+        ordering = ['date', 'start_time', 'end_time']
 
     def get_meeting_club(self):
         return self.club
@@ -298,8 +331,14 @@ class Meeting(models.Model):
     def get_meeting_date(self):
         return self.date
 
-    def get_meeting_time(self):
-        return self.time
+    def get_meeting_start_time(self):
+        return self.start_time
+    
+    def set_default_meeting_end_time(self):
+        self.end_time = self.start_time.replace(hour=(self.start_time.hour + 1) % 24)
+        
+    def get_meeting_end_time(self):
+        return self.end_time
 
     def get_meeting_address(self):
         return self.address
@@ -318,3 +357,15 @@ class Message(models.Model):
   body = models.CharField(max_length=1000)
   date = models.DateTimeField(default=timezone.now)
   is_read = models.BooleanField(default=False)
+
+
+class Post(models.Model):
+
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
+    text = models.CharField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+
+        ordering = ['-created_at']
