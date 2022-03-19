@@ -1,6 +1,11 @@
 import sqlite3
-from bookclub.models import User, Rating, Club
+from bookclub.models import User, Rating, Club, Book
 from surprise import SVD
+from surprise import BaselineOnly
+from surprise import KNNBasic
+from surprise import CoClustering
+from surprise import NMF
+from surprise import NormalPredictor
 from surprise import Dataset
 from surprise import Reader
 from surprise.model_selection import cross_validate
@@ -13,16 +18,15 @@ from sklearn.neighbors import NearestNeighbors
 import numpy as np
 from scipy.sparse import csr_matrix
 
-
 from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        processed_df = self.pre_process()
+        processed_df, books = self.pre_process()
         algo = self.recommender_model(processed_df)
-        self.get_user_ratings(algo)
+        self.get_user_ratings(algo, processed_df, books)
 
     def pre_process(self):
         books = pd.read_csv('data/BX_Books.csv', sep=';', on_bad_lines='skip', encoding="latin-1")
@@ -65,9 +69,8 @@ class Command(BaseCommand):
 
         user_item_rating = books_users_ratings[['user_id', 'isbn', 'book_rating']]
 
-        return user_item_rating
+        return user_item_rating, books
 
-    """ RECOMMENDER SECTION """
 
     def recommender_model(self, user_item_rating):
 
@@ -76,11 +79,11 @@ class Command(BaseCommand):
         data = Dataset.load_from_df(user_item_rating, reader)
 
         trainset = data.build_full_trainset()
-        algo = SVD()
+        algo = NMF()
 
-        algo.fit(trainset)
+        recommender = algo.fit(trainset)
 
-        return algo
+        return recommender
 
         # train_set, test_set = train_test_split(data, test_size=0.2)
 
@@ -129,53 +132,28 @@ class Command(BaseCommand):
             pickle.dump(predicted_books, f)
         """
 
-    def get_user_ratings(self, algo):
-        user_ratings_df = pd.DataFrame(list(Rating.objects.all().values("user_id", "book_id", "rating")))
-        print(user_ratings_df.head())
+    def get_user_ratings(self, algo, user_item_rating, books):
+        user_ratings_df = pd.DataFrame(list(Rating.objects.all().values("user_id", "isbn", "rating")))
 
         reader = Reader(rating_scale=(1, 10))
 
-        user_ratings_dataset = Dataset.load_from_df(user_ratings_df[['user_id', 'book_id', 'rating']], reader)
+        user_ratings_dataset = Dataset.load_from_df(user_ratings_df[['user_id', 'isbn', 'rating']], reader)
 
-        testset = [user_ratings_dataset.df.loc[i].to_list() for i in range(len(user_ratings_dataset.df))]
+        [user_ratings_dataset.df.loc[i].to_list() for i in range(len(user_ratings_dataset.df))]
 
-        predictions = (algo.test(testset))
+        book_list = list(set(user_item_rating['isbn'].to_list()))
 
-        def get_top_n(predictions, n=10):
-            """Return the top-N recommendation for each user from a set of predictions.
+        iid = '0451526341'
+        uid = 503
 
-            Args:
-                predictions(list of Prediction objects): The list of predictions, as
-                    returned by the test method of an algorithm.
-                n(int): The number of recommendation to output for each user. Default
-                    is 10.
+        print(algo.predict(uid, iid))
 
-            Returns:
-            A dict where keys are user (raw) ids and values are lists of tuples:
-                [(raw item id, rating estimation), ...] of size n.
-            """
+        predictions = []
+        for isbn in book_list:
+            prediction = algo.predict('502', isbn).est
+            predictions.append([isbn, prediction])
 
-            # First map the predictions to each user.
-            top_n = defaultdict(list)
-            for uid, iid, true_r, est, _ in predictions:
-                top_n[uid].append((iid, est))
-
-            # Then sort the predictions for each user and retrieve the k highest ones.
-            for uid, user_ratings in top_n.items():
-                user_ratings.sort(key=lambda x: x[1], reverse=True)
-                top_n[uid] = user_ratings[:n]
-
-            return top_n
-
-        top_n = get_top_n(predictions, n=10)
-
-        for uid, user_ratings in top_n.items():
-            print(uid, [iid for (iid, _) in user_ratings])
-
-
-
-
-
-
-
+        recommender = pd.DataFrame(predictions, columns=['isbn', 'rating'])
+        merge = pd.merge(recommender, books, on='isbn')
+        print(merge.sort_values('rating', ascending=False).head(10))
 
