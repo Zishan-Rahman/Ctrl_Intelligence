@@ -110,44 +110,32 @@ def new_application(request, club_id):
             messages.add_message(request, messages.ERROR,
                                  f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}. You have "
                                  f"already applied.")
-
-
     return redirect('my_applications')
 
 
 
 def invite(request):
     if 'term' in request.GET:
-        query = User.objects.filter(first_name__icontains=request.GET.get('term'))
-        emails = list()
-        for user in query:
-            emails.append(user.email)
-        return JsonResponse(emails, safe=False)
-    return render(request, 'club_profile.html')
-
-
+        query = Club.objects.filter(name__icontains=request.GET.get('term'))
+        clubs = list()
+        for club in query:
+            if request.user in club.get_all_users():
+                clubs.append(club.name)
+        return JsonResponse(clubs, safe=False)
+#
+# request.GET['myinput']
+#
 # def inviteMessage(request, self):
-
-
-        # """Sends an message to invite users to clubs."""
-        # users=User.objects.all()
-    # if request.method == "POST":
-    #     query = request.POST['query']
-    #     users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(full_name__icontains=query)
-    #     return render(request,'home.html',{"users":users})
-    # else:
-    #     return render(request, 'home.html', {})
-    #     users = query
-
-    #
-    # if request.method == "GET":
-    #     form = InviteForm(data={"from_user": str(request.user.email), "to_user": str(invitee.email)})
-    # else:
-    #     form = InviteForm(data=request.POST)
-    #
-    # if request.method == "POST" and form.is_valid():
-    #     form.save()
-    #     messages.add_message(request, messages.SUCCESS, f"Invite sent to {username}.")
-    #     return redirect(self.request, "my_clubs.html")
-    #
-    # return render(request, "invites/send.html", context)
+#     if request.GET['club_name']:
+#
+#     if request.method == "GET":
+#         form = InviteForm(data={"from_user": str(request.user.email), "to_user": str(invitee.email)})
+#     else:
+#         form = InviteForm(data=request.POST)
+#
+#     if request.method == "POST" and form.is_valid():
+#         form.save()
+#         messages.add_message(request, messages.SUCCESS, f"Invite sent to {username}.")
+#         return redirect(self.request, "my_clubs.html")
+#
+#     return render(request, "invites/send.html", context)

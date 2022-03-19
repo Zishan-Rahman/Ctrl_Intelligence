@@ -10,6 +10,7 @@ from django.urls import reverse
 from bookclub.models import *
 from django.views.generic.edit import View
 from django.db.models import Q
+from django.http import Http404, JsonResponse
 
 #Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class CreateChatView(View):
@@ -30,7 +31,7 @@ class CreateChatView(View):
       if Chat.objects.filter(user=request.user, receiver=receiver).exists():
         chat = Chat.objects.filter(user=request.user, receiver=receiver)[0]
         return redirect('chat', pk=chat.pk)
-      
+
       if form.is_valid():
         sender_chat = Chat(
           user=request.user,
