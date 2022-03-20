@@ -78,4 +78,7 @@ class ScheduleMeetingTestCase(TestCase):
         form = ScheduleMeetingForm(data=self.online_form_input ,club=self.bush_club)
         self.assertFalse(form.is_valid())
 
-    
+    def test_form_accepts_meeting_starting_half_an_hour_before_midnight(self):
+        self.online_form_input['start_time'] = time(23,30,0)
+        form = ScheduleMeetingForm(data=self.online_form_input ,club=self.bush_club)
+        self.assertFalse(form.is_valid())
