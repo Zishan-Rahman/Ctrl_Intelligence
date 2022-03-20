@@ -5,7 +5,6 @@ from django import forms
 from bookclub.models import Club, User, Meeting
 from datetime import timedelta, date, time, datetime
 
-"""
 
 class ScheduleMeetingTestCase(TestCase):
 
@@ -79,4 +78,4 @@ class ScheduleMeetingTestCase(TestCase):
         form = ScheduleMeetingForm(data=self.online_form_input ,club=self.bush_club)
         self.assertFalse(form.is_valid())
 
-    """
+    
