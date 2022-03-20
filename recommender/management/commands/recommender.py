@@ -1,8 +1,4 @@
 import pickle
-from bookclub.models import Rating
-from surprise import SVD
-from surprise import Dataset
-from surprise import Reader
 import pandas as pd
 import numpy as np
 from django.core.management.base import BaseCommand, CommandError
@@ -61,14 +57,8 @@ def pre_process():
     pickle.dump(user_rating_df, open('data/user_item_rating.p', 'wb'))
 
 
-
-def get_user_ratings(user_rating_df):
-
-
-
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
         pre_process()
-        get_user_ratings()
 

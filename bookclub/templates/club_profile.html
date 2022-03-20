@@ -10,9 +10,24 @@
       <p>{{ club.description }}</p>
 
     </div>
-    <div class="col-6 text-center">
+    <div class="col-6">
 
-      <h5>PUT CLUB POSTS HERE</h5>
+    <h4 class="text-center"><strong>Latest Posts</strong></h4>
+
+            {% for post in posts %}
+
+                <div class="card w-75 mx-auto" style="margin-bottom: 10px; border-color: brown">
+
+                            <div class="card-body">
+                            <h6 class="card-title text-left"><strong>{{ post.text }}</strong></h6>
+                                <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-person-fill"></i> {{ post.author.get_full_name }}</p>
+                            </div>
+
+                        <div class="card-footer">
+                            <small class="text-muted">{{ post.created_at }}</small>
+                        </div>
+                </div>
+            {% endfor %}
 
     </div>
 
@@ -77,14 +92,12 @@
               {% else %}
               <h6 class="card-title" style="color: purple">In-Person</h6>
               {% endif %}
-
             </div>
           </div>
-
-
-
         </div>
       </div>
+
+    <br>
       <div class="card w-100">
         <div class="card-body text-center">
           {% if current_user == club.owner %}
@@ -98,9 +111,6 @@
           </form>
           {%endif%}
           <a class="btn btn-default" href="{% url 'club_meetings' club.id %}"><span class="btn btn-dark" style="background-color: brown">See meeting history</span></a>
-          </td>
-          </tr>
-
           <tr>
             <td class="leave-club">
 
@@ -147,5 +157,10 @@
         </div>
       </div>
     </div>
+    </div>
+  </div>
+</div>
 
     {% endblock %}
+
+
