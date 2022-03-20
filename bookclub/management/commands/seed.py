@@ -4,6 +4,8 @@ from faker import Faker
 from bookclub.models import User, Club, Book
 from django.core.exceptions import ValidationError
 import csv
+import pandas as pd
+import numpy as np
 
 
 def create_set_users():
@@ -267,9 +269,25 @@ class Command(BaseCommand):
             except ValidationError:
                 pass
 
+    def pre_process_books(self):
+        books = pd.read_csv('data/BX_Books.csv', sep=';', on_bad_lines='skip', encoding="latin-1")
+        books.columns = books.columns.str.strip().str.lower().str.replace('-', '_')
+        books = books[books.year_of_publication != 0]
+        books = books[books.year_of_publication != np.nan]
+
+        book_dates_too_old = books[books.year_of_publication < 1800]
+        book_dates_future = books[books.year_of_publication > 2022]
+
+        books = books.loc[~(books.isbn.isin(book_dates_too_old.isbn))]
+        books = books.loc[~(books.isbn.isin(book_dates_future.isbn))]
+
+        books.to_csv("data/Clean_Books.csv", sep=";", encoding="latin-1", index=False)
+
+
     def load_books(self):
+        self.pre_process_books()
         count = 0
-        file_path_users = "data/BX_Books.csv"
+        file_path_users = "data/Clean_Books.csv"
 
         with open(file_path_users, encoding='latin-1') as book_csv_file:
             data = csv.reader(book_csv_file, delimiter=";")
