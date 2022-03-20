@@ -15,7 +15,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views
+from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views
 from django.contrib.auth import views as auth_views
 
 
@@ -66,5 +66,7 @@ urlpatterns = [
     path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),
     path('book_profile/<int:book_id>/rating', book_views.update_ratings, name="update_ratings"),
     path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club'),
+    path('club_profile/<int:club_id>/feed/', feed_views.FeedView.as_view(), name='feed'),
     path('follow_toggle/<int:user_id>', user_views.follow_toggle , name = 'follow_toggle'),
+    path('club_profile/<int:club_id>/new_post/', post_views.NewPostView.as_view(), name='new_post'),
 ]
