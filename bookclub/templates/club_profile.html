@@ -195,17 +195,6 @@
             </td>
           </tr>
 
-            <tr>
-                   <td class = "post-feed">
-                       {% if current_user in club.get_all_users %}
-                       <form action=" {% url 'feed' club.id %} " method="post">
-                       {% csrf_token %}
-                           <button type="submit" class="btn btn-default" id="post-feed"><span class="btn btn-dark" style="background-color: brown;">Club feed</span></button>
-                     </form>
-                       {%endif%}
-                   </td>
-               </tr>
-
           <td class="disband-club">
               {% if current_user == club.get_owner %}
               <form action="{% url 'disband_club' club.id %}" method=post>
