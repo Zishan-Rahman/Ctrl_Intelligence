@@ -26,8 +26,8 @@ def get_recommended_books(recommendations_list):
     for book in recommendations_list:
         rec_book = Book.objects.filter(isbn=book)
         if rec_book:
-            rec_book.get()
-            recommended_books.append(rec_book)
+            book_item = rec_book.get()
+            recommended_books.append(book_item)
     return recommended_books
 
 

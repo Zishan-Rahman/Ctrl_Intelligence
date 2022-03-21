@@ -3,9 +3,10 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
-from django.views.generic import ListView , FormView
+from django.views.generic import ListView, FormView
 from bookclub.forms import PostForm
 from bookclub.models import Club, Post
+
 
 class FeedView(LoginRequiredMixin, ListView):
     """Class-based generic view for displaying a view."""
@@ -41,14 +42,12 @@ class FeedView(LoginRequiredMixin, ListView):
         current_club_id = self.kwargs['club_id']
         club = Club.objects.all().get(pk=current_club_id)
         form = PostForm()
-        # authors = self.request.user
         posts = Post.objects.filter(club=club)
         if form.is_valid():
-            return render('feed')
+            return redirect('feed')
         return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
 
-    def get(self, request , *args, **kwargs):
-        authors = self.request.user
+    def get(self, request, *args, **kwargs):
         current_club_id = self.kwargs['club_id']
         club = Club.objects.all().get(pk=current_club_id)
         posts = Post.objects.filter(club=club)
