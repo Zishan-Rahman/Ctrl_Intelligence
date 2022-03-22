@@ -85,21 +85,6 @@
       <div class="card w-100">
         <div class="card-body text-center">
           {% if current_user == club.owner %}
-          <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-          <form>
-            <input name="user_name" placeholder = "Enter name" class="form-control" id="invite_users">
-            <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Invite to Club</span></button>
-          </form>
-          <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-          <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-          <script>
-            $(function () {
-              $( "#invite_users" ).autocomplete({
-                source: '{% url 'invite' %}',
-                minLength: 2
-              });
-            });
-          </script>
           <a class="btn btn-default" href="{% url 'schedule_meeting' pk=club.pk %}"><span class="btn btn-dark" style="background-color: brown">Schedule meeting</span></a>
           {% elif current_user in club.get_all_users%}
           <a class="btn btn-default">Placeholder</a>
@@ -154,42 +139,8 @@
           <tr>
             <td>
 
-<!--
-          <br>
-          <tr>
-            <td class="invite=to-club">
-              {% if current_user == club.get_owner %}
-              <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-              <form>
-                <input name="user_name" placeholder = "Enter name" class="form-control" id="invite_users">
-                <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Invite</span></button>
-              </form>
-              </form>
-              <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-              <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-              <script>
-                $(function () {
-                  $( "#invite_users" ).autocomplete({
-                    source: '{% url 'invite' %}',
-                    minLength: 4
-                  });
-                });
-              </script>
-              {% elif current_user in club.get_organisers %}
-              <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-              <form>
-                <input name="user_name" placeholder = "Enter name" class="form-control" id="invite_users">
-                <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Invite</span></button>
-              </form>
-              {%endif%}
             </td>
           </tr>
-          <tr>
-            <td> -->
-
-            </td>
-          </tr>
-          </table>
         </div>
       </div>
     </div>

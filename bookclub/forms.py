@@ -253,18 +253,6 @@ class ScheduleMeetingForm(forms.ModelForm):
             meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), end_time=self.cleaned_data.get('start_time').replace(hour=(self.cleaned_data.get('start_time').hour + 1) % 24), club=club, address = self.cleaned_data.get('address'))
         return meeting
 
-class InviteForm(forms.ModelForm):
-    email_address = forms.EmailField()
-
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop("user")
-        super().__init__(*args, **kwargs)
-
-    def clean(self):
-        super().clean()
-        email = self.cleaned_data["email_address"]
-
-
 #Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ChatForm(forms.Form):
   email = forms.CharField(label='', max_length=100)
@@ -304,7 +292,7 @@ class PostForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea()
         }
-    # 
+    #
     # def save(self , user, club):
     #     super().save(commit=False)
     #     # post.author = self.cleaned_data.get('author')
@@ -317,4 +305,3 @@ class PostForm(forms.ModelForm):
     #     )
     #     post.save()
     #     return post
-

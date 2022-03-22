@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, JsonResponse
 from bookclub.models import Club, Application, User
-from bookclub.views import club_views
+from bookclub.views import club_views, messaging_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
 
@@ -111,31 +111,3 @@ def new_application(request, club_id):
                                  f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}. You have "
                                  f"already applied.")
     return redirect('my_applications')
-
-
-
-def invite(request):
-    if 'term' in request.GET:
-        query = Club.objects.filter(name__icontains=request.GET.get('term'))
-        clubs = list()
-        for club in query:
-            if request.user in club.get_all_users():
-                clubs.append(club.name)
-        return JsonResponse(clubs, safe=False)
-#
-# request.GET['myinput']
-#
-# def inviteMessage(request, self):
-#     if request.GET['club_name']:
-#
-#     if request.method == "GET":
-#         form = InviteForm(data={"from_user": str(request.user.email), "to_user": str(invitee.email)})
-#     else:
-#         form = InviteForm(data=request.POST)
-#
-#     if request.method == "POST" and form.is_valid():
-#         form.save()
-#         messages.add_message(request, messages.SUCCESS, f"Invite sent to {username}.")
-#         return redirect(self.request, "my_clubs.html")
-#
-#     return render(request, "invites/send.html", context)

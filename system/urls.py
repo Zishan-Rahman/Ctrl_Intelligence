@@ -65,13 +65,9 @@ urlpatterns = [
     path('book_profile/<int:book_id>/favourite', book_views.make_favourite, name="make_favourite"),
     path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),
     path('book_profile/<int:book_id>/rating', book_views.update_ratings, name="update_ratings"),
-<<<<<<< HEAD
-    path('invite/', application_views.invite, name='invite'),
-
-=======
+    path('invite/<int:user_id>/<int:club_id>/', user_views.inviteMessage, name='invite_message'),
     path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club'),
     path('club_profile/<int:club_id>/feed/', feed_views.FeedView.as_view(), name='feed'),
     path('follow_toggle/<int:user_id>', user_views.follow_toggle , name = 'follow_toggle'),
     path('club_profile/<int:club_id>/new_post/', post_views.NewPostView.as_view(), name='new_post'),
->>>>>>> 429ce2c6a31b6244c491b8892f49b6d758058b17
 ]

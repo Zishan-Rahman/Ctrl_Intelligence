@@ -40,22 +40,84 @@
         </form>
       </center>
       <center>
-          <form>
-            <input id="club_name" placeholder = "Enter Club Name" class="form-control" id="invite_users" style="width:450px">
-            <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Invite to Club</span></button>
-          </form>
-          <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-          <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-          <script>
-            $(function () {
-              $( "#invite_users" ).autocomplete({
-                source: '{% url 'invite' %}',
-                minLength: 2
-              });
-            });
-          </script>
+        <button id="Invite" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="background-color: brown">
+            Invite
+      </button>
+
+      <div class="modal fade" id="exampleModal_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Invite to Club
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <body>
+           <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp
+           <table id="myTable" class="table">
+             <thead class="table-light">
+               <tr>
+                 <th scope="col"></th>
+                 <th scope="col">Name</th>
+                 <th scope="col">Invite</th>
+               </tr>
+             </thead>
+           <tr>
+             {% for entry in user_clubs %}
+             <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
+               <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
+               <td>{{ entry.name }}</td>
+               <td><a class="btn btn-default" href="{% url 'invite_message' user.id entry.id %}"><span class="btn btn-dark" style="background-color: brown">Invite</span></a></td>
+             </tr>
+             {% endfor %}
+       </table>
+
+
+        </body>
+      </div>
+    </div>
+  </div>
+</div>
+
+
       </center>
     </div>
   </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $('#txt_searchall').keyup(function(){
+    var search = $(this).val();
+    $('table tbody tr').hide();
+    var len = $('table tbody tr:not(.notfound) td:contains("'+search+'")').length;
+    if(len > 0){
+      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
+        $(this).closest('tr').show();
+      });
+    }else{
+      $('.notfound').show();
+    }
+  });
+  $('#txt_name').keyup(function(){
+    var search = $(this).val();
+    $('table tbody tr').hide();
+    var len = $('table tbody tr:not(.notfound) td:nth-child(2):contains("'+search+'")').length;
+    if(len > 0){
+      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
+         $(this).closest('tr').show();
+      });
+    }else{
+      $('.notfound').show();
+    }
+  });
+});
+$.expr[":"].contains = $.expr.createPseudo(function(arg) {
+   return function( elem ) {
+     return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+   };
+});
+</script>
 {% endblock %}
