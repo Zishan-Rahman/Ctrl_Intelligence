@@ -1,0 +1,16 @@
+{% autoescape off %}
+
+Dear, {{user.first_name}} {{user.last_name}}
+
+Welcome to the Bookwise community!
+
+To begin finding and interacting with users like you, please click the link below to verify your email address.
+
+http://{{domain}}{% url 'activate' user_id token %}
+
+If you believe this email was sent to you in error, please ignore this email. Any replies to this email will be ignored.
+
+Thank you,
+Bookwise Webmaster
+
+{% endautoescape %}

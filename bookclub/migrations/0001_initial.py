@@ -34,6 +34,7 @@ class Migration(migrations.Migration):
                 ('favourite_genre', models.CharField(blank=True, max_length=30)),
                 ('location', models.CharField(max_length=96)),
                 ('age', models.IntegerField(blank=True, null=True)),
+                ('is_email_verified', models.BooleanField(default=False)),
             ],
             options={
                 'ordering': ['last_name', 'first_name'],
