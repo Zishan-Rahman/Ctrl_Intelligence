@@ -10,7 +10,8 @@ from bookclub.tests.helpers import LogInTester, reverse_with_next
 
 
 class ClubProfileTest(TestCase, LogInTester):
-    fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json',
+    fixtures = ['bookclub/tests/fixtures/default_users.json',
+                'bookclub/tests/fixtures/default_clubs.json',
                 'bookclub/tests/fixtures/default_applications.json']
 
     def setUp(self):
@@ -75,7 +76,9 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(
-            f'<button type="submit" class="btn" id="apply-button" style=\'padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'><i class="bi bi-check-square"></i> Apply</button>',
+            f'<button type="submit" class="btn" id="apply-button" style=\'padding: 15px;color:white; '
+            f'background-color: brown; text-transform:uppercase; font-size: 14px\'><i class="bi bi-check-square"></i> '
+            f'Apply</button>',
             html)
 
     def test_club_profile_view_has_meetings_list_button_for_all_user(self):
@@ -92,7 +95,8 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertNotIn(
-            f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {self.bush_club.name}</button>',
+            f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" '
+            f'style="background-color: brown;">Leave {self.bush_club.name}</button>',
             html)
 
     """Test if the club profile page has a leave button for a member of the club """
