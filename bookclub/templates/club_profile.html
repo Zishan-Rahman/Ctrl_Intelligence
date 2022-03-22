@@ -25,9 +25,9 @@
                 <div class="col-6">
 
                     {% if current_user == club.owner%}
-                            <a class="btn float-end" href="{% url 'schedule_meeting' club.id %}" style='padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
+                            <a class="btn float-end" href="{% url 'schedule_meeting' club.id %}" style="padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
                     {% elif current_user in club.get_organisers and club.organiser_has_owner_privilege  %}
-                          <a class="btn float-end" href="{% url 'schedule_meeting' club.id %}" style='padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
+                          <a class="btn float-end" href="{% url 'schedule_meeting' club.id %}" style="padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
                     {% endif %}
 
 
@@ -222,7 +222,7 @@
                 {% csrf_token %}
                   <button type="submit" class="btn btn-default" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-box-arrow-left"></i> Leave </button>
               </form>
-                  {% elif current_user == club.get_owner %}
+              {% elif current_user == club.get_owner %}
               <form action="{% url 'disband_club' club.id %}" method=post>
                 {% csrf_token %}
                   <button type="submit" class="btn" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-x-octagon"></i> Disband </button>
@@ -258,5 +258,4 @@
 
 
     {% endblock %}
-
 

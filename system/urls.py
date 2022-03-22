@@ -30,6 +30,7 @@ urlpatterns = [
     path('clubs/', club_views.ClubsListView.as_view() , name = 'club_list'),
     path('books/', book_views.BooksListView.as_view() , name = 'book_list'),
     path('sign_up/', authentication_views.sign_up, name='sign_up'),
+    path('activate/<uid>/<token>', authentication_views.activate, name='activate'),
     path('login/', authentication_views.LogInView.as_view(), name='login'),
     path('log_out/', authentication_views.log_out, name='log_out'),
     path('home/', dashboard_views.home_page, name='home'),
