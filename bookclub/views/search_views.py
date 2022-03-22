@@ -24,7 +24,7 @@ def search(request):
 
 def search_autocomplete(request):
     if 'term' in request.GET:
-        query = Book.objects.filter(title__contains=request.GET.get('term'))
+        query = Book.objects.filter(title__contains=request.GET.get('term'))[:5]
         books = list()
         for book in query:
             books.append(book.title)
