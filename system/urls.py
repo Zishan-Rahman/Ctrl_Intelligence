@@ -1,5 +1,4 @@
 """system URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
 Examples:
@@ -16,7 +15,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views
+from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views
 from django.contrib.auth import views as auth_views
 
 
@@ -31,6 +30,7 @@ urlpatterns = [
     path('clubs/', club_views.ClubsListView.as_view() , name = 'club_list'),
     path('books/', book_views.BooksListView.as_view() , name = 'book_list'),
     path('sign_up/', authentication_views.sign_up, name='sign_up'),
+    path('activate/<uid>/<token>', authentication_views.activate, name='activate'),
     path('login/', authentication_views.LogInView.as_view(), name='login'),
     path('log_out/', authentication_views.log_out, name='log_out'),
     path('home/', dashboard_views.home_page, name='home'),
@@ -59,11 +59,15 @@ urlpatterns = [
     path('inbox/<int:pk>/create_message/', messaging_views.CreateMessageView.as_view(), name='create_message'),
     path('club_profile/<int:c_pk>/members/<int:u_pk>/promote', club_views.promote_member_to_organiser, name='promote_member_to_organiser'),
     path('club_profile/<int:c_pk>/members/<int:u_pk>/demote', club_views.demote_organiser_to_member, name='demote_organiser_to_member'),
+    path('club_profile/<int:c_pk>/members/<int:u_pk>/kick', club_views.kick_user_from_club, name='kick_user_from_club'),
     path('club_profile/<int:c_pk>/edit/', club_views.ClubUpdateView.as_view(), name='edit_club'),
     path('favourites/', book_views.Favourites.as_view(), name='favourites'),
     path('book_profile/<int:book_id>/favourite', book_views.make_favourite, name="make_favourite"),
     path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),
     path('book_profile/<int:book_id>/rating', book_views.update_ratings, name="update_ratings"),
     path('invite/', application_views.invite, name='invite'),
+    path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club'),
+    path('club_profile/<int:club_id>/feed/', feed_views.FeedView.as_view(), name='feed'),
+    path('follow_toggle/<int:user_id>', user_views.follow_toggle , name = 'follow_toggle'),
+    path('club_profile/<int:club_id>/new_post/', post_views.NewPostView.as_view(), name='new_post'),
 
-]

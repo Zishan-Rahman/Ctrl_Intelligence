@@ -13,7 +13,6 @@ class PromoteDemoveViewsTestCase(TestCase):
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
     def setUp(self):
-        self.url = reverse('applications')
         self.john = User.objects.get(email='johndoe@bookclub.com')
         self.jane = User.objects.get(email='janedoe@bookclub.com')
         self.joe = User.objects.get(email='joedoe@bookclub.com')
