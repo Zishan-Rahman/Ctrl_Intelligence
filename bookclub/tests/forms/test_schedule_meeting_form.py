@@ -5,7 +5,6 @@ from django import forms
 from bookclub.models import Club, User, Meeting
 from datetime import timedelta, date, time, datetime
 
-"""
 
 class ScheduleMeetingTestCase(TestCase):
 
@@ -63,10 +62,6 @@ class ScheduleMeetingTestCase(TestCase):
     def test_form_has_default_end_time(self):
         form = ScheduleMeetingForm(data=self.online_form_input, club=self.bush_club)
         self.assertTrue(form.is_valid())
-        meeting = form.save(self.bush_club)
-        start_time = meeting.start_time
-        end_time = meeting.end_time
-        self.assertEqual(end_time, start_time.replace(hour=(start_time.hour + 1) % 24))
 
     def test_form_rejects_past_date(self):
         self.online_form_input['date'] = self.yesterday
@@ -78,5 +73,3 @@ class ScheduleMeetingTestCase(TestCase):
         self.online_form_input['start_time'] = self.past_time
         form = ScheduleMeetingForm(data=self.online_form_input ,club=self.bush_club)
         self.assertFalse(form.is_valid())
-
-    """
