@@ -12,6 +12,7 @@ from bookclub.views import club_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
 
+
 class ApplicationsView(LoginRequiredMixin, View):
     """View that handles club applications."""
 
@@ -65,6 +66,7 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
         return render(self.request, 'my_applications.html', {'applications': my_applications, 'page_obj': page_obj})
 
+
 def app_accept(request, pk):
     """Accept application"""
     app = Application.objects.all().get(pk=pk)
@@ -81,6 +83,7 @@ def app_remove(request, pk):
     app.delete()
     messages.add_message(request, messages.SUCCESS, "User rejected!")
     return redirect('applications')
+
 
 @login_required
 def new_application(request, club_id):
@@ -111,9 +114,7 @@ def new_application(request, club_id):
                                  f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}. You have "
                                  f"already applied.")
 
-
     return redirect('my_applications')
-
 
 
 def invite(request):
@@ -124,30 +125,3 @@ def invite(request):
             emails.append(user.email)
         return JsonResponse(emails, safe=False)
     return render(request, 'club_profile.html')
-
-
-# def inviteMessage(request, self):
-
-
-        # """Sends an message to invite users to clubs."""
-        # users=User.objects.all()
-    # if request.method == "POST":
-    #     query = request.POST['query']
-    #     users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(full_name__icontains=query)
-    #     return render(request,'home.html',{"users":users})
-    # else:
-    #     return render(request, 'home.html', {})
-    #     users = query
-
-    #
-    # if request.method == "GET":
-    #     form = InviteForm(data={"from_user": str(request.user.email), "to_user": str(invitee.email)})
-    # else:
-    #     form = InviteForm(data=request.POST)
-    #
-    # if request.method == "POST" and form.is_valid():
-    #     form.save()
-    #     messages.add_message(request, messages.SUCCESS, f"Invite sent to {username}.")
-    #     return redirect(self.request, "my_clubs.html")
-    #
-    # return render(request, "invites/send.html", context)
