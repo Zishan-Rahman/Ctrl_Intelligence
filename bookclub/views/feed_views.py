@@ -21,6 +21,8 @@ class FeedView(LoginRequiredMixin, ListView):
         """Return context data, including new post form."""
         current_club_id = self.kwargs['club_id']
         current_club = Club.objects.get(id=current_club_id)
+        current_user = self.request.user
+        authors = current_user
         posts = Post.objects.filter(club=current_club)
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user

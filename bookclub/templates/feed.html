@@ -1,19 +1,33 @@
 {% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
 {% block content %}
-
 <div class="container">
-
-
     <div class="row">
-        <h1>Feed</h1>
-            <br>
-              {% for post in posts %}
-              <div class="box">
-                <p>Post: {{post.text}}</p>
-                <p>User: {{post.author.get_full_name}}</p>
-                <p>Date: {{post.created_at}}</p>
+        <div class="col">
+            <h1>Posts of {{ club.name }}</h1>
+            <div class="book-table">
+                <table class="table table-hover">
+                    <thead>
+                  <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Author</th>
+                      <th scope="col">Post</th>
+                      <th scope="col">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for post in posts %}
+                  <tr class="clickable-row" data-href="#">
+                    <td><img src='{{ post.author.gravatar }}' alt="{{ post.author }}'s Gravatar"></td>
+                    <td>{{ post.author }}</td>
+                    <td>{{ post.post }}</td>
+                    <td>{{ post.created_at }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+                  </table>
               </div>
-              {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
