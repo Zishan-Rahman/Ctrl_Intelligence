@@ -220,46 +220,18 @@
               {% elif current_user in club.get_organisers %}
               <form action="{% url 'leave_club' club.id %}" method="post">
                 {% csrf_token %}
-<<<<<<< HEAD
                   <button type="submit" class="btn btn-default" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-box-arrow-left"></i> Leave </button>
               </form>
               {% elif current_user == club.get_owner %}
-=======
-                <button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {{ club.name }}</button>
-              </form>
-              {%endif%}
-
-            </td>
-          </tr>
-
-            <tr>
-                   <td class = "post-feed">
-                       {% if current_user in club.get_all_users %}
-                       <form action=" {% url 'feed' club.id %} " method="post">
-                       {% csrf_token %}
-                      <button type="submit" class="btn btn-default" id="post-feed"><span class="btn btn-dark" style="background-color: brown;">Club feed</button>
-                     </form>
-                       {%endif%}
-                   </td>
-               </tr>
-
-          <td class="disband-club">
-              {% if current_user == club.get_owner %}
->>>>>>> 272852a95d9252afe537e4c8ca0c0f0299a99251
               <form action="{% url 'disband_club' club.id %}" method=post>
                 {% csrf_token %}
                   <button type="submit" class="btn" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-x-octagon"></i> Disband </button>
                 </form>
 
-<<<<<<< HEAD
               {%endif%}
 
                 </div>
 
-=======
-            </td>
-          </tr>
->>>>>>> 272852a95d9252afe537e4c8ca0c0f0299a99251
         </div>
     </div>
     </div>
