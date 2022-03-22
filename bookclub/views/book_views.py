@@ -13,6 +13,7 @@ from django.views.generic.list import MultipleObjectMixin
 from bookclub.models import Book, Club, User, Rating
 from django.contrib import messages
 
+
 class BooksListView(LoginRequiredMixin, ListView):
     """View that shows a list of all books."""
 
@@ -21,6 +22,7 @@ class BooksListView(LoginRequiredMixin, ListView):
     context_object_name = "books"
     queryset = Book.objects.all()
     paginate_by = settings.BOOKS_PER_PAGE
+
 
 class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     """View that shows individual books details."""
@@ -38,9 +40,8 @@ class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
         except Http404:
             return redirect('book_list')
 
-   
-class Favourites(LoginRequiredMixin, ListView):       
 
+class Favourites(LoginRequiredMixin, ListView):
     model = Book
     template_name = "favourites.html"
     context_object_name = "books"
@@ -51,27 +52,26 @@ class Favourites(LoginRequiredMixin, ListView):
 
 
 def update_ratings(request, book_id):
-    user = User.objects.get(pk = request.user.id)
-    book = Book.objects.get(pk = book_id)
-    Rating.objects.create(user = user, book = book, rating = request.POST.get('ratings', "0"))
-    messages.add_message(request, messages.SUCCESS, "You have given " + book.title + " a rating of " + request.POST.get('ratings', "0"))
-    return redirect('book_profile', book_id = book_id)
-   
+    user = User.objects.get(pk=request.user.id)
+    book = Book.objects.get(pk=book_id)
+    isbn = Book.objects.get(pk=book_id).isbn
+    Rating.objects.create(user=user, book=book, isbn=isbn, rating=request.POST.get('ratings', "0"))
+    messages.add_message(request, messages.SUCCESS,
+                         "You have given " + book.title + " a rating of " + request.POST.get('ratings', "0"))
+    return redirect('book_profile', book_id=book_id)
 
-def make_favourite(request,book_id):
-    user = User.objects.get(pk = request.user.id)
-    book = Book.objects.get(pk = book_id)
+
+def make_favourite(request, book_id):
+    user = User.objects.get(pk=request.user.id)
+    book = Book.objects.get(pk=book_id)
     user.favourite_books.add(book)
     messages.add_message(request, messages.SUCCESS, book.title + " has been added to Favourites!")
-    return redirect('book_profile', book_id = book_id)
+    return redirect('book_profile', book_id=book_id)
+
 
 def Unfavourite(request, book_id):
-    user = User.objects.get(pk = request.user.id)
-    book = Book.objects.get(pk = book_id)
+    user = User.objects.get(pk=request.user.id)
+    book = Book.objects.get(pk=book_id)
     user.favourite_books.remove(book)
     messages.add_message(request, messages.SUCCESS, book.title + " has been removed from Favourites!")
-    return redirect('book_profile', book_id = book_id)
-
-
-    
-
+    return redirect('book_profile', book_id=book_id)
