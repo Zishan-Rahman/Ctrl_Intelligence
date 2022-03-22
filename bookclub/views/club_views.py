@@ -10,18 +10,18 @@ from bookclub.views import config
 from django.urls import reverse
 from django.contrib import messages
 from bookclub.templates import *
-from bookclub.forms import EditClubForm
+from bookclub.forms import EditClubForm, PostForm
 from django.http import Http404
-from bookclub.models import User, Club
+from bookclub.models import User, Club, Post, Meeting
 from django.views.generic.edit import UpdateView
 from django.core.paginator import Paginator
+
 
 class ClubMemberListView(LoginRequiredMixin, ListView):
     """Gets the members of each club"""
 
     model = Club
     template_name = "club_members.html"
-    paginate_by = settings.USERS_PER_PAGE
     pk_url_kwarg = 'club_id'
     context_object_name = 'club'
     ordering = ['-name']
@@ -34,14 +34,17 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
             return redirect('home')
 
     def get_queryset(self):
-        return Club.objects.get(id = self.kwargs['club_id']).get_all_users()
+        return Club.objects.get(id=self.kwargs['club_id']).get_all_users()
 
     def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        current_user = self.request.user
         current_user_is_owner = False
+        context = super().get_context_data(*args, **kwargs)
         current_club_id = self.kwargs['club_id']
+        current_club = Club.objects.get(id=current_club_id)
+        all_users = current_club.get_all_users()
         current_club = Club.objects.get(id = current_club_id)
+        if current_club.owner == self.request.user:
+            current_user_is_owner = True
         paginator = Paginator(current_club.get_all_users(), settings.USERS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -49,37 +52,52 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
             u_id = each.pk
             if current_club.user_level(each) == "Member":
                 user_level = "Member"
+                u_id = each.pk
             elif current_club.user_level(each) == "Organiser":
                 user_level = "Organiser"
+                u_id = each.pk
             else:
                 user_level = "Owner"
-                if each == current_user:
+                u_id = each.pk
+                if each == self.request.user:
                     current_user_is_owner = True
 
+        context['u_pk'] = u_id
         context['club'] = current_club
+        context['all_users'] = all_users
         context['page_obj'] = page_obj
         context['user_level'] = user_level
         context['c_pk'] = current_club_id
-        context['u_pk'] = u_id
         context['is_owner'] = current_user_is_owner
-
         return context
+
 
 def promote_member_to_organiser(request, c_pk, u_pk):
     """Promote member to organiser"""
-    club = Club.objects.all().get(pk = c_pk)
+    club = Club.objects.all().get(pk=c_pk)
     new_organiser = User.objects.all().get(pk=u_pk)
     club.make_organiser(new_organiser)
     messages.add_message(request, messages.SUCCESS, "User promoted!")
     return redirect('club_members', club_id=c_pk)
 
+
 def demote_organiser_to_member(request, c_pk, u_pk):
     """Demote organiser to member"""
-    club = Club.objects.all().get(pk = c_pk)
+    club = Club.objects.all().get(pk=c_pk)
     new_member = User.objects.all().get(pk=u_pk)
     club.demote_organiser(new_member)
     messages.add_message(request, messages.SUCCESS, "User demoted!")
     return redirect('club_members', club_id=c_pk)
+
+
+def kick_user_from_club(request, c_pk, u_pk):
+    """Promote member to organiser"""
+    club = Club.objects.all().get(pk = c_pk)
+    user_to_kick = User.objects.all().get(pk=u_pk)
+    club.remove_from_club(user_to_kick)
+    messages.add_message(request, messages.SUCCESS, "User kicked!")
+    return redirect('club_members', club_id=c_pk)
+
 
 class ClubUpdateView(LoginRequiredMixin, UpdateView):
     """View to update club profile."""
@@ -110,6 +128,7 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
         form = self.form_class(instance=club_to_edit)
         return render(request, 'edit_club.html', {"form": form})
 
+
 def club_util(request):
     user_clubs_list = []
     clubs = Club.objects.all()
@@ -119,6 +138,7 @@ def club_util(request):
             user_clubs_list.append(temp_club)
 
     config.user_clubs = user_clubs_list
+
 
 @login_required
 def club_list(request):
@@ -134,19 +154,20 @@ def club_list(request):
             "mini_gravatar": club.mini_gravatar(),
             "gravatar": club.gravatar()
         })
-    return render(request, 'club_list.html', {'clubs':clubs})
+    return render(request, 'club_list.html', {'clubs': clubs})
 
 
 @login_required
 def club_selector(request):
     club_util(request)
-    return render(request, "club_switcher.html", {'user_clubs': config.user_clubs,'user':request.user})
+    return render(request, "club_switcher.html", {'user_clubs': config.user_clubs, 'user': request.user})
 
 
 @login_required
 def club_selector_alt(request):
     club_util(request)
     return render(request, "club_switcher_alt.html", {"user_clubs": config.user_clubs, 'user': request.user})
+
 
 @login_required
 def new_club(request):  # new club adapted from the chess club project
@@ -159,7 +180,7 @@ def new_club(request):  # new club adapted from the chess club project
             return redirect('club_list')
     else:
         form = ClubForm()
-    return render(request, 'new_club.html', {'form':form})
+    return render(request, 'new_club.html', {'form': form})
 
 
 class ClubsListView(LoginRequiredMixin, ListView):
@@ -176,17 +197,24 @@ class ClubsListView(LoginRequiredMixin, ListView):
 def club_profile(request, club_id):
     """ Individual Club's Profile Page """
     try:
+        form = PostForm()
         club = Club.objects.get(id=club_id)
+        posts = Post.objects.filter(club=club)
+        posts = posts[:6]
+        meetings = Meeting.objects.filter(club=club)
+        meetings = meetings[:3]
     except:
         messages.add_message(request, messages.ERROR, "Club does not exist!")
         return redirect('club_list')
         
     current_user = request.user
     is_owner = club.user_level(current_user) == "Owner"
-    return render(request, 'club_profile.html',{'club':club, 'current_user':current_user, 'is_owner':is_owner})
+    return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner,
+                                                 'posts': posts, 'meetings': meetings, 'form': form})
+
 
 @login_required
-def leave_club(request , club_id):
+def leave_club(request, club_id):
     """Leave A Club """
     club = Club.objects.get(pk=club_id)
     current_user = request.user

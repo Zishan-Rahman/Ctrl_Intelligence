@@ -1,22 +1,33 @@
-<!-- adapted from clucker project -->
 {% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
 {% block content %}
 <div class="container">
-  <div class="row">
-    <div class="col-xs-12 col-lg-6 col-xl-4">
-      <h3>New Club Post</h3>
-        <h6>Club: {{club.get_name}}</h6>
-        <h6>Author: {{author.get_full_name}}</h6>
-        <form action="{% url 'new_post' club.id %}" method="post">
-        {% csrf_token %}
-        {% include 'partials/bootstrap_form.html' with form=form %}
-        <button type="submit" class="btn btn-primary">Send</button>
-      </form>
+    <div class="row">
+        <div class="col">
+            <h1>Posts of {{ club.name }}</h1>
+            <div class="book-table">
+                <table class="table table-hover">
+                    <thead>
+                  <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Author</th>
+                      <th scope="col">Post</th>
+                      <th scope="col">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for post in posts %}
+                  <tr class="clickable-row" data-href="#">
+                    <td><img src='{{ post.author.gravatar }}' alt="{{ post.author }}'s Gravatar" class="rounded-circle"></td>
+                    <td>{{ post.author }}</td>
+                    <td>{{ post.text }}</td>
+                    <td>{{ post.created_at }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+                  </table>
+              </div>
+        </div>
     </div>
-    <div class="col-xs-12 col-lg-6 col-xl-8">
-      <h1>Feed</h1>
-      <p><b></b>This page will contain the feed of this club.</p>
-    </div>
-  </div>
 </div>
 {% endblock %}

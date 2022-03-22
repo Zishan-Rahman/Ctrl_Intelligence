@@ -74,6 +74,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     age = models.IntegerField(blank=True, null=True)
     favourite_books = models.ManyToManyField(Book)
     is_email_verified = models.BooleanField(default=False)
+    followers = models.ManyToManyField(
+        'self', symmetrical=False, related_name='followees'
+    )
 
     class Meta:
         """Model options."""
@@ -81,7 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ordering = ['last_name', 'first_name']
 
     def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f'{self.first_name} {self.last_name}'
 
     def get_first_name(self):
         return self.first_name
@@ -113,6 +116,29 @@ class User(AbstractBaseUser, PermissionsMixin):
     def mini_gravatar(self):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=60)
+
+    def toggle_follow(self, followee):
+        if followee == self:
+            return
+        if self.is_following(followee):
+            self._unfollow(followee)
+        else:
+            self._follow(followee)
+
+    def _follow(self, user):    
+        user.followers.add(self)
+
+    def _unfollow(self,user):
+        user.followers.remove(self)
+
+    def is_following(self, user):
+        return user in self.followees.all()
+    
+    def follower_count(self):
+        return self.followers.count()
+
+    def followee_count(self):
+        return self.followees.count()
 
     objects = UserManager()
 
@@ -275,6 +301,7 @@ class Rating(models.Model):
     """A model for the book ratings"""
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.CASCADE)
+    isbn = models.CharField(unique=False, max_length=12, blank=False)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
 
     def get_user(self):

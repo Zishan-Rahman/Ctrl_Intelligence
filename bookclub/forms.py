@@ -174,7 +174,7 @@ class ClubForm(forms.ModelForm):
     CHOICES1 = [
         (True, 'Yes'),
         (False, 'No')]
-        
+
     organiser_has_owner_privilege = forms.ChoiceField(choices=CHOICES1, widget=forms.Select())
 
     def clean(self):
@@ -235,7 +235,7 @@ class ScheduleMeetingForm(forms.ModelForm):
         now = timezone.now()
         date = self.cleaned_data['date']
         start_time = self.cleaned_data['start_time']
-        end_time = self.cleaned_data['end_time'] 
+        end_time = self.cleaned_data['end_time']
         if end_time == None:
             end_time = start_time.replace(hour=(start_time.hour + 1) % 24)
         if date < datetime.now().date():
@@ -260,7 +260,7 @@ class ChatForm(forms.Form):
 
 class MessageForm(forms.Form):
   message = forms.CharField(label='', max_length=1000)
- 
+
 class EditClubForm(forms.ModelForm):
     """Form to update clubs."""
 
@@ -293,12 +293,17 @@ class PostForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea()
         }
-
-    def save(self , club , author):
-        super().save(commit=False)
-        Post.objects.create(
-            author=author,
-            club=club,
-            text=self.cleaned_data.get('text')
-        )
+    # 
+    # def save(self , user, club):
+    #     super().save(commit=False)
+    #     # post.author = self.cleaned_data.get('author')
+    #     # post.club = self.cleaned_data.get('club')
+    #     # post.text = self.cleaned_data.get('text')
+    #     post = Post.objects.create(
+    #         author=user,
+    #         club=club,
+    #         text=self.cleaned_data.get('text')
+    #     )
+    #     post.save()
+    #     return post
 

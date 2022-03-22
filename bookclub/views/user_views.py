@@ -23,11 +23,12 @@ def user_list(request):
             "last_name": user.get_last_name,
             "email": user.get_email,
             "public_bio": user.get_bio,
-            "favourite_genre" : user.get_favourite_genre,
-            "mini_gravatar": club.mini_gravatar(),
-            "gravatar": club.gravatar()
+            "favourite_genre": user.get_favourite_genre,
+            "mini_gravatar": user.mini_gravatar(),
+            "gravatar": user.gravatar()
         })
     return render(request, 'user_list.html', {'users': users})
+
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
@@ -69,10 +70,23 @@ class UsersListView(LoginRequiredMixin, ListView):
     paginate_by = settings.USERS_PER_PAGE
 
 
-
 @login_required
 def user_profile(request, user_id):
     """ Individual User's Profile Page """
-    user = User.objects.get(id = user_id)
+    user = User.objects.get(id=user_id)
     current_user = request.user
-    return render(request, 'user_profile.html',{'user': user, 'current_user':current_user})
+    following = request.user.is_following(user)
+    followable = request.user != user
+    return render(request, 'user_profile.html', {'user': user,
+                                                 'current_user': current_user,
+                                                 'following': following,
+                                                 'followable': followable}
+                  )
+
+
+@login_required
+def follow_toggle(request, user_id):
+    current_user = request.user
+    followee = User.objects.get(id=user_id)
+    current_user.toggle_follow(followee)
+    return redirect('user_profile', user_id=user_id)
