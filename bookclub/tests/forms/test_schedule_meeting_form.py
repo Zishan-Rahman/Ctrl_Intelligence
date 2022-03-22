@@ -18,7 +18,6 @@ class ScheduleMeetingTestCase(TestCase):
         self.client.login(email=self.john.get_email(), password='Password123')
         self.yesterday = self.today - timedelta(days=1)
         self.tomorrow = self.today + timedelta(days=1)
-        self.tomorrow_with_end_time = self.tomorrow + timedelta(hours=1)
         last_hour_date_time = datetime.now() - timedelta(hours=1)
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.past_time = time(last_hour_date_time.hour, 0)
@@ -56,10 +55,6 @@ class ScheduleMeetingTestCase(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_form_accepts_valid_date_time(self):
-        form = ScheduleMeetingForm(data=self.online_form_input, club=self.bush_club)
-        self.assertTrue(form.is_valid())
-
-    def test_form_has_default_end_time(self):
         form = ScheduleMeetingForm(data=self.online_form_input, club=self.bush_club)
         self.assertTrue(form.is_valid())
 
