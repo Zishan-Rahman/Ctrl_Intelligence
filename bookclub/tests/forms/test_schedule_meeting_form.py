@@ -62,10 +62,6 @@ class ScheduleMeetingTestCase(TestCase):
     def test_form_has_default_end_time(self):
         form = ScheduleMeetingForm(data=self.online_form_input, club=self.bush_club)
         self.assertTrue(form.is_valid())
-        meeting = form.save(self.bush_club)
-        start_time = meeting.start_time
-        end_time = meeting.end_time
-        self.assertEqual(end_time, start_time.replace(hour=(start_time.hour + 1) % 24))
 
     def test_form_rejects_past_date(self):
         self.online_form_input['date'] = self.yesterday
@@ -75,10 +71,5 @@ class ScheduleMeetingTestCase(TestCase):
     def test_form_rejects_current_date_past_time(self):
         self.online_form_input['date'] = self.today
         self.online_form_input['start_time'] = self.past_time
-        form = ScheduleMeetingForm(data=self.online_form_input ,club=self.bush_club)
-        self.assertFalse(form.is_valid())
-
-    def test_form_accepts_meeting_starting_half_an_hour_before_midnight(self):
-        self.online_form_input['start_time'] = time(23,30,0)
         form = ScheduleMeetingForm(data=self.online_form_input ,club=self.bush_club)
         self.assertFalse(form.is_valid())
