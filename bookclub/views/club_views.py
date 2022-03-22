@@ -101,10 +101,13 @@ def kick_user_from_club(request, c_pk, u_pk):
 def transfer_ownership(request, c_pk, u_pk):
     """Transfer ownership to specific member"""
     club = Club.objects.get(pk=c_pk)
-    new_owner = User.objects.get(pk=u_pk)
-    club.make_owner(new_owner)
-    messages.add_message(request, messages.SUCCESS, "Transferred Ownership to " + str(new_owner.first_name) + " " + str(new_owner.last_name) + "!")
+    if request.user == club.owner or request.user == club.organiser_owner:
+        new_owner = User.objects.get(pk=u_pk)
+        club.make_owner(new_owner)
+        messages.add_message(request, messages.SUCCESS, "Transferred Ownership to " + str(new_owner.first_name) + " " + str(new_owner.last_name) + "!")
+    messages.add_message(request, messages.WARNING, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
+
 
 
 class ClubUpdateView(LoginRequiredMixin, UpdateView):
@@ -212,7 +215,8 @@ def club_profile(request, club_id):
 
     current_user = request.user
     is_owner = club.user_level(current_user) == "Owner"
-    return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner})
+    is_organiser_owner = club.organiser_owner == current_user
+    return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner, 'is_organiser_owner': is_organiser_owner})
 
 
 @login_required

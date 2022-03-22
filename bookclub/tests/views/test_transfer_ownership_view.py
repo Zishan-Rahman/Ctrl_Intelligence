@@ -21,6 +21,7 @@ class TransferOwnershipViewsTestCase(TestCase):
         #self.bush_club = Club.objects.create(name="Book Club",description="Bush House Official Book Club!",location="Strand, London",owner=self.john,meeting_online=True)
         self.bush_club.make_member(self.jane)
         self.bush_club.make_member(self.joe)
+        self.bush_club.make_organiser(self.jane)
 
     def test_transfer_owner_button_visible_for_owner(self):
         self.client.login(email=self.john.email, password='Password123')
@@ -48,9 +49,9 @@ class TransferOwnershipViewsTestCase(TestCase):
         beforeOwner = self.bush_club.get_owner()
         print(self.bush_club.get_organisers())
         print(self.bush_club.get_members())
-        print(self.jane.id)
+        print(self.joe.id)
         print(beforeOwner)
-        response = self.client.get('/club_profile/1/members/2/transfer', follow=True)
+        response = self.client.get('/club_profile/1/members/3/transfer', follow=True)
         redirect_url = '/club_profile/1/members'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
