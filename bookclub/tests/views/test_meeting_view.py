@@ -51,13 +51,13 @@ class MeetingViewTestCase(TestCase):
         self.client.login(email=self.john.get_email(), password='Password123')
         response = self.client.get('/club_profile/1/')
         html = response.content.decode('utf8')
-        self.assertIn('Schedule meeting',  html)
+        self.assertIn('Schedule Meeting',  html)
 
     def test_meeting_schedule_button_not_present_if_not_owner(self):
         self.client.login(email=self.jane.get_email(), password='Password123')
         response = self.client.get('/club_profile/1/')
         html = response.content.decode('utf8')
-        self.assertNotIn('Schedule meeting',  html)
+        self.assertNotIn('Schedule Meeting',  html)
 
     def test_get_meeting(self):
         self.client.login(email=self.john.get_email(), password='Password123')

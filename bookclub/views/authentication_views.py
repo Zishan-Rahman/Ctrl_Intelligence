@@ -16,7 +16,7 @@ from bookclub.views import club_views
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str, force_text, DjangoUnicodeDecodeError
+from django.utils.encoding import force_bytes, force_str, force_text
 from ..utils import generate_token
 from django.core.mail import EmailMessage
 from django.conf import settings
