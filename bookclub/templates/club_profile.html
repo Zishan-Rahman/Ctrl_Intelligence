@@ -33,6 +33,8 @@
 
             </div>
 
+        {% if meetings %}
+
                 {% for meeting in meetings %}
                      <div class="card w-100 mx-auto" style="margin-top: 10px; border-color: black">
     <div class="card-body">
@@ -58,6 +60,22 @@
 
             </div>
             {% endfor %}
+        {% else %}
+
+
+            <div class="row">
+            <div class="col">
+                <br>
+              <p class="text-muted">{{ club.name }} does not have any meetings!</p>
+            </div>
+            </div>
+
+
+
+
+
+
+        {% endif %}
         </div>
 
     </div>
@@ -86,6 +104,8 @@
             </div>
     </div>
 
+    {% if posts %}
+
             {% for post in posts %}
 
                 <div class="card w-100 mx-auto" style="margin-top: 10px; border-color: brown">
@@ -100,7 +120,16 @@
                         </div>
                 </div>
             {% endfor %}
+        {% else %}
 
+        <div class="row">
+            <div class="col text-center">
+                <br>
+              <p class="text-muted">{{ club.name }} does not have any posts!</p>
+            </div>
+            </div>
+
+    {% endif %}
     </div>
 
     <div class="col-3">
@@ -196,7 +225,7 @@
                   {% elif current_user == club.get_owner %}
               <form action="{% url 'disband_club' club.id %}" method=post>
                 {% csrf_token %}
-                  <button type="submit" class="btn" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-x-square"></i> Disband </button>
+                  <button type="submit" class="btn" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-x-octagon"></i> Disband </button>
                 </form>
 
               {%endif%}
