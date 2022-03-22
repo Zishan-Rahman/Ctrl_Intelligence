@@ -71,3 +71,5 @@ urlpatterns = [
     path('follow_toggle/<int:user_id>', user_views.follow_toggle , name = 'follow_toggle'),
     path('club_profile/<int:club_id>/new_post/', post_views.NewPostView.as_view(), name='new_post'),
 
+    ]
+
