@@ -12,8 +12,7 @@ from django.views.generic.edit import View
 from django.db.models import Q
 
 
-# Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct
-# -messages-pt-1-1a6b8bd9fc40
+# Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class CreateChatView(View):
 
     def get(self, request, *args, **kwargs):
@@ -45,8 +44,7 @@ class CreateChatView(View):
             return redirect('create_chat')
 
 
-# Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct
-# -messages-pt-1-1a6b8bd9fc40
+# Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ListChatsView(View):
 
     def get(self, request, *args, **kwargs):
@@ -57,8 +55,7 @@ class ListChatsView(View):
         return render(request, 'inbox.html', context)
 
 
-# Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct
-# -messages-pt-1-1a6b8bd9fc40
+# Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class CreateMessageView(View):
 
     def post(self, request, pk, *args, **kwargs):
@@ -77,8 +74,7 @@ class CreateMessageView(View):
         return redirect('chat', pk=pk)
 
 
-# Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct
-# -messages-pt-1-1a6b8bd9fc40
+# Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ChatView(View):
 
     def get(self, request, pk, *args, **kwargs):

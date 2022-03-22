@@ -52,6 +52,7 @@ urlpatterns = [
     path('new_club/', club_views.new_club, name='new_club'),
     path('club_profile/<int:pk>/meeting/', meeting_views.MeetingScheduler.as_view(), name='schedule_meeting'),
     path('search/', search_views.search, name='search_page'),
+    path('search_autocomplete/', search_views.search_autocomplete, name='search_autocomplete'),
     path('leave_club/<int:club_id>/', club_views.leave_club, name='leave_club'),
     path('inbox/', messaging_views.ListChatsView.as_view(), name='inbox'),
     path('inbox/create_chat', messaging_views.CreateChatView.as_view(), name='create_chat'),
@@ -66,10 +67,10 @@ urlpatterns = [
     path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),
     path('book_profile/<int:book_id>/rating', book_views.update_ratings, name="update_ratings"),
     path('invite/', application_views.invite, name='invite'),
+    path('invite/<int:user_id>/<int:club_id>/', user_views.inviteMessage, name='invite_message'),
     path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club'),
     path('club_profile/<int:club_id>/feed/', feed_views.FeedView.as_view(), name='feed'),
     path('follow_toggle/<int:user_id>', user_views.follow_toggle , name = 'follow_toggle'),
     path('club_profile/<int:club_id>/new_post/', post_views.NewPostView.as_view(), name='new_post'),
 
     ]
-

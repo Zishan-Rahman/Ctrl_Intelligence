@@ -6,12 +6,11 @@ from bookclub.templates import *
 from bookclub.forms import ApplicantForm, ApplicationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404, JsonResponse
-from bookclub.models import Club, Application, User
+from django.http import Http404
+from bookclub.models import Club, Application
 from bookclub.views import club_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
-
 
 class ApplicationsView(LoginRequiredMixin, View):
     """View that handles club applications."""
@@ -66,7 +65,6 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
         return render(self.request, 'my_applications.html', {'applications': my_applications, 'page_obj': page_obj})
 
-
 def app_accept(request, pk):
     """Accept application"""
     app = Application.objects.all().get(pk=pk)
@@ -83,7 +81,6 @@ def app_remove(request, pk):
     app.delete()
     messages.add_message(request, messages.SUCCESS, "User rejected!")
     return redirect('applications')
-
 
 @login_required
 def new_application(request, club_id):
@@ -114,14 +111,5 @@ def new_application(request, club_id):
                                  f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}. You have "
                                  f"already applied.")
 
+
     return redirect('my_applications')
-
-
-def invite(request):
-    if 'term' in request.GET:
-        query = User.objects.filter(first_name__icontains=request.GET.get('term'))
-        emails = list()
-        for user in query:
-            emails.append(user.email)
-        return JsonResponse(emails, safe=False)
-    return render(request, 'club_profile.html')

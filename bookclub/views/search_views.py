@@ -1,6 +1,6 @@
 import json
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden, HttpResponse
+from django.http import HttpResponseForbidden, HttpResponse, JsonResponse
 from django.shortcuts import render
 from bookclub.models import Club, Book, User
 from django.views.generic.list import ListView
@@ -20,3 +20,12 @@ def search(request):
 		return render(request, 'search_page.html', {'query': query, 'books': books, 'clubs': clubs, 'users': users})
 	else:
 		return render(request, 'search_page.html', {})
+
+
+def search_autocomplete(request):
+    if 'term' in request.GET:
+        query = Book.objects.filter(title__contains=request.GET.get('term'))[:5]
+        books = list()
+        for book in query:
+            books.append(book.title)
+        return JsonResponse(books, safe=False)
