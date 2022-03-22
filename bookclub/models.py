@@ -124,7 +124,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             self._follow(followee)
 
-    def _follow(self, user):    
+    def _follow(self, user):
         user.followers.add(self)
 
     def _unfollow(self,user):
@@ -132,7 +132,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def is_following(self, user):
         return user in self.followees.all()
-    
+
     def follower_count(self):
         return self.followers.count()
 
@@ -164,7 +164,7 @@ class Club(models.Model):
 
     def __str__(self):
         return self.name
-        
+
     def get_name(self):
         return self.name
 
@@ -187,13 +187,10 @@ class Club(models.Model):
     def make_owner(self, user):
         if self.user_level(user) == "Member":
             self.members.remove(user)
-            self.organisers.add(self.owner)
             self.owner = user
             self.save()
-
         elif self.user_level(user) == "Organiser":
             self.organisers.remove(user)
-            self.organisers.add(self.owner)
             self.owner = user
             self.save()
         else:
@@ -333,10 +330,10 @@ class Meeting(models.Model):
 
     def get_meeting_start_time(self):
         return self.start_time
-    
+
     def set_default_meeting_end_time(self):
         self.end_time = self.start_time.replace(hour=(self.start_time.hour + 1) % 24)
-        
+
     def get_meeting_end_time(self):
         return self.end_time
 
