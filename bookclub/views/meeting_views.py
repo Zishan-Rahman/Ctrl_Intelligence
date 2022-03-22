@@ -13,6 +13,7 @@ from bookclub.views import club_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
 
+
 class ClubMeetingsListView(LoginRequiredMixin, ListView):
     """Gets the meetings history of each club"""
     """Adapted from ClubMembersListView"""
@@ -32,18 +33,19 @@ class ClubMeetingsListView(LoginRequiredMixin, ListView):
             return redirect('home')
 
     def get_queryset(self):
-        return Club.objects.get(id = self.kwargs['club_id']).get_meetings()
+        return Club.objects.get(id=self.kwargs['club_id']).get_meetings()
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         current_club_id = self.kwargs['club_id']
-        current_club = Club.objects.get(id = current_club_id)
+        current_club = Club.objects.get(id=current_club_id)
         paginator = Paginator(current_club.get_meetings(), settings.USERS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context['club'] = current_club
         context['page_obj'] = page_obj
         return context
+
 
 @login_required
 def meetings_list(request, club_id):
@@ -53,7 +55,6 @@ def meetings_list(request, club_id):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'club_meetings.html', {'club': club, 'page_obj': page_obj})
-
 
 
 class MeetingScheduler(LoginRequiredMixin, View):
@@ -68,7 +69,7 @@ class MeetingScheduler(LoginRequiredMixin, View):
     def post(self, request, pk):
         """Handle scheduling attempt."""
 
-        current_club=Club.objects.get(pk=pk)
+        current_club = Club.objects.get(pk=pk)
         form = ScheduleMeetingForm(club=current_club, data=request.POST)
         if form.is_valid():
             meeting = form.save(club=current_club)
@@ -79,6 +80,6 @@ class MeetingScheduler(LoginRequiredMixin, View):
 
     def render(self, pk):
         """Render meeting scheduler form"""
-        current_club=Club.objects.get(pk=pk)
+        current_club = Club.objects.get(pk=pk)
         form = ScheduleMeetingForm(club=current_club)
-        return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
+        return render(self.request, 'schedule_meeting.html', {'form': form, 'pk': pk})

@@ -73,6 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
     favourite_books = models.ManyToManyField(Book)
+    is_email_verified = models.BooleanField(default=False)
     followers = models.ManyToManyField(
         'self', symmetrical=False, related_name='followees'
     )
@@ -297,6 +298,7 @@ class Rating(models.Model):
     """A model for the book ratings"""
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.CASCADE)
+    isbn = models.CharField(unique=False, max_length=12, blank=False)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
 
     def get_user(self):
@@ -313,14 +315,13 @@ class Meeting(models.Model):
     """A model for denoting and storing meetings."""
     date = models.DateField()
     start_time = models.TimeField()
-    end_time = models.TimeField(blank=True, null=True)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
     address = models.CharField(max_length=50)
 
     class Meta:
         """Model options."""
 
-        ordering = ['date', 'start_time', 'end_time']
+        ordering = ['date', 'start_time']
 
     def get_meeting_club(self):
         return self.club
@@ -330,12 +331,6 @@ class Meeting(models.Model):
 
     def get_meeting_start_time(self):
         return self.start_time
-
-    def set_default_meeting_end_time(self):
-        self.end_time = self.start_time.replace(hour=(self.start_time.hour + 1) % 24)
-
-    def get_meeting_end_time(self):
-        return self.end_time
 
     def get_meeting_address(self):
         return self.address

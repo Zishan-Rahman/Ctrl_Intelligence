@@ -1,46 +1,33 @@
-<!-- adapted from clucker project -->
 {% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
 {% block content %}
-<style>
-.box {
-  margin-top : 50px;
-  border : 1px solid #000;
-  padding : 15px;
-  width : 500px;
-  margin-left : auto;
-  margin-right : auto;
-  position : relative;
-}
-</style>
 <div class="container">
-  <div class="row">
-      <div class="col-9">
-      <h3>New Club Post</h3>
-        <h6>Club: {{club.get_name}}</h6>
-        <h6>Author: {{author.get_full_name}}</h6>
-          <div class="w-25 p-3">
-        <form action="{% url 'new_post' club.id %}" method="post">
-        {% csrf_token %}
-        {% include 'partials/bootstrap_form.html' with form=form %}
-        <button type="submit" class="btn btn-dark" style="background-color: brown">Submit post</button>
-      </form>
-          </div>
-      </div>
-
     <div class="row">
-      <div class="col-3">
-        <h1>Feed</h1>
-            <br>
-              {% for post in posts %}
-              <div class="box">
-                <p>Post: {{post.text}}</p>
-                <p>User: {{post.author.get_full_name}}</p>
-                <p>Date: {{post.created_at}}</p>
+        <div class="col">
+            <h1>Posts of {{ club.name }}</h1>
+            <div class="book-table">
+                <table class="table table-hover">
+                    <thead>
+                  <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Author</th>
+                      <th scope="col">Post</th>
+                      <th scope="col">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for post in posts %}
+                  <tr class="clickable-row" data-href="#">
+                    <td><img src='{{ post.author.gravatar }}' alt="{{ post.author }}'s Gravatar" class="rounded-circle"></td>
+                    <td>{{ post.author }}</td>
+                    <td>{{ post.text }}</td>
+                    <td>{{ post.created_at }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+                  </table>
               </div>
-              {% endfor %}
-
-      </div>
+        </div>
     </div>
-
-    </div>
+</div>
 {% endblock %}

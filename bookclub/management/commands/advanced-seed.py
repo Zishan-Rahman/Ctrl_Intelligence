@@ -80,7 +80,8 @@ class Command(BaseCommand):
                     location=row[1],
                     age=age,
                     public_bio=self.faker.text(max_nb_chars=512),
-                    email=email
+                    email=email,
+                    is_email_verified = True
                 )
 
                 users.append(user)
@@ -107,7 +108,8 @@ class Command(BaseCommand):
             public_bio="Pop Will Eat Itself! This is the day, this is the hour, this is this!",
             favourite_genre="Science Fiction",
             location="Greater London",
-            age=20
+            age=20,
+            is_email_verified = True
         )
         print("Default superuser created with details:")
         print("Email: ctrl@intelligence.com")
