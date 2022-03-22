@@ -170,63 +170,57 @@
       </div>
 
     <br>
-      <div class="card w-100 text-center">
+
+    <div class="col text-center">
+        <h5 class="text-left"><strong>Options</strong></h5>
+    <div class="row mx-auto">
+
+
             {% if current_user not in club.get_all_users%}
           <form action="{% url 'new_application' club.id %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-default" id="apply-button"><span class="btn btn-dark" style="background-color: brown;">Apply</span></button>
+            <button type="submit" class="btn" id="apply-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-check-square"></i> Apply</button>
           </form>
           {%endif%}
-          <tr>
-            <td class="leave-club">
 
               {% if current_user in club.get_members %}
               <form action="{% url 'leave_club' club.id %}" method="post">
                 {% csrf_token %}
-                  <button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {{ club.name }}</span></button>
+                  <button type="submit" class="btn btn-default" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-box-arrow-left"></i> Leave</button>
               </form>
               {% elif current_user in club.get_organisers %}
               <form action="{% url 'leave_club' club.id %}" method="post">
                 {% csrf_token %}
-                  <button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Leave {{ club.name }}</span></button>
+                  <button type="submit" class="btn btn-default" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-box-arrow-left"></i> Leave </button>
               </form>
-              {%endif%}
-
-            </td>
-          </tr>
-
-          <td class="disband-club">
-              {% if current_user == club.get_owner %}
+                  {% elif current_user == club.get_owner %}
               <form action="{% url 'disband_club' club.id %}" method=post>
                 {% csrf_token %}
-                  <button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" style="background-color: brown;">Disband {{ club.name }}</span></button>
+                  <button type="submit" class="btn" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-x-square"></i> Disband </button>
                 </form>
-              {% endif %}
-            </td>
-          <tr>
-            <td>
 
-            </td>
-          </tr>
+              {%endif%}
+
+                </div>
+
         </div>
-      </div>
     </div>
     </div>
-
+    </div>
     <br>
 
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">New Post</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">Create a post</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form action="{% url 'new_post' club.id %}" method="post">
           {% csrf_token %}
           {% include 'partials/bootstrap_form.html' with form=form %}
-          <button type="submit" class="btn btn-dark" style="background-color: brown">Submit post</button>
+          <button type="submit" class="btn btn-dark" style="background-color: brown">Post</button>
         </form>
       </div>
     </div>
