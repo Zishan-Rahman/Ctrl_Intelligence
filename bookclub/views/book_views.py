@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import Http404
+from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
@@ -46,6 +47,7 @@ def add_to_current_reads(request, book_id):
     book = Book.objects.get(id=book_id)
     user.currently_reading_books.add(book)
     user.save()
+    messages.add_message(request, messages.SUCCESS, "Book was successfully added to your current reads!")
     return redirect("book_profile" , book_id)
 
 @login_required
@@ -55,8 +57,15 @@ def books_read(request):
     return render(request, "books_read.html", {'books':books})
 
 def add_to_books_read(request, book_id):
+    # book_not_added = True
     user = User.objects.get(id = request.user.id)
     book = Book.objects.get(id=book_id)
     user.already_read_books.add(book)
     user.save()
+
+    messages.add_message(request, messages.SUCCESS,
+                                        "Book was successfully added to books reads!")
+
+
+
     return redirect("book_profile" , book_id)
