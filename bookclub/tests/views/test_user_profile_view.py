@@ -30,7 +30,7 @@ class UserProfileTest(TestCase):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'alt="Gravatar of {self.user.first_name } {self.user.last_name}" class="rounded-circle profile-image">', html)
-        self.assertIn(f'<h3 class="profile-name">{self.user.first_name} {self.user.last_name}</h3>', html)
+        self.assertIn(f'<h2 class="profile-name">{self.user.first_name} {self.user.last_name}</h2>', html)
         self.assertIn(f'<p class="profile-email">{self.user.email}</p>', html)
         self.assertIn(f'<p class="profile-bio">Public Bio: {self.user.public_bio}</p>', html)
         self.assertIn(f'<p class="profile-ps">Favourite Genre: {self.user.favourite_genre}</p>', html)
