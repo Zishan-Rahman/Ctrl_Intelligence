@@ -11,12 +11,16 @@ from django.core.exceptions import ValidationError
 class InviteTestCases(TestCase):
     """Tests of the create chats view."""
 
-    fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json',
-                'bookclub/tests/fixtures/default_applications.json']
+    fixtures = ['bookclub/tests/fixtures/default_users.json',
+                'bookclub/tests/fixtures/default_clubs.json',
+                'bookclub/tests/fixtures/default_applications.json',
+                'bookclub/tests/fixtures/default_chats.json']
 
     def setUp(self):
         self.john = User.objects.get(email='johndoe@bookclub.com')
         self.jane = User.objects.get(email='janedoe@bookclub.com')
+        self.john_jane_chat = Chat.objects.get(pk=1)
+        self.sam = User.objects.get(email='samdoe@bookclub.com')
         self.bush_club = Club.objects.get(pk=1)
         self.bush_club.make_member(self.john)
         self.url = reverse('invite_message', kwargs={'club_id': self.bush_club.id, 'user_id': self.john.id})
@@ -84,3 +88,13 @@ class InviteTestCases(TestCase):
         html = response.content.decode('utf-8')
         self.assertIn('<a class="btn float-end" href="/club_profile/1/" style="color:white; background-color: brown; '
                       'text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>', html)
+
+    def test_invite_message_sent_to_correct_chat(self):
+        self.client.login(email=self.john.email, password='Password123')
+        self.client.get(reverse('invite_message', kwargs={'user_id': self.sam.id, 'club_id': self.bush_club.id}),
+                        follow=True)
+        chat = Chat.objects.get(user=self.john, receiver=self.sam)
+        self.assertEqual(chat.id, 3)
+
+
+
