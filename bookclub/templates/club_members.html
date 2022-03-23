@@ -27,14 +27,14 @@
                                 <td>{{member.favourite_genre}}</td>
                                 {% if member in club.get_members%}
                                   <td>Member</td>
-                                  {% if is_owner or is_organiser_owner %}
+                                  {% if is_owner  %}
                                     <td><a class="btn btn-default" href="{% url 'promote_member_to_organiser' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: green">Promote</span></a></td>
                                     <td><a class="btn btn-default" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: brown">Kick</span></a></td>
                                     <td><a class="btn btn-default" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: blue">Transfer Ownership</span></a></td>
                                     {%endif%}
                                     {% elif member in club.get_organisers %}
                                   <td>Organiser</td>
-                                  {% if is_owner or is_organiser_owner %}
+                                  {% if is_owner  %}
                                      <td><a class="btn btn-default" href="{% url 'demote_organiser_to_member' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: red">Demote</span></a></td>
                                      <td><a class="btn btn-default" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: brown">Kick</span></a></td>
                                      <td><a class="btn btn-default" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: blue">Transfer Ownership</span></a></td>

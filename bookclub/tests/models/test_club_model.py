@@ -18,7 +18,6 @@ class ClubModelTestCase(TestCase):
         self.club_strand_house = Club.objects.get(pk=3)
         self.club_temple_house = Club.objects.get(pk=4)
 
-
     def test_name_cannot_be_blank(self):
         self.club_bush_house.name = ''
         self._assert_book_club_is_invalid()
@@ -90,26 +89,22 @@ class ClubModelTestCase(TestCase):
         self.club_bush_house.make_member(self.user_two)
         self.club_bush_house.make_owner(self.user_two)
         self.assertEqual(self.club_bush_house.owner, self.user_two)
-        self.assertEqual(self.club_bush_house.get_organisers().get(pk=1), self.user_one)
-
 
     def test_remove_member_from_club(self):
         self.club_temple_house.make_member(self.user_one)
         self.assertEqual(self.club_temple_house.get_members().get(pk=1), self.user_one)
         self.club_temple_house.remove_from_club(self.user_one)
         with self.assertRaises(User.DoesNotExist):
-            self.club_temple_house.get_members().get(pk = 1)
-
+            self.club_temple_house.get_members().get(pk=1)
 
     def test_remove_organiser_from_club(self):
         self.club_temple_house.make_member(self.user_one)
         self.club_temple_house.make_organiser(self.user_one)
-        self.assertEqual(self.club_temple_house.user_level(self.user_one),"Organiser")
-        self.assertEqual(self.club_temple_house.get_organisers().get(pk=1) , self.user_one)
+        self.assertEqual(self.club_temple_house.user_level(self.user_one), "Organiser")
+        self.assertEqual(self.club_temple_house.get_organisers().get(pk=1), self.user_one)
         self.club_temple_house.remove_from_club(self.user_one)
         with self.assertRaises(User.DoesNotExist):
-            self.club_temple_house.get_organisers().get(pk = 1)
-
+            self.club_temple_house.get_organisers().get(pk=1)
 
     def _assert_book_club_is_valid(self):
         try:
@@ -117,14 +112,6 @@ class ClubModelTestCase(TestCase):
         except ValidationError:
             self.fail('Test club should be valid')
 
-
     def _assert_book_club_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.club_bush_house.full_clean()
-
-
-
-
-
-
-

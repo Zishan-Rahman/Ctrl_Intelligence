@@ -69,43 +69,58 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
         context['user_level'] = user_level
         context['c_pk'] = current_club_id
         context['is_owner'] = current_user_is_owner
+        context['current_user'] = self.request.user
         return context
 
 
 def promote_member_to_organiser(request, c_pk, u_pk):
     """Promote member to organiser"""
     club = Club.objects.all().get(pk=c_pk)
-    new_organiser = User.objects.all().get(pk=u_pk)
-    club.make_organiser(new_organiser)
-    messages.add_message(request, messages.SUCCESS, str(new_organiser.first_name) + " " + str(new_organiser.last_name) +" has been promoted!")
+    if request.user == club.owner:
+        user = User.objects.all().get(pk=u_pk)
+        if user in club.get_organisers():
+            messages.add_message(request, messages.WARNING, "This person is already an organiser!")
+        else:
+            new_organiser = User.objects.all().get(pk=u_pk)
+            club.make_organiser(new_organiser)
+            messages.add_message(request, messages.SUCCESS, str(new_organiser.first_name) + " " + str(new_organiser.last_name) +" has been promoted!")
+    else:
+        messages.add_message(request, messages.WARNING, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
 
 def demote_organiser_to_member(request, c_pk, u_pk):
     """Demote organiser to member"""
     club = Club.objects.all().get(pk=c_pk)
-    new_member = User.objects.all().get(pk=u_pk)
-    club.demote_organiser(new_member)
-    messages.add_message(request, messages.WARNING, str(new_member.first_name) + " " + str(new_member.last_name) + " has been demoted!")
+    if request.user == club.owner:
+        new_member = User.objects.all().get(pk=u_pk)
+        club.demote_organiser(new_member)
+        messages.add_message(request, messages.WARNING, str(new_member.first_name) + " " + str(new_member.last_name) + " has been demoted!")
+    else:
+        messages.add_message(request, messages.WARNING, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
 
 def kick_user_from_club(request, c_pk, u_pk):
     """Promote member to organiser"""
     club = Club.objects.all().get(pk = c_pk)
-    user_to_kick = User.objects.all().get(pk=u_pk)
-    club.remove_from_club(user_to_kick)
-    messages.add_message(request, messages.WARNING, str(user_to_kick.first_name) + " " + str(user_to_kick.last_name) + " has been kicked out!")
+    if request.user == club.owner:
+        user_to_kick = User.objects.all().get(pk=u_pk)
+        club.remove_from_club(user_to_kick)
+        messages.add_message(request, messages.WARNING, str(user_to_kick.first_name) + " " + str(user_to_kick.last_name) + " has been kicked out!")
+    else:
+        messages.add_message(request, messages.WARNING, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
 def transfer_ownership(request, c_pk, u_pk):
     """Transfer ownership to specific member"""
     club = Club.objects.get(pk=c_pk)
-    if request.user == club.owner or request.user == club.organiser_owner:
+    if request.user == club.owner :
         new_owner = User.objects.get(pk=u_pk)
         club.make_owner(new_owner)
         messages.add_message(request, messages.SUCCESS, "Transferred Ownership to " + str(new_owner.first_name) + " " + str(new_owner.last_name) + "!")
-    messages.add_message(request, messages.WARNING, "You do not have authority to do this!")
+    else:
+        messages.add_message(request, messages.WARNING, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
 
@@ -220,8 +235,7 @@ def club_profile(request, club_id):
 
     current_user = request.user
     is_owner = club.user_level(current_user) == "Owner"
-    is_organiser_owner = club.organiser_owner == current_user
-    return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner, 'is_organiser_owner': is_organiser_owner})
+    return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner})
 
 
 @login_required

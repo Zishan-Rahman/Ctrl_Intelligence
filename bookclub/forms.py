@@ -285,7 +285,7 @@ class PostForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea()
         }
-    # 
+    #
     # def save(self , user, club):
     #     super().save(commit=False)
     #     # post.author = self.cleaned_data.get('author')
@@ -298,4 +298,3 @@ class PostForm(forms.ModelForm):
     #     )
     #     post.save()
     #     return post
-
