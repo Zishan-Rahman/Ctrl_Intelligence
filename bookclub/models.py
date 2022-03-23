@@ -69,6 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
     currently_reading_books = models.ManyToManyField(Book, related_name='%(class)s_currently_reading_books')
+
     already_read_books = models.ManyToManyField(Book, related_name='%(class)s_already_read_books')
 
     class Meta:

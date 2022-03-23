@@ -66,6 +66,4 @@ def add_to_books_read(request, book_id):
     messages.add_message(request, messages.SUCCESS,
                                         "Book was successfully added to books reads!")
 
-
-
     return redirect("book_profile" , book_id)
