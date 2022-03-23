@@ -30,14 +30,25 @@
     </li>
 
   </ul>
-  
+
   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
     <li class="nav-item px-3">
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
       <form class="d-flex justify-content-center" method=POST action="{% url 'search_page' %}">
       {% csrf_token %}
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query" id="search">
       <button class="btn btn-outline-light" type="submit">Search</button>
       </form>
+      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+      <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+      <script>
+        $(function () {
+          $( "#search" ).autocomplete({
+            source: '{% url 'search_autocomplete' %}',
+            minLength: 4
+          });
+        });
+      </script>
     </li>
     <li class="nav-item dropdown">
       <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

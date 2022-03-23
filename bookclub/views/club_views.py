@@ -140,6 +140,8 @@ def club_util(request):
     config.user_clubs = user_clubs_list
 
 
+
+
 @login_required
 def club_list(request):
     clubs = []
@@ -155,6 +157,8 @@ def club_list(request):
             "gravatar": club.gravatar()
         })
     return render(request, 'club_list.html', {'clubs': clubs})
+
+
 
 
 @login_required
@@ -206,7 +210,7 @@ def club_profile(request, club_id):
     except:
         messages.add_message(request, messages.ERROR, "Club does not exist!")
         return redirect('club_list')
-        
+
     current_user = request.user
     is_owner = club.user_level(current_user) == "Owner"
     return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner,
@@ -222,7 +226,7 @@ def leave_club(request, club_id):
     return redirect('club_selector')
 
 @login_required
-def disband_club(request, c_pk): 
+def disband_club(request, c_pk):
     """Disband a club"""
     Club.objects.get(pk=c_pk).delete()
     messages.add_message(request, messages.SUCCESS, "Club Disbanded!")

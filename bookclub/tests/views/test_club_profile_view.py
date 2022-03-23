@@ -120,7 +120,7 @@ class ClubProfileTest(TestCase, LogInTester):
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="submit" class="btn btn-default" id="leave-button" style=\'padding: '
                       f'15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'><i '
-                      f'class="bi bi-box-arrow-left"></i> Leave </button>', html)
+                      f'class="bi bi-box-arrow-left"></i> Leave</button>', html)
 
     def test_disband_button_visible_for_owner(self):
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
@@ -132,7 +132,7 @@ class ClubProfileTest(TestCase, LogInTester):
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="submit" class="btn" id="leave-button" style=\'padding: 15px;color:white; '
                       f'background-color: brown; text-transform:uppercase; font-size: 14px\'><i class="bi '
-                      f'bi-x-octagon"></i> Disband </button>', html)
+                      f'bi-x-octagon"></i> Disband</button>', html)
 
     def test_disband_button_not_visible_for_member(self):
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
@@ -141,8 +141,9 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
 
-        self.assertNotIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" '
-                         f'style="background-color: brown;">Disband {self.bush_club.name}</button>', html)
+        self.assertNotIn(f'<button type="submit" class="btn" id="leave-button" style=\'padding: 15px;color:white; '
+                         f'background-color: brown; text-transform:uppercase; font-size: 14px\'><i class="bi '
+                         f'bi-x-octagon"></i> Disband</button>', html)
         self.assertNotIn('Disband', html)
 
     def test_disband_button_not_visible_for_organiser(self):
@@ -191,9 +192,6 @@ class ClubProfileTest(TestCase, LogInTester):
                       f'data-bs-target="#staticBackdrop" style=\'padding-top: 15px; padding-bottom: 15px; '
                       f'color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'>\n          '
                       f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
-
-
-
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()

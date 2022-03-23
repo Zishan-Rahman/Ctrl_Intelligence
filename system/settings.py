@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'recommender',
     'crispy_forms',
 
+
 ]
 
 MIDDLEWARE = [
