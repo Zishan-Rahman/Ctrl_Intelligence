@@ -1,10 +1,11 @@
-"""Tests of the home view."""
+"""Tests of the current reads view."""
+from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
-from bookclub.models import User, Book
-from bookclub.tests.helpers import reverse_with_next
+from bookclub.models import Book, User
+from bookclub.tests.helpers import LogInTester, reverse_with_next
 
-class CurrentReadsTestCase(TestCase):
+class CurrentReadsTestCase(TestCase, LogInTester):
     """Tests of the current reads view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
