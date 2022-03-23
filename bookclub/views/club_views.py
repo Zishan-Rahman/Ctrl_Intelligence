@@ -105,18 +105,21 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
     model = EditClubForm
     template_name = "edit_club.html"
     form_class = EditClubForm
+    
 
     def get_object(self, c_pk):
         """Return the object (user) to be updated."""
         club_to_edit = Club.objects.all().get(pk=c_pk)
+        self.pk = c_pk
         return club_to_edit
 
     def get_success_url(self):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Club updated!")
-        return reverse('club_selector')
+        return reverse('club_profile', kwargs={'club_id': self.pk})
 
     def post(self, request, c_pk, *args, **kwargs):
+        self.pk = c_pk
         club_to_edit = Club.objects.all().get(pk=c_pk)
         form = self.form_class(instance=club_to_edit, data=request.POST)
         if form.is_valid():
@@ -124,6 +127,7 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
         return render(request, 'edit_club.html', {"form": form})
 
     def get(self, request, c_pk, *args, **kwargs):
+        self.pk = c_pk
         club_to_edit = Club.objects.all().get(pk=c_pk)
         form = self.form_class(instance=club_to_edit)
         return render(request, 'edit_club.html', {"form": form})
@@ -138,6 +142,8 @@ def club_util(request):
             user_clubs_list.append(temp_club)
 
     config.user_clubs = user_clubs_list
+
+
 
 
 @login_required
@@ -155,6 +161,8 @@ def club_list(request):
             "gravatar": club.gravatar()
         })
     return render(request, 'club_list.html', {'clubs': clubs})
+
+
 
 
 @login_required
@@ -206,7 +214,7 @@ def club_profile(request, club_id):
     except:
         messages.add_message(request, messages.ERROR, "Club does not exist!")
         return redirect('club_list')
-        
+
     current_user = request.user
     is_owner = club.user_level(current_user) == "Owner"
     return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner,
@@ -222,7 +230,7 @@ def leave_club(request, club_id):
     return redirect('club_selector')
 
 @login_required
-def disband_club(request, c_pk): 
+def disband_club(request, c_pk):
     """Disband a club"""
     Club.objects.get(pk=c_pk).delete()
     messages.add_message(request, messages.SUCCESS, "Club Disbanded!")

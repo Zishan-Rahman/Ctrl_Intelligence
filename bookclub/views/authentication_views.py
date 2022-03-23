@@ -22,7 +22,8 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 import threading
 
-#adapted from https://www.youtube.com/watch?v=Rbkc-0rqSw8
+
+# adapted from https://www.youtube.com/watch?v=Rbkc-0rqSw8
 
 class email_sender(threading.Thread):
 
@@ -73,12 +74,13 @@ def log_out(request):
     logout(request)
     return redirect('landing_page')
 
-#adapted from https://www.youtube.com/watch?v=Rbkc-0rqSw8
+
+# adapted from https://www.youtube.com/watch?v=Rbkc-0rqSw8
 
 def send_verification_email(user, request):
     site = get_current_site(request)
     subject = 'Bookwise: Activate your account'
-    body = render_to_string('activate.html',{
+    body = render_to_string('activate.html', {
         'user': user,
         'domain': site,
         'user_id': urlsafe_base64_encode(force_bytes(user.id)),
@@ -95,7 +97,7 @@ def activate(request, uid, token):
         user = User.objects.get(pk=id)
     except Exception as e:
         user = None
-    
+
     if user and generate_token.check_token(user, token):
         user.is_email_verified = True
         user.save()
@@ -103,10 +105,10 @@ def activate(request, uid, token):
         messages.add_message(request, messages.SUCCESS, "Email verified")
         return redirect(reverse('login'))
 
-    
     return render(request, "reverify_email.html")
 
-#End of adapated code
+
+# End of adapated code
 
 
 @login_prohibited
@@ -121,6 +123,3 @@ def sign_up(request):
     else:
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
-
-
-
