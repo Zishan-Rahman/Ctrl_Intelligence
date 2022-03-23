@@ -44,4 +44,4 @@ class BooksReadTestCase(TestCase):
         self.assertIn(f'<p class="book-pub-year">Published Year: {str(self.book.pub_year)}</p>', html)
 
     def test_add_to_books_read_url(self):
-        self.assertEqual(self.url, '/book_profile/')
+        self.assertEqual(self.url, '/books_read/')
