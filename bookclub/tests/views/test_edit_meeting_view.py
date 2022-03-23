@@ -1,4 +1,5 @@
 """Tests for the edit meeting view."""
+from datetime import datetime, timedelta
 from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
@@ -58,68 +59,48 @@ class EditMeetingViewTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
-    def test_unsuccesful_meeting_update(self):
+    def test_unsuccesful_meeting_update_with_past_date(self):
+        self.form_input['date'] = "2000-01-01"
         self.client.login(email='johndoe@bookclub.com', password='Password123')
-        self.form_input['email'] = 'BAD_email'
-        before_count = User.objects.count()
-        response = self.client.post(self.url, self.form_input)
-        after_count = User.objects.count()
-        self.assertEqual(after_count, before_count)
+        response = self.client.post(self.url, self.form_input, club=self.club, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'edit_meeting.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, ScheduleMeetingForm))
         self.assertTrue(form.is_bound)
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.email, 'johndoe@bookclub.com')
-        self.assertEqual(self.user.first_name, 'John')
-        self.assertEqual(self.user.last_name, 'Doe')
-        self.assertEqual(self.user.public_bio, "Im just an abstract concept!")
-        self.assertEqual(self.user.favourite_genre, "Science fiction")
-        self.assertEqual(self.user.location, "London")
-        self.assertEqual(self.user.age, 39)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        self.assertFalse(Meeting.objects.filter(date=self.form_input['date'], club = self.club).exists())
 
-    def test_unsuccessful_meeting_update_due_to_duplicate_email(self):
+        self.assertFalse(Meeting.objects.filter(date=self.form_input['date'], club = self.club).exists())
+
+    def test_unsuccesful_meeting_update_with_past_time(self):
+        self.form_input['date'] = datetime.now().date()
+        self.form_input['start_time'] = (datetime.now() + timedelta(hours=-2)).time().isoformat(timespec='seconds') #From python documentation https://docs.python.org/3/library/datetime.html#time-objects
         self.client.login(email='johndoe@bookclub.com', password='Password123')
-        self.form_input['email'] = 'janedoe@bookclub.com'
-        before_count = User.objects.count()
-        response = self.client.post(self.url, self.form_input)
-        after_count = User.objects.count()
-        self.assertEqual(after_count, before_count)
+        response = self.client.post(self.url, self.form_input, club=self.club, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'edit_meeting.html')
         form = response.context['form']
         self.assertTrue(isinstance(form, ScheduleMeetingForm))
         self.assertTrue(form.is_bound)
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.email, 'johndoe@bookclub.com')
-        self.assertEqual(self.user.first_name, 'John')
-        self.assertEqual(self.user.last_name, 'Doe')
-        self.assertEqual(self.user.public_bio, "Im just an abstract concept!")
-        self.assertEqual(self.user.favourite_genre, "Science fiction")
-        self.assertEqual(self.user.location, "London")
-        self.assertEqual(self.user.age, 39)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        self.assertFalse(Meeting.objects.filter(date=self.form_input['date'], club = self.club).exists())
 
     def test_succesful_meeting_update(self):
         self.client.login(email='johndoe@bookclub.com', password='Password123')
-        before_count = User.objects.count()
         response = self.client.post(self.url, self.form_input, club=self.club, follow=True)
-        after_count = User.objects.count()
-        self.assertEqual(after_count, before_count)
         response_url = reverse('home')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'home.html')
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.email, 'johndoe2@bookclub.com')
-        self.assertEqual(self.user.first_name, 'John2')
-        self.assertEqual(self.user.last_name, 'Doe2')
-        self.assertEqual(self.user.public_bio, 'New public_bio')
-        self.assertEqual(self.user.favourite_genre, "Science fiction")
-        self.assertEqual(self.user.location, "London")
-        self.assertEqual(self.user.age, 39)
+        self.assertTrue(Meeting.objects.filter(date=self.form_input['date'], club = self.club).exists())
+        
 
     def test_post_meeting_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)

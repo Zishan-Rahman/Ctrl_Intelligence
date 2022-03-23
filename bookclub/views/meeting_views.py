@@ -111,7 +111,11 @@ class MeetingUpdateView(LoginRequiredMixin, UpdateView):
         if form.is_valid():
             Meeting.objects.filter(id=meeting_id).delete()
             form.save(club)
+            self.get_success_url()
             return redirect('home')
+
+
+        messages.add_message(self.request, messages.ERROR, form.errors['__all__'].as_text())
         return render(request, 'edit_meeting.html', {"club": club, "form": form})
 
     def get(self, request, club_id, meeting_id, *args, **kwargs):
