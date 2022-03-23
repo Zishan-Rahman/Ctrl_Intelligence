@@ -146,7 +146,7 @@ class Command(BaseCommand):
             print()
             print("Seed books:")
             self.load_books()
-            print("Books successfully seeded")
+            print("All books have been successfully seeded")
             print()
             create_set_users()
             print('Created set users')
@@ -156,7 +156,7 @@ class Command(BaseCommand):
             print('Seed users:')
             print()
             self.generate_users()
-            print('Users successfully seeded')
+            print('All users have been successfully seeded')
             print()
             print('Seed clubs:')
             print()
@@ -164,7 +164,7 @@ class Command(BaseCommand):
             print('Created set clubs')
             print()
             self.generate_clubs()
-            print('Clubs successfully seeded')
+            print('All clubs have been successfully seeded')
             print()
             print('Seeder has successfully completed')
 
@@ -293,7 +293,7 @@ class Command(BaseCommand):
                 )
                 books.append(book)
                 count += 1
-                percent_complete = float((count / 266745) * 100)
+                percent_complete = float((count / 271380) * 100)
 
                 print(f'[ DONE: {round(percent_complete)}% | {count}/271380 ]', end='\r')
 

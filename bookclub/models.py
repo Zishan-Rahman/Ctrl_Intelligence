@@ -10,7 +10,6 @@ from django.core.validators import RegexValidator, MaxValueValidator, MinValueVa
 from libgravatar import Gravatar
 
 
-
 # books model
 
 class Book(models.Model):
@@ -128,7 +127,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def _follow(self, user):
         user.followers.add(self)
 
-    def _unfollow(self,user):
+    def _unfollow(self, user):
         user.followers.remove(self)
 
     def is_following(self, user):
@@ -156,7 +155,7 @@ class Club(models.Model):
     organisers = models.ManyToManyField(User, related_name="organiser_of")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
     meeting_online = models.BooleanField(unique=False, blank=False, default=True)
-    organiser_owner = models.BooleanField(unique=False, blank = False, default = True)
+    organiser_owner = models.BooleanField(unique=False, blank=False, default=True)
 
     class Meta:
         """Model options."""
@@ -314,7 +313,7 @@ class Meeting(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
-    address = models.CharField(max_length=50)
+    address = models.CharField(max_length=50, default=True)
 
     class Meta:
         """Model options."""
@@ -334,28 +333,28 @@ class Meeting(models.Model):
         return self.address
 
 
-#Chat and Message models adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
+# Chat and Message models adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class Chat(models.Model):
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
-  receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
-  has_unread = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    has_unread = models.BooleanField(default=False)
+
 
 class Message(models.Model):
-  chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
-  sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
-  receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
-  body = models.CharField(max_length=1000)
-  date = models.DateTimeField(default=timezone.now)
-  is_read = models.BooleanField(default=False)
+    chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+    sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    body = models.CharField(max_length=1000)
+    date = models.DateTimeField(default=timezone.now)
+    is_read = models.BooleanField(default=False)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, blank=True, null=True)
 
 
 class Post(models.Model):
-
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
     text = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-
         ordering = ['-created_at']
