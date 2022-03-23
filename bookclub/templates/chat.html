@@ -29,6 +29,9 @@
         {% if message.sender_user == request.user %}
       <div class="sent-message my-3">
         <p>{{ message.body }}</p>
+      {% if message.club %}
+          <a href="{% url 'club_profile' message.club.id %}"></a>
+          {% endif %}
       </div>
     {% elif message.receiver_user == request.user%}
     <div class="received-message my-3">

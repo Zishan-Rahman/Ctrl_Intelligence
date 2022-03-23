@@ -90,6 +90,8 @@ def follow_toggle(request, user_id):
     followee = User.objects.get(id=user_id)
     current_user.toggle_follow(followee)
     return redirect('user_profile', user_id=user_id)
+
+
 def club_util(request):
     user_clubs_list = []
     clubs = Club.objects.all()
@@ -118,6 +120,7 @@ def inviteMessage(request, user_id, club_id):
         receiver_user=receiver,
         body=(
             f"Hi {receiver.first_name}, {request.user.first_name} invited you to join the club {club.name}. To view "
-            f"the club page, please click the link below:"))
+            f"the club page, please click the link below:"),
+        club=club)
     message.save()
     return redirect('user_profile', user_id=user_id)
