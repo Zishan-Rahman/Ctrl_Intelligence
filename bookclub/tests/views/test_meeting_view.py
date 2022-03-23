@@ -33,7 +33,7 @@ class MeetingViewTestCase(TestCase):
             'start_time':self.future_time,
             'address':'123 Road London'
         }
-<<<<<<< HEAD
+
 
     def test_schedule_meeting_url(self):
         self.assertEqual(self.url,'/club_profile/1/meeting/')
@@ -118,8 +118,7 @@ class MeetingViewTestCase(TestCase):
         afterCount = Meeting.objects.all().count()
         self.assertEqual(beforeCount, afterCount)
     
-    """
-=======
+
     # def test_schedule_meeting_url(self):
     #     self.assertEqual(self.url,'/club_profile/1/meeting/')
     # def test_schedule_meeting_uses_correct_template(self):
@@ -194,4 +193,4 @@ class MeetingViewTestCase(TestCase):
     #     self.assertEqual(messages_list[0].level, messages.ERROR)
     #     afterCount = Meeting.objects.all().count()
     #     self.assertEqual(beforeCount, afterCount)
->>>>>>> 272852a95d9252afe537e4c8ca0c0f0299a99251
+

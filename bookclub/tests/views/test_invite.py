@@ -39,3 +39,24 @@ class InviteTestCases(TestCase):
         response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
         html = response.content.decode('utf8')
         self.assertIn('id="Invite"', html)
+
+    def test_user_invite_sent(self):
+        self.client.login(email=self.john.email, password='Password123')
+        self.client.get(reverse('invite_message', kwargs={'user_id': self.jane.id, 'club_id': self.bush_club.id}), follow=True)
+        chat = Chat.objects.get(user=self.john, receiver=self.jane)
+        response = self.client.get(reverse('chat', kwargs={'pk': chat.id}), follow=True)
+        html = response.content.decode('utf-8')
+        self.assertIn("<p>\nHi Jane,\n\nJohn invited you to join the club Bush House Book Club.\n\nTo view the club "
+                      "page, please click the button below:\n\n</p>", html)
+
+    def test_user_invite_sent_has_join_button(self):
+        self.client.login(email=self.john.email, password='Password123')
+        self.client.get(reverse('invite_message', kwargs={'user_id': self.jane.id, 'club_id': self.bush_club.id}),
+                        follow=True)
+        chat = Chat.objects.get(user=self.john, receiver=self.jane)
+        response = self.client.get(reverse('chat', kwargs={'pk': chat.id}), follow=True)
+        html = response.content.decode('utf-8')
+        self.assertIn('<a class="btn float-end" href="/club_profile/1/" style="color:white; background-color: brown; '
+                      'text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>', html)
+
+

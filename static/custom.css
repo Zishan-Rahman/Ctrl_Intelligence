@@ -51,11 +51,12 @@
     float: right;
   }
   .received-message {
-    background-color: rgb(1, 196, 255);
+    background-color: darkslategray;
     color: #fff;
     border-radius: 30px;
     padding: 10px 25px;
     width: 25%;
+    float: left;
     
   }
   .empty-text {
