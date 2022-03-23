@@ -1,56 +1,39 @@
 {% extends 'base_content.html' %}
 {% block content %}
     <div class="container">
-        <div class="row">
-            <div class="col-6">
-
-            </div>
-            <div class="col-3">
-
-            </div>
-
-            <div class="col-3">
-                <div class="text float-end">
-
-                </div>
-            </div>
-        </div>
     <div class="row">
         <div class="col-6">
-
         <h4 style="padding-top: 10px;"><strong>Recommended for {{ request.user.first_name }} {{ request.user.last_name }}</strong></h4>
 
-            <div class="book-table">
-    <table class="table table-hover table-borderless text-light table-dark text-center">
-        <thead>
-      <tr>
-        <th scope="col">
-        <th scope="col">
-      </tr>
-    </thead>
-    <tbody>
-      {% for book in recommendations %}
-      <tr class="clickable-row" data-href="{% url 'book_profile' book.id %}">
-        <td><img src="{{ book.medium_url }}" alt="a"></td>
-        <td><strong>{{ book.title }}</strong></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-      </table>
+        <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel" style="padding-top: 10px;">
+          <div class="carousel-indicators" style="bottom: -2.4rem">
+            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          </div>
+          <div class="carousel-inner">
+            {% for book in recommendations %}
+            {% if forloop.counter == 1%}
+            <div class="carousel-item active" data-bs-interval="5000">
+             <a href="{% url 'book_profile' book.id %}"><img src="{{ book.large_url }}" alt="Image of {{book.title}} " width="25%" height="25%" style="display: block; margin: auto;"></a>
+            </div>
+            {% else %}
+            <div class="carousel-item" data-bs-interval="5000">
+              <a href="{% url 'book_profile' book.id %}"><img src="{{ book.large_url }}" alt="Image of {{book.title}}" width="25%" height="25%" style="display: block; margin: auto;"></a>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
-    </div>
-
-    </div>
-    </div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script>
-  jQuery(document).ready(function($) {
-      $(".clickable-row").click(function() {
-          window.location = $(this).data("href");
-      });
-  });
-</script>
+      </div>
 
 {% endblock %}
 
