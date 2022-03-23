@@ -51,7 +51,7 @@ class KickFromClubViewTestCase(TestCase):
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
-        self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        self.assertEqual(messages_list[0].level, messages.WARNING)
         afterMemberCount = self.bush_club.get_number_of_members()
         self.assertEqual(beforeMemberCount, afterMemberCount + 1)
 
@@ -63,7 +63,6 @@ class KickFromClubViewTestCase(TestCase):
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
-        self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        self.assertEqual(messages_list[0].level, messages.WARNING)
         afterOrganiserCount = self.bush_club.get_number_organisers()
         self.assertEqual(beforeOrganiserCount, afterOrganiserCount + 1)
-    
