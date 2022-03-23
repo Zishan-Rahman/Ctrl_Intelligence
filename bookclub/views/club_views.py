@@ -181,7 +181,8 @@ def new_club(request):  # new club adapted from the chess club project
         if form.is_valid():
             form.save(request.user)
             club_util(request)
-            return redirect('club_list')
+            messages.add_message(request, messages.SUCCESS, "Club has been created!")
+            return redirect('club_selector')
     else:
         form = ClubForm()
     return render(request, 'new_club.html', {'form': form})
