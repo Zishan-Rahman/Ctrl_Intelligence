@@ -25,6 +25,7 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
     pk_url_kwarg = 'club_id'
     context_object_name = 'club'
     ordering = ['-name']
+    paginate_by = settings.USERS_PER_PAGE
 
     def get(self, request, *args, **kwargs):
         """Handle get request, and redirect to book_list if book_id invalid."""
@@ -131,7 +132,7 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
     model = EditClubForm
     template_name = "edit_club.html"
     form_class = EditClubForm
-    
+
 
     def get_object(self, c_pk):
         """Return the object (user) to be updated."""
