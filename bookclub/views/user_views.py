@@ -128,4 +128,7 @@ def inviteMessage(request, user_id, club_id):
         body=body,
         club=club)
     message.save()
+    messages.add_message(request, messages.SUCCESS, "Invite Sent!")
     return redirect('user_profile', user_id=user_id)
+
+
