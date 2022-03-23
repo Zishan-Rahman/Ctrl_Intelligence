@@ -71,8 +71,15 @@ class UsersListView(LoginRequiredMixin, ListView):
 
 
 @login_required
-def user_profile(request, user_id):
+def user_profile(request):
     """ Individual User's Profile Page """
-    user = User.objects.get(id = user_id)
-    current_user = request.user
-    return render(request, 'user_profile.html',{'user': user, 'current_user':current_user})
+    user = User.objects.get(id = request.user.id)
+    currently_reading_books = user.currently_reading_books.all()
+    already_read_books = user.already_read_books.all()
+    return render(request, 'user_profile.html',
+        {
+            'user': user,
+            'currently_reading_books': currently_reading_books,
+            'already_read_books': already_read_books
+        }
+    )
