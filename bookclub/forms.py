@@ -2,11 +2,9 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from bookclub.models import User, Club, Application, Meeting , Post
+from bookclub.models import User, Club, Application, Meeting, Post
 from datetime import datetime
 from django.utils import timezone
-
-
 
 
 class UserForm(forms.ModelForm):
@@ -18,6 +16,7 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email', 'public_bio', 'favourite_genre', 'location', 'age']
         widgets = {'public_bio': forms.Textarea()}
+
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
@@ -74,6 +73,7 @@ class SignUpForm(forms.ModelForm):
         )
         return user
 
+
 class NewPasswordMixin(forms.Form):
     """Form mixing for new_password and password_confirmation fields."""
 
@@ -84,7 +84,7 @@ class NewPasswordMixin(forms.Form):
             regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
             message='Password must contain an uppercase character, a lowercase '
                     'character and a number'
-            )]
+        )]
     )
     password_confirmation = forms.CharField(label='New Password Confirmation', widget=forms.PasswordInput())
 
@@ -191,8 +191,10 @@ class ClubForm(forms.ModelForm):
             meeting_online=self.cleaned_data.get('meeting_type')
         )
 
+
 class ApplicationForm(forms.ModelForm):
     """Form that enables applicants to apply to clubs"""
+
     class Meta:
         model = Application
         fields = "__all__"
@@ -211,25 +213,25 @@ class ApplicationForm(forms.ModelForm):
 class DateInput(forms.DateInput):
     input_type = 'date'
 
+
 class TimeInput(forms.DateInput):
     input_type = 'time'
 
-class ScheduleMeetingForm(forms.ModelForm):
 
+class ScheduleMeetingForm(forms.ModelForm):
     class Meta:
         model = Meeting
         fields = ['date', 'start_time', 'address']
-        widgets = { 'date': DateInput(), 'start_time': TimeInput()}
+        widgets = {'date': DateInput(), 'start_time': TimeInput()}
 
     def __init__(self, club, *args, **kwargs):
         """Construct new form instance with a user instance."""
         self.club = club
         super(ScheduleMeetingForm, self).__init__(**kwargs)
         if self.club != None and self.club.meeting_type() == "in person":
-             self.fields['address'].label = 'Meeting address'
+            self.fields['address'].label = 'Meeting address'
         elif self.club != None and self.club.meeting_type() == "online":
             self.fields['address'].label = 'Meeting link'
-
 
     def clean(self):
         now = timezone.now()
@@ -242,15 +244,20 @@ class ScheduleMeetingForm(forms.ModelForm):
 
     def save(self, club):
         super().save(commit=False)
-        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), club=club, address = self.cleaned_data.get('address'))
+        meeting = Meeting.objects.create(date=self.cleaned_data.get('date'),
+                                         start_time=self.cleaned_data.get('start_time'), club=club,
+                                         address=self.cleaned_data.get('address'))
         return meeting
 
-#Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
+
+# Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ChatForm(forms.Form):
-  email = forms.CharField(label='', max_length=100)
+    email = forms.CharField(label='', max_length=100)
+
 
 class MessageForm(forms.Form):
-  message = forms.CharField(label='', max_length=1000)
+    message = forms.CharField(label='', max_length=1000)
+
 
 class EditClubForm(forms.ModelForm):
     """Form to update clubs."""
@@ -268,8 +275,9 @@ class EditClubForm(forms.ModelForm):
         (False, 'In Person')]
 
     meeting_online = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
-                                                                                       "online based or meets in "
-                                                                                       "person")
+                                                                                         "online based or meets in "
+                                                                                         "person")
+
 
 class PostForm(forms.ModelForm):
     """Form to ask user for post text.
@@ -284,16 +292,3 @@ class PostForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea()
         }
-    #
-    # def save(self , user, club):
-    #     super().save(commit=False)
-    #     # post.author = self.cleaned_data.get('author')
-    #     # post.club = self.cleaned_data.get('club')
-    #     # post.text = self.cleaned_data.get('text')
-    #     post = Post.objects.create(
-    #         author=user,
-    #         club=club,
-    #         text=self.cleaned_data.get('text')
-    #     )
-    #     post.save()
-    #     return post

@@ -7,7 +7,8 @@
       "description": "Bush House Official Book Club!",
       "location": "Strand, London",
       "owner": 1,
-      "meeting_online": true
+      "meeting_online": true,
+      "organiser_owner": true
     }
   },
     {
@@ -18,7 +19,8 @@
       "description": "Somerset House Official Book Club!",
       "location": "Strand, London",
       "owner": 2,
-      "meeting_online": true
+      "meeting_online": true,
+      "organiser_owner": false
     }
   },
   {
@@ -29,7 +31,8 @@
       "description": "Strand House Official Book Club!",
       "location": "Strand, London",
       "owner": 1,
-      "meeting_online": false
+      "meeting_online": false,
+      "organiser_owner": true
     }
   },
   {
@@ -40,7 +43,8 @@
       "description": "Temple House Official Book Club!",
       "location": "Temple, London",
       "owner": 2,
-      "meeting_online": true
+      "meeting_online": true,
+      "organiser_owner": false
     }
   }
 ]
