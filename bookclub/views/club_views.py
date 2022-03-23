@@ -105,18 +105,21 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
     model = EditClubForm
     template_name = "edit_club.html"
     form_class = EditClubForm
+    
 
     def get_object(self, c_pk):
         """Return the object (user) to be updated."""
         club_to_edit = Club.objects.all().get(pk=c_pk)
+        self.pk = c_pk
         return club_to_edit
 
     def get_success_url(self):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Club updated!")
-        return reverse('club_selector')
+        return reverse('club_profile', kwargs={'club_id': self.pk})
 
     def post(self, request, c_pk, *args, **kwargs):
+        self.pk = c_pk
         club_to_edit = Club.objects.all().get(pk=c_pk)
         form = self.form_class(instance=club_to_edit, data=request.POST)
         if form.is_valid():
@@ -124,6 +127,7 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
         return render(request, 'edit_club.html', {"form": form})
 
     def get(self, request, c_pk, *args, **kwargs):
+        self.pk = c_pk
         club_to_edit = Club.objects.all().get(pk=c_pk)
         form = self.form_class(instance=club_to_edit)
         return render(request, 'edit_club.html', {"form": form})
