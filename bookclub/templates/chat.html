@@ -30,12 +30,15 @@
       <div class="sent-message my-3">
         <p>{{ message.body }}</p>
       {% if message.club %}
-          <a href="{% url 'club_profile' message.club.id %}"></a>
+          <a class="btn float-end" href="{% url 'club_profile' message.club.id %}" style="color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>
           {% endif %}
       </div>
     {% elif message.receiver_user == request.user%}
     <div class="received-message my-3">
       <p>{{ message.body }}</p>
+    {% if message.club %}
+          <a class="btn" href="{% url 'club_profile' message.club.id %}"></a>
+          {% endif %}
     </div>
     {% endif %}
     </div>
@@ -46,8 +49,7 @@
       <form method="POST" action="{% url 'create_message' chat.pk %}" enctype="multipart/form-data">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Send" class="btn btn-primary" style="background-color: brown">
-        </div>
+          <button type="submit" class="btn" style="background-color: brown; color: white">Send</button>
       </form>
     </div>
 </div>

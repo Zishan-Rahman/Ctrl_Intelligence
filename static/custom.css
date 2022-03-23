@@ -17,33 +17,21 @@
     font-size: 1.7rem;
   }
 
-  .vertical-center-bottom {
-    margin: 0;
-    position: absolute;
-    top: 65%;
-    -ms-transform: translateY(-65%);
-    transform: translateY(-65%);
-  }
 
   .cover-card {
-    background-color: rgb(43, 42, 42);
+    background-color: black;
     max-width: 35rem;
-    padding-top: 30px;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-bottom: 30px;
     border-radius: 0;
     margin-right: 0;
     margin-left: auto;
+    text-align: center;
+
 
   }
   .cover-card-block {
     opacity: 1
   }
 
-  img {
-    float:"left";
-  }
 
   .inbox-icon-container {
     margin-right: 15px;
