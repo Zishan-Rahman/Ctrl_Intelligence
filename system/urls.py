@@ -63,6 +63,7 @@ urlpatterns = [
     path('club_profile/<int:c_pk>/members/<int:u_pk>/kick', club_views.kick_user_from_club, name='kick_user_from_club'),
     path('club_profile/<int:c_pk>/members/<int:u_pk>/transfer', club_views.transfer_ownership, name='transfer_ownership'),
     path('club_profile/<int:c_pk>/edit/', club_views.ClubUpdateView.as_view(), name='edit_club'),
+    path('club_profile/<int:club_id>/meetings/<int:meeting_id>/edit', meeting_views.MeetingUpdateView.as_view(), name='edit_meeting'),
     path('favourites/', book_views.Favourites.as_view(), name='favourites'),
     path('book_profile/<int:book_id>/favourite', book_views.make_favourite, name="make_favourite"),
     path('book_profile/<int:book_id>/unfavourite', book_views.Unfavourite, name="Unfavourite"),

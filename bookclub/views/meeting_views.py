@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from bookclub.templates import *
 from bookclub.forms import ScheduleMeetingForm
 from django.contrib.auth.decorators import login_required
@@ -10,7 +11,7 @@ from django.http import Http404
 from django.views.generic import ListView
 from bookclub.models import Meeting, Club
 from bookclub.views import club_views
-from django.views.generic.edit import View
+from django.views.generic.edit import View, UpdateView
 from django.core.paginator import Paginator
 
 
@@ -82,4 +83,43 @@ class MeetingScheduler(LoginRequiredMixin, View):
         """Render meeting scheduler form"""
         current_club = Club.objects.get(pk=pk)
         form = ScheduleMeetingForm(club=current_club)
-        return render(self.request, 'schedule_meeting.html', {'form': form, 'pk': pk})
+        return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
+
+class MeetingUpdateView(LoginRequiredMixin, UpdateView):
+    """View to update a scheduled club meeting
+    
+    Adapted from Raisa Ahmed's ProfileUpdateView"""
+    
+    model = ScheduleMeetingForm
+    template_name = "edit_meeting.html"
+    form_class = ScheduleMeetingForm
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        messages.add_message(self.request, messages.SUCCESS, "Meeting updated!")
+        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+    
+    def form_vaild(self, form):
+        club = form.instance.club
+        form.save(club)
+        return super().form_valid(form)
+
+    def post(self, request, club_id, meeting_id, *args, **kwargs):
+        club = Club.objects.get(id=club_id)
+        meeting = Meeting.objects.get(id=meeting_id)
+        form = self.form_class(instance=meeting, club=club, data=request.POST)
+        if form.is_valid():
+            Meeting.objects.filter(id=meeting_id).delete()
+            form.save(club)
+            self.get_success_url()
+            return redirect('home')
+
+
+        messages.add_message(self.request, messages.ERROR, form.errors['__all__'].as_text())
+        return render(request, 'edit_meeting.html', {"club": club, "form": form})
+
+    def get(self, request, club_id, meeting_id, *args, **kwargs):
+        club = Club.objects.get(id=club_id)
+        meeting = Meeting.objects.get(id=meeting_id)
+        form = self.form_class(instance=meeting, club=club)
+        return render(request, 'edit_meeting.html', {"club": club,"form": form})
