@@ -124,4 +124,5 @@ def inviteMessage(request, user_id, club_id):
     receiver_user=receiver,
     body=(f"Hi {receiver.first_name}, {request.user.first_name} invited you to join the club {club.name}. To view the club page, please click the link below: {link} "))
     message.save()
+    messages.add_message(request, messages.SUCCESS, "Invite Sent!")
     return redirect('user_profile', user_id = user_id)
