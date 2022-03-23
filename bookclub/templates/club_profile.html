@@ -133,7 +133,9 @@
     </div>
 
     <div class="col-3">
-
+    {% if current_user == club.owner %}
+        <a class="btn float-end" style='padding: 15px;color:white; margin-bottom: 20px; background-color: brown; text-transform:uppercase; font-size: 14px' href="{% url 'edit_club' c_pk=club.id %}"><i class="bi bi-pencil-square"></i> Edit Club</a>
+    {% endif %}
       <div class="card w-100">
         <div class="card-body">
           <div class="row">
@@ -223,9 +225,6 @@
                   <button type="submit" class="btn btn-default" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-box-arrow-left"></i> Leave</button>
               </form>
               {% elif current_user == club.get_owner %}
-                  <div class="text-center mx-auto w-50">
-                                <a class="btn" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px' href="{% url 'edit_club' c_pk=club.id %}"><i class="bi bi-pencil-square"></i> Edit</a>
-                  </div>
               <form action="{% url 'disband_club' club.id %}" method=post>
                 {% csrf_token %}
                   <button type="submit" class="btn" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-x-octagon"></i> Disband</button>
