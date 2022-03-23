@@ -188,14 +188,12 @@ class Club(models.Model):
     def make_owner(self, user):
         if self.user_level(user) == "Member":
             self.members.remove(user)
-            self.owner = user
-            self.save()
         elif self.user_level(user) == "Organiser":
             self.organisers.remove(user)
-            self.owner = user
-            self.save()
-        else:
-            raise ValueError
+
+        self.members.add(self.owner)
+        self.owner = user
+        self.save()
 
     def make_organiser(self, user):
         if self.user_level(user) == "Member":

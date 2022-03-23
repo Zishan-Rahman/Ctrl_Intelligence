@@ -1,10 +1,13 @@
 """Tests of the application view."""
 from django.conf import settings
+from django.shortcuts import redirect
 from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import *
 from bookclub.tests.helpers import reverse_with_next
 from django.contrib import messages
+
+from bookclub.views.club_views import transfer_ownership
 
 
 class TransferOwnershipViewsTestCase(TestCase):
@@ -46,21 +49,16 @@ class TransferOwnershipViewsTestCase(TestCase):
         self.assertNotIn('<a class="btn btn-default"', html)
         self.assertNotIn('Transfer Ownership', html)
 
+    
     def test_successful_transfer_of_ownership(self):
-        self.client.login(email=self.john.email, password='Password123')
-        beforeOwner = self.bush_club.get_owner()
-        print(self.bush_club.get_organisers())
-        print(self.bush_club.get_members())
-        print(self.jane.id)
-        print(beforeOwner)
-        response = self.client.get('/club_profile/1/members/3/transfer', follow=True)
-        redirect_url = '/club_profile/1/members'
+        self.client.login(email=self.john.email, password="Password123")
+        before_owner = self.bush_club.get_owner()
+        response = self.client.get(reverse(transfer_ownership, kwargs={'c_pk': self.bush_club.id, 'u_pk': self.jane.id}), follow=True)
+        self.bush_club.refresh_from_db()
+        redirect_url = f"/club_profile/{self.bush_club.id}/members"
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
-        afterOwner = self.bush_club.get_owner()
-        print(afterOwner)
-        print(self.bush_club.get_organisers())
-        print(self.bush_club.get_members())
-        self.assertNotEqual(beforeOwner, afterOwner)
+        after_owner = self.bush_club.get_owner()
+        self.assertNotEqual(before_owner, after_owner)
