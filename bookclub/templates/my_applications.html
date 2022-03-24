@@ -6,12 +6,27 @@
         <div class="col-12">
    <body>
       {% if not applications %}
-      <h3>You have no pending applications.</h3>
+          <div class="row mt-5">
+        <div class="col-3">
+
+        </div>
+        <div class="col-6 text-center">
+         <h5 class="text-muted">You have not made any applications yet.</h5>
+            <br>
+        <a class="btn" style="background-color: brown; text-transform: uppercase; color: white" href="{% url 'club_list' %}">View Clubs</a>
+        </div>
+        <div class="col-3">
+
+        </div>
+
+    </div>
       {% else %}
-      <table class="table">
-        {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
-        <thead class="table-light">
+          <h2 class="text-left"><strong>My Applications</strong></h2>
+          <h5 class="text-muted">Applications you have made to other clubs</h5>
+      <table class="table table-hover table-borderless">
+        <thead class="table">
           <tr>
+              <th></th>
             <th scope="col" style="width:25%">Club Applying To</th>
             <th scope="col" style="width:50%">Description</th>
             <th scope="col">Location</th>
@@ -19,6 +34,7 @@
         </thead>
     {% for a in page_obj %}
       <tr>
+        <td> <img src="{{ a.club.gravatar }}" class="rounded-circle"></td>
         <td>{{ a.club.name }}</td>
         <td>{{ a.club.description }}</td>
         <td>{{ a.club.location }}</td>
