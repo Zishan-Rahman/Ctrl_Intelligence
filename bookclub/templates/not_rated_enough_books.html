@@ -14,20 +14,16 @@
                     {{request.user.get_number_of_ratings}} books
                 {% endif %}
             </h6>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 p-5">
-            <form method="GET" action="{% url 'book_list' %}">
-                <button class="btn" style="background-color: brown; color: white" type="submit">Give me some books to rate!</button>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 p-5">
-            <form method="GET" action="{% url 'home' %}">
-                <button class="btn" style="background-color: brown; color: white" type="submit">No thanks, I'll rate books later</button>
-            </form>
+            <p>
+                <form method="GET" action="{% url 'book_list' %}">
+                    <button class="btn" style="background-color: brown; color: white" type="submit">Give me some books to rate!</button>
+                </form>
+            </p>
+            <p>
+                <form method="GET" action="{% url 'home' %}">
+                    <button class="btn" style="background-color: brown; color: white" type="submit">No thanks, I'll rate books later</button>
+                </form>
+            </p>
         </div>
     </div>
 </div>
