@@ -8,7 +8,7 @@
       "location": "Strand, London",
       "owner": 1,
       "meeting_online": true,
-      "organiser_owner": true
+      "organiser_owner": false
     }
   },
     {
@@ -20,7 +20,7 @@
       "location": "Strand, London",
       "owner": 2,
       "meeting_online": true,
-      "organiser_owner": false
+      "organiser_owner": true
     }
   },
   {

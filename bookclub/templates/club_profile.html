@@ -26,7 +26,7 @@
 
                     {% if current_user == club.owner%}
                             <a class="btn float-end" href="{% url 'schedule_meeting' club.id %}" style="padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
-                    {% elif current_user in club.get_organisers and club.organiser_has_owner_privilege  %}
+                    {% elif current_user in club.get_organisers and club.organiser_owner  %}
                           <a class="btn float-end" href="{% url 'schedule_meeting' club.id %}" style="padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
                     {% endif %}
 
@@ -95,7 +95,7 @@
                         <button type="button" class="btn float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
                             <i class="bi bi-chat-square-text"></i> New Post
                         </button>
-                    {% elif current_user in club.get_organisers and club.organiser_has_owner_privilege  %}
+                    {% elif current_user in club.get_organisers and club.organiser_owner  %}
                         <button type="button" class="btn float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
                             <i class="bi bi-chat-square-text"></i> New Post
                         </button>

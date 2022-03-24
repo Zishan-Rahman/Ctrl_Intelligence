@@ -188,7 +188,8 @@ class ClubForm(forms.ModelForm):
             description=self.cleaned_data.get('description'),
             location=self.cleaned_data.get('location'),
             owner=user,
-            meeting_online=self.cleaned_data.get('meeting_type')
+            meeting_online=self.cleaned_data.get('meeting_type'),
+            organiser_owner=self.cleaned_data.get('organiser_has_owner_privileges')
         )
 
 
@@ -266,7 +267,7 @@ class EditClubForm(forms.ModelForm):
         """Form options."""
 
         model = Club
-        fields = ['name', 'description', 'location', 'meeting_online']
+        fields = ['name', 'description', 'location', 'meeting_online', 'organiser_owner']
         widgets = {'description': forms.Textarea()}
 
     CHOICES = [
@@ -274,9 +275,15 @@ class EditClubForm(forms.ModelForm):
         (True, 'Online'),
         (False, 'In Person')]
 
+    ORGANISER_OWNER_CHOICES = [
+        (True, 'Organiser has greater privileges'),
+        (False, 'Organiser does not have greater privileges')
+    ]
+
     meeting_online = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
                                                                                          "online based or meets in "
                                                                                          "person")
+    organiser_owner = forms.ChoiceField(choices=ORGANISER_OWNER_CHOICES)
 
 
 class PostForm(forms.ModelForm):

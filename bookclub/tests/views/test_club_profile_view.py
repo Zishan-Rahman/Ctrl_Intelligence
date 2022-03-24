@@ -16,10 +16,13 @@ class ClubProfileTest(TestCase, LogInTester):
                 'bookclub/tests/fixtures/default_posts.json']
 
     def setUp(self):
-        self.john = User.objects.get(email='johndoe@bookclub.com')
+        self.john = User.objects.get(pk=1)
         self.jane = User.objects.get(pk=2)
         self.joe = User.objects.get(pk=3)
-        self.bush_club = Club.objects.get(name='Bush House Book Club')
+        self.sam = User.objects.get(pk=4)
+        self.bush_club = Club.objects.get(pk=1)
+        self.somerset_club = Club.objects.get(pk=2)
+        self.temple_club = Club.objects.get(pk=4)
         self.bush_club.make_member(self.jane)
         self.url = reverse('club_profile', kwargs={'club_id': self.bush_club.id})
         self.post_bush_club = Post.objects.get(pk=1)
@@ -225,6 +228,14 @@ class ClubProfileTest(TestCase, LogInTester):
                          f'background-color: brown; text-transform:uppercase; font-size: 14px\' '
                          f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
 
+    def test_club_member_cannot_see_edit_button(self):
+        self.client.login(email=self.jane.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertNotIn(f' <a class="btn float-end" style=\'padding: 15px;color:white; margin-bottom: 20px; '
+                         f'background-color: brown; text-transform:uppercase; font-size: 14px\' '
+                         f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
+
     def test_club_profile_view_has_feed_view_button_for_owner(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
@@ -245,9 +256,74 @@ class ClubProfileTest(TestCase, LogInTester):
         html = response.content.decode('utf8')
         self.assertIn(f'<a href="/club_profile/1/feed/" style="text-decoration: none;">View All</a>', html)
 
+    """Test the owner-organiser privilege mechanism"""
 
+    def test_club_profile_view_when_owner_organiser_true_post_button(self):
+        self.somerset_club.make_member(self.sam)
+        self.somerset_club.make_organiser(self.sam)
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button type="button" class="btn float-end" data-bs-toggle="modal" '
+                      f'data-bs-target="#staticBackdrop" style=\'padding-top: 15px; padding-bottom: 15px; '
+                      f'color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'>\n          '
+                      f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
 
-        # ADD TESTS CHECKING THE OWNER-ORGANISER PRVILEGES
+    def test_club_profile_view_when_owner_organiser_false_post_button(self):
+        self.bush_club.make_member(self.sam)
+        self.bush_club.make_organiser(self.sam)
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
+        html = response.content.decode('utf8')
+        self.assertNotIn(f'<button type="button" class="btn float-end" data-bs-toggle="modal" '
+                         f'data-bs-target="#staticBackdrop" style=\'padding-top: 15px; padding-bottom: 15px; '
+                         f'color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'>\n '
+                         f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
+
+    def test_club_profile_view_when_owner_organiser_true_schedule_button(self):
+        self.somerset_club.make_member(self.sam)
+        self.somerset_club.make_organiser(self.sam)
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
+        html = response.content.decode('utf8')
+        self.assertIn(f'<a class="btn float-end" href="/club_profile/2/meeting/" style="padding-top: 15px; '
+                      f'padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; '
+                      f'font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>', html)
+
+    def test_club_profile_view_when_owner_organiser_false_schedule_button(self):
+        self.bush_club.make_member(self.sam)
+        self.bush_club.make_organiser(self.sam)
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
+        html = response.content.decode('utf8')
+        self.assertNotIn(f'<a class="btn float-end" href="/club_profile/2/meeting/" style="padding-top: 15px; '
+                         f'padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; '
+                         f'font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>', html)
+
+    """ Test to check whether some posts and meetings appear on club profile page """
+
+    def test_club_profile_view_has_posts(self):
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
+        html = response.content.decode('utf8')
+        self.assertIn(f'<h6 class="card-title text-left"><strong>This is a Bush House Book Club Post</strong></h6>',
+                      html)
+
+    def test_club_profile_view_does_not_display_other_club_posts(self):
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
+        html = response.content.decode('utf8')
+        self.assertNotIn(f'<h6 class="card-title text-left"><strong>This is a Bush House Book Club Post</strong></h6>',
+                         html)
+
+    def test_club_profile_view_displays_correct_message_when_no_posts(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
+        html = response.content.decode('utf8')
+        self.assertIn(f'<p class="text-muted"><strong>{self.temple_club.name}</strong> does not have any posts</p>',
+                      html)
+
+    def test_club_profile_view_has_meeting(self):
 
 
     def _is_logged_in(self):
