@@ -4,12 +4,19 @@
     <div class="row">
         <div class="col-md-12 p-5">
             <h3>You must rate 10 books to get better recommendations</h3>
-            <h6>You have rated {{request.user.get_number_of_ratings}} books</h6>
+            <h6>
+                You have rated {{request.user.get_number_of_ratings}}
+                {% if request.user.get_number_of_ratings == 1 %}
+                    book
+                {% else %}
+                    books
+                {% endif %}
+            </h6>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12 p-5">
-            <form method="GET" action="{% url 'books' %}">
+            <form method="GET" action="{% url 'book_list' %}">
                 <button class="btn" style="background-color: brown; color: white" type="submit">Give me some books to rate!</button>
             </form>
         </div>
