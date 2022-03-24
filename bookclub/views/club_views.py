@@ -212,7 +212,8 @@ def new_club(request):  # new club adapted from the chess club project
         if form.is_valid():
             form.save(request.user)
             club_util(request)
-            return redirect('club_list')
+            messages.add_message(request, messages.SUCCESS, "Club has been created!")
+            return redirect('club_selector')
     else:
         form = ClubForm()
     return render(request, 'new_club.html', {'form': form})
@@ -244,7 +245,8 @@ def club_profile(request, club_id):
 
     current_user = request.user
     is_owner = club.user_level(current_user) == "Owner"
-    return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner})
+    return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner,
+                                                 'posts': posts, 'meetings': meetings, 'form': form})
 
 
 @login_required

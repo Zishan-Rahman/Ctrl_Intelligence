@@ -1,12 +1,11 @@
-#adapted from clucker
+# adapted from clucker
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from bookclub.models import Post, User , Club
+from bookclub.models import Post, User, Club
 
 
 class PostTest(TestCase):
-
     fixtures = ["bookclub/tests/fixtures/default_users.json",
                 "bookclub/tests/fixtures/default_clubs.json"]
 
@@ -17,7 +16,7 @@ class PostTest(TestCase):
         self.post = Post(
             author=self.user_one,
             text="example",
-            club = self.club_bush_house
+            club=self.club_bush_house
         )
 
     def test_valid_message(self):
@@ -40,7 +39,3 @@ class PostTest(TestCase):
         self.post.text = 'x' * 281
         with self.assertRaises(ValidationError):
             self.post.full_clean()
-
-
-
-

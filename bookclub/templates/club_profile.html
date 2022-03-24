@@ -26,7 +26,7 @@
 
                     {% if current_user == club.owner%}
                             <a class="btn float-end" href="{% url 'schedule_meeting' club.id %}" style="padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
-                    {% elif current_user in club.get_organisers and club.organiser_has_owner_privilege  %}
+                    {% elif current_user in club.get_organisers and club.organiser_owner  %}
                           <a class="btn float-end" href="{% url 'schedule_meeting' club.id %}" style="padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
                     {% endif %}
 
@@ -66,7 +66,7 @@
             <div class="row">
             <div class="col">
                 <br>
-              <p class="text-muted">{{ club.name }} does not have any meetings!</p>
+              <p class="text-muted"><strong>{{ club.name }}</strong> does not have any meetings</p>
             </div>
             </div>
 
@@ -95,7 +95,7 @@
                         <button type="button" class="btn float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
                             <i class="bi bi-chat-square-text"></i> New Post
                         </button>
-                    {% elif current_user in club.get_organisers and club.organiser_has_owner_privilege  %}
+                    {% elif current_user in club.get_organisers and club.organiser_owner  %}
                         <button type="button" class="btn float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding-top: 15px; padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
                             <i class="bi bi-chat-square-text"></i> New Post
                         </button>
@@ -125,7 +125,7 @@
         <div class="row">
             <div class="col text-center">
                 <br>
-              <p class="text-muted">{{ club.name }} does not have any posts!</p>
+              <p class="text-muted"><strong>{{ club.name }}</strong> does not have any posts</p>
             </div>
             </div>
 
@@ -133,7 +133,9 @@
     </div>
 
     <div class="col-3">
-
+    {% if current_user == club.owner %}
+        <a class="btn float-end" style='padding: 15px;color:white; margin-bottom: 20px; background-color: brown; text-transform:uppercase; font-size: 14px' href="{% url 'edit_club' c_pk=club.id %}"><i class="bi bi-pencil-square"></i> Edit Club</a>
+    {% endif %}
       <div class="card w-100">
         <div class="card-body">
           <div class="row">
@@ -197,6 +199,24 @@
           </div>
         </div>
       </div>
+    {% if club.organiser_owner %}
+    <div class="card w-100">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-3">
+
+
+              <h6 class="card-title"><i class="bi bi-check-circle" style="color: #0d6ffd"></i></h6>
+            </div>
+
+            <div class="col">
+              <h6 class="card-title" style="color: #0d6ffd">Organiser Privileges</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
 
     <br>
 
@@ -223,7 +243,6 @@
                   <button type="submit" class="btn btn-default" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-box-arrow-left"></i> Leave</button>
               </form>
               {% elif current_user == club.get_owner %}
-              <td><a class="btn btn-default" href="{% url 'edit_club' c_pk=club.id %}"><span class="btn btn-dark" style="background-color: brown">Edit</span></a></td>
               <form action="{% url 'disband_club' club.id %}" method=post>
                 {% csrf_token %}
                   <button type="submit" class="btn" id="leave-button" style='padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-x-octagon"></i> Disband</button>

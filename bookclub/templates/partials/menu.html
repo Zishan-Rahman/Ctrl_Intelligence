@@ -3,30 +3,31 @@
 
       <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="books-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Browse
+        Browse <i class="bi bi-globe"></i>
       </a>
       <ul class="dropdown-menu" aria-labelledby="user-account-dropdown">
-          <li><a class="dropdown-item" href="{% url 'book_list' %}">View all Books</a></li>
+          <li><a class="dropdown-item" href="{% url 'book_list' %}">All Books</a></li>
 
-          <li><a class="dropdown-item" href="{% url 'club_list' %}">View all Clubs</a></li>
-          <li><a class="dropdown-item" href="{% url 'user_list' %}">View all Users</a></li>
+          <li><a class="dropdown-item" href="{% url 'club_list' %}">All Clubs</a></li>
+          <li><a class="dropdown-item" href="{% url 'user_list' %}">All Users</a></li>
 
       </ul>
     </li>
 
       <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="clubs-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Manage
+        Manage <i class="bi bi-grid-1x2"></i>
       </a>
       <ul class="dropdown-menu dropdown-menu" aria-labelledby="user-account-dropdown">
+       <li><a class="dropdown-item" href="{% url 'new_club' %}">Create Club</a></li>
         <li><a class="dropdown-item" href="{% url 'club_selector' %}">My Clubs</a></li>
-        <li><a class="dropdown-item" href="{% url 'favourites' %}">Favourite Books</a></li>
+        <li><a class="dropdown-item" href="{% url 'favourites' %}">Favourites</a></li>
         <li><a class="dropdown-item" href="{% url 'applications' %}">Applications</a></li>
       </ul>
     </li>
 
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'inbox' %}">Inbox</a>
+      <a class="nav-link" href="{% url 'inbox' %}">Inbox <i class="bi bi-inboxes"></i></a>
     </li>
 
   </ul>
@@ -55,8 +56,8 @@
         <i class="bi bi-person-square"></i> {{request.user.first_name}} {{request.user.last_name}}
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-account-dropdown">
-        <li><a class="dropdown-item" href="{% url 'profile' %}">My profile</a></li>
-        <li><a class="dropdown-item" href="{% url 'my_applications' %}">My applications</a></li>
+        <li><a class="dropdown-item" href="{% url 'profile' %}">View profile</a></li>
+        <li><a class="dropdown-item" href="{% url 'my_applications' %}">Track applications</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit profile</a></li>
         <li><a class="dropdown-item" href="{% url 'password' %}">Edit password</a></li>
