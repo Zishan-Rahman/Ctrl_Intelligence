@@ -2,9 +2,11 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from bookclub.models import User, Club, Application, Meeting
+from bookclub.models import User, Club, Application, Meeting , Post
 from datetime import datetime
 from django.utils import timezone
+
+
 
 
 class UserForm(forms.ModelForm):
@@ -157,7 +159,7 @@ class ApplicantForm(forms.Form):
 class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
-        fields = ['name', 'description', 'location', 'meeting_type']
+        fields = ['name', 'description', 'location', 'meeting_type', 'organiser_has_owner_privilege']
         widgets = {"description": forms.Textarea()}
 
     CHOICES = [
@@ -168,6 +170,12 @@ class ClubForm(forms.ModelForm):
     meeting_type = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
                                                                                        "online based or meets in "
                                                                                        "person")
+
+    CHOICES1 = [
+        (True, 'Yes'),
+        (False, 'No')]
+
+    organiser_has_owner_privilege = forms.ChoiceField(choices=CHOICES1, widget=forms.Select())
 
     def clean(self):
         super().clean()
@@ -210,8 +218,8 @@ class ScheduleMeetingForm(forms.ModelForm):
 
     class Meta:
         model = Meeting
-        fields = ['date', 'time', 'address']
-        widgets = { 'date': DateInput(), 'time': TimeInput(),}
+        fields = ['date', 'start_time', 'address']
+        widgets = { 'date': DateInput(), 'start_time': TimeInput()}
 
     def __init__(self, club, *args, **kwargs):
         """Construct new form instance with a user instance."""
@@ -226,15 +234,66 @@ class ScheduleMeetingForm(forms.ModelForm):
     def clean(self):
         now = timezone.now()
         date = self.cleaned_data['date']
-        time = self.cleaned_data['time']
+        start_time = self.cleaned_data['start_time']
         if date < datetime.now().date():
             raise forms.ValidationError("The meeting cannot be in the past!")
-        elif date == datetime.now().date() and time < datetime.now().time():
+        elif date == datetime.now().date() and start_time < datetime.now().time():
             raise forms.ValidationError("The meeting cannot be in the past!")
 
     def save(self, club):
         super().save(commit=False)
-        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), time = self.cleaned_data.get('time'), club=club, address = self.cleaned_data.get('address'))
+        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), club=club, address = self.cleaned_data.get('address'))
+        return meeting
 
+#Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
+class ChatForm(forms.Form):
+  email = forms.CharField(label='', max_length=100)
 
+class MessageForm(forms.Form):
+  message = forms.CharField(label='', max_length=1000)
 
+class EditClubForm(forms.ModelForm):
+    """Form to update clubs."""
+
+    class Meta:
+        """Form options."""
+
+        model = Club
+        fields = ['name', 'description', 'location', 'meeting_online']
+        widgets = {'description': forms.Textarea()}
+
+    CHOICES = [
+        (None, 'Choose meeting type'),
+        (True, 'Online'),
+        (False, 'In Person')]
+
+    meeting_online = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
+                                                                                       "online based or meets in "
+                                                                                       "person")
+
+class PostForm(forms.ModelForm):
+    """Form to ask user for post text.
+    The post author must be by the post creator.
+    """
+
+    class Meta:
+        """Form options."""
+
+        model = Post
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea()
+        }
+    #
+    # def save(self , user, club):
+    #     super().save(commit=False)
+    #     # post.author = self.cleaned_data.get('author')
+    #     # post.club = self.cleaned_data.get('club')
+    #     # post.text = self.cleaned_data.get('text')
+    #     post = Post.objects.create(
+    #         author=user,
+    #         club=club,
+    #         text=self.cleaned_data.get('text')
+    #     )
+    #     post.save()
+    #     return post

@@ -1,0 +1,57 @@
+{% extends 'base_content.html' %}
+{% block content %}
+  <div class="container">
+    <div class="row">
+        <div>
+            <a class="btn btn-default right" href="{% url 'inbox' %}"><span class="btn btn-dark" style="float: right; background-color: brown">Back</span></a>
+        </div>
+      <div class="card col-md-12 mt-5 p-3 shadow-sm">
+        
+        <h5>
+            {%if request.user == chat.receiver%}
+              {{ chat.user }}
+            {%else%}
+              {{ chat.receiver }}
+            {%endif%}
+        </h5>
+      </div>
+    </div>
+    {% if message_list.all.count == 0 %}
+    <div class="row my-5">
+      <div class="col-md-12">
+        <p class="empty-text">No Messages</p>
+      </div>
+    </div>
+    {% endif %}
+    {% for message in message_list %}
+    <div class="row">
+      <div class="col-md-12 my-1">
+        {% if message.sender_user == request.user %}
+      <div class="sent-message my-3">
+        <p>{{ message.body }}</p>
+      {% if message.club %}
+          <a class="btn float-end" href="{% url 'club_profile' message.club.id %}" style="color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>
+          {% endif %}
+      </div>
+    {% elif message.receiver_user == request.user%}
+    <div class="received-message my-3">
+      <p>{{ message.body }}</p>
+    {% if message.club %}
+          <a class="btn float-end" href="{% url 'club_profile' message.club.id %}" style="color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>
+          {% endif %}
+    </div>
+    {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+  <div class="row">
+    <div class="card col-md-12 p-3 shadow-sm">
+      <form method="POST" action="{% url 'create_message' chat.pk %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include 'partials/bootstrap_form.html' with form=form %}
+          <button type="submit" class="btn" style="background-color: brown; color: white">Send</button>
+      </form>
+    </div>
+</div>
+</div>
+{% endblock content %}

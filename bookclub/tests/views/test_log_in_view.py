@@ -103,6 +103,7 @@ class LogInViewTestCase(TestCase, LogInTester):
         redirect_url = reverse('home')
         form_input = {'email': self.user.email, 'password': 'Password123', 'next': redirect_url }
         response = self.client.post(self.url, form_input, follow=True)
+        
         self.assertTrue(self._is_logged_in())
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'home.html')
@@ -138,3 +139,19 @@ class LogInViewTestCase(TestCase, LogInTester):
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.ERROR)
+
+    def test_valid_login_by_unverified_user(self):
+        self.user.is_email_verified = False
+        self.user.save()
+        form_input = {'email': 'johndoe@bookclub.com', 'password': 'Password123'}
+        response = self.client.post(self.url, form_input, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'login.html')
+        form = response.context['form']
+        self.assertTrue(isinstance(form, LogInForm))
+        self.assertFalse(form.is_bound)
+        self.assertFalse(self._is_logged_in())
+        message_list = list(response.context['messages'])
+        self.assertEqual(len(message_list), 1)
+        self.assertEqual(message_list[0].level, messages.ERROR)
+        self.assertEqual(message_list[0].message, "Email is not verified, please check your inbox")

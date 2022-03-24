@@ -1,38 +1,139 @@
 {% extends 'base_content.html' %}
 {% block content %}
-
-<div class="container">
-  <div class="row">
+<div class="container mt-3">
+  <div class="row content">
+    <div class="col-12">
+      <center><img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}"
+          class="rounded-circle profile-image"></center>
+      <div class="profile-text">
+        <center>
+          <h3 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h3>
+          <p class="profile-email">{{ user.email }}</p>
+        </center>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row content">
     <div class="col-3">
-      <h6 style="background-color: brown; padding: 10px; color: white;text-align: center;">Current Reads</h6>
-        <img src="{{ currently_reading_books.1.medium_url }}"/>
-        <p>{{ current_reads.1.title }}</p>
-        <img src="{{ currently_reading_books.2.medium_url }}"/>
-        <p>{{ current_reads.2.title }}</p>
-        <a href="/current_reads/">See More</a>
-      <hr>
+      <center>
+        <p class="profile-ps">Favourite Genre: {{ user.favourite_genre }}</p>
+        <p class="profile-name">Location: {{ user.location }}</p>
+        <p class="profile-name">Age: {{ user.age }}</p>
+        <p class="follow-user">
+        <form action="{% url 'follow_toggle' user.id %}" method='post'>
+          {% csrf_token %}
+          <p class=" profile-statistics">
+            <span>
+              <b>{{user.followee_count}}</b> Following
+              &emsp;
+              <b>{{user.follower_count}}</b> Followers
+              {%if followable %}
+              {% if following %}
+              <button class='btn btn-secondary'>Unfollow</button>
+              {% else %}
+              <button class='btn btn-primary'>Follow</button>
+              {% endif %}
+              {% endif %}
+            </span>
+          </p>
+        </form>
+      </center>
+      <center>
+        <button id="Invite" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="background-color: brown; color: white">
+            Invite
+      </button>
+
+      <div class="modal fade" id="exampleModal_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Invite to Club
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <body>
+           <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp
+           <table id="myTable" class="table">
+             <thead class="table-light">
+               <tr>
+                 <th scope="col"></th>
+                 <th scope="col">Name</th>
+                 <th scope="col">Invite</th>
+               </tr>
+             </thead>
+           <tr>
+             {% for entry in user_clubs %}
+             <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
+               <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
+               <td>{{ entry.name }}</td>
+               <td><a class="btn" href="{% url 'invite_message' user.id entry.id %}" style="background-color: brown; color: white">Invite</a></td>
+             </tr>
+             {% endfor %}
+       </table>
+
+
+        </body>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      </center>
+    </div>
+    <div class="col-3">
+        <h6 style="background-color: brown; padding: 10px; color: white;text-align: center;">Current Reads</h6>
+          <img src="{{ currently_reading_books.1.medium_url }}"/>
+          <p>{{ currently_reading_books.1.title }}</p>
+          <img src="{{ currently_reading_books.2.medium_url }}"/>
+          <p>{{ currently_reading_books.2.title }}</p>
+          <a href="/current_reads/">See More</a>
+    </div>
+    <div class="col-3">
       <h6 style= "background-color: brown; padding: 10px; color: white;text-align: center;">Books Read</h6>
         <img src="{{ already_read_books.1.medium_url }}"/>
-        <p>{{ books_read.1.title }}</p>
+        <p>{{ already_read_books.1.title }}</p>
         <img src="{{ already_read_books.2.medium_url }}"/>
-        <p>{{ books_read.2.title }}</p>
+        <p>{{ already_read_books.2.title }}</p>
         <a href="/books_read/">See More</a>
     </div>
-    <div class="col-7" text-center >
-        <img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}" class="rounded-circle profile-image"
-        style="float:left;">
-        <h2 class="profile-name" style= "text-align: center;">{{ user.first_name }} {{ user.last_name }} </h2>
-        <p class="profile-email" style= "text-align: center;">{{ user.email }}</p>
-        <p class="profile-age" style= "text-align: center;">Age: {{ user.age }}</p>
-        <br> <p Public Bio </p> <hr>
-        <p class="profile-bio">{{ user.public_bio }}</p>
-        <p class="profile-favourite_genre">Favourite Genre: {{ user.favourite_genre }}</p>
-        <p class="profile-location">Location: {{ user.location }}</p>
-
   </div>
-  <div class="col-3">
-
-  </div>
- </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $('#txt_searchall').keyup(function(){
+    var search = $(this).val();
+    $('table tbody tr').hide();
+    var len = $('table tbody tr:not(.notfound) td:contains("'+search+'")').length;
+    if(len > 0){
+      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
+        $(this).closest('tr').show();
+      });
+    }else{
+      $('.notfound').show();
+    }
+  });
+  $('#txt_name').keyup(function(){
+    var search = $(this).val();
+    $('table tbody tr').hide();
+    var len = $('table tbody tr:not(.notfound) td:nth-child(2):contains("'+search+'")').length;
+    if(len > 0){
+      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
+         $(this).closest('tr').show();
+      });
+    }else{
+      $('.notfound').show();
+    }
+  });
+});
+$.expr[":"].contains = $.expr.createPseudo(function(arg) {
+   return function( elem ) {
+     return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+   };
+});
+</script>
 {% endblock %}

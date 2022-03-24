@@ -7,22 +7,41 @@
             <h1>Members of {{ club.get_name }}</h1>
             <div class="book-table">
                 {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
-                <table class="table table-striped">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col"></th>
                             <th scope="col">Name</th>
                             <th scope="col">Bio</th>
                             <th scope="col">Favourite Genre</th>
+                            <th scope="col">User Level</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for member in page_obj %}
-                            <tr>
-                                <td><a href="{% url 'user_profile' member.id %}"><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></a></td>
+                            <tr class="clickable-row" data-href="{% url 'user_profile' member.id %}">
+                                <td><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></td>
                                 <td>{{member.first_name}} {{member.last_name}}</td>
                                 <td>{{member.public_bio}}</td>
                                 <td>{{member.favourite_genre}}</td>
+                                {% if member in club.get_members%}
+                                  <td>Member</td>
+                                  {% if is_owner  %}
+                                    <td><a class="btn btn-default" href="{% url 'promote_member_to_organiser' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: green">Promote</span></a></td>
+                                    <td><a class="btn btn-default" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: brown">Kick</span></a></td>
+                                    <td><a class="btn btn-default" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: blue">Transfer Ownership</span></a></td>
+                                    {%endif%}
+                                    {% elif member in club.get_organisers %}
+                                  <td>Organiser</td>
+                                  {% if is_owner  %}
+                                     <td><a class="btn btn-default" href="{% url 'demote_organiser_to_member' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: red">Demote</span></a></td>
+                                     <td><a class="btn btn-default" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: brown">Kick</span></a></td>
+                                     <td><a class="btn btn-default" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: blue">Transfer Ownership</span></a></td>
+                                     {%endif%}
+                                     {% else %}
+                                  <td>Owner</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -32,4 +51,12 @@
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+  jQuery(document).ready(function($) {
+      $(".clickable-row").click(function() {
+          window.location = $(this).data("href");
+      });
+  });
+</script>
 {% endblock %}

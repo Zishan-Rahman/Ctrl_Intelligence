@@ -1,0 +1,14 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container mt-3">
+  <div class="row content">
+    <h1>Edit Meeting Details</h1>
+    <h4>Club: {{ club.name }}</h4>
+    <form method="post">
+        {% csrf_token %}
+        {% include 'partials/bootstrap_form.html' with form=form %}
+        <input type="submit" value="Proceed" class="btn btn-primary" style="background-color: brown">
+    </form>
+  </div>
+</div>
+{% endblock %}

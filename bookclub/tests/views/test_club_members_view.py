@@ -37,8 +37,9 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
         html = response.content.decode('utf8')
         self.assertIn(f'<h1>Members of {self.club.name}</h1>', html)
 
+
     def test_club_members_list_view_contains_user_details(self):
-        """Test some test users' details to see if they actually show up at all."""
+        '''Test some test users' details to see if they actually show up at all.'''
         self.client.login(email=self.user.email, password="Password123")
         self._create_test_club_members(settings.USERS_PER_PAGE - 1) # Total: 10 test users
         response = self.client.get(self.url)
@@ -46,22 +47,21 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
         self.assertTrue(self._is_logged_in())
         self.assertEqual(len(response.context['page_obj']), settings.USERS_PER_PAGE)
         html = response.content.decode('utf8')
-        """Test the club owner's details (they should show up)."""
-        self.assertIn(f'<tr>', html)
-        self.assertIn(f'<td><a href="/user_profile/{self.user.id}/"><img src=', html)
-        self.assertIn(f'alt="Gravatar of {self.user.get_full_name()}" class="rounded-circle" ></a></td>', html)
+        '''Test the club owner's details (they should show up).'''
+        self.assertIn(f'alt="Gravatar of {self.user.get_full_name()}" class="rounded-circle" ></td>', html)
         self.assertIn(f'<td>{self.user.get_full_name()}</td>', html)
         self.assertIn(f'<td>{self.user.get_bio()}</td>', html)
         self.assertIn(f'<td>{self.user.get_favourite_genre()}</td>', html)
-        self.assertIn(f'</tr>', html)
-        """Test the details of the 9 test users created earlier."""
+        self.assertIn(f'<td>{self.club.user_level(self.user)}</td>', html)
+        '''Test the details of the 9 test users created earlier.'''
         for i in range(1, settings.USERS_PER_PAGE, 1):
             test_user = User.objects.get(email=f'user{i}@test.org')
-            self.assertIn(f'<td><a href="/user_profile/{test_user.id}/"><img src=', html)
-            self.assertIn(f'alt="Gravatar of {test_user.get_full_name()}" class="rounded-circle" ></a></td>', html)
+            self.assertIn(f'alt="Gravatar of {test_user.get_full_name()}" class="rounded-circle" ></td>', html)
             self.assertIn(f'<td>{test_user.get_full_name()}</td>', html)
             self.assertIn(f'<td>{test_user.get_bio()}</td>', html)
             self.assertIn(f'<td>{test_user.get_favourite_genre()}</td>', html)
+            self.assertIn(f'<td>{self.club.user_level(test_user)}</td>', html)
+
 
     def test_get_club_members_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')

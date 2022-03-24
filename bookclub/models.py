@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
@@ -71,6 +72,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     currently_reading_books = models.ManyToManyField(Book, related_name='%(class)s_currently_reading_books')
 
     already_read_books = models.ManyToManyField(Book, related_name='%(class)s_already_read_books')
+    favourite_books = models.ManyToManyField(Book)
+    is_email_verified = models.BooleanField(default=False)
+    followers = models.ManyToManyField(
+        'self', symmetrical=False, related_name='followees'
+    )
 
     class Meta:
         """Model options."""
@@ -78,7 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ordering = ['last_name', 'first_name']
 
     def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f'{self.first_name} {self.last_name}'
 
     def get_first_name(self):
         return self.first_name
@@ -111,11 +117,32 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=60)
 
+    def toggle_follow(self, followee):
+        if followee == self:
+            return
+        if self.is_following(followee):
+            self._unfollow(followee)
+        else:
+            self._follow(followee)
+
+    def _follow(self, user):
+        user.followers.add(self)
+
+    def _unfollow(self, user):
+        user.followers.remove(self)
+
+    def is_following(self, user):
+        return user in self.followees.all()
+
+    def follower_count(self):
+        return self.followers.count()
+
+    def followee_count(self):
+        return self.followees.count()
+
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-
-
 
 # Club Model adapted from Clucker user model and Chess club management system club model
 
@@ -128,11 +155,15 @@ class Club(models.Model):
     organisers = models.ManyToManyField(User, related_name="organiser_of")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
     meeting_online = models.BooleanField(unique=False, blank=False, default=True)
+    organiser_owner = models.BooleanField(unique=False, blank=False, default=True)
 
     class Meta:
         """Model options."""
 
         ordering = ['name']
+
+    def __str__(self):
+        return self.name
 
     def get_name(self):
         return self.name
@@ -156,22 +187,25 @@ class Club(models.Model):
     def make_owner(self, user):
         if self.user_level(user) == "Member":
             self.members.remove(user)
-            self.organisers.add(self.owner)
-            self.owner = user
-            self.save()
-
         elif self.user_level(user) == "Organiser":
             self.organisers.remove(user)
-            self.organisers.add(self.owner)
-            self.owner = user
-            self.save()
-        else:
-            raise ValueError
+
+        self.members.add(self.owner)
+        self.owner = user
+        self.save()
 
     def make_organiser(self, user):
         if self.user_level(user) == "Member":
             self.members.remove(user)
             self.organisers.add(user)
+            self.save()
+        else:
+            raise ValueError
+
+    def demote_organiser(self, user):
+        if self.user_level(user) == "Organiser":
+            self.organisers.remove(user)
+            self.members.add(user)
             self.save()
         else:
             raise ValueError
@@ -214,8 +248,19 @@ class Club(models.Model):
         if self.user_level(user) == "Member":
             self.members.remove(user)
             self.save()
+
+        elif self.user_level(user) == "Organiser":
+            self.organisers.remove(user)
+            self.save()
+
         else:
             raise ValueError
+
+    def organiser_has_owner_privilege(self):
+        if self.organiser_owner:
+            return "Organiser has owner privileges."
+        else:
+            return "Organiser does not have owner privileges."
 
     def gravatar(self, size=120):
         """Return a URL to the user's gravatar."""
@@ -249,14 +294,15 @@ class Application(models.Model):
 class Rating(models.Model):
     """A model for the book ratings"""
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
-    isbn = models.CharField(max_length=12, blank=False)
+    book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.CASCADE)
+    isbn = models.CharField(unique=False, max_length=12, blank=False)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
 
     def get_user(self):
         return self.user
 
-    def get_isbn(self):
-        return self.isbn
+    def get_book(self):
+        return self.book
 
     def get_rating(self):
         return self.rating
@@ -265,10 +311,14 @@ class Rating(models.Model):
 class Meeting(models.Model):
     """A model for denoting and storing meetings."""
     date = models.DateField()
-    time = models.TimeField()
+    start_time = models.TimeField()
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
-    address = models.CharField(max_length=50)
+    address = models.CharField(max_length=50, default=True)
 
+    class Meta:
+        """Model options."""
+
+        ordering = ['date', 'start_time']
 
     def get_meeting_club(self):
         return self.club
@@ -276,8 +326,35 @@ class Meeting(models.Model):
     def get_meeting_date(self):
         return self.date
 
-    def get_meeting_time(self):
-        return self.time
+    def get_meeting_start_time(self):
+        return self.start_time
 
     def get_meeting_address(self):
         return self.address
+
+
+# Chat and Message models adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
+class Chat(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    has_unread = models.BooleanField(default=False)
+
+
+class Message(models.Model):
+    chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+    sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    body = models.CharField(max_length=1000)
+    date = models.DateTimeField(default=timezone.now)
+    is_read = models.BooleanField(default=False)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, blank=True, null=True)
+
+
+class Post(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
+    text = models.CharField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']

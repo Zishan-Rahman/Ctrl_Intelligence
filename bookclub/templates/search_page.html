@@ -114,7 +114,7 @@
 			</thead>
 			<tbody>
 				{% for user in users %}
-				<tr>
+				<tr class="clickable-row" data-href="{% url 'user_profile' user.id %}">
 					<td><img src ="{{ user.gravatar }}" class="rounded-circle" alt="{{ user.email }} gravatar"></td>
 					<td>{{ user.first_name }} {{ user.last_name }}</td>
 					<td>{{ user.location }}</td>
