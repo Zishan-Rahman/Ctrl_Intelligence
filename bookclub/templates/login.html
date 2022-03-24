@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body %}
+
 <div id ="cover-image">
     <div class="row h-100">
         <div class="card cover-card vh-100 align-right">
@@ -9,7 +10,8 @@
           <p class="cover-text fw-bold text-left" style="font-size: 36px; color:white; padding-top: 20px;">Welcome Back!</p>
           <br>
             <div class="container text-center">
-                <form class="modal-content animate" action="{% url 'login' %}" method="post">
+                <section class="text-white">
+                <form class="modal-content animate bg-black" action="{% url 'login' %}" method="post">
     <h3><strong>Log in</strong></h3>
    {%  csrf_token  %}
         <input type ="hidden" name="next" value ="{{ next }}">
@@ -29,8 +31,10 @@
           </tbody>
         </table>
      </form>
+                    </section>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock%}

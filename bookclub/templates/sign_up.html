@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body %}
+
 <div id ="cover-image">
     <div class="row h-100">
         <div class="card cover-card vh-100 align-right">
@@ -9,7 +10,8 @@
           <p class="cover-text fw-bold text-left" style="font-size: 36px; color:white; padding-top: 20px;">Welcome to Bookwise</p>
           <br>
             <div class="container text-center" >
-                <form class="modal-content animate" action="{% url 'sign_up' %}" method="post">
+                <section class="text-white">
+                <form class="modal-content animate bg-black" action="{% url 'sign_up' %}" method="post">
         <h3><strong>Sign up</strong></h3>
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
@@ -27,8 +29,10 @@
           </tbody>
         </table>
                 </form>
+                    </section>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
