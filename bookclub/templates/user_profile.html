@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-3"></div>
       
-      <div class="col-2">
+      <div class="col-3">
         <div>
             <img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}"
                 class="rounded-circle profile-image">
@@ -19,10 +19,15 @@
               </h3>
 
             <p class="profile-email">{{ user.email }}</p>
-            <b>
-              {{user.followee_count}}</b> Following
-               &emsp;
-               <b>{{user.follower_count}}</b> Followers
+            <div class="row">
+              <div class="col-5">
+                <button class="link" data-bs-toggle="modal" data-bs-target="#following_modal"><b>{{user.followee_count}}</b> Following</button>
+            </div>
+            <div class="col-5">
+              <button class="link" data-bs-toggle="modal" data-bs-target="#follower_modal"><b>{{user.follower_count}}</b> Followers</button>
+            </div>
+            <div class="col"></div>
+          </div>
               <div class="row"><br></div>
                
               
@@ -137,8 +142,7 @@
        
       
        
-            
-           
+      
        </div>
  
      </div>
@@ -153,40 +157,126 @@
         
 
       <div class="modal fade" id="exampleModal_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Invite to Club
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <body>
-           <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp
-           <table id="myTable" class="table">
-             <thead class="table-light">
-               <tr>
-                 <th scope="col"></th>
-                 <th scope="col">Name</th>
-                 <th scope="col">Invite</th>
-               </tr>
-             </thead>
-           <tr>
-             {% for entry in user_clubs %}
-             <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
-               <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
-               <td>{{ entry.name }}</td>
-               <td><a class="btn" href="{% url 'invite_message' user.id entry.id %}" style="background-color: brown; color: white">Invite</a></td>
-             </tr>
-             {% endfor %}
-       </table>
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Invite to Club
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <body>
+                <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp
+                <table id="myTable" class="table">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Invite</th>
+                    </tr>
+                  </thead>
+                     <tr>
+                      {% for entry in user_clubs %}
+                      <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
+                        <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
+                        <td>{{ entry.name }}</td>
+                        <td><a class="btn" href="{% url 'invite_message' user.id entry.id %}" style="background-color: brown; color: white">Invite</a></td>
+                      </tr>
+                      {% endfor %}
+                  </table>
 
 
-        </body>
+                  </body>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
+
+
+      <div class="modal fade" id="follower_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Followers
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <body>
+                <table id="myTable" class="table">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Follow</th>
+                    </tr>
+                  </thead>
+                     <tr>
+                      {% for entry in user.followers.all %}
+                      <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
+                        <td><a href="{% url 'user_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
+                        <td>{{ entry.first_name }} {{ entry.last_name }}</td>
+                        <td>
+                          {%if entry.id != request.user.id %}
+                          <a class="btn" href="{% url 'unfollow' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                            Unfollow
+                          </a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                      {% endfor %}
+                  </table>
+
+
+                  </body>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="following_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Following
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <body>
+                <table id="myTable" class="table">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Unfollow</th>
+                    </tr>
+                  </thead>
+                     <tr>
+                      {% for entry in user.followees.all %}
+                      <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
+                        <td><a href="{% url 'user_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
+                        <td>{{ entry.first_name }} {{ entry.last_name }}</td>
+                        <td>
+                          {%if entry.id != request.user.id %}
+                          <a class="btn" href="{% url 'unfollow' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                            Unfollow
+                          </a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                      {% endfor %}
+                  </table>
+
+
+                  </body>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
 
       </center>

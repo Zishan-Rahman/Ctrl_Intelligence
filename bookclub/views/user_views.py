@@ -78,13 +78,15 @@ def user_profile(request, user_id):
     user = User.objects.get(id=user_id)
     club_util(request)
     current_user = request.user
+    followers = request.user.followers.all()
     following = request.user.is_following(user)
     followable = request.user != user
     return render(request, 'user_profile.html', {'user': user,
                                                  'current_user': current_user,
                                                  'following': following,
                                                  'followable': followable,
-                                                 'user_clubs': config.user_clubs}
+                                                 'user_clubs': config.user_clubs,
+                                                 'followers': followers}
                   )
 
 
@@ -94,6 +96,13 @@ def follow_toggle(request, user_id):
     followee = User.objects.get(id=user_id)
     current_user.toggle_follow(followee)
     return redirect('user_profile', user_id=user_id)
+
+@login_required
+def unfollow(request, user_id):
+    current_user = request.user
+    followee = User.objects.get(id=user_id)
+    current_user._unfollow(followee)
+    return redirect('profile')
 
 
 def club_util(request):
