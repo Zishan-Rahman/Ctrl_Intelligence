@@ -85,3 +85,10 @@ class ChatView(View):
       'message_list': message_list
     }
     return render(request, 'chat.html', context)
+
+def messaging_autocomplete(request):
+    if 'term' in request.GET:
+        query = User.objects.filter(first_name__icontains=request.GET.get('term'))[:5]
+        for user in query:
+            users.append(user.email)
+        return JsonResponse(users, safe=False)

@@ -13,13 +13,24 @@
   </div>
   <div class="row justify-content-center mt-3 mb-5">
     <div class="col-md-5 col-sm-12">
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
       <form method="POST">
         {% csrf_token %}
         <p>Enter the email of the person you would like to talk to.</p>
         {% include 'partials/bootstrap_form.html' with form=form %}
         <input type="submit" value="Continue" class="btn btn-primary" style="background-color: brown" id="chat">
-        </div>
       </form>
+      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+      <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+      <script>
+        $(function () {
+          $( "#messaging_autocomplete" ).autocomplete({
+            source: '{% url 'messaging_autocomplete' %}',
+            minLength: 4
+          });
+        });
+      </script>
+      </div>
     </div>
   </div>
 </div>

@@ -52,6 +52,7 @@ urlpatterns = [
     path('club_profile/<int:pk>/meeting/', meeting_views.MeetingScheduler.as_view(), name='schedule_meeting'),
     path('search/', search_views.search, name='search_page'),
     path('search_autocomplete/', search_views.search_autocomplete, name='search_autocomplete'),
+    path('messaging_autocomplete/', messaging_views.messaging_autocomplete, name='messaging_autocomplete'),
     path('leave_club/<int:club_id>/', club_views.leave_club, name='leave_club'),
     path('inbox/', messaging_views.ListChatsView.as_view(), name='inbox'),
     path('inbox/create_chat', messaging_views.CreateChatView.as_view(), name='create_chat'),
