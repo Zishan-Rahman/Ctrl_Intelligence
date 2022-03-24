@@ -12,12 +12,12 @@
 </div>
 <div>
   <table>
-  {% for entry in books %}
-  <tr class="clickable-row" data-href="{% url 'book_profile' entry.id %}">
-    <td><img src="{{ entry.medium_url }}" alt="a"></td>
-    <td>{{ entry.title }}</td>
-    <td>{{ entry.author }}</td>
-    <td>{{ entry.pub_year }}</td>
+  {% for book in books %}
+  <tr class="clickable-row" data-href="{% url 'book_profile' book.id %}">
+    <td><img src="{{ book.medium_url }}" alt="a"></td>
+    <td>{{ book.title }}</td>
+    <td>{{ book.author }}</td>
+    <td>{{ book.pub_year }}</td>
   </tr>
   {% endfor %}
   </table>
