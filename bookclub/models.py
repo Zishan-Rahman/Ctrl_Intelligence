@@ -324,7 +324,7 @@ class Meeting(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
-    address = models.CharField(max_length=50, default=True)
+    address = models.CharField(max_length=50, blank=False, null=False)
 
     class Meta:
         """Model options."""

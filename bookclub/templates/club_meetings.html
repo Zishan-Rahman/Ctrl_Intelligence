@@ -2,6 +2,7 @@
 {% load bootstrap_pagination %}
 {% block content %}
 <div class="container">
+  {% if club.get_meetings %}
   <div class="row">
     <div class="col">
       <h1>Meetings Archive for {{ club.name }}</h1>
@@ -32,5 +33,10 @@
       </div>
     </div>
   </div>
+  {% else %}
+  <div class="mt-5" style="text-align: center;">
+    <h5 class="text-muted text-center"><strong>{{ club.name }}</strong> does not have any meetings</h5>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}

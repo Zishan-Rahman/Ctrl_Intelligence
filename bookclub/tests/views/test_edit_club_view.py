@@ -6,6 +6,7 @@ from bookclub.forms import EditClubForm
 from bookclub.models import *
 from bookclub.tests.helpers import reverse_with_next
 
+
 class ProfileViewTest(TestCase):
     """Test suite for the profile view."""
 
@@ -22,7 +23,8 @@ class ProfileViewTest(TestCase):
             'name': 'Bush House Book Club Remastered',
             'description': 'New description',
             'location': 'Strand, London, England',
-            'meeting_online':False
+            'meeting_online': False,
+            'organiser_owner': True
         }
 
     def test_profile_url(self):
@@ -77,7 +79,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(self.club.location, 'Strand, London')
         self.assertEqual(self.club.meeting_online, True)
 
-    def test_succesful_profile_update(self):
+    def test_successful_profile_update(self):
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         before_count = Club.objects.count()
         response = self.client.post(self.url, self.form_input, follow=True)

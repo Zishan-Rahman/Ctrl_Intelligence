@@ -19,7 +19,7 @@ def create_set_users():
         location="London",
         age=39,
         password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
-        is_email_verified = True
+        is_email_verified=True
     )
     User.objects.create(
         first_name="Jane",
@@ -30,7 +30,7 @@ def create_set_users():
         location="Oxford",
         age=32,
         password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
-        is_email_verified = True
+        is_email_verified=True
     )
     User.objects.create(
         first_name="Joe",
@@ -41,7 +41,7 @@ def create_set_users():
         location="London",
         age=52,
         password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
-        is_email_verified = True
+        is_email_verified=True
     )
 
 
@@ -80,7 +80,6 @@ def create_set_clubs():
     strand_house.full_clean()
     strand_house.save()
     generate_club_hierarchy(strand_house)
-
 
 
 def generate_genre():
@@ -175,7 +174,6 @@ class Command(BaseCommand):
             print('> python3 manage.py unseed')
             print()
 
-
     def verify_seeding_possible(self):
         seed_possible = True
         users_present = User.objects.count()
@@ -188,7 +186,6 @@ class Command(BaseCommand):
             seed_possible = False
 
         return seed_possible
-
 
     def default_superuser(self):
         User.objects.create_superuser(
@@ -205,7 +202,6 @@ class Command(BaseCommand):
         print("Email: ctrl@intelligence.com")
         print("Password: Password123")
         print()
-
 
     def create_user(self):
         provider = generate_provider()
@@ -253,7 +249,7 @@ class Command(BaseCommand):
                 temp_user.full_clean()
                 temp_user.save()
                 total_users = get_total_users()
-                percent_complete = float((total_users/self.TOTAL_USERS)*100)
+                percent_complete = float((total_users / self.TOTAL_USERS) * 100)
                 print(f'[ DONE: {round(percent_complete)}% | {total_users}/{self.TOTAL_USERS} ]', end='\r')
             except ValidationError:
                 pass

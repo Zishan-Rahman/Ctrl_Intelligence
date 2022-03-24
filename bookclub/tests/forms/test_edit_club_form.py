@@ -3,8 +3,8 @@ from django.urls import reverse
 from bookclub.models import *
 from bookclub.forms import EditClubForm
 
-class PasswordFormTestCase(TestCase):
 
+class PasswordFormTestCase(TestCase):
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
     def setUp(self):
@@ -13,7 +13,8 @@ class PasswordFormTestCase(TestCase):
             'name': 'Bush House Book Club Remastered',
             'description': 'New description',
             'location': 'Strand, London, England',
-            'meeting_online':False
+            'meeting_online': False,
+            'organiser_owner': False
         }
 
     def test_form_has_necessary_fields(self):

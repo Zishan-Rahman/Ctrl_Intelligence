@@ -3,8 +3,8 @@ from django.urls import reverse
 from bookclub.models import User
 from bookclub.forms import PasswordForm
 
-class PasswordFormTestCase(TestCase):
 
+class PasswordFormTestCase(TestCase):
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 
     def setUp(self):
