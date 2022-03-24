@@ -3,12 +3,12 @@
 <div class="container mt-3">
   <div class="row content">
     <div class="col-12">
-      <center><img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}"
-          class="rounded-circle profile-image"></center>
+      <center><img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}" class="rounded-circle profile-image"></center>
       <div class="profile-text">
         <center>
           <h3 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h3>
           <p class="profile-email">{{ user.email }}</p>
+          <p class="profile-bio">{{ user.public_bio }}</p>
         </center>
       </div>
     </div>
@@ -17,9 +17,9 @@
   <div class="row content">
     <div class="col-3">
       <center>
-        <p class="profile-ps">Favourite Genre: {{ user.favourite_genre }}</p>
-        <p class="profile-name">Location: {{ user.location }}</p>
-        <p class="profile-name">Age: {{ user.age }}</p>
+        <p class="profile-genre">Favourite Genre: {{ user.favourite_genre }}</p>
+        <p class="profile-loc">Location: {{ user.location }}</p>
+        <p class="profile-age">Age: {{ user.age }}</p>
         <p class="follow-user">
         <form action="{% url 'follow_toggle' user.id %}" method='post'>
           {% csrf_token %}
