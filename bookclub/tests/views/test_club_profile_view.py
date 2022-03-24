@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib import messages
 from bookclub.models import User, Club, Post, Meeting
 from bookclub.tests.helpers import LogInTester, reverse_with_next
+from datetime import timedelta, date, time, datetime
 
 """Tests for Club Profile """
 
@@ -324,7 +325,33 @@ class ClubProfileTest(TestCase, LogInTester):
                       html)
 
     def test_club_profile_view_has_meeting(self):
+        self.today = date.today()
+        next_hour_date_time = datetime.now() + timedelta(hours=1)
+        self.tomorrow = self.today + timedelta(days=1)
+        self.future_time = time(next_hour_date_time.hour, 0)
+        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club, address='www.google.com')
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
+        html = response.content.decode('utf8')
+        self.assertIn(f'<h6 class="card-title">www.google.com</h6>', html)
 
+    def test_club_profile_view_does_not_display_other_club_meetings(self):
+        self.today = date.today()
+        next_hour_date_time = datetime.now() + timedelta(hours=1)
+        self.tomorrow = self.today + timedelta(days=1)
+        self.future_time = time(next_hour_date_time.hour, 0)
+        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club, address='www.google.com')
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
+        html = response.content.decode('utf8')
+        self.assertNotIn(f'<h6 class="card-title">www.google.com</h6>', html)
+
+    def test_club_profile_view_displays_correct_message_when_no_meetings(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
+        html = response.content.decode('utf8')
+        self.assertIn(f'<p class="text-muted"><strong>{self.temple_club.name}</strong> does not have any meetings</p>',
+                      html)
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
