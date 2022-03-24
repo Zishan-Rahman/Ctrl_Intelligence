@@ -5,11 +5,13 @@
         <div class="col-md-12 p-5">
             <h3>You must rate 10 books to get better recommendations</h3>
             <h6>
-                You have rated {{request.user.get_number_of_ratings}}
-                {% if request.user.get_number_of_ratings == 1 %}
-                    book
+                You have rated 
+                {% if request.user.get_number_of_ratings == 0 %}
+                    no books yet
+                {% elif request.user.get_number_of_ratings == 1 %}
+                    1 book
                 {% else %}
-                    books
+                    {{request.user.get_number_of_ratings}} books
                 {% endif %}
             </h6>
         </div>
