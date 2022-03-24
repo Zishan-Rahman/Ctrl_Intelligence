@@ -10,6 +10,7 @@
           <p class="cover-text fw-bold text-left" style="font-size: 36px; color:white; padding-top: 20px;">Welcome to Bookwise</p>
           <br>
             <div class="container text-center" >
+                {% include 'partials/messages.html' %}
                 <section class="text-white">
                 <form class="modal-content animate bg-black" action="{% url 'sign_up' %}" method="post">
         <h3><strong>Sign up</strong></h3>
