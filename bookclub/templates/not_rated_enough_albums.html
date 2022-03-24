@@ -1,0 +1,25 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 p-5">
+            <h3>You must rate 10 books to get better recommendations</h3>
+            <h4></h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 p-5">
+            <form method="GET" action="{% url 'books' %}">
+                <button class="btn" style="background-color: brown; color: white" type="submit">Give me some books to rate!</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 p-5">
+            <form method="GET" action="{% url 'home' %}">
+                <button class="btn" style="background-color: brown; color: white" type="submit">No thanks, I'll rate books later</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
