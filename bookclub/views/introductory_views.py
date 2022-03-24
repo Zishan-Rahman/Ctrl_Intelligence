@@ -7,5 +7,6 @@ from bookclub.models import Book, Rating, User
 from django.views.generic.edit import View
 from django.contrib import messages
 
+@login_required
 def introductory_view(request):
     pass
