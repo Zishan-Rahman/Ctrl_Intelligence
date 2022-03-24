@@ -15,7 +15,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views
+from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, introductory_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views
 from django.contrib.auth import views as auth_views
 
 
@@ -34,6 +34,7 @@ urlpatterns = [
     path('login/', authentication_views.LogInView.as_view(), name='login'),
     path('log_out/', authentication_views.log_out, name='log_out'),
     path('home/', dashboard_views.home_page, name='home'),
+    path('rate_more_books/', introductory_views.introductory_view, name='rate_more_books'),
     path('password/', account_views.PasswordView.as_view(), name='password'),
     path('profile/', account_views.user_profile, name='profile'),
     path('profile/edit/', user_views.ProfileUpdateView.as_view(), name='edit_profile'),
