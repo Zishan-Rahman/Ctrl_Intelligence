@@ -47,7 +47,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+        return reverse('profile')
 
     def post(self, request, *args, **kwargs):
         current_user = request.user
