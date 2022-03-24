@@ -27,6 +27,9 @@ class Book(models.Model):
 
         ordering = ['title']
 
+    def __str__(self):
+        return self.title
+
     def get_isbn(self):
         return self.isbn
 

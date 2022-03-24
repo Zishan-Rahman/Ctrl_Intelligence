@@ -75,3 +75,25 @@ def Unfavourite(request, book_id):
     user.favourite_books.remove(book)
     messages.add_message(request, messages.SUCCESS, book.title + " has been removed from Favourites!")
     return redirect('book_profile', book_id=book_id)
+
+class MyBookRatings(LoginRequiredMixin, ListView):
+    model = Rating
+    template_name = "past_book_ratings.html"
+    context_object_name = "books"
+    paginate_by = 2
+
+    def get_queryset(self):
+        user = User.objects.get(pk=self.request.user.id)
+        ratings = Rating.objects.filter(user=user)
+        return ratings
+
+    # def get_context_data(self, *args, **kwargs):
+    #     context = super().get_context_data(*args, **kwargs)
+    #     user = User.objects.get(pk=self.request.user.id)
+    #     ratings = Rating.objects.filter(user=user)
+    #     paginator = Paginator(ratings, settings.POSTS_PER_PAGE)
+    #     page_number = self.request.GET.get('page')
+    #     page_obj = paginator.get_page(page_number)
+    #
+    #     context['page_obj'] = page_obj
+    #     context['rating'] = ratings
