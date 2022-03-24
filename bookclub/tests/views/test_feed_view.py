@@ -36,8 +36,19 @@ class FeedViewTestCase(TestCase, LogInTester):
     def test_get_feed_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
-        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirect_url,
+                             status_code=302, target_status_code=200)
         self.assertFalse(self._is_logged_in())
+
+    def test_text_must_not_be_blank(self):
+        self.post.text = ''
+        with self.assertRaises(ValidationError):
+            self.post.full_clean()
+
+    def test_text_must_not_be_overlong(self):
+        self.post.text = 'x' * 251
+        with self.assertRaises(ValidationError):
+            self.post.full_clean()
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
