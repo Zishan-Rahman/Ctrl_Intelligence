@@ -65,14 +65,22 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Create a post</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">You must rate 10 books to get better recommendations</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="{% url 'new_post' club.id %}" method="post">
-          {% csrf_token %}
-          {% include 'partials/bootstrap_form.html' with form=form %}
-          <button type="submit" class="btn btn-dark" style="background-color: brown">Post</button>
+        <h6>
+          You have rated 
+          {% if request.user.get_number_of_ratings == 0 %}
+              no books yet
+          {% elif request.user.get_number_of_ratings == 1 %}
+              1 book
+          {% else %}
+              {{request.user.get_number_of_ratings}} books
+          {% endif %}
+        </h6>
+        <form method="GET" action="{% url 'book_list' %}">
+          <button class="btn" style="background-color: brown; color: white" type="submit">Click here to rate more books</button>
         </form>
       </div>
     </div>
