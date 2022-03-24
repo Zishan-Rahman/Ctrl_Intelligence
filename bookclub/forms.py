@@ -2,11 +2,9 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from bookclub.models import User, Club, Application, Meeting , Post
+from bookclub.models import User, Club, Application, Meeting, Post
 from datetime import datetime
 from django.utils import timezone
-
-
 
 
 class UserForm(forms.ModelForm):
@@ -16,8 +14,10 @@ class UserForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'email', 'public_bio', 'favourite_genre', 'location', 'age']
+        fields = ['first_name', 'last_name', 'email',
+                  'public_bio', 'favourite_genre', 'location', 'age']
         widgets = {'public_bio': forms.Textarea()}
+
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
@@ -51,7 +51,8 @@ class SignUpForm(forms.ModelForm):
             message='Password must contain an uppercase character, a lowercase character and a number'
         )]
     )
-    password_confirmation = forms.CharField(label='Password confirmation', widget=forms.PasswordInput())
+    password_confirmation = forms.CharField(
+        label='Password confirmation', widget=forms.PasswordInput())
 
     def clean(self):
         """Clean the data and generate messages for any errors."""
@@ -61,7 +62,8 @@ class SignUpForm(forms.ModelForm):
         new_password = self.cleaned_data.get('new_password')
         password_confirmation = self.cleaned_data.get('password_confirmation')
         if new_password != password_confirmation:
-            self.add_error('password_confirmation', 'Confirmation does not match password.')
+            self.add_error('password_confirmation',
+                           'Confirmation does not match password.')
 
     def save(self):
         """Create a new user."""
@@ -74,6 +76,7 @@ class SignUpForm(forms.ModelForm):
         )
         return user
 
+
 class NewPasswordMixin(forms.Form):
     """Form mixing for new_password and password_confirmation fields."""
 
@@ -84,9 +87,10 @@ class NewPasswordMixin(forms.Form):
             regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
             message='Password must contain an uppercase character, a lowercase '
                     'character and a number'
-            )]
+        )]
     )
-    password_confirmation = forms.CharField(label='New Password Confirmation', widget=forms.PasswordInput())
+    password_confirmation = forms.CharField(
+        label='New Password Confirmation', widget=forms.PasswordInput())
 
     def clean(self):
         """Form mixing for new_password and password_confirmation fields."""
@@ -95,13 +99,15 @@ class NewPasswordMixin(forms.Form):
         new_password = self.cleaned_data.get('new_password')
         password_confirmation = self.cleaned_data.get('password_confirmation')
         if new_password != password_confirmation:
-            self.add_error('password_confirmation', 'Confirmation does not match password.')
+            self.add_error('password_confirmation',
+                           'Confirmation does not match password.')
 
 
 class PasswordForm(NewPasswordMixin):
     """Form enabling users to change their password."""
 
-    password = forms.CharField(label='Current password', widget=forms.PasswordInput())
+    password = forms.CharField(
+        label='Current password', widget=forms.PasswordInput())
 
     def __init__(self, user=None, **kwargs):
         """Construct new form instance with a user instance."""
@@ -133,7 +139,8 @@ class PasswordForm(NewPasswordMixin):
 
 class ApplicantForm(forms.Form):
     """Form enabling owners to choose which club applications to view."""
-    applicants_dropdown = forms.ModelChoiceField(label="Select an applicant", queryset=None)
+    applicants_dropdown = forms.ModelChoiceField(
+        label="Select an applicant", queryset=None)
 
     def __init__(self, user=None, club=None, **kwargs):
         """Construct new form instance with a user instance."""
@@ -153,13 +160,15 @@ class ApplicantForm(forms.Form):
         for a in current_applicants:
             current_applicants_ids.append(a.id)
 
-        self.fields['applicants_dropdown'].queryset = Application.objects.filter(pk__in=current_applicants_ids)
+        self.fields['applicants_dropdown'].queryset = Application.objects.filter(
+            pk__in=current_applicants_ids)
 
 
 class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
-        fields = ['name', 'description', 'location', 'meeting_type', 'organiser_has_owner_privilege']
+        fields = ['name', 'description', 'location',
+                  'meeting_type', 'organiser_has_owner_privilege']
         widgets = {"description": forms.Textarea()}
 
     CHOICES = [
@@ -175,7 +184,8 @@ class ClubForm(forms.ModelForm):
         (True, 'Yes'),
         (False, 'No')]
 
-    organiser_has_owner_privilege = forms.ChoiceField(choices=CHOICES1, widget=forms.Select())
+    organiser_has_owner_privilege = forms.ChoiceField(
+        choices=CHOICES1, widget=forms.Select())
 
     def clean(self):
         super().clean()
@@ -190,6 +200,7 @@ class ClubForm(forms.ModelForm):
             owner=user,
             meeting_online=self.cleaned_data.get('meeting_type')
         )
+
 
 class ApplicationForm(forms.ModelForm):
     """Form that enables applicants to apply to clubs"""
@@ -211,25 +222,26 @@ class ApplicationForm(forms.ModelForm):
 class DateInput(forms.DateInput):
     input_type = 'date'
 
+
 class TimeInput(forms.DateInput):
     input_type = 'time'
+
 
 class ScheduleMeetingForm(forms.ModelForm):
 
     class Meta:
         model = Meeting
         fields = ['date', 'start_time', 'address']
-        widgets = { 'date': DateInput(), 'start_time': TimeInput()}
+        widgets = {'date': DateInput(), 'start_time': TimeInput()}
 
     def __init__(self, club, *args, **kwargs):
         """Construct new form instance with a user instance."""
         self.club = club
         super(ScheduleMeetingForm, self).__init__(**kwargs)
         if self.club != None and self.club.meeting_type() == "in person":
-             self.fields['address'].label = 'Meeting address'
+            self.fields['address'].label = 'Meeting address'
         elif self.club != None and self.club.meeting_type() == "online":
             self.fields['address'].label = 'Meeting link'
-
 
     def clean(self):
         now = timezone.now()
@@ -242,15 +254,20 @@ class ScheduleMeetingForm(forms.ModelForm):
 
     def save(self, club):
         super().save(commit=False)
-        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), club=club, address = self.cleaned_data.get('address'))
+        meeting = Meeting.objects.create(date=self.cleaned_data.get('date'), start_time=self.cleaned_data.get(
+            'start_time'), club=club, address=self.cleaned_data.get('address'))
         return meeting
 
-#Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
+# Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
+
+
 class ChatForm(forms.Form):
-  email = forms.CharField(label='', max_length=100)
+    email = forms.CharField(label='', max_length=100)
+
 
 class MessageForm(forms.Form):
-  message = forms.CharField(label='', max_length=1000)
+    message = forms.CharField(label='', max_length=1000)
+
 
 class EditClubForm(forms.ModelForm):
     """Form to update clubs."""
@@ -268,8 +285,9 @@ class EditClubForm(forms.ModelForm):
         (False, 'In Person')]
 
     meeting_online = forms.ChoiceField(choices=CHOICES, widget=forms.Select(), help_text="Select whether your club is "
-                                                                                       "online based or meets in "
-                                                                                       "person")
+                                       "online based or meets in "
+                                       "person")
+
 
 class PostForm(forms.ModelForm):
     """Form to ask user for post text.
@@ -284,6 +302,7 @@ class PostForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea()
         }
+        comment = forms.CharField(widget=forms.Textarea)
     #
     # def save(self , user, club):
     #     super().save(commit=False)

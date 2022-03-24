@@ -16,7 +16,8 @@ class Book(models.Model):
     isbn = models.CharField(unique=True, max_length=12, blank=False)
     title = models.CharField(unique=False, blank=False, max_length=512)
     author = models.CharField(blank=False, max_length=512)
-    pub_year = models.IntegerField(blank=False, validators=[MinValueValidator(1800), MaxValueValidator(2022)])
+    pub_year = models.IntegerField(blank=False, validators=[
+                                   MinValueValidator(1800), MaxValueValidator(2022)])
     publisher = models.CharField(blank=False, max_length=512)
     small_url = models.URLField(unique=False, blank=False, max_length=512)
     medium_url = models.URLField(unique=False, blank=False, max_length=512)
@@ -56,7 +57,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=30, blank=False)
     is_staff = models.BooleanField(
         default=False,
-        help_text=("Designates whether the user can log into " "this admin site."),
+        help_text=(
+            "Designates whether the user can log into " "this admin site."),
     )
     is_active = models.BooleanField(
         default=True,
@@ -153,9 +155,12 @@ class Club(models.Model):
     location = models.CharField(blank=False, max_length=96)
     members = models.ManyToManyField(User, related_name="member_of")
     organisers = models.ManyToManyField(User, related_name="organiser_of")
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_of")
-    meeting_online = models.BooleanField(unique=False, blank=False, default=True)
-    organiser_owner = models.BooleanField(unique=False, blank=False, default=True)
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="owner_of")
+    meeting_online = models.BooleanField(
+        unique=False, blank=False, default=True)
+    organiser_owner = models.BooleanField(
+        unique=False, blank=False, default=True)
 
     class Meta:
         """Model options."""
@@ -237,6 +242,9 @@ class Club(models.Model):
     def get_meetings(self):
         return Meeting.objects.filter(club_id=self.id)
 
+    def get_posts(self):
+        return Post.objects.filter(club_id=self.id)
+
     def get_all_users(self):
         self.club_members = self.get_members()
         self.club_organisers = self.get_organisers()
@@ -293,10 +301,13 @@ class Application(models.Model):
 # Ratings model
 class Rating(models.Model):
     """A model for the book ratings"""
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
-    book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, blank=True, null=True, on_delete=models.CASCADE)
+    book = models.ForeignKey(
+        Book, blank=True, null=True, on_delete=models.CASCADE)
     isbn = models.CharField(unique=False, max_length=12, blank=False)
-    rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
+    rating = models.IntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
 
     def get_user(self):
         return self.user
@@ -336,18 +347,23 @@ class Meeting(models.Model):
 # Chat and Message models adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class Chat(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    receiver = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='+')
     has_unread = models.BooleanField(default=False)
 
 
 class Message(models.Model):
-    chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
-    sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
-    receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    chat = models.ForeignKey('Chat', related_name='+',
+                             on_delete=models.CASCADE, blank=True, null=True)
+    sender_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='+')
+    receiver_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='+')
     body = models.CharField(max_length=1000)
     date = models.DateTimeField(default=timezone.now)
     is_read = models.BooleanField(default=False)
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, blank=True, null=True)
+    club = models.ForeignKey(
+        Club, on_delete=models.CASCADE, blank=True, null=True)
 
 
 class Post(models.Model):
@@ -358,3 +374,15 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+    def get_post_author(self):
+        return self.author
+
+    def get_post_club(self):
+        return self.club
+
+    def get_post_text(self):
+        return self.text
+
+    def get_post_created_at(self):
+        return self.created_at
