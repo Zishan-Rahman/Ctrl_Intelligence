@@ -9,4 +9,6 @@ from django.contrib import messages
 
 @login_required
 def introductory_view(request):
-    pass
+    if request.user.get_number_of_ratings() < 10:
+        return render(request, 'not_rated_enough_albums.html')
+    return redirect('home')
