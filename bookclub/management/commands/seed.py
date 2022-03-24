@@ -4,10 +4,13 @@ from faker import Faker
 from bookclub.models import User, Club, Book
 from django.core.exceptions import ValidationError
 import csv
+import pandas as pd
+import numpy as np
 
 
 def create_set_users():
     User.objects.create(
+        pk=1000000,
         first_name="John",
         last_name="Doe",
         email="johndoe@bookclub.com",
@@ -15,7 +18,8 @@ def create_set_users():
         favourite_genre="Science fiction",
         location="London",
         age=39,
-        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0="
+        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
+        is_email_verified = True
     )
     User.objects.create(
         first_name="Jane",
@@ -25,7 +29,8 @@ def create_set_users():
         favourite_genre="Adventure",
         location="Oxford",
         age=32,
-        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0="
+        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
+        is_email_verified = True
     )
     User.objects.create(
         first_name="Joe",
@@ -35,7 +40,8 @@ def create_set_users():
         favourite_genre="Romance",
         location="London",
         age=52,
-        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0="
+        password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0=",
+        is_email_verified = True
     )
 
 
@@ -138,7 +144,9 @@ class Command(BaseCommand):
         seed_possible = self.verify_seeding_possible()
         if seed_possible:
             print()
-            print('NORMAL')
+            print("Seed books:")
+            self.load_books()
+            print("All books have been successfully seeded")
             print()
             create_set_users()
             print('Created set users')
@@ -148,7 +156,7 @@ class Command(BaseCommand):
             print('Seed users:')
             print()
             self.generate_users()
-            print('Users successfully seeded')
+            print('All users have been successfully seeded')
             print()
             print('Seed clubs:')
             print()
@@ -156,10 +164,7 @@ class Command(BaseCommand):
             print('Created set clubs')
             print()
             self.generate_clubs()
-            print('Clubs successfully seeded')
-            print()
-            self.load_books()
-            print("Books successfully seeded")
+            print('All clubs have been successfully seeded')
             print()
             print('Seeder has successfully completed')
 

@@ -40,7 +40,7 @@
         </form>
       </center>
       <center>
-        <button id="Invite" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="background-color: brown">
+        <button id="Invite" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="background-color: brown; color: white">
             Invite
       </button>
 
@@ -68,7 +68,7 @@
              <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
                <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
                <td>{{ entry.name }}</td>
-               <td><a class="btn btn-default" href="{% url 'invite_message' user.id entry.id %}"><span class="btn btn-dark" style="background-color: brown">Invite</span></a></td>
+               <td><a class="btn" href="{% url 'invite_message' user.id entry.id %}" style="background-color: brown; color: white">Invite</a></td>
              </tr>
              {% endfor %}
        </table>

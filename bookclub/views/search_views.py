@@ -12,14 +12,14 @@ from django.db.models.functions import Concat
 
 @login_required
 def search(request):
-	if request.method == "POST":
-		query = request.POST['query']
-		books = Book.objects.filter(title__contains=query) | Book.objects.filter(isbn__contains=query) | Book.objects.filter(author__contains=query) | Book.objects.filter(pub_year__contains=query) | Book.objects.filter(publisher__contains=query)
-		clubs = Club.objects.filter(name__contains=query)
-		users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(full_name__icontains=query)
-		return render(request, 'search_page.html', {'query': query, 'books': books, 'clubs': clubs, 'users': users})
-	else:
-		return render(request, 'search_page.html', {})
+    if request.method == "POST":
+        query = request.POST['query']
+        books = Book.objects.filter(title__contains=query) | Book.objects.filter(isbn__contains=query) | Book.objects.filter(author__contains=query) | Book.objects.filter(pub_year__contains=query) | Book.objects.filter(publisher__contains=query)
+        clubs = Club.objects.filter(name__contains=query)
+        users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(full_name__icontains=query) | User.objects.filter(email__contains=query)
+        return render(request, 'search_page.html', {'query': query, 'books': books[:10], 'clubs': clubs[:10], 'users': users[:10]})
+    else:
+        return render(request, 'search_page.html', {})
 
 
 def search_autocomplete(request):

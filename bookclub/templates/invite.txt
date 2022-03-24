@@ -1,8 +1,0 @@
-Hi {{ invitee }},
-
-{{ inviter }} invited you to join the club {{ club.name }}.
-
-To view the club page, please click the link below:
-{{ link }}
-
--- Bookwise

@@ -18,7 +18,7 @@
         {% csrf_token %}
         <p>Enter the email of the person you would like to talk to.</p>
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Continue" class="btn btn-primary" style="background-color: brown" id="chat">
+        <input type="submit" value="Continue" class="btn btn-primary" style="background-color: brown">
       </form>
       <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
       <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
@@ -33,5 +33,5 @@
       </div>
     </div>
   </div>
-</div>
+
 {% endblock content %}

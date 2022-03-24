@@ -1,5 +1,6 @@
 """Tests of the sign up view """
 from django.test import TestCase
+from django.contrib import messages
 from django.urls import reverse
 from bookclub.forms import SignUpForm
 from django.contrib.auth.hashers import check_password
@@ -34,14 +35,18 @@ class SignUpViewTestCase(TestCase, LogInTester):
         response = self.client.post(self.url, self.form_input, follow=True)
         after_count = User.objects.count()
         self.assertEqual(after_count, before_count + 1)
-        response_url = reverse('home')
+        response_url = reverse('login')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
         user = User.objects.get(email='alexwillows@example.org')
         self.assertEqual(user.first_name, 'Alex')
         self.assertEqual(user.last_name, 'Willows')
         is_password_correct = check_password('Password123', user.password)
         self.assertTrue(is_password_correct)
-        self.assertTrue(self._is_logged_in())
+        self.assertFalse(user.is_email_verified)
+        message_list = list(response.context['messages'])
+        self.assertEqual(len(message_list), 1)
+        self.assertEqual(message_list[0].level, messages.SUCCESS)
+        self.assertEqual(message_list[0].message, "Verification email sent")
 
     def test_get_sign_up(self):
         response = self.client.get(self.url)

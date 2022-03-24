@@ -6,9 +6,9 @@ from bookclub.templates import *
 from bookclub.forms import ApplicantForm, ApplicationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404, JsonResponse
-from bookclub.models import Club, Application, User
-from bookclub.views import club_views, messaging_views
+from django.http import Http404
+from bookclub.models import Club, Application
+from bookclub.views import club_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
 
@@ -110,4 +110,6 @@ def new_application(request, club_id):
             messages.add_message(request, messages.ERROR,
                                  f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}. You have "
                                  f"already applied.")
+
+
     return redirect('my_applications')

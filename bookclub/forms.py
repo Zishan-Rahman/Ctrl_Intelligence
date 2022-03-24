@@ -218,8 +218,8 @@ class ScheduleMeetingForm(forms.ModelForm):
 
     class Meta:
         model = Meeting
-        fields = ['date', 'start_time', 'end_time', 'address']
-        widgets = { 'date': DateInput(), 'start_time': TimeInput(), 'end_time': TimeInput()}
+        fields = ['date', 'start_time', 'address']
+        widgets = { 'date': DateInput(), 'start_time': TimeInput()}
 
     def __init__(self, club, *args, **kwargs):
         """Construct new form instance with a user instance."""
@@ -235,22 +235,14 @@ class ScheduleMeetingForm(forms.ModelForm):
         now = timezone.now()
         date = self.cleaned_data['date']
         start_time = self.cleaned_data['start_time']
-        end_time = self.cleaned_data['end_time']
-        if end_time == None:
-            end_time = start_time.replace(hour=(start_time.hour + 1) % 24)
         if date < datetime.now().date():
             raise forms.ValidationError("The meeting cannot be in the past!")
         elif date == datetime.now().date() and start_time < datetime.now().time():
             raise forms.ValidationError("The meeting cannot be in the past!")
-        elif end_time < start_time:
-            raise forms.ValidationError("You cannot have the meeting start after it ends!")
 
     def save(self, club):
         super().save(commit=False)
-        if self.cleaned_data.get('end_time') != None:
-            meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), end_time=self.cleaned_data.get('end_time'), club=club, address = self.cleaned_data.get('address'))
-        else:
-            meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), end_time=self.cleaned_data.get('start_time').replace(hour=(self.cleaned_data.get('start_time').hour + 1) % 24), club=club, address = self.cleaned_data.get('address'))
+        meeting = Meeting.objects.create(date = self.cleaned_data.get('date'), start_time = self.cleaned_data.get('start_time'), club=club, address = self.cleaned_data.get('address'))
         return meeting
 
 #Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
