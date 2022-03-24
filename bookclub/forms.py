@@ -172,6 +172,7 @@ class ClubForm(forms.ModelForm):
                                                                                        "person")
 
     CHOICES1 = [
+        (None, 'Choose organiser privilege'),
         (True, 'Yes'),
         (False, 'No')]
 
@@ -180,6 +181,7 @@ class ClubForm(forms.ModelForm):
     def clean(self):
         super().clean()
         meeting_type = self.cleaned_data.get('meeting_type')
+        organiser_has_owner_privilege = self.cleaned_data.get('organiser_has_owner_privilege')
 
     def save(self, user):
         super().save(commit=False)
@@ -189,7 +191,7 @@ class ClubForm(forms.ModelForm):
             location=self.cleaned_data.get('location'),
             owner=user,
             meeting_online=self.cleaned_data.get('meeting_type'),
-            organiser_owner=self.cleaned_data.get('organiser_has_owner_privileges')
+            organiser_owner=self.cleaned_data.get('organiser_has_owner_privilege')
         )
 
 
