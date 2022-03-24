@@ -140,7 +140,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.followees.count()
     
     def get_ratings(self):
-        return Rating.objects.get(user_id=self.id)
+        return Rating.objects.filter(user_id=self.id)
 
     def get_number_of_ratings(self):
         return len(self.get_ratings())
