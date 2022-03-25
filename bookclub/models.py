@@ -301,6 +301,11 @@ class Rating(models.Model):
     isbn = models.CharField(unique=False, max_length=12, blank=False)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
 
+    class Meta:
+        """Model options."""
+
+        ordering = ['book']
+
     def get_user(self):
         return self.user
 
