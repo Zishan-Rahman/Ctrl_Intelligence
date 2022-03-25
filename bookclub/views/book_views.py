@@ -75,3 +75,15 @@ def Unfavourite(request, book_id):
     user.favourite_books.remove(book)
     messages.add_message(request, messages.SUCCESS, book.title + " has been removed from Favourites!")
     return redirect('book_profile', book_id=book_id)
+
+class MyBookRatings(LoginRequiredMixin, ListView):
+
+    model = Rating
+    template_name = "my_book_ratings.html"
+    context_object_name = "ratings"
+    paginate_by = settings.BOOKS_PER_PAGE
+
+    def get_queryset(self):
+        user = User.objects.get(pk=self.request.user.id)
+        ratings = Rating.objects.filter(user=user)
+        return ratings

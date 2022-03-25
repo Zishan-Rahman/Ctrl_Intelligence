@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Club, Book, Application , Post
+from .models import User, Club, Book, Application, Post, Rating
 # Register your models here.
 
 @admin.register(User)
@@ -40,4 +40,8 @@ class PostAdmin(admin.ModelAdmin):
         """Return the author of a given post."""
         return post.author.email
 
-
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = [
+        'user', 'book', 'isbn', 'rating'
+    ]
