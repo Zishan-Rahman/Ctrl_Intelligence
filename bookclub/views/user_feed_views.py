@@ -18,6 +18,7 @@ class UserFeedView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         """Return context data, including new post form."""
+        user = self.request.user
         posts = UserPost.objects.filter(author = user)
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
