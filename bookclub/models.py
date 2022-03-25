@@ -27,6 +27,9 @@ class Book(models.Model):
 
         ordering = ['title']
 
+    def __str__(self):
+        return self.title
+
     def get_isbn(self):
         return self.isbn
 
@@ -303,6 +306,11 @@ class Rating(models.Model):
     book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.CASCADE)
     isbn = models.CharField(unique=False, max_length=12, blank=False)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
+
+    class Meta:
+        """Model options."""
+
+        ordering = ['book']
 
     def get_user(self):
         return self.user

@@ -1,12 +1,18 @@
-{% extends 'base_content.html' %}
-{% block content %}
+{% extends 'base.html' %}
 {% load static %}
-<div class="container text-center">
-<h2><strong>Welcome Back!</strong></h2>
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-  <form class="modal-content animate" action="{% url 'login' %}" method="post">
+{% block body %}
+
+<div id ="cover-image">
+    <div class="row h-100">
+        <div class="card cover-card vh-100 align-right">
+          <h1 class="cover-heading fw-bold text-left" style="font-size: 42px; color:white; margin-top: 100px"> <img src="{% static 'images/bookwise.svg' %}" height="60" width="40">ookwise</h1>
+          <br>
+          <p class="cover-text fw-bold text-left" style="font-size: 36px; color:white; padding-top: 20px;">Welcome Back!</p>
+          <br>
+            <div class="container text-center">
+                {% include 'partials/messages.html' %}
+                <section class="text-white">
+                <form class="modal-content animate bg-black" action="{% url 'login' %}" method="post">
     <h3><strong>Log in</strong></h3>
    {%  csrf_token  %}
         <input type ="hidden" name="next" value ="{{ next }}">
@@ -26,8 +32,10 @@
           </tbody>
         </table>
      </form>
-     </div>
-     </div>
- </div>
- </div>
- {% endblock %}
+                    </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock%}

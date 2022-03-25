@@ -67,6 +67,19 @@
     text-align: center;
   }
 
+  .bottom_align {
+    position:absolute;                 
+    bottom:0;                         
+    left:0;                         
+  }
+
+  button.link {
+    background:none; 
+    border:none;
+    padding:none;
+  }
+  
+
 
 
 

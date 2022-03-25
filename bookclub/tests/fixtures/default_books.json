@@ -27,6 +27,20 @@
       "medium_url": "http://exampleurl5.com",
       "large_url": "http://exampleurl6.com"
     }
+  },
+
+  {
+    "model": "bookclub.book",
+    "pk": 3,
+    "fields": {
+      "isbn": "12345678912",
+      "title": "The Book title3",
+      "author": "John Doe",
+      "pub_year": "2021",
+      "publisher": "Example Company",
+      "small_url": "http://exampleurl7.com",
+      "medium_url": "http://exampleurl8.com",
+      "large_url": "http://exampleurl9.com"
+    }
   }
 ]
-
