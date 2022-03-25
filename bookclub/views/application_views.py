@@ -68,11 +68,17 @@ class MyApplicationsView(LoginRequiredMixin, View):
 def app_accept(request, pk):
     """Accept application"""
     app = Application.objects.all().get(pk=pk)
-    app.club.make_member(app.applicant)
-    app.delete()
-    messages.add_message(request, messages.SUCCESS, "User accepted!")
-    club_views.club_util(request)
-    return redirect('applications')
+    if request.user == app.club.owner:
+        app.club.make_member(app.applicant)
+        app.delete()
+        messages.add_message(request, messages.SUCCESS, "User accepted!")
+        club_views.club_util(request)
+        return redirect('applications')
+    else:
+        messages.add_message(request, messages.ERROR, "Action prohibited")
+        club_views.club_util(request)
+        return redirect('my_applications')
+
 
 
 def app_remove(request, pk):

@@ -41,11 +41,7 @@
                             <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-person-fill"></i> {{ user_club.owner }}</p>
                         </div>
                         </div>
-                        <div class="row">
-                            <div class="card-body">
-                                <p class="card-text">{% include 'partials/club_meeting_type.html' with club=user_club %}</p>
-                            </div>
-                        </div>
+
 
 
                     </div>
@@ -53,7 +49,8 @@
                 <div class="row">
                     <div class="col">
                         <div class="card-body">
-                            <p class="card-text text-center"> <i class="bi bi-geo-alt"></i> {{ user_club.location }}</p>
+                            <p class="card-text"> <i class="bi bi-geo-alt"></i> {{ user_club.location }}</p>
+                        <p class="card-text">{% include 'partials/club_meeting_type.html' with club=user_club %}</p>
                             {% if user in user_club.get_organisers%}
                                     <p> <i class="bi bi-clipboard"></i><strong> Organiser </strong></p>
                                       {% endif %}

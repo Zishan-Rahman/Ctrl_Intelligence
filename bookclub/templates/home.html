@@ -22,12 +22,6 @@
 
             <div class="book-table">
     <table class="table table-hover table-borderless text-dark" style="background-color: white;border-style: groove ;border-color: brown">
-        <thead>
-      <tr>
-        <th scope="col">
-        <th scope="col">
-      </tr>
-    </thead>
     <tbody>
       {% for book in recommendations %}
       <tr class="clickable-row" data-href="{% url 'book_profile' book.id %}">
