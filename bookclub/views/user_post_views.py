@@ -18,11 +18,11 @@ class UserNewPostView(LoginRequiredMixin, CreateView):
     http_method_names = ['post']
     context_object_name = 'user'
 
+
     def get_context_data(self, **kwargs):
         """Return context data, including new post form."""
-        user_id = self.kwargs['user_id']
-        user1 = User.objects.all().get(pk=user_id)
-        posts = UserPost.objects.filter(user = user1)
+        user = self.request.user
+        posts = UserPost.objects.filter(author = user)
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         context['form'] = UserPostForm()
@@ -31,8 +31,7 @@ class UserNewPostView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form, **kwargs):
         """Process a valid form."""
-        user_id = self.kwargs['user_id']
-        user = User.objects.get(id=user_id)
+        user = self.request.user
         form.instance.author = user
         return super().form_valid(form)
 
