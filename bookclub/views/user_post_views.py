@@ -20,22 +20,20 @@ class UserNewPostView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         """Return context data, including new post form."""
-        current_club_id = self.kwargs['club_id']
-        current_club = Club.objects.get(id=current_club_id)
-        posts = Post.objects.filter(user = self.request.user)
+        user_id = self.kwargs['user_id']
+        user1 = User.objects.all().get(pk=user_id)
+        posts = UserPost.objects.filter(user = user1)
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         context['form'] = UserPostForm()
-        context['club'] = current_club_id
         context['posts'] = posts
         return context
 
     def form_valid(self, form, **kwargs):
         """Process a valid form."""
-        current_club_id = self.kwargs['club_id']
-        club = Club.objects.get(id=current_club_id)
-        form.instance.author = self.request.user
-        form.instance.club = club
+        user_id = self.kwargs['user_id']
+        user = User.objects.get(id=user_id)
+        form.instance.author = user
         return super().form_valid(form)
 
     def get_success_url(self, **kwargs):
