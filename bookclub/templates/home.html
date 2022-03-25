@@ -87,5 +87,13 @@
   </div>
 </div>
 
+{% if request.user.get_number_of_ratings < 10 %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+        $("#staticBackdrop").modal('show');
+    });
+  </script>
+{% endif %}
+
 {% endblock %}
 
