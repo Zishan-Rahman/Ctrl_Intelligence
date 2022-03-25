@@ -77,7 +77,7 @@ class EditMeetingViewTestCase(TestCase):
 
     def test_unsuccesful_meeting_update_with_past_time(self):
         self.form_input['date'] = datetime.now().date()
-        self.form_input['start_time'] = (datetime.now() + timedelta(hours=-2)).time().isoformat(timespec='seconds') #From python documentation https://docs.python.org/3/library/datetime.html#time-objects
+        self.form_input['start_time'] = (datetime.now() + timedelta(minutes=-2)).time().isoformat(timespec='seconds') #From python documentation https://docs.python.org/3/library/datetime.html#time-objects
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         response = self.client.post(self.url, self.form_input, club=self.club, follow=True)
         self.assertEqual(response.status_code, 200)
