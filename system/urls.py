@@ -75,6 +75,6 @@ urlpatterns = [
     path('unfollow/<int:user_id>/', user_views.unfollow, name = 'unfollow'),
     path('club_profile/<int:club_id>/new_post/', post_views.NewPostView.as_view(), name='new_post'),
     path('user_profile/<int:user_id>/create_chat/', messaging_views.createChatFromProfile, name='create_chat_from_profile'),
-    path('user_profile/<int:user_id>/user_feed/', user_feed_views.UserFeedView.as_view(), name='user_feed'),
-    path('user_profile/<int:user_id>/user_new_post/', user_post_views.UserNewPostView.as_view(), name='user_new_post'),
+    path('profile/user_feed/', user_feed_views.UserFeedView.as_view(), name='user_feed'),
+    path('profile/new_post/', user_post_views.UserNewPostView.as_view(), name='user_new_post'),
     ]

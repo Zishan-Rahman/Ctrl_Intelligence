@@ -18,10 +18,9 @@ class UserFeedView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         """Return context data, including new post form."""
-        user = self.request.user
         posts = UserPost.objects.filter(author = user)
         context = super().get_context_data(**kwargs)
-        context['user'] = user
+        context['user'] = self.request.user
         context['form'] = UserPostForm()
         context['posts'] = posts
         return context
@@ -32,10 +31,10 @@ class UserFeedView(LoginRequiredMixin, ListView):
         posts = UserPost.objects.filter(authors = user)
         if form.is_valid():
             return redirect('user_feed')
-        return render(request, 'user_feed.html', {"user": request.user, "club": club, "form": form, "posts": posts})
+        return render(request, 'user_feed.html', {"user": request.user, "form": form, "posts": posts})
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
         posts = UserPost.objects.filter(author = user)
         form = UserPostForm()
-        return render(request, 'user_feed.html', {"user": request.user, "club": club, "form": form, "posts": posts})
+        return render(request, 'user_feed.html', {"user": request.user, "form": form, "posts": posts})
