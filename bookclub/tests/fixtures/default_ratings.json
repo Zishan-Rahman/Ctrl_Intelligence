@@ -9,6 +9,16 @@
       "rating": 5
     }
   },
+  {
+    "model": "bookclub.rating",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "isbn": "0063295619",
+      "book": 2,
+      "rating": 4
+    }
+  },
     {
     "model": "bookclub.rating",
     "pk": 2,

@@ -20,9 +20,11 @@
       </a>
       <ul class="dropdown-menu dropdown-menu" aria-labelledby="user-account-dropdown">
        <li><a class="dropdown-item" href="{% url 'new_club' %}">Create Club</a></li>
+       <div class="dropdown-divider"></div>
         <li><a class="dropdown-item" href="{% url 'club_selector' %}">My Clubs</a></li>
-        <li><a class="dropdown-item" href="{% url 'favourites' %}">Favourites</a></li>
-        <li><a class="dropdown-item" href="{% url 'applications' %}">Applications</a></li>
+        <li><a class="dropdown-item" href="{% url 'favourites' %}">My Favourite Books</a></li>
+        <li><a class="dropdown-item" href="{% url 'applications' %}">My Club Applications</a></li>
+        <li><a class="dropdown-item" href="{% url 'my_book_ratings' %}">My Book Ratings</a></li>
       </ul>
     </li>
 
