@@ -5,9 +5,10 @@ from django.urls import reverse
 from bookclub.models import User, Club, Application
 from django.contrib import messages
 
-class MyApplicationViewTestCase(TestCase):
 
-    fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json', 'bookclub/tests/fixtures/default_applications.json']
+class MyApplicationViewTestCase(TestCase):
+    fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json',
+                'bookclub/tests/fixtures/default_applications.json']
 
     def setUp(self):
         self.url = reverse('my_applications')
@@ -26,7 +27,7 @@ class MyApplicationViewTestCase(TestCase):
         return response, html
 
     def test_my_application_url(self):
-        self.assertEqual(self.url,'/my_applications/')
+        self.assertEqual(self.url, '/my_applications/')
 
     def test_home_uses_correct_template(self):
         self.client.login(email=self.john.email, password='Password123')
@@ -37,7 +38,7 @@ class MyApplicationViewTestCase(TestCase):
     def test_single_application_has_correct_details(self):
         self.client.login(email=self.john.email, password="Password123")
         response, html = self.get_response_and_html()
-        self.assertNotIn('You have no pending applications.', html)
+        self.assertNotIn('You have not made any applications yet.', html)
         self.assertIn('<td>Somerset House Book Club</td>', html)
         self.assertIn('<td>Somerset House Official Book Club!</td>', html)
         self.assertIn('<td>Strand, London</td>', html)
@@ -45,7 +46,7 @@ class MyApplicationViewTestCase(TestCase):
     def test_multiple_applications_have_correct_details(self):
         self.client.login(email=self.joe.email, password='Password123')
         response, html = self.get_response_and_html()
-        self.assertNotIn('You have no pending applications.', html)
+        self.assertNotIn('You have not made any applications yet.', html)
         self.assertIn('<td>Bush House Book Club</td>', html)
         self.assertIn('<td>Bush House Official Book Club!</td>', html)
         self.assertIn('<td>Strand, London</td>', html)
@@ -59,13 +60,13 @@ class MyApplicationViewTestCase(TestCase):
     def test_no_applications(self):
         self.client.login(email=self.jane.email, password='Password123')
         response, html = self.get_response_and_html()
-        self.assertIn('You have no pending applications.', html)
+        self.assertIn('You have not made any applications yet.', html)
         self.assertNotIn('<td>', html)
         self.assertNotIn('</td>', html)
 
     def test_view_after_application_creation(self):
         self.client.login(email=self.sam.email, password="Password123")
-        self.application = Application.objects.create(applicant=self.sam,club=self.bush_club)
+        self.application = Application.objects.create(applicant=self.sam, club=self.bush_club)
         response, html = self.get_response_and_html()
         self.assertNotIn('You have no pending applications.', html)
         self.assertIn('<td>Bush House Book Club</td>', html)
@@ -74,7 +75,7 @@ class MyApplicationViewTestCase(TestCase):
 
     def test_get_application_list_with_pagination(self):
         self.client.login(email=self.john.email, password='Password123')
-        self._create_test_my_applications(settings.APPLICATIONS_PER_PAGE*2+3-1)
+        self._create_test_my_applications(settings.APPLICATIONS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'my_applications.html')

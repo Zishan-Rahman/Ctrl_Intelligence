@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-3">
         <div class="text">
-            <h4>My Clubs </h4>
+            <h3 class="text-left"><strong>My Clubs</strong></h3>
         </div>
     </div>
     <div class="col-6">
@@ -75,7 +75,7 @@
                     </div>
                     <div class="col-3">
                         <div class="card-body">
-                            <a class="btn m-auto" style="background-color: brown; color: white;" href="{% url 'club_profile' user_club.id %}">View</a>
+                            <a class="btn" href="{% url 'club_profile' user_club.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-search"></i> View</a>
                         </div>
 
                     </div>

@@ -1,8 +1,33 @@
-{% extends 'base_content.html' %}
-{% block content %}
-<div class="text-center" style="margin: 0 auto;">
-    <i class="bi bi-bug-fill" style="color: brown; font-size:100px"></i>
-    <h1>Invalid verification code</h1>
-    <a class="btn btn-default btn-lg" href="/sign_up/"><span class="btn btn-dark btn-lg" style="background-color: brown">Sign up</span></a></div>
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+
+<div id ="cover-image">
+    <div class="row h-100">
+        <div class="card cover-card vh-100 align-right">
+          <h1 class="cover-heading fw-bold text-left" style="font-size: 42px; color:white; margin-top: 100px"> <img src="{% static 'images/bookwise.svg' %}" height="60" width="40">ookwise</h1>
+          <br>
+
+
+            <div class="text-center" style="margin: 0 auto;">
+                {% include 'partials/messages.html' %}
+                <section class="text-white">
+                <i class="bi bi-bug-fill" style="color: brown; font-size:100px"></i>
+                <h1>Invalid verification code</h1>
+                <a class="btn btn-default btn-lg" href="/sign_up/"><span class="btn btn-dark btn-lg" style="background-color: brown">Sign up</span></a></div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 {% endblock%}
+
+
+
 

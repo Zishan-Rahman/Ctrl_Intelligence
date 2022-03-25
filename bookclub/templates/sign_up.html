@@ -1,16 +1,22 @@
-{% extends 'base_content.html' %}
-{% block content %}
+{% extends 'base.html' %}
 {% load static %}
-<div class="container text-center">
-  <h2><strong>Welcome to Bookwise!</strong></h2>
-  <div class="container">
-  <div class="row">
-    <div class="col-12">
-      <form class="modal-content animate" action="{% url 'sign_up' %}" method="post">
+{% block body %}
+
+<div id ="cover-image">
+    <div class="row h-100">
+        <div class="card cover-card vh-100 align-right">
+          <h1 class="cover-heading fw-bold text-left" style="font-size: 42px; color:white; margin-top: 100px"> <img src="{% static 'images/bookwise.svg' %}" height="60" width="40">ookwise</h1>
+          <br>
+          <p class="cover-text fw-bold text-left" style="font-size: 36px; color:white; padding-top: 20px;">Welcome to Bookwise</p>
+          <br>
+            <div class="container text-center" >
+                {% include 'partials/messages.html' %}
+                <section class="text-white">
+                <form class="modal-content animate bg-black" action="{% url 'sign_up' %}" method="post">
         <h3><strong>Sign up</strong></h3>
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Sign up" class="btn btn-primary" style="background-color: brown">
+        <input type="submit" value="Sign up" class="btn" style="background-color: brown; color: white">
         <table>
           <thead>
               <tr>
@@ -19,14 +25,15 @@
               </tr>
           </thead>
           <tbody>
-            <td style='text-align:left; vertical-align:middle'><a class="btn btn-default" href="/"><span class="btn btn-dark" style="background-color: brown">Back</span></a></td>
-            <td style='text-align:right; vertical-align:middle'><a class="btn btn-default" href="/login/"><span class="btn btn-dark" style="background-color: brown">Already a user?</span></a></td>
+            <td style='text-align:left; vertical-align:middle'><a class="btn" href="/"><span class="btn" style="background-color: brown; color: white">Back</span></a></td>
+            <td style='text-align:right; vertical-align:middle'><a class="btn" href="{% url 'login' %}" style="background-color: brown; color: white">Already a User?</a></td>
           </tbody>
         </table>
-
-      </form>
+                </form>
+                    </section>
+            </div>
+        </div>
     </div>
-  </div>
-  </div>
 </div>
+
 {% endblock %}

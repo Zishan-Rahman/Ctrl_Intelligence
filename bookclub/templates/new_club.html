@@ -1,11 +1,10 @@
-<!-- new club page adapted from the chess club project -->
 {% extends 'base_content.html' %}
 {% block content %}
 
-<div class="container" style="padding:50px">
+<div class="container">
   <div class="row">
-    <div class="col-12">
-      <h1 class="new-club-title">Create New Club</h1>
+    <div class="col-6 mx-auto" style="background-color: white; border-radius: 10px ;border-style: groove; border-color: brown; padding-top: 10px; padding-bottom: 10px">
+          <h2 class="fw-bold">Create New Club</h2>
       <form action="{% url 'new_club' %}" method="post">
         {% csrf_token %}
           {% include 'partials/bootstrap_form.html' with form=form %}
@@ -15,3 +14,4 @@
   </div>
 </div>
 {% endblock %}
+

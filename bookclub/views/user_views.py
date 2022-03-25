@@ -47,7 +47,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+        return reverse('profile')
 
     def post(self, request, *args, **kwargs):
         current_user = request.user
@@ -77,13 +77,17 @@ def user_profile(request, user_id):
     """ Individual User's Profile Page """
     user = User.objects.get(id = user_id)
     club_util(request)
+    current_user = request.user
     following = request.user.is_following(user)
     followable = request.user != user
+    followers = request.user.followers.all()
     currently_reading_books = user.currently_reading_books.all()
     already_read_books = user.already_read_books.all()
     return render(request, 'user_profile.html',
                     {
                         'user': user,
+                        'current_user': current_user,
+                        'following': following,
                         'following': following,
                         'followable': followable,
                         'user_clubs': config.user_clubs,
@@ -93,23 +97,27 @@ def user_profile(request, user_id):
                  )
 @login_required
 def current_user_profile(request):
-        """ Current User's Profile Page """
-        user = User.objects.get(id = request.user.id)
-        club_util(request)
-        following = request.user.is_following(user)
-        followable = request.user != user
-        currently_reading_books = user.currently_reading_books.all()
-        already_read_books = user.already_read_books.all()
-        return render(request, 'user_profile.html',
-                        {
-                            'user': user,
-                            'following': following,
-                            'followable': followable,
-                            'user_clubs': config.user_clubs,
-                            'currently_reading_books': currently_reading_books,
-                            'already_read_books': already_read_books
-                        }
-                     )
+    """ Current User's Profile Page """
+    user = User.objects.get(id = request.user.id)
+    club_util(request)
+    current_user = request.user
+    following = request.user.is_following(user)
+    followable = request.user != user
+    followers = request.user.followers.all()
+    currently_reading_books = user.currently_reading_books.all()
+    already_read_books = user.already_read_books.all()
+    return render(request, 'user_profile.html',
+                    {
+                        'user': user,
+                        'current_user': current_user,
+                        'following': following,
+                        'following': following,
+                        'followable': followable,
+                        'user_clubs': config.user_clubs,
+                        'currently_reading_books': currently_reading_books,
+                        'already_read_books': already_read_books
+                    }
+                 )
 
 @login_required
 def follow_toggle(request, user_id):
@@ -117,6 +125,13 @@ def follow_toggle(request, user_id):
     followee = User.objects.get(id=user_id)
     current_user.toggle_follow(followee)
     return redirect('user_profile', user_id=user_id)
+
+@login_required
+def unfollow(request, user_id):
+    current_user = request.user
+    followee = User.objects.get(id=user_id)
+    current_user._unfollow(followee)
+    return redirect('profile')
 
 
 def club_util(request):
