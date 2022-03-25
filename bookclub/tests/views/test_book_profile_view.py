@@ -79,3 +79,17 @@ class BookProfileTest(TestCase):
 </div>
 <script id="dsq-count-scr" src="//localhost-8000-b6e1mwjp94.disqus.com/count.js" async></script>"""
         self.assertIn(assertString,html)
+
+
+    def test_book_profile_view_has_add_to_current_reads_button(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<a class="btn btn-default" href="/add_to_current_reads/1/" <span class="btn btn-dark" style=\'padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'> Add to Current Reads </span></a>', html)
+
+
+    def test_book_profile_view_has_add_to_books_read_button(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<a class="btn btn-default" href="/add_to_books_read/1/" <span class="btn btn-dark" style=\'padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'> Add to Books Read </span></a>', html)
