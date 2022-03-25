@@ -11,7 +11,6 @@ class BooksReadTestCase(TestCase, LogInTester):
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 
     def setUp(self):
-        self.url = reverse('books_read')
         self.user = User.objects.get(email='johndoe@bookclub.com')
         id = 1234
         book = Book.objects.create(
@@ -26,9 +25,10 @@ class BooksReadTestCase(TestCase, LogInTester):
             )
         self.book = book
         self.user.already_read_books.add(book)
+        self.url = reverse('books_read', kwargs={'user_id': self.user.id})
 
     def test_books_read(self):
-        self.assertEqual(self.url, '/books_read/')
+        self.assertEqual(self.url, f'/books_read/{self.user.id}/')
 
     def test_get_books_read(self):
         self.client.login(username=self.user.email, password='Password123')
@@ -58,4 +58,4 @@ class BooksReadTestCase(TestCase, LogInTester):
         self.assertIn(f'<td>{str(self.book.pub_year)}</td>', html)
 
     def test_add_to_books_read_url(self):
-        self.assertEqual(self.url, '/books_read/')
+        self.assertEqual(self.url, '/books_read/1/')
