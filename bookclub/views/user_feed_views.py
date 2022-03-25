@@ -14,6 +14,7 @@ class UserFeedView(LoginRequiredMixin, ListView):
     model = UserPost
     template_name = "user_feed.html"
     context_object_name = 'posts'
+    pk_url_kwarg = 'user_id'
 
     def get_context_data(self, **kwargs):
         """Return context data, including new post form."""
@@ -30,19 +31,17 @@ class UserFeedView(LoginRequiredMixin, ListView):
         return context
 
     def post(self, request, *args, **kwargs):
-        current_club_id = self.kwargs['club_id']
-        club = Club.objects.all().get(pk=current_club_id)
-        authors = self.request.user
+        user_id = self.kwargs['user_id']
+        user = User.objects.all().get(pk=user_id)
         form = UserPostForm()
-        posts = UserPost.objects.filter(author = authors)
+        posts = UserPost.objects.filter(authors = user)
         if form.is_valid():
             return redirect('user_feed')
-        return render(request, 'user_feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
+        return render(request, 'user_feed.html', {"user": request.user, "club": club, "form": form, "posts": posts})
 
     def get(self, request, *args, **kwargs):
-        current_club_id = self.kwargs['club_id']
-        club = Club.objects.all().get(pk=current_club_id)
-        authors = self.request.user
-        posts = UserPost.objects.filter(author = authors)
+        user_id = self.kwargs['user_id']
+        user = User.objects.all().get(pk=user_id)
+        posts = UserPost.objects.filter(author = user)
         form = UserPostForm()
-        return render(request, 'user_feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
+        return render(request, 'user_feed.html', {"user": request.user, "club": club, "form": form, "posts": posts})

@@ -324,7 +324,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="{% url 'new_post' user.id %}" method="post">
+        <form action="{% url 'user_new_post' user.id %}" method="post">
           {% csrf_token %}
           {% include 'partials/bootstrap_form.html' with form=form %}
           <button type="submit" class="btn btn-dark" style="background-color: brown">Post</button>

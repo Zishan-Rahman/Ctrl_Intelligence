@@ -13,7 +13,7 @@ class UserNewPostView(LoginRequiredMixin, CreateView):
     """Class-based generic view for new post handling."""
 
     model = UserPost
-    template_name = 'profile.html'
+    template_name = 'user_feed'
     form_class = UserPostForm
     http_method_names = ['post']
     context_object_name = 'user'
