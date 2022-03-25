@@ -32,3 +32,17 @@ class HomeViewTestCase(TestCase):
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+
+    def test_home_shows_alert_if_not_enough_books_rated(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn('''<div class="container">
+      
+      <div class="alert alert-warning" role="alert">
+        You need to rate 10 books to get better recommendations. You have rated  
+        
+            no books yet
+        
+        , so click "Browse" then "All Books" or click "Search" on the toolbar to search for books to rate!
+      </div>''',html)
