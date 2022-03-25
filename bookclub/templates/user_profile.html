@@ -1,7 +1,7 @@
 {% extends 'base_content.html' %}
 {% block content %}
 <div class="container mt-3">
-  <div class="row content">
+  <div class="row">
     <div class="col-3">
         <h6 style="background-color: brown; padding: 10px; color: white;text-align: center;">Current Reads</h6>
           <img src="{{ currently_reading_books.1.medium_url }}"/>
@@ -18,37 +18,11 @@
           <a href="/books_read/">See More</a>
     </div>
 
-    <div class="col-6">
-      <center><img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}" class="rounded-circle profile-image"></center>
-      <div class="profile-text text-center">
-          <h3 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h3>
-          <p class="profile-email">{{ user.email }}</p>
-          <p class="profile-bio">{{ user.public_bio }}</p>
-          <hr>
-          <p class="profile-genre">Favourite Genre: {{ user.favourite_genre }}</p>
-          <p class="profile-loc">Location: {{ user.location }}</p>
-          <p class="profile-age">Age: {{ user.age }}</p>
-          <p class="follow-user">
-          <form action="{% url 'follow_toggle' user.id %}" method='post'>
-            {% csrf_token %}
-            <p class=" profile-statistics">
-              <span>
-                <b>{{user.followee_count}}</b> Following
-                &emsp;
-                <b>{{user.follower_count}}</b> Followers
-                {%if followable %}
-                {% if following %}
-                <button class='btn btn-secondary'>Unfollow</button>
-                {% else %}
-                <button class='btn btn-primary'>Follow</button>
-                {% endif %}
-                {% endif %}
-              </span>
-            </p>
-          </form>
-          <button id="Invite" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="background-color: brown; color: white">
-              Invite
-          </button>
+      <div class="col-3">
+        <div>
+            <img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}"
+                class="rounded-circle profile-image">
+
       </div>
 
         <div class="profile-text">
@@ -69,6 +43,61 @@
             <div class="col"></div>
           </div>
               <div class="row"><br></div>
+              <div class="row">
+
+              <div class="card w-100 h-100">
+                <div class="card-body">
+                  <div class="card-title">
+                    <h5>Bio:</h5>
+                  </div>
+                  <div class="card-text">
+                    <p class="card-title" align="justify">{{ user.public_bio }}<p>
+                  </div>
+                </div>
+              </div>
+               <div class="row">
+                 <p class="follow-user">
+                   <form action="{% url 'follow_toggle' user.id %}" method='post'>
+                     {% csrf_token %}
+                            {%if user.id == request.user.id%}
+                            <a valign="left" class="btn" href="{% url 'edit_profile' %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                              <i class="bi bi-gear" style="font-size: 0.9rem;"></i>
+                              Edit Profile
+                            </a>
+                            {%else%}
+                              <a valign="left" class="btn" href="{% url 'create_chat_from_profile' user.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                                <i class="bi bi-messenger" style="font-size: 0.9rem"></i>
+                                Chat
+                              </a>
+                            {%endif%}
+                            &emsp;
+                            {%if followable %}
+                            {% if following %}
+                            <button class='btn btn-secondary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: GREY; text-transform:uppercase; font-size: 14px">
+                              Unfollow
+                            </button>
+                            {% else %}
+                            <button class='btn btn-primary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: LIGHT-BLUE; text-transform:uppercase; font-size: 14px">
+                              Follow
+                            </button>
+                            {% endif %}
+                            {% endif %}
+                            &emsp;
+                            {%if user.id != request.user.id%}
+                            <a id="Invite" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                              <i class="bi bi-envelope" style="font-size: 0.9rem"></i>
+                              Invite
+                            </a>
+                            {%endif%}
+                   </form>
+               </div>
+               <div class="row"> <br> </div>
+
+
+
+
+
+               </div>
 
 
 
@@ -125,8 +154,20 @@
     <div class="col-3"></div>
 
   </div>
+  <div class="row">
+    <div class="col-3"></div>
+    <div class="col">
+
+     </div>
+    <div class="col-3"></div>
+  </div>
+
+  <div class="row content">
+    <div class="col-12">
 
       <center>
+
+
 
       <div class="modal fade" id="exampleModal_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -252,10 +293,6 @@
 
 
       </center>
-    </div>
-
-    <div class="col-3">
-
     </div>
   </div>
 </div>

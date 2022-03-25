@@ -13,6 +13,19 @@ class BooksReadTestCase(TestCase, LogInTester):
     def setUp(self):
         self.url = reverse('books_read')
         self.user = User.objects.get(email='johndoe@bookclub.com')
+        id = 1234
+        book = Book.objects.create(
+                isbn=id,
+                title=f'{id} Book',
+                author=f'user {id}',
+                pub_year=2010+id,
+                publisher=f'{id} Publisher',
+                small_url=f'small{id}@example.org',
+                medium_url=f'medium{id}@example.org',
+                large_url=f'large{id}@example.org',
+            )
+        self.book = book
+        self.user.already_read_books.add(book)
 
     def test_books_read(self):
         self.assertEqual(self.url, '/books_read/')
@@ -35,14 +48,14 @@ class BooksReadTestCase(TestCase, LogInTester):
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
 
-    def test_book_profile_has_correct_details(self):
+    def test_book_reads_has_correct_details(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<img src="{self.book.medium_url}" alt="a">', html)
-        self.assertIn(f'<h3 class="book-title">{self.book.title}</h3>', html)
-        self.assertIn(f'<p class="book-author">Author: {self.book.author}</p>', html)
-        self.assertIn(f'<p class="book-pub-year">Published Year: {str(self.book.pub_year)}</p>', html)
+        self.assertIn(f'<td>{self.book.title}</td>', html)
+        self.assertIn(f'<td>{self.book.author}</td>', html)
+        self.assertIn(f'<td>{str(self.book.pub_year)}</td>', html)
 
     def test_add_to_books_read_url(self):
         self.assertEqual(self.url, '/books_read/')
