@@ -41,9 +41,9 @@ class InviteTestCases(TestCase):
 
     def test_user_profile_has_invite(self):
         self.client.login(email=self.john.email, password='Password123')
-        response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
+        response = self.client.get(reverse('user_profile', kwargs={'user_id': self.jane.id}))
         html = response.content.decode('utf8')
-        self.assertIn('id="Invite"', html)
+        self.assertIn('Invite', html)
 
     def test_sender_user_invite_sent(self):
         self.client.login(email=self.john.email, password='Password123')

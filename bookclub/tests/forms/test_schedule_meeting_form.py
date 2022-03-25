@@ -18,7 +18,7 @@ class ScheduleMeetingTestCase(TestCase):
         self.client.login(email=self.john.get_email(), password='Password123')
         self.yesterday = self.today - timedelta(days=1)
         self.tomorrow = self.today + timedelta(days=1)
-        last_hour_date_time = datetime.now() - timedelta(hours=1)
+        last_hour_date_time = datetime.now() - timedelta(minutes=1)
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.past_time = time(last_hour_date_time.hour, 0)
         self.future_time = time(next_hour_date_time.hour, 0)
