@@ -39,7 +39,7 @@ class LogInView(LoginProhibitedMixin, View):
     """View that handles log in."""
 
     http_method_names = ['get', 'post']
-    redirect_when_logged_in_url = 'rate_more_books' # will automatically redirect to 'home' if more than 10 books rated
+    redirect_when_logged_in_url = "home"
 
     def get(self, request):
         """Display log in template."""
