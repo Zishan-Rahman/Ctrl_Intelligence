@@ -358,3 +358,14 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+
+
+class UserPost(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    text = models.CharField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
