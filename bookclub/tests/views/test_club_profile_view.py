@@ -84,7 +84,7 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(
-            f'<button type="submit" class="btn" id="apply-button" style=\'padding: 15px;color:white; '
+            f'<button type="submit" class="btn" id="apply-button" style=\'padding: 10px;color:white; '
             f'background-color: brown; text-transform:uppercase; font-size: 14px\'><i class="bi bi-check-square"></i> '
             f'Apply</button>',
             html)
@@ -127,7 +127,7 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="submit" class="btn btn-default" id="leave-button" style=\'padding: '
-                      f'15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'><i '
+                      f'10px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'><i '
                       f'class="bi bi-box-arrow-left"></i> Leave</button>', html)
 
     """Test if the club profile page has a leave button for a organiser of a club """
@@ -140,7 +140,7 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="submit" class="btn btn-default" id="leave-button" style=\'padding: '
-                      f'15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'><i '
+                      f'10px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'><i '
                       f'class="bi bi-box-arrow-left"></i> Leave</button>', html)
 
     def test_disband_button_visible_for_owner(self):
@@ -151,7 +151,7 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
 
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" id="leave-button" style=\'padding: 15px;color:white; '
+        self.assertIn(f'<button type="submit" class="btn" id="leave-button" style=\'padding: 10px;color:white; '
                       f'background-color: brown; text-transform:uppercase; font-size: 14px\'><i class="bi '
                       f'bi-x-octagon"></i> Disband</button>', html)
 
@@ -162,7 +162,7 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
 
-        self.assertNotIn(f'<button type="submit" class="btn" id="leave-button" style=\'padding: 15px;color:white; '
+        self.assertNotIn(f'<button type="submit" class="btn" id="leave-button" style=\'padding: 10px;color:white; '
                          f'background-color: brown; text-transform:uppercase; font-size: 14px\'><i class="bi '
                          f'bi-x-octagon"></i> Disband</button>', html)
         self.assertNotIn('Disband', html)
@@ -208,7 +208,7 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="button" class="btn float-end" data-bs-toggle="modal" '
-                      f'data-bs-target="#staticBackdrop" style=\'padding-top: 15px; padding-bottom: 15px; '
+                      f'data-bs-target="#staticBackdrop" style=\'padding-top: 10px; padding-bottom: 10px; '
                       f'color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'>\n          '
                       f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
 
@@ -216,7 +216,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f' <a class="btn float-end" style=\'padding: 15px;color:white; margin-bottom: 20px; '
+        self.assertIn(f' <a class="btn float-end" style=\'padding: 10px;color:white; margin-bottom: 20px; '
                       f'background-color: brown; text-transform:uppercase; font-size: 14px\' '
                       f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
 
@@ -225,7 +225,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertNotIn(f' <a class="btn float-end" style=\'padding: 15px;color:white; margin-bottom: 20px; '
+        self.assertNotIn(f' <a class="btn float-end" style=\'padding: 10px;color:white; margin-bottom: 20px; '
                          f'background-color: brown; text-transform:uppercase; font-size: 14px\' '
                          f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
 
@@ -233,7 +233,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertNotIn(f' <a class="btn float-end" style=\'padding: 15px;color:white; margin-bottom: 20px; '
+        self.assertNotIn(f' <a class="btn float-end" style=\'padding: 10px;color:white; margin-bottom: 20px; '
                          f'background-color: brown; text-transform:uppercase; font-size: 14px\' '
                          f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
 
@@ -266,7 +266,7 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="button" class="btn float-end" data-bs-toggle="modal" '
-                      f'data-bs-target="#staticBackdrop" style=\'padding-top: 15px; padding-bottom: 15px; '
+                      f'data-bs-target="#staticBackdrop" style=\'padding-top: 10px; padding-bottom: 10px; '
                       f'color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'>\n          '
                       f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
 
@@ -277,7 +277,7 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
         html = response.content.decode('utf8')
         self.assertNotIn(f'<button type="button" class="btn float-end" data-bs-toggle="modal" '
-                         f'data-bs-target="#staticBackdrop" style=\'padding-top: 15px; padding-bottom: 15px; '
+                         f'data-bs-target="#staticBackdrop" style=\'padding-top: 10px; padding-bottom: 10px; '
                          f'color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'>\n '
                          f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
 
@@ -287,8 +287,8 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<a class="btn float-end" href="/club_profile/2/meeting/" style="padding-top: 15px; '
-                      f'padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; '
+        self.assertIn(f'<a class="btn float-end" href="/club_profile/2/meeting/" style="padding-top: 10px; '
+                      f'padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; '
                       f'font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>', html)
 
     def test_club_profile_view_when_owner_organiser_false_schedule_button(self):
@@ -297,8 +297,8 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
         html = response.content.decode('utf8')
-        self.assertNotIn(f'<a class="btn float-end" href="/club_profile/2/meeting/" style="padding-top: 15px; '
-                         f'padding-bottom: 15px; color:white; background-color: brown; text-transform:uppercase; '
+        self.assertNotIn(f'<a class="btn float-end" href="/club_profile/2/meeting/" style="padding-top: 10px; '
+                         f'padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; '
                          f'font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>', html)
 
     """ Test to check whether some posts and meetings appear on club profile page """

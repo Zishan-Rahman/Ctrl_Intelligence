@@ -3,7 +3,7 @@ from django.urls import reverse
 from bookclub.models import User
 from bookclub.tests.helpers import reverse_with_next
 
-class ShowUserTest(TestCase):
+class FollowViewTest(TestCase):
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 
@@ -13,10 +13,7 @@ class ShowUserTest(TestCase):
         self.url = reverse('follow_toggle', kwargs={'user_id': self.followee.id})
 
     def test_follow_toggle_url(self):
-        self.assertEqual(self.url,f'/follow_toggle/{self.followee.id}')
-
-    def test_follow_toggle_url(self):
-        self.assertEqual(self.url,f'/follow_toggle/{self.followee.id}')
+        self.assertEqual(self.url,'/follow_toggle/2/')
 
     def test_get_follow_toggle_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)

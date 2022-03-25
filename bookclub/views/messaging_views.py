@@ -43,6 +43,23 @@ class CreateChatView(View):
         except:
             return redirect('create_chat')
 
+def createChatFromProfile(request, user_id):
+    try:
+        receiver = User.objects.get(id=user_id)
+        if Chat.objects.filter(user=request.user, receiver=receiver).exists():
+            chat = Chat.objects.filter(user=request.user, receiver=receiver)[0]
+            return redirect('chat', pk=chat.pk)
+
+        sender_chat = Chat.objects.create(
+            user=request.user,
+            receiver=receiver
+        )
+        messages.add_message(request, messages.SUCCESS, "Chat created!")
+        chat_pk = sender_chat.pk
+        return redirect('chat', pk=chat_pk)
+    except:
+        return redirect('create_chat')
+
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ListChatsView(View):

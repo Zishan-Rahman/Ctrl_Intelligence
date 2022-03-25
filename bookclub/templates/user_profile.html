@@ -1,84 +1,282 @@
 {% extends 'base_content.html' %}
 {% block content %}
 <div class="container mt-3">
-  <div class="row content">
-    <div class="col-12">
-      <center><img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}"
-          class="rounded-circle profile-image"></center>
-      <div class="profile-text">
-        <center>
-          <h3 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h3>
-          <p class="profile-email">{{ user.email }}</p>
-        </center>
+  <div class="row">
+    <div class="col-3"></div>
+      
+      <div class="col-3">
+        <div>
+            <img src="{{ user.gravatar }}" alt="Gravatar of {{ user.first_name }} {{ user.last_name }}"
+                class="rounded-circle profile-image">
+          
       </div>
-    </div>
+
+        <div class="profile-text">
+          
+              <h3 class="profile-name">
+                {{ user.first_name }} {{ user.last_name }}
+                
+              </h3>
+
+            <p class="profile-email">{{ user.email }}</p>
+            <div class="row">
+              <div class="col-5">
+                <button class="link" data-bs-toggle="modal" data-bs-target="#following_modal"><b>{{user.followee_count}}</b> Following</button>
+            </div>
+            <div class="col-5">
+              <button class="link" data-bs-toggle="modal" data-bs-target="#follower_modal"><b>{{user.follower_count}}</b> Followers</button>
+            </div>
+            <div class="col"></div>
+          </div>
+              <div class="row"><br></div>
+               
+              
+          
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <div class="card w-100">
+            <div class="card-body">
+                <div class="row">
+                  <div class="col-3">
+                    <h6 class="card-title"><i class="bi bi-book " style="color: brown"></i></h6>
+                  </div>
+                  <div class="col">
+                    <h6 class="card-title">{{ user.favourite_genre }}</h6>
+                  </div>
+                </div>
+            </div>
+          </div>
+         </div>
+          <div class="row">
+            <div class="card w-100">
+              <div class="card-body">
+                  <div class="row">
+                    <div class="col-3">
+                      <h6 class="card-title"><i class="bi bi-geo-alt" style="color: brown"></i></h6>
+                    </div>
+                    <div class="col">
+                      <h6 class="card-title">{{ user.location }}</h6>
+                    </div>
+                  </div>
+              </div>
+            </div>
+           </div>
+            
+            <div class="row">
+              <div class="card w-100">
+                <div class="card-body">
+                    <div class="row">
+                      <div class="col-3">
+                        <h6 class="card-title"><i class="bi bi-clock-history" style="color: brown"></i></h6>
+                      </div>
+                      <div class="col">
+                        <h6 class="card-title">{{ user.age }} years old</h6>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+  
+    
+    
+    <div class="col-3"></div>
+
   </div>
-  <hr>
+  <div class="row">
+    <div class="col-3"></div>
+    <div class="col">
+
+      <div class="row"> 
+      
+      <div class="card w-100 h-100">
+        <div class="card-body">
+          <div class="card-title">
+            <h5>Bio:</h5>
+          </div>
+          <div class="card-text">
+            <p class="card-title" align="justify">{{ user.public_bio }}<p>
+          </div>
+        </div>
+      </div>
+       <div class="row">
+         <p class="follow-user">
+           <form action="{% url 'follow_toggle' user.id %}" method='post'>
+             {% csrf_token %}
+                    {%if user.id == request.user.id%}
+                    <a valign="left" class="btn" href="{% url 'edit_profile' %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                      <i class="bi bi-gear" style="font-size: 0.9rem;"></i>
+                      Edit Profile
+                    </a>
+                    {%else%}
+                      <a valign="left" class="btn" href="{% url 'create_chat_from_profile' user.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                        <i class="bi bi-messenger" style="font-size: 0.9rem"></i>
+                        Chat
+                      </a>
+                    {%endif%}
+                    &emsp;
+                    {%if followable %}
+                    {% if following %}
+                    <button class='btn btn-secondary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: GREY; text-transform:uppercase; font-size: 14px">
+                      Unfollow
+                    </button>
+                    {% else %}
+                    <button class='btn btn-primary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: LIGHT-BLUE; text-transform:uppercase; font-size: 14px">
+                      Follow
+                    </button>
+                    {% endif %}
+                    {% endif %}
+                    &emsp;
+                    {%if user.id != request.user.id%}
+                    <a id="Invite" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                      <i class="bi bi-envelope" style="font-size: 0.9rem"></i>
+                      Invite
+                    </a>
+                    {%endif%}
+           </form>
+       </div>
+       <div class="row"> <br> </div>
+ 
+       
+      
+       
+      
+       </div>
+ 
+     </div>
+    <div class="col-3"></div>
+  </div>
+  
   <div class="row content">
     <div class="col-12">
+      
       <center>
-        <p class="profile-ps">Favourite Genre: {{ user.favourite_genre }}</p>
-        <p class="profile-name">Location: {{ user.location }}</p>
-        <p class="profile-name">Age: {{ user.age }}</p>
-        <p class="follow-user">
-        <form action="{% url 'follow_toggle' user.id %}" method='post'>
-          {% csrf_token %}
-          <p class=" profile-statistics">
-            <span>
-              <b>{{user.followee_count}}</b> Following
-              &emsp;
-              <b>{{user.follower_count}}</b> Followers
-              {%if followable %}
-              {% if following %}
-              <button class='btn btn-secondary'>Unfollow</button>
-              {% else %}
-              <button class='btn btn-primary'>Follow</button>
-              {% endif %}
-              {% endif %}
-            </span>
-          </p>
-        </form>
-      </center>
-      <center>
-        <button id="Invite" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="background-color: brown; color: white">
-            Invite
-      </button>
+
+        
 
       <div class="modal fade" id="exampleModal_1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Invite to Club
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <body>
-           <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp
-           <table id="myTable" class="table">
-             <thead class="table-light">
-               <tr>
-                 <th scope="col"></th>
-                 <th scope="col">Name</th>
-                 <th scope="col">Invite</th>
-               </tr>
-             </thead>
-           <tr>
-             {% for entry in user_clubs %}
-             <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
-               <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
-               <td>{{ entry.name }}</td>
-               <td><a class="btn" href="{% url 'invite_message' user.id entry.id %}" style="background-color: brown; color: white">Invite</a></td>
-             </tr>
-             {% endfor %}
-       </table>
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Invite to Club
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <body>
+                <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp
+                <table id="myTable" class="table">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Invite</th>
+                    </tr>
+                  </thead>
+                     <tr>
+                      {% for entry in user_clubs %}
+                      <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
+                        <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
+                        <td>{{ entry.name }}</td>
+                        <td><a class="btn" href="{% url 'invite_message' user.id entry.id %}" style="background-color: brown; color: white">Invite</a></td>
+                      </tr>
+                      {% endfor %}
+                  </table>
 
 
-        </body>
+                  </body>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
+
+
+      <div class="modal fade" id="follower_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Followers
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <body>
+                <table id="myTable" class="table">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Follow</th>
+                    </tr>
+                  </thead>
+                     <tr>
+                      {% for entry in user.followers.all %}
+                      <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
+                        <td><a href="{% url 'user_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
+                        <td>{{ entry.first_name }} {{ entry.last_name }}</td>
+                        <td>
+                          {%if entry.id != request.user.id %}
+                          <a class="btn" href="{% url 'unfollow' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                            Unfollow
+                          </a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                      {% endfor %}
+                  </table>
+
+
+                  </body>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="following_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Following
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <body>
+                <table id="myTable" class="table">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Unfollow</th>
+                    </tr>
+                  </thead>
+                     <tr>
+                      {% for entry in user.followees.all %}
+                      <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
+                        <td><a href="{% url 'user_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
+                        <td>{{ entry.first_name }} {{ entry.last_name }}</td>
+                        <td>
+                          {%if entry.id != request.user.id %}
+                          <a class="btn" href="{% url 'unfollow' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                            Unfollow
+                          </a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                      {% endfor %}
+                  </table>
+
+
+                  </body>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
 
       </center>
