@@ -75,20 +75,49 @@ class UsersListView(LoginRequiredMixin, ListView):
 @login_required
 def user_profile(request, user_id):
     """ Individual User's Profile Page """
-    user = User.objects.get(id=user_id)
+    user = User.objects.get(id = user_id)
     club_util(request)
     current_user = request.user
-    followers = request.user.followers.all()
     following = request.user.is_following(user)
     followable = request.user != user
-    return render(request, 'user_profile.html', {'user': user,
-                                                 'current_user': current_user,
-                                                 'following': following,
-                                                 'followable': followable,
-                                                 'user_clubs': config.user_clubs,
-                                                 'followers': followers}
-                  )
-
+    followers = request.user.followers.all()
+    currently_reading_books = user.currently_reading_books.all()
+    already_read_books = user.already_read_books.all()
+    return render(request, 'user_profile.html',
+                    {
+                        'user': user,
+                        'current_user': current_user,
+                        'following': following,
+                        'following': following,
+                        'followable': followable,
+                        'user_clubs': config.user_clubs,
+                        'currently_reading_books': currently_reading_books,
+                        'already_read_books': already_read_books
+                    }
+                 )
+@login_required
+def current_user_profile(request):
+    """ Current User's Profile Page """
+    user = User.objects.get(id = request.user.id)
+    club_util(request)
+    current_user = request.user
+    following = request.user.is_following(user)
+    followable = request.user != user
+    followers = request.user.followers.all()
+    currently_reading_books = user.currently_reading_books.all()
+    already_read_books = user.already_read_books.all()
+    return render(request, 'user_profile.html',
+                    {
+                        'user': user,
+                        'current_user': current_user,
+                        'following': following,
+                        'following': following,
+                        'followable': followable,
+                        'user_clubs': config.user_clubs,
+                        'currently_reading_books': currently_reading_books,
+                        'already_read_books': already_read_books
+                    }
+                 )
 
 @login_required
 def follow_toggle(request, user_id):
@@ -139,5 +168,3 @@ def inviteMessage(request, user_id, club_id):
     message.save()
     messages.add_message(request, messages.SUCCESS, "Invite Sent!")
     return redirect('user_profile', user_id=user_id)
-
-

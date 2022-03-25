@@ -70,6 +70,7 @@ class MyApplicationsView(LoginRequiredMixin, View):
 def app_accept(request, pk):
     """Accept application"""
     app = Application.objects.all().get(pk=pk)
+
     if request.user == app.club.owner:
         app.club.make_member(app.applicant)
         app.delete()
