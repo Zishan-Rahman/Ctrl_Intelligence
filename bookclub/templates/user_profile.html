@@ -110,6 +110,9 @@
                       <i class="bi bi-gear" style="font-size: 0.9rem;"></i>
                       Edit Profile
                     </a>
+                    <button type="button" class="btn float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
+                            <i class="bi bi-chat-square-text"></i> New Post
+                        </button>
                     {%else%}
                       <a valign="left" class="btn" href="{% url 'create_chat_from_profile' user.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
                         <i class="bi bi-messenger" style="font-size: 0.9rem"></i>
@@ -312,6 +315,22 @@
     {% endif %}
     </div>
           </div>
+
+          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Create a post</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'new_post' user.id %}" method="post">
+          {% csrf_token %}
+          {% include 'partials/bootstrap_form.html' with form=form %}
+          <button type="submit" class="btn btn-dark" style="background-color: brown">Post</button>
+        </form>
+      </div>
+    </div>
 
       </center>
     </div>
