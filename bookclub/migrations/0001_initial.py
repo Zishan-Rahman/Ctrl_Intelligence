@@ -148,6 +148,16 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='user',
+            name='already_read_books',
+            field=models.ManyToManyField(related_name='user_already_read_books', to='bookclub.Book'),
+        ),
+        migrations.AddField(
+            model_name='user',
+            name='currently_reading_books',
+            field=models.ManyToManyField(related_name='user_currently_reading_books', to='bookclub.Book'),
+        ),
+        migrations.AddField(
+            model_name='user',
             name='favourite_books',
             field=models.ManyToManyField(to='bookclub.Book'),
         ),

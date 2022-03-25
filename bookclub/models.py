@@ -11,7 +11,6 @@ from libgravatar import Gravatar
 
 
 # books model
-
 class Book(models.Model):
     isbn = models.CharField(unique=True, max_length=12, blank=False)
     title = models.CharField(unique=False, blank=False, max_length=512)
@@ -51,7 +50,6 @@ class Book(models.Model):
     def get_large_url(self):
         return self.large_url
 
-
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255, blank=False)
@@ -74,6 +72,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     favourite_genre = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
+    currently_reading_books = models.ManyToManyField(Book, related_name='%(class)s_currently_reading_books')
+
+    already_read_books = models.ManyToManyField(Book, related_name='%(class)s_already_read_books')
     favourite_books = models.ManyToManyField(Book)
     is_email_verified = models.BooleanField(default=False)
     followers = models.ManyToManyField(
@@ -151,7 +152,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-
 
 # Club Model adapted from Clucker user model and Chess club management system club model
 
