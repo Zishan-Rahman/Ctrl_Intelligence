@@ -73,9 +73,9 @@ class UsersListView(LoginRequiredMixin, ListView):
 
 
 @login_required
-def user_profile(request):
+def user_profile(request, user_id):
     """ Individual User's Profile Page """
-    user = User.objects.get(id = request.user.id)
+    user = User.objects.get(id = user_id)
     club_util(request)
     following = request.user.is_following(user)
     followable = request.user != user
@@ -91,7 +91,25 @@ def user_profile(request):
                         'already_read_books': already_read_books
                     }
                  )
-
+@login_required
+def current_user_profile(request):
+        """ Current User's Profile Page """
+        user = User.objects.get(id = request.user.id)
+        club_util(request)
+        following = request.user.is_following(user)
+        followable = request.user != user
+        currently_reading_books = user.currently_reading_books.all()
+        already_read_books = user.already_read_books.all()
+        return render(request, 'user_profile.html',
+                        {
+                            'user': user,
+                            'following': following,
+                            'followable': followable,
+                            'user_clubs': config.user_clubs,
+                            'currently_reading_books': currently_reading_books,
+                            'already_read_books': already_read_books
+                        }
+                     )
 
 @login_required
 def follow_toggle(request, user_id):
