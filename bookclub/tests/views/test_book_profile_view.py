@@ -42,14 +42,14 @@ class BookProfileTest(TestCase):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<input type="submit" value="Make Favourite">', html)
+        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Favourite</button>', html)
 
     def test_book_profile_has_unfavourite_button_when_book_is_in_favourites(self):
         self.client.login(email=self.user.email, password='Password123')
         self.user.favourite_books.add(self.book)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<input type="submit" value="Unfavourite">', html)
+        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Unfavourite</button>', html)
 
     def test_book_profile_has_dropdown_to_rate_book(self):
         self.client.login(email=self.user.email, password='Password123')
