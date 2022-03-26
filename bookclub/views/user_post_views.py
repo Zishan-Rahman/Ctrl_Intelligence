@@ -17,6 +17,7 @@ class UserNewPostView(LoginRequiredMixin, CreateView):
     form_class = UserPostForm
     http_method_names = ['post']
     context_object_name = 'user'
+    pk_url_kwarg = 'club_id'
 
 
     def get_context_data(self, **kwargs):
