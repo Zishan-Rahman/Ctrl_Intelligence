@@ -44,33 +44,36 @@ class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
 def current_reads(request, user_id):
     user = User.objects.get(id = user_id)
     books = user.currently_reading_books.all()
-    return render(request, "current_reads.html", {'books':books})
+    return render(request, "reading_list.html", {'books':books, 'user': user})
 
 def add_to_current_reads(request, book_id):
-    user = User.objects.get(id = request.user.id)
-    book = Book.objects.get(id=book_id)
+    user = User.objects.get(pk=request.user.id)
+    book = Book.objects.get(pk=book_id)
     user.currently_reading_books.add(book)
-    user.save()
-    messages.add_message(request, messages.SUCCESS, "Book was successfully added to your current reads!")
-    return redirect("book_profile" , book_id)
+    messages.add_message(request, messages.SUCCESS, f"{book.title} was successfully added to your reading list!")
 
-@login_required
-def books_read(request, user_id):
-    user = User.objects.get(id = user_id)
-    books = user.already_read_books.all()
-    return render(request, "books_read.html", {'books':books})
 
-def add_to_books_read(request, book_id):
-    # book_not_added = True
-    user = User.objects.get(id = request.user.id)
-    book = Book.objects.get(id=book_id)
-    user.already_read_books.add(book)
-    user.save()
+def add_to_current_reads_book_list(request, book_id):
+    add_to_current_reads(request, book_id)
+    return redirect("book_list")
 
-    messages.add_message(request, messages.SUCCESS,
-                                        "Book was successfully added to books reads!")
+def add_to_current_reads_book_profile(request, book_id):
+    add_to_current_reads(request, book_id)
+    return redirect("book_profile", book_id=book_id)
 
-    return redirect("book_profile" , book_id)
+def remove_from_current_reads(request, book_id):
+    user = User.objects.get(pk=request.user.id)
+    book = Book.objects.get(pk=book_id)
+    user.currently_reading_books.remove(book)
+    messages.add_message(request, messages.ERROR, f"{book.title} was successfully removed from your reading list!")
+
+def remove_from_current_reads_book_list(request, book_id):
+    remove_from_current_reads(request, book_id)
+    return redirect("book_list")
+
+def remove_from_current_reads_book_profile(request, book_id):
+    remove_from_current_reads(request, book_id)
+    return redirect("book_profile", book_id=book_id)
 
 class Favourites(LoginRequiredMixin, ListView):
     model = Book
@@ -97,14 +100,28 @@ def make_favourite(request, book_id):
     book = Book.objects.get(pk=book_id)
     user.favourite_books.add(book)
     messages.add_message(request, messages.SUCCESS, book.title + " has been added to Favourites!")
+
+def make_favourite_book_list(request, book_id):
+    make_favourite(request, book_id)
+    return redirect('book_list')
+
+def make_favourite_book_profile(request, book_id):
+    make_favourite(request, book_id)
     return redirect('book_profile', book_id=book_id)
 
-
-def Unfavourite(request, book_id):
+def unfavourite(request, book_id):
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.favourite_books.remove(book)
-    messages.add_message(request, messages.SUCCESS, book.title + " has been removed from Favourites!")
+    messages.add_message(request, messages.REMOVE, book.title + " has been removed from Favourites!")
+    return redirect('book_profile', book_id=book_id)
+
+def unfavourite_book_list(request, book_id):
+    unfavourite(request, book_id)
+    return redirect('book_list')
+
+def unfavourite_book_profile(request, book_id):
+    unfavourite(request, book_id)
     return redirect('book_profile', book_id=book_id)
 
 class MyBookRatings(LoginRequiredMixin, ListView):
@@ -114,7 +131,16 @@ class MyBookRatings(LoginRequiredMixin, ListView):
     context_object_name = "ratings"
     paginate_by = settings.BOOKS_PER_PAGE
 
-    def get_queryset(self):
+    def get(self, request):
+        """Display application template"""
+        return self.render()
+
+    def render(self):
         user = User.objects.get(pk=self.request.user.id)
         ratings = Rating.objects.filter(user=user)
-        return ratings
+
+        paginator = Paginator(ratings, settings.APPLICATIONS_PER_PAGE)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        return render(self.request, 'my_book_ratings.html', {'ratings': ratings, 'page_obj': page_obj})

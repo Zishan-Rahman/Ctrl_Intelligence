@@ -12,8 +12,17 @@ p {
         <center>
           <img src="{{ book.medium_url }}" alt="a">
           <h3 class="book-title">{{ book.title }}</h3>
-          <a class="btn btn-default" href="{% url 'add_to_current_reads' book.id %}" <span class="btn btn-dark" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'> Add to Current Reads </span></a>
-          <a class="btn btn-default" href="{% url 'add_to_books_read' book.id %}" <span class="btn btn-dark" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'> Add to Books Read </span></a>
+          {% if book in request.user.currently_reading_books.all %}
+          <form action="{% url 'remove_from_current_reads_book_profile' book.id %}" method="post">
+            {% csrf_token %}
+           <td><button type="submit" class="btn btn-dark" style="background-color: brown">Remove from My Reading List</button></td>
+         </form>
+         {% else %}
+          <form action="{% url 'add_to_current_reads_book_profile' book.id %}" method="post">
+            {% csrf_token %}
+           <td><button type="submit" class="btn btn-dark" style="background-color: brown">Add to My Reading List</button></td>
+         </form>
+          {% endif %}
           <hr>
           <p class="book-isbn">ISBN: {{ book.isbn }}</p>
           <p class="book-author">Author: {{ book.author }}</p>
@@ -36,18 +45,18 @@ p {
               <option value=10>10</option>
             </select>
             <br>
-            <input type="submit" value="Submit">
+            <button type="submit" class="btn btn-dark" style="background-color: brown">Submit</button>
           </form>
 
           <br>
 
           {% if book in request.user.favourite_books.all %}
-          <form action="{% url 'Unfavourite' book.id %}" method="post">
+          <form action="{% url 'unfavourite_book_profile' book.id %}" method="post">
             {% csrf_token %}
           <button type="submit" class="btn btn-dark" style="background-color: brown">Unfavourite</button>
           </form>
           {% else %}
-           <form action="{% url 'make_favourite' book.id %}" method="post">
+           <form action="{% url 'make_favourite_book_profile' book.id %}" method="post">
              {% csrf_token %}
           <button type="submit" class="btn btn-dark" style="background-color: brown">Favourite</button>
           </form>

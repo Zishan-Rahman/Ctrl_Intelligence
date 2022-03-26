@@ -34,13 +34,13 @@ class CurrentReadsTestCase(TestCase, LogInTester):
         self.client.login(username=self.user.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'current_reads.html')
+        self.assertTemplateUsed(response, 'reading_list.html')
 
     def test_current_reads_uses_correct_template(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'current_reads.html')
+        self.assertTemplateUsed(response, 'reading_list.html')
 
     def test_get_current_reads_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)
