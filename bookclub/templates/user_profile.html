@@ -2,7 +2,15 @@
 {% block content %}
 <div class="container mt-3">
   <div class="row">
-    <div class="col-3"></div>
+    <div class="col-3">
+        <h6 style="background-color: brown; padding: 10px; color: white;text-align: center;">Reading List</h6>
+          <img src="{{ currently_reading_books.1.medium_url }}"/>
+          <p>{{ currently_reading_books.1.title }}</p>
+          <img src="{{ currently_reading_books.2.medium_url }}"/>
+          <p>{{ currently_reading_books.2.title }}</p>
+          <a href="/current_reads/{{ user.id }}/">See More</a>
+          <hr>
+    </div>
 
       <div class="col-3">
         <div>
@@ -29,6 +37,61 @@
             <div class="col"></div>
           </div>
               <div class="row"><br></div>
+              <div class="row">
+
+              <div class="card w-100 h-100">
+                <div class="card-body">
+                  <div class="card-title">
+                    <h5>Bio:</h5>
+                  </div>
+                  <div class="card-text">
+                    <p class="card-title" align="justify">{{ user.public_bio }}<p>
+                  </div>
+                </div>
+              </div>
+               <div class="row">
+                 <p class="follow-user">
+                   <form action="{% url 'follow_toggle' user.id %}" method='post'>
+                     {% csrf_token %}
+                            {%if user.id == request.user.id%}
+                            <a valign="left" class="btn" href="{% url 'edit_profile' %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                              <i class="bi bi-gear" style="font-size: 0.9rem;"></i>
+                              Edit Profile
+                            </a>
+                            {%else%}
+                              <a valign="left" class="btn" href="{% url 'create_chat_from_profile' user.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                                <i class="bi bi-messenger" style="font-size: 0.9rem"></i>
+                                Chat
+                              </a>
+                            {%endif%}
+                            &emsp;
+                            {%if followable %}
+                            {% if following %}
+                            <button class='btn btn-secondary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: GREY; text-transform:uppercase; font-size: 14px">
+                              Unfollow
+                            </button>
+                            {% else %}
+                            <button class='btn btn-primary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: LIGHT-BLUE; text-transform:uppercase; font-size: 14px">
+                              Follow
+                            </button>
+                            {% endif %}
+                            {% endif %}
+                            &emsp;
+                            {%if user.id != request.user.id%}
+                            <a id="Invite" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                              <i class="bi bi-envelope" style="font-size: 0.9rem"></i>
+                              Invite
+                            </a>
+                            {%endif%}
+                   </form>
+               </div>
+               <div class="row"> <br> </div>
+
+
+
+
+
+               </div>
 
 
 

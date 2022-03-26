@@ -108,6 +108,9 @@ class Migration(migrations.Migration):
                 ('book', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='bookclub.book')),
                 ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
+            options={
+                'ordering': ['book'],
+            },
         ),
         migrations.CreateModel(
             name='Post',
@@ -158,6 +161,16 @@ class Migration(migrations.Migration):
             options={
                 'ordering': ['applicant'],
             },
+        ),
+        migrations.AddField(
+            model_name='user',
+            name='already_read_books',
+            field=models.ManyToManyField(related_name='user_already_read_books', to='bookclub.Book'),
+        ),
+        migrations.AddField(
+            model_name='user',
+            name='currently_reading_books',
+            field=models.ManyToManyField(related_name='user_currently_reading_books', to='bookclub.Book'),
         ),
         migrations.AddField(
             model_name='user',

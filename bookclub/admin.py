@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Club, Book, Application , Post, UserPost
+from .models import User, Club, Book, Application , Post, UserPost , Rating
 # Register your models here.
 
 @admin.register(User)
@@ -44,4 +44,8 @@ class PostAdmin(admin.ModelAdmin):
 class UserPostAdmin(admin.ModelAdmin):
     list_display = [
         'author', 'text', 'created_at'
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = [
+        'user', 'book', 'isbn', 'rating'
     ]

@@ -11,7 +11,6 @@ from libgravatar import Gravatar
 
 
 # books model
-
 class Book(models.Model):
     isbn = models.CharField(unique=True, max_length=12, blank=False)
     title = models.CharField(unique=False, blank=False, max_length=512)
@@ -26,6 +25,9 @@ class Book(models.Model):
         """Model options."""
 
         ordering = ['title']
+
+    def __str__(self):
+        return self.title
 
     def get_isbn(self):
         return self.isbn
@@ -47,7 +49,6 @@ class Book(models.Model):
 
     def get_large_url(self):
         return self.large_url
-
 
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
@@ -71,6 +72,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     favourite_genre = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
+    currently_reading_books = models.ManyToManyField(Book, related_name='%(class)s_currently_reading_books')
     favourite_books = models.ManyToManyField(Book)
     is_email_verified = models.BooleanField(default=False)
     followers = models.ManyToManyField(
@@ -139,10 +141,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     def followee_count(self):
         return self.followees.count()
 
+    def get_ratings(self):
+        return Rating.objects.filter(user_id=self.id)
+
+    def get_number_of_ratings(self):
+        return len(self.get_ratings())
+
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-
 
 # Club Model adapted from Clucker user model and Chess club management system club model
 
@@ -297,6 +304,11 @@ class Rating(models.Model):
     book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.CASCADE)
     isbn = models.CharField(unique=False, max_length=12, blank=False)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], blank=False)
+
+    class Meta:
+        """Model options."""
+
+        ordering = ['book']
 
     def get_user(self):
         return self.user

@@ -70,7 +70,7 @@ def app_accept(request, pk):
     app = Application.objects.all().get(pk=pk)
     app.club.make_member(app.applicant)
     app.delete()
-    messages.add_message(request, messages.SUCCESS, "User accepted!")
+    messages.add_message(request, messages.SUCCESS, f"{app.applicant.get_full_name()} has been accepted to {app.club.name} !")
     club_views.club_util(request)
     return redirect('applications')
 
@@ -79,7 +79,7 @@ def app_remove(request, pk):
     """Reject application"""
     app = Application.objects.all().get(pk=pk)
     app.delete()
-    messages.add_message(request, messages.SUCCESS, "User rejected!")
+    messages.add_message(request, messages.ERROR, f"{app.applicant.get_full_name()} has been rejected from {app.club.name} !")
     return redirect('applications')
 
 @login_required
