@@ -51,7 +51,7 @@ def add_to_current_reads(request, book_id):
     book = Book.objects.get(id=book_id)
     user.currently_reading_books.add(book)
     user.save()
-    messages.add_message(request, messages.SUCCESS, "Book was successfully added to your current reads!")
+    messages.add_message(request, messages.SUCCESS, f"{book.title} was successfully added to your current reads!")
     return redirect("book_profile" , book_id)
 
 @login_required
@@ -68,7 +68,7 @@ def add_to_books_read(request, book_id):
     user.save()
 
     messages.add_message(request, messages.SUCCESS,
-                                        "Book was successfully added to books reads!")
+                                        f"{book.title} was successfully added to your books reads!")
 
     return redirect("book_profile" , book_id)
 

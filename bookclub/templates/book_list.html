@@ -20,6 +20,8 @@
         <td>{{ entry.title }}</td>
         <td>{{ entry.author }}</td>
         <td>{{ entry.pub_year }}</td>
+        <td><a class="btn btn-default" href="{% url 'add_to_books_read' book_id=entry.id %}"><span class="btn btn-dark" style="background-color: brown"> Add to Books Read </span></a></td>
+        <td><a class="btn btn-default" href="{% url 'add_to_current_reads' book_id=entry.id %}"><span class="btn btn-dark" style="background-color: brown"> Add to Current Reads </span></a></td>
       </tr>
       {% endfor %}
     </tbody>
