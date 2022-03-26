@@ -47,6 +47,6 @@ class TestApplicationForm(TestCase):
     def test_applicant_form_saves_properly(self):
         """Tests if the form, well, saves properly!"""
         form = ApplicationForm(data=self.form_input)
-        app = form.save()
+        app = form.save(self.user) # This breaks the tests. This form isn't even being used anywhere, for all I know. ¯\_(ツ)_/¯
         self.assertEqual(app.applicant, self.user)
         self.assertEqual(app.club, self.bush_club)
