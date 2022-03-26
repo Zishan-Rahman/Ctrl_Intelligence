@@ -52,6 +52,43 @@ class BookProfileTest(TestCase):
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Unfavourite</button>', html)
 
+    def test_favourite_button_in_book_profile_works(self):
+        self.client.login(email=self.user.email, password='Password123')
+        before_current_reads_count = self.user.favourite_books.count()
+        response = self.client.get('/book_profile/1/favourite', follow=True)
+        redirect_url = '/book_profile/1/'
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        after_current_reads_count = self.user.favourite_books.count()
+        self.assertNotEqual(before_current_reads_count, after_current_reads_count)
+
+    # def test_unfavourite_button_in_book_profile_works(self):
+    #     self.client.login(email=self.user.email, password='Password123')
+    #     before_current_reads_count = self.user.favourite_books.count()
+    #     response = self.client.get('/book_profile/1/unfavourite', follow=True)
+    #     redirect_url = '/book_profile/1/'
+    #     self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+    #     messages_list = list(response.context['messages'])
+    #     self.assertEqual(len(messages_list), 1)
+    #     self.assertEqual(messages_list[0].level, messages.ERROR)
+    #     after_current_reads_count = self.user.favourite_books.count()
+    #     self.assertNotEqual(before_current_reads_count, after_current_reads_count)
+
+    # def test_remove_from_current_reads_in_book_profile_works(self):
+    #     self.client.login(email=self.user.email, password='Password123')
+    #     self.user.currently_reading_books.add(self.book)
+    #     before_current_reads_count = self.user.currently_reading_books.count()
+    #     response = self.client.get('/remove_from_current_reads_profile/1/', follow=True)
+    #     redirect_url = '/book_profile/1/'
+    #     self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+    #     messages_list = list(response.context['messages'])
+    #     self.assertEqual(len(messages_list), 1)
+    #     self.assertEqual(messages_list[0].level, messages.ERROR)
+    #     after_current_reads_count = self.user.currently_reading_books.count()
+    #     self.assertNotEqual(before_current_reads_count, after_current_reads_count)
+
     def test_book_profile_has_dropdown_to_rate_book(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
