@@ -170,6 +170,3 @@ def inviteMessage(request, user_id, club_id):
     messages.add_message(request, messages.SUCCESS, "Invite Sent!")
     return redirect('user_profile', user_id=user_id)
 
-
-def inbox_count(request):
-    inbox_count = Message.objects.filter(recipient=request.user, is_read=False).count()
