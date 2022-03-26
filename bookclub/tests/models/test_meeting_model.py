@@ -39,6 +39,20 @@ class MeetingModelTestCase(TestCase):
         self.address = None
         self._assert_meeting_is_invalid()
 
+    # Test getters
+    
+    def test_meeting_club_getter_works(self):
+        self.assertEqual(self.meeting.get_meeting_club(), self.meeting.club)
+    
+    def test_meeting_date_getter_works(self):
+        self.assertEqual(self.meeting.get_meeting_date(), self.meeting.date)
+    
+    def test_meeting_start_time_getter_works(self):
+        self.assertEqual(self.meeting.get_meeting_start_time(), self.meeting.start_time)
+    
+    def test_meeting_date_address_works(self):
+        self.assertEqual(self.meeting.get_meeting_address(), self.meeting.address)
+
     def _assert_meeting_is_valid(self):
         try:
             self.meeting.full_clean()

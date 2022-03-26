@@ -49,6 +49,14 @@ class RatingsModelsTestCase(TestCase):
         self.rating_one.rating = None
         self._assert_rating_is_invalid()
 
+    def test_rating_user_getter_works(self):
+        self.assertEqual(self.rating_one.get_user(),self.rating_one.user)
+
+    def test_rating_book_getter_works(self):
+        self.assertEqual(self.rating_one.get_book(),self.rating_one.book)
+        
+    def test_rating_rating_getter_works(self):
+        self.assertEqual(self.rating_one.get_rating(),self.rating_one.rating)
 
     def _assert_rating_is_valid(self):
         try:
