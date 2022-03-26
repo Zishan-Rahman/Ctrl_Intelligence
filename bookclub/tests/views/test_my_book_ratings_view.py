@@ -65,7 +65,7 @@ class MyBookRatingsViewTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'my_book_ratings.html')
-        self.assertEqual(len(response.context['ratings']), settings.BOOKS_PER_PAGE)
+        self.assertEqual(len(response.context['page_obj']), settings.BOOKS_PER_PAGE)
         page_obj = response.context['page_obj']
         self.assertFalse(page_obj.has_previous())
         self.assertTrue(page_obj.has_next())
@@ -73,7 +73,7 @@ class MyBookRatingsViewTestCase(TestCase):
         response = self.client.get(page_one_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'my_book_ratings.html')
-        self.assertEqual(len(response.context['ratings']), settings.BOOKS_PER_PAGE)
+        self.assertEqual(len(response.context['page_obj']), settings.BOOKS_PER_PAGE)
         page_obj = response.context['page_obj']
         self.assertFalse(page_obj.has_previous())
         self.assertTrue(page_obj.has_next())
@@ -81,7 +81,7 @@ class MyBookRatingsViewTestCase(TestCase):
         response = self.client.get(page_two_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'my_book_ratings.html')
-        self.assertEqual(len(response.context['ratings']), settings.BOOKS_PER_PAGE)
+        self.assertEqual(len(response.context['page_obj']), settings.BOOKS_PER_PAGE)
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertTrue(page_obj.has_next())
@@ -89,7 +89,7 @@ class MyBookRatingsViewTestCase(TestCase):
         response = self.client.get(page_three_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'my_book_ratings.html')
-        self.assertEqual(len(response.context['ratings']), 4)
+        self.assertEqual(len(response.context['page_obj']), 4)
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())

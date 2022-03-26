@@ -83,7 +83,7 @@ def user_profile(request, user_id):
     followable = request.user != user
     followers = request.user.followers.all()
     currently_reading_books = user.currently_reading_books.all()
-    already_read_books = user.already_read_books.all()
+
     return render(request, 'user_profile.html',
                     {
                         'user': user,
@@ -92,8 +92,7 @@ def user_profile(request, user_id):
                         'following': following,
                         'followable': followable,
                         'user_clubs': config.user_clubs,
-                        'currently_reading_books': currently_reading_books,
-                        'already_read_books': already_read_books
+                        'currently_reading_books': currently_reading_books
                     }
                  )
 @login_required
@@ -106,7 +105,6 @@ def current_user_profile(request):
     followable = request.user != user
     followers = request.user.followers.all()
     currently_reading_books = user.currently_reading_books.all()
-    already_read_books = user.already_read_books.all()
     return render(request, 'user_profile.html',
                     {
                         'user': user,
@@ -116,7 +114,6 @@ def current_user_profile(request):
                         'followable': followable,
                         'user_clubs': config.user_clubs,
                         'currently_reading_books': currently_reading_books,
-                        'already_read_books': already_read_books
                     }
                  )
 

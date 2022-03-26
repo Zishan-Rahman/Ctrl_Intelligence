@@ -74,8 +74,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     location = models.CharField(max_length=96, blank=False)
     age = models.IntegerField(blank=True, null=True)
     currently_reading_books = models.ManyToManyField(Book, related_name='%(class)s_currently_reading_books')
-
-    already_read_books = models.ManyToManyField(Book, related_name='%(class)s_already_read_books')
     favourite_books = models.ManyToManyField(Book)
     is_email_verified = models.BooleanField(default=False)
     followers = models.ManyToManyField(
@@ -143,13 +141,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def followee_count(self):
         return self.followees.count()
-    
+
     def get_ratings(self):
         return Rating.objects.filter(user_id=self.id)
 
     def get_number_of_ratings(self):
         return len(self.get_ratings())
-    
+
     objects = UserManager()
 
     USERNAME_FIELD = "email"
