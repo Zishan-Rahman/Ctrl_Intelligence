@@ -26,8 +26,8 @@ class LandingPageRedirectTestCase(TestCase):
         redirect_url = reverse('home')
         self.client.login(email=self.user.email, password=self.user.password)
         response = self.client.get(reverse('landing_page'), follow=False)
+        self.assertTemplateUsed('home.html')
         # user = auth.get_user(self.client)
         # self.assertTrue(user.is_authenticated) #still returns False when it shouldn't
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        self.assertTemplateUsed('home.html')
     
