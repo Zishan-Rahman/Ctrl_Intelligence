@@ -22,7 +22,6 @@ class TransferOwnershipViewsTestCase(TestCase):
         self.sam = User.objects.get(email='samdoe@bookclub.com')
 
         self.bush_club = Club.objects.get(name='Bush House Book Club')
-        #self.bush_club = Club.objects.create(name="Bush HouseBook Club",description="Bush House Official Book Club!",location="Strand, London",meeting_online=True)
         self.bush_club.make_member(self.jane)
         self.bush_club.make_member(self.joe)
         self.bush_club.make_member(self.sam)
@@ -49,7 +48,6 @@ class TransferOwnershipViewsTestCase(TestCase):
         self.assertNotIn('<a class="btn btn-default"', html)
         self.assertNotIn('Transfer Ownership', html)
 
-    
     def test_successful_transfer_of_ownership(self):
         self.client.login(email=self.john.email, password="Password123")
         before_owner = self.bush_club.get_owner()

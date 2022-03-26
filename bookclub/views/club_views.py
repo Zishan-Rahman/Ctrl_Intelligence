@@ -80,13 +80,13 @@ def promote_member_to_organiser(request, c_pk, u_pk):
     if request.user == club.owner:
         user = User.objects.all().get(pk=u_pk)
         if user in club.get_organisers():
-            messages.add_message(request, messages.WARNING, "This person is already an organiser!")
+            messages.add_message(request, messages.ERROR, "This person is already an organiser!")
         else:
             new_organiser = User.objects.all().get(pk=u_pk)
             club.make_organiser(new_organiser)
-            messages.add_message(request, messages.SUCCESS, str(new_organiser.first_name) + " " + str(new_organiser.last_name) +" has been promoted!")
+            messages.add_message(request, messages.SUCCESS, str(new_organiser.get_full_name()) +" has been promoted!")
     else:
-        messages.add_message(request, messages.WARNING, "You do not have authority to do this!")
+        messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
 
@@ -96,9 +96,9 @@ def demote_organiser_to_member(request, c_pk, u_pk):
     if request.user == club.owner:
         new_member = User.objects.all().get(pk=u_pk)
         club.demote_organiser(new_member)
-        messages.add_message(request, messages.WARNING, str(new_member.first_name) + " " + str(new_member.last_name) + " has been demoted!")
+        messages.add_message(request, messages.ERROR, str(new_member.get_full_name()) + " has been demoted!")
     else:
-        messages.add_message(request, messages.WARNING, "You do not have authority to do this!")
+        messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
 
@@ -108,9 +108,9 @@ def kick_user_from_club(request, c_pk, u_pk):
     if request.user == club.owner:
         user_to_kick = User.objects.all().get(pk=u_pk)
         club.remove_from_club(user_to_kick)
-        messages.add_message(request, messages.WARNING, str(user_to_kick.first_name) + " " + str(user_to_kick.last_name) + " has been kicked out!")
+        messages.add_message(request, messages.ERROR, str(user_to_kick.get_full_name()) + " has been kicked out!")
     else:
-        messages.add_message(request, messages.WARNING, "You do not have authority to do this!")
+        messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
 def transfer_ownership(request, c_pk, u_pk):
@@ -119,9 +119,9 @@ def transfer_ownership(request, c_pk, u_pk):
     if request.user == club.owner :
         new_owner = User.objects.get(pk=u_pk)
         club.make_owner(new_owner)
-        messages.add_message(request, messages.SUCCESS, "Transferred Ownership to " + str(new_owner.first_name) + " " + str(new_owner.last_name) + "!")
+        messages.add_message(request, messages.SUCCESS, "Transferred Ownership to " + str(new_owner.get_full_name()) + "!")
     else:
-        messages.add_message(request, messages.WARNING, "You do not have authority to do this!")
+        messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
 
@@ -255,11 +255,13 @@ def leave_club(request, club_id):
     club = Club.objects.get(pk=club_id)
     current_user = request.user
     club.remove_from_club(current_user)
+    messages.add_message(request, messages.SUCCESS, f"You have successfully left {club.name}!")
     return redirect('club_selector')
 
 @login_required
 def disband_club(request, c_pk):
     """Disband a club"""
-    Club.objects.get(pk=c_pk).delete()
-    messages.add_message(request, messages.SUCCESS, "Club Disbanded!")
+    club = Club.objects.get(pk=c_pk)
+    club.delete()
+    messages.add_message(request, messages.SUCCESS, f"{club.name} has been disbanded!")
     return redirect('club_selector')

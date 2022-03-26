@@ -82,6 +82,7 @@ def app_accept(request, pk):
         return redirect('my_applications')
 
 
+
 def app_remove(request, pk):
     """Reject application"""
     app = Application.objects.all().get(pk=pk)
