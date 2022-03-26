@@ -43,3 +43,10 @@ class TestApplicationForm(TestCase):
         self.form_input['club'] = ''
         form = ApplicationForm(data=self.form_input)
         self.assertFalse(form.is_valid())
+        
+    def test_applicant_form_saves_properly(self):
+        """Tests if the form, well, saves properly!"""
+        form = ApplicationForm(data=self.form_input)
+        app = form.save()
+        self.assertEqual(app.applicant, self.user)
+        self.assertEqual(app.club, self.bush_club)
