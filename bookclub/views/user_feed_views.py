@@ -35,11 +35,11 @@ class UserFeedView(LoginRequiredMixin, ListView):
         posts = UserPost.objects.filter(authors = user)
         if form.is_valid():
             return redirect('user_feed')
-        return render(request, 'user_feed.html', {"user": request.user, "form": form, "posts": posts})
+        return render(request, 'user_feed.html', {"user": user, "form": form, "posts": posts})
 
     def get(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
         user = User.objects.get(id=user_id)
         posts = UserPost.objects.filter(author = user)
         form = UserPostForm()
-        return render(request, 'user_feed.html', {"user": request.user, "form": form, "posts": posts})
+        return render(request, 'user_feed.html', {"user": user, "form": form, "posts": posts})
