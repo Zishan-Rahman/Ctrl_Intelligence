@@ -44,33 +44,37 @@ class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
 def current_reads(request, user_id):
     user = User.objects.get(id = user_id)
     books = user.currently_reading_books.all()
-    return render(request, "current_reads.html", {'books':books})
+    return render(request, "reading_list.html", {'books':books})
 
 def add_to_current_reads(request, book_id):
-    user = User.objects.get(id = request.user.id)
-    book = Book.objects.get(id=book_id)
+    user = User.objects.get(pk=request.user.id)
+    book = Book.objects.get(pk=book_id)
     user.currently_reading_books.add(book)
-    user.save()
-    messages.add_message(request, messages.SUCCESS, f"{book.title} was successfully added to your current reads!")
-    return redirect("book_profile" , book_id)
+    messages.add_message(request, messages.SUCCESS, f"{book.title} was successfully added to your reading list!")
+    return redirect("book_list")
 
-@login_required
-def books_read(request, user_id):
-    user = User.objects.get(id = user_id)
-    books = user.already_read_books.all()
-    return render(request, "books_read.html", {'books':books})
+def remove_from_current_reads(request, book_id):
+    user = User.objects.get(pk=request.user.id)
+    book = Book.objects.get(pk=book_id)
+    user.currently_reading_books.remove(book)
+    messages.add_message(request, messages.WARNING, f"{book.title} was successfully removed from your reading list!")
+    return redirect("book_list")
 
-def add_to_books_read(request, book_id):
-    # book_not_added = True
-    user = User.objects.get(id = request.user.id)
-    book = Book.objects.get(id=book_id)
-    user.already_read_books.add(book)
-    user.save()
-
-    messages.add_message(request, messages.SUCCESS,
-                                        f"{book.title} was successfully added to your books reads!")
-
-    return redirect("book_profile" , book_id)
+# @login_required
+# def books_read(request, user_id):
+#     user = User.objects.get(id = user_id)
+#     books = user.already_read_books.all()
+#     return render(request, "books_read.html", {'books':books})
+#
+# def add_to_books_read(request, book_id):
+#     user = User.objects.get(id = request.user.id)
+#     book = Book.objects.get(id=book_id)
+#     user.already_read_books.add(book)
+#     user.save()
+#
+#     messages.add_message(request, messages.SUCCESS,
+#                                         f"{book.title} was successfully added to your books reads!")
+#     return redirect("book_profile" , book_id)
 
 class Favourites(LoginRequiredMixin, ListView):
     model = Book
@@ -104,7 +108,7 @@ def Unfavourite(request, book_id):
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.favourite_books.remove(book)
-    messages.add_message(request, messages.SUCCESS, book.title + " has been removed from Favourites!")
+    messages.add_message(request, messages.WARNING, book.title + " has been removed from Favourites!")
     return redirect('book_profile', book_id=book_id)
 
 class MyBookRatings(LoginRequiredMixin, ListView):

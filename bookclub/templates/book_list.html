@@ -20,8 +20,28 @@
         <td>{{ entry.title }}</td>
         <td>{{ entry.author }}</td>
         <td>{{ entry.pub_year }}</td>
-        <td><a class="btn btn-default" href="{% url 'add_to_books_read' book_id=entry.id %}"><span class="btn btn-dark" style="background-color: brown"> Add to Books Read </span></a></td>
-        <td><a class="btn btn-default" href="{% url 'add_to_current_reads' book_id=entry.id %}"><span class="btn btn-dark" style="background-color: brown"> Add to Current Reads </span></a></td>
+        {% if entry in request.user.currently_reading_books.all %}
+        <form action="{% url 'remove_from_current_reads' book_id=entry.id %}" method="post">
+          {% csrf_token %}
+         <td><input type="submit" value="Remove from Reading List"></td>
+       </form>
+       {% else %}
+        <form action="{% url 'add_to_current_reads' book_id=entry.id %}" method="post">
+          {% csrf_token %}
+         <td><input type="submit" value="Add to Reading List"></td>
+       </form>
+        {% endif %}
+        {% if entry in request.user.favourite_books.all %}
+        <form action="{% url 'Unfavourite' book_id=entry.id %}" method="post">
+          {% csrf_token %}
+          <td><input type="submit" value="Unfavourite"></td>
+        </form>
+        {% else %}
+         <form action="{% url 'make_favourite' book_id=entry.id %}" method="post">
+           {% csrf_token %}
+          <td><input type="submit" value="Make Favourite"></td>
+        </form>
+        {% endif %}
       </tr>
       {% endfor %}
     </tbody>
