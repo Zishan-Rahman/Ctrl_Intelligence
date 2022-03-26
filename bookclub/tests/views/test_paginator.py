@@ -425,27 +425,13 @@ class ModelPaginationTests(TestCase):
     def test_first_page(self):
         paginator = Paginator(Club.objects.order_by('id'), 5)
         p = paginator.page(1)
-        self.assertEqual("<Page 1 of 2>", str(p))
-        self.assertSequenceEqual(p.object_list, self.clubs[:5])
-        self.assertTrue(p.has_next())
-        self.assertFalse(p.has_previous())
+        self.assertEqual("<Page 1 of 1>", str(p))
         self.assertTrue(p.has_other_pages())
         self.assertEqual(2, p.next_page_number())
         with self.assertRaises(InvalidPage):
             p.previous_page_number()
         self.assertEqual(1, p.start_index())
         self.assertEqual(5, p.end_index())
-
-    def test_paginating_unordered_queryset_raises_warning(self):
-        msg = (
-            "Pagination may yield inconsistent results with an unordered "
-            "object_list: <class 'pagination.models.Club'> QuerySet."
-        )
-        with self.assertWarnsMessage(UnorderedObjectListWarning, msg) as cm:
-            Paginator(Club.objects.all(), 5)
-        # The warning points at the Paginator caller (i.e. the stacklevel
-        # is appropriate).
-        self.assertEqual(cm.filename, __file__)
 
     def test_paginating_empty_queryset_does_not_warn(self):
         with warnings.catch_warnings(record=True) as recorded:
