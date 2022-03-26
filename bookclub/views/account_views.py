@@ -30,11 +30,12 @@ def landing_page(request):
 
 
 @login_required
-def user_profile(request , user_id):
+def user_profile(request):
     """ Individual User's Profile Page """
-    user = User.objects.get(id=user_id)
+    user = User.objects.get(id=request.user.id)
+    current_user = request.user
     form = UserPostForm()
-    posts = UserPost.objects.filter(author=user)
+    posts = UserPost.objects.filter(author=current_user)
     posts = posts[:6]
     return render(request, 'user_profile.html', {'user': user, 'form': form, 'posts': posts})
 
