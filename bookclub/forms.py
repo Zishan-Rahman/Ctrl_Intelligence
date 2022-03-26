@@ -185,7 +185,7 @@ class ClubForm(forms.ModelForm):
 
     def save(self, user):
         super().save(commit=False)
-        Club.objects.create(
+        club = Club.objects.create(
             name=self.cleaned_data.get('name'),
             description=self.cleaned_data.get('description'),
             location=self.cleaned_data.get('location'),
@@ -193,6 +193,7 @@ class ClubForm(forms.ModelForm):
             meeting_online=self.cleaned_data.get('meeting_type'),
             organiser_owner=self.cleaned_data.get('organiser_has_owner_privilege')
         )
+        return club
 
 
 class ApplicationForm(forms.ModelForm):
