@@ -1,4 +1,5 @@
 import datetime
+from email.mime import application
 from django.db import models
 from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
@@ -372,3 +373,4 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+

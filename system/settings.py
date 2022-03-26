@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'recommender',
     'crispy_forms',
+    'notifications',
 
 
 ]

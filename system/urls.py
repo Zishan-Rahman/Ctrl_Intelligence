@@ -15,6 +15,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
+import notifications.urls
+from django.conf.urls import include
 from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views
 from django.contrib.auth import views as auth_views
 
@@ -80,4 +82,5 @@ urlpatterns = [
     path('unfollow/<int:user_id>/', user_views.unfollow, name = 'unfollow'),
     path('club_profile/<int:club_id>/new_post/', post_views.NewPostView.as_view(), name='new_post'),
     path('user_profile/<int:user_id>/create_chat/', messaging_views.createChatFromProfile, name='create_chat_from_profile'),
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     ]

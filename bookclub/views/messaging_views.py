@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from bookclub.templates import *
 from bookclub.forms import *
@@ -10,6 +11,7 @@ from django.urls import reverse
 from bookclub.models import *
 from django.views.generic.edit import View
 from django.db.models import Q
+from notifications.signals import notify
 
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
@@ -81,14 +83,26 @@ class CreateMessageView(View):
             receiver = chat.user
         else:
             receiver = chat.receiver
-        message = Message(
+            message = Message(
             chat=chat,
             sender_user=request.user,
             receiver_user=receiver,
-            body=request.POST.get('message'),
-        )
-        message.save()
+            body=request.POST.get('message'))
+            message.save()
+            notify.send(
+            request.user,
+            recipient=receiver,
+            verb = 'sent you a message',
+            target=chat,
+            action_object=message,
+            )
         return redirect('chat', pk=pk)
+    
+        
+        
+        
+        
+
 
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
