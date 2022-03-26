@@ -82,6 +82,4 @@ urlpatterns = [
     path('unfollow/<int:user_id>/', user_views.unfollow, name = 'unfollow'),
     path('club_profile/<int:club_id>/new_post/', post_views.NewPostView.as_view(), name='new_post'),
     path('user_profile/<int:user_id>/create_chat/', messaging_views.createChatFromProfile, name='create_chat_from_profile'),
-    path('notif_list/', notifications_views.CommentNoticeListView.as_view(), name='notifs'),
-    path('update_notifs/', notifications_views.CommentNoticeUpdateView.as_view(), name='update_notifs'),
     ]

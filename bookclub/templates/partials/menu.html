@@ -34,16 +34,6 @@
       <a class="nav-link" href="{% url 'inbox' %}">Inbox <i class="bi bi-inboxes"><span class="badge badge-light">{{ unread_count }}</span></i></a>
     </li>
 
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="notifs-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Notifications <i class="bi bi-bell"></i>
-      </a>
-      <ul class="dropdown-menu dropdown-menu" aria-labelledby="user-account-dropdown">
-       <li><a href="{% url 'notifs' %}" class="btn btn-warning" role="button">{{ notice.id }}</a></li>
-      </ul>
-    </li>
-
-
   
   </ul>
 
