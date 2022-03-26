@@ -10,6 +10,7 @@ from django.urls import reverse
 from bookclub.models import *
 from django.views.generic.edit import View
 from django.db.models import Q
+from notifications.signals import notify
 
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
@@ -87,6 +88,14 @@ class CreateMessageView(View):
             receiver_user=receiver,
             body=request.POST.get('message'),
         )
+
+        notify.send(
+            request.user,
+            recipient=receiver,
+            verb = 'sent you a message',
+            target=message,
+            action_object=message,
+                )
         message.save()
         return redirect('chat', pk=pk)
 
