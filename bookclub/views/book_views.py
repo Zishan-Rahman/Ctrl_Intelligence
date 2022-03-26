@@ -114,7 +114,16 @@ class MyBookRatings(LoginRequiredMixin, ListView):
     context_object_name = "ratings"
     paginate_by = settings.BOOKS_PER_PAGE
 
-    def get_queryset(self):
+    def get(self, request):
+        """Display application template"""
+        return self.render()
+
+    def render(self):
         user = User.objects.get(pk=self.request.user.id)
         ratings = Rating.objects.filter(user=user)
-        return ratings
+
+        paginator = Paginator(ratings, settings.APPLICATIONS_PER_PAGE)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        return render(self.request, 'my_book_ratings.html', {'ratings': ratings, 'page_obj': page_obj})
