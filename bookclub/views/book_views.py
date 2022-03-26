@@ -41,8 +41,8 @@ class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
             return redirect('book_list')
 
 @login_required
-def current_reads(request):
-    user = User.objects.get(id = request.user.id)
+def current_reads(request, user_id):
+    user = User.objects.get(id = user_id)
     books = user.currently_reading_books.all()
     return render(request, "current_reads.html", {'books':books})
 
@@ -55,8 +55,8 @@ def add_to_current_reads(request, book_id):
     return redirect("book_profile" , book_id)
 
 @login_required
-def books_read(request):
-    user = User.objects.get(id = request.user.id)
+def books_read(request, user_id):
+    user = User.objects.get(id = user_id)
     books = user.already_read_books.all()
     return render(request, "books_read.html", {'books':books})
 

@@ -144,7 +144,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def followee_count(self):
         return self.followees.count()
+    
+    def get_ratings(self):
+        return Rating.objects.filter(user_id=self.id)
 
+    def get_number_of_ratings(self):
+        return len(self.get_ratings())
+    
     objects = UserManager()
 
     USERNAME_FIELD = "email"
