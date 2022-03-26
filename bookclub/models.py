@@ -372,3 +372,9 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+
+class RecommendedBooks(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    isbn = models.CharField(unique=False, max_length=12, blank=False)
+

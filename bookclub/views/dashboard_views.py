@@ -6,18 +6,10 @@ from surprise import SVD
 from surprise import Dataset, Reader
 import pickle
 
-RECOMMENDATIONS_LIST_GLB = []
-TOP_N = 10
 
 @login_required
 def home_page(request):
-    if len(RECOMMENDATIONS_LIST_GLB) > 0:
-        recommended_books = get_recommended_books(RECOMMENDATIONS_LIST_GLB)
-        return render(request, "home.html", {'user': request.user, 'recommendations': recommended_books})
-    else:
-        recommendations_list = recommender(request.user.id, TOP_N)
-        recommended_books = get_recommended_books(recommendations_list)
-
+    recommended_books = []
     return render(request, "home.html", {'user': request.user, 'recommendations': recommended_books})
 
 
@@ -55,8 +47,6 @@ def recommender(user_id, top_n):
     recommendations = pd.DataFrame(predictions, columns=['isbn', 'rating'])
     top_n_recommendations = recommendations.sort_values('rating', ascending=False).head(top_n)
     isbn_list = list(set(top_n_recommendations['isbn'].to_list()))
-    global RECOMMENDATIONS_LIST_GLB
-    RECOMMENDATIONS_LIST_GLB = isbn_list
     return isbn_list
 
 
