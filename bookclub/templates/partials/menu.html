@@ -1,6 +1,5 @@
 {% load notifications_tags %}
 {% notifications_unread as unread_count %}
-
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
@@ -26,7 +25,7 @@
        <div class="dropdown-divider"></div>
         <li><a class="dropdown-item" href="{% url 'club_selector' %}">My Clubs</a></li>
         <li><a class="dropdown-item" href="{% url 'favourites' %}">My Favourite Books</a></li>
-        <li><a class="dropdown-item" href="{% url 'applications' %}">My Club Applications<span class="badge badge-warning">4</span></a></li>
+        <li><a class="dropdown-item" href="{% url 'applications' %}">My Club Applications<span class="badge badge-warning">{{ application_count }}</span></a></li>
         <li><a class="dropdown-item" href="{% url 'my_book_ratings' %}">My Book Ratings</a></li>
       </ul>
     </li>

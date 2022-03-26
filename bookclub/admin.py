@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Club, Book, Application, Post, Rating
+from .models import Notification, User, Club, Book, Application, Post, Rating
 # Register your models here.
 
 @admin.register(User)
@@ -44,4 +44,10 @@ class PostAdmin(admin.ModelAdmin):
 class RatingAdmin(admin.ModelAdmin):
     list_display = [
         'user', 'book', 'isbn', 'rating'
+    ]
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = [
+        'notification_type', 'message', 'date', 'user_has_seen'
     ]
