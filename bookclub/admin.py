@@ -44,6 +44,7 @@ class PostAdmin(admin.ModelAdmin):
 class UserPostAdmin(admin.ModelAdmin):
     list_display = [
         'author', 'text', 'created_at'
+        ]
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
     list_display = [
