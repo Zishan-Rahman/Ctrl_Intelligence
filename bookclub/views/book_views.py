@@ -113,7 +113,7 @@ def unfavourite(request, book_id):
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.favourite_books.remove(book)
-    messages.add_message(request, messages.REMOVE, book.title + " has been removed from Favourites!")
+    messages.add_message(request, messages.ERROR, book.title + " has been removed from Favourites!")
     return redirect('book_profile', book_id=book_id)
 
 def unfavourite_book_list(request, book_id):
