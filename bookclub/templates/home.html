@@ -34,11 +34,17 @@
     </div>
 
     <div class="col-6">
-        <div class="row">
-
-        </div>
-        <div class="row">
-
+        <div class="book-table">
+    <table class="table table-hover table-borderless text-dark" style="background-color: white;border-style: groove ;border-color: brown">
+    <tbody>
+      {% for book in popular_books %}
+      <tr class="clickable-row" data-href="{% url 'book_profile' book.id %}">
+        <td><img src="{{ book.medium_url }}" alt="a"></td>
+        <td><strong>{{ book.title }}</strong></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+      </table>
         </div>
     </div>
 
