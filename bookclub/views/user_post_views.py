@@ -41,7 +41,7 @@ class UserNewPostView(LoginRequiredMixin, CreateView):
     def get_success_url(self, **kwargs):
         """Return URL to redirect the user too after valid form handling."""
         messages.add_message(self.request, messages.SUCCESS, "The post was sent!")
-        return reverse('profile')
+        return reverse('user_profile' , {'user' : user})
 
     def handle_no_permission(self):
         return redirect('login')
