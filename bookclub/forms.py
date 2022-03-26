@@ -131,29 +131,29 @@ class PasswordForm(NewPasswordMixin):
         return self.user
 
 
-class ApplicantForm(forms.Form):
-    """Form enabling owners to choose which club applications to view."""
-    applicants_dropdown = forms.ModelChoiceField(label="Select an applicant", queryset=None)
+# class ApplicantForm(forms.Form):
+#     """Form enabling owners to choose which club applications to view."""
+#     applicants_dropdown = forms.ModelChoiceField(label="Select an applicant", queryset=None)
 
-    def __init__(self, user=None, club=None, **kwargs):
-        """Construct new form instance with a user instance."""
+#     def __init__(self, user=None, club=None, **kwargs):
+#         """Construct new form instance with a user instance."""
 
-        super().__init__(**kwargs)
-        self.user = user
-        self.club = club
+#         super().__init__(**kwargs)
+#         self.user = user
+#         self.club = club
 
-        all_applicants = Application.objects.all()
-        current_applicants = []
-        current_applicants_ids = []
+#         all_applicants = Application.objects.all()
+#         current_applicants = []
+#         current_applicants_ids = []
 
-        for a in all_applicants:
-            if a.club == self.club:
-                current_applicants.append(a)
+#         for a in all_applicants:
+#             if a.club == self.club:
+#                 current_applicants.append(a)
 
-        for a in current_applicants:
-            current_applicants_ids.append(a.id)
+#         for a in current_applicants:
+#             current_applicants_ids.append(a.id)
 
-        self.fields['applicants_dropdown'].queryset = Application.objects.filter(pk__in=current_applicants_ids)
+#         self.fields['applicants_dropdown'].queryset = Application.objects.filter(pk__in=current_applicants_ids)
 
 
 class ClubForm(forms.ModelForm):
