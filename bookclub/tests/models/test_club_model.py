@@ -115,3 +115,11 @@ class ClubModelTestCase(TestCase):
     def _assert_book_club_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.club_bush_house.full_clean()
+
+    # testing a couple of Club model methods
+
+    def test_get_description_method(self):
+        self.assertEqual(self.club_bush_house.get_description(), "Bush House Official Book Club!")
+    
+    def test_get_location_method(self):
+        self.assertEqual(self.club_bush_house.get_location(), "Strand, London")
