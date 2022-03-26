@@ -1,20 +1,19 @@
 {% extends 'base_content.html' %}
 {% block content %}
     <div class="container">
-        <div class="row">
-            <div class="col-6">
-
-            </div>
-            <div class="col-3">
-
-            </div>
-
-            <div class="col-3">
-                <div class="text float-end">
-
-                </div>
-            </div>
-        </div>
+      {% if request.user.get_number_of_ratings < 10 %}
+      <div class="alert alert-warning" role="alert">
+        You need to rate 10 books to get better recommendations. You have rated  
+        {% if request.user.get_number_of_ratings == 0 %}
+            no books yet
+        {% elif request.user.get_number_of_ratings == 1 %}
+            1 book
+        {% else %}
+            {{request.user.get_number_of_ratings}} books
+        {% endif %}
+        , so click "Browse" then "All Books" or click "Search" on the toolbar to search for books to rate!
+      </div>
+      {% endif %}
     <div class="row">
         <div class="col-6">
 
@@ -54,6 +53,7 @@
       });
   });
 </script>
+
 
 {% endblock %}
 
