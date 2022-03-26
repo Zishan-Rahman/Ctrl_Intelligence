@@ -34,7 +34,7 @@ p {
               <option value=10>10</option>
             </select>
             <br>
-            <input type="submit" value="Submit">
+          <button type="submit" class="btn btn-dark" style="background-color: brown">Submit</button>
           </form>
 
           <br>
@@ -42,12 +42,12 @@ p {
           {% if book in request.user.favourite_books.all %}
           <form action="{% url 'Unfavourite' book.id %}" method="post">
             {% csrf_token %}
-            <input type="submit" value="Unfavourite">
+          <button type="submit" class="btn btn-dark" style="background-color: brown">Unfavourite</button>
           </form>
           {% else %}
            <form action="{% url 'make_favourite' book.id %}" method="post">
              {% csrf_token %}
-            <input type="submit" value="Make Favourite">
+          <button type="submit" class="btn btn-dark" style="background-color: brown">Favourite</button>
           </form>
           {% endif %}
         </center>
