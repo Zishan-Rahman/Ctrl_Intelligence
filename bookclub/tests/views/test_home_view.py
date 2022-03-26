@@ -44,5 +44,5 @@ class HomeViewTestCase(TestCase):
         
             no books yet
         
-        , so click "Browse" then "All Books" or click "Search" on the toolbar to search for books to rate!
+        so far, so click "Browse" then "All Books" or click "Search" on the toolbar to search for books to rate!
       </div>''',html)
