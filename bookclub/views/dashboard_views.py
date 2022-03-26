@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from bookclub.models import Rating, Book
+from bookclub.models import Rating, Book, RecommendedBooks
 import pandas as pd
 from surprise import SVD
 from surprise import Dataset, Reader
@@ -9,7 +9,26 @@ import pickle
 
 @login_required
 def home_page(request):
-    recommended_books = []
+    top_n = 10
+    recommendations_list_isbn = []
+    user_ratings_count = Rating.objects.filter(user=request.user).count()
+    if user_ratings_count >= 10:
+        recommended_books_count = RecommendedBooks.objects.filter(user=request.user).count()
+        if recommended_books_count > 0:
+            recommendations_list = list(set(RecommendedBooks.objects.filter(user=request.user)))
+            for item in recommendations_list:
+                print(item.isbn)
+                recommendations_list_isbn.append(item.isbn)
+            recommended_books = get_recommended_books(recommendations_list_isbn)
+
+        else:
+            recommendations_list = recommender(request.user.id, top_n)
+            recommended_books = get_recommended_books(recommendations_list)
+            for item in recommended_books:
+                print(item.isbn)
+                RecommendedBooks.objects.create(user=request.user, isbn=item.isbn)
+    else:
+        recommended_books = []
     return render(request, "home.html", {'user': request.user, 'recommendations': recommended_books})
 
 
