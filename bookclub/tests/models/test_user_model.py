@@ -18,8 +18,19 @@ class UserModelTestCase(TestCase):
         self.user = User.objects.get(email = 'johndoe@bookclub.com')
         self.user2 = User.objects.get(email = 'janedoe@bookclub.com')
         
+    # Tests some user model methods that haven't been covered elsewhere in our testing
 
-
+    def test_user_model_first_name(self):
+        self.assertEqual(self.user_one.get_first_name(),"John")
+    
+    def test_user_model_last_name(self):
+        self.assertEqual(self.user_one.get_last_name(),"Doe")
+    
+    def test_user_model_location(self):
+        self.assertEqual(self.user_one.get_location(),"London")
+    
+    def test_user_model_age(self):
+        self.assertEqual(self.user_one.get_age(),39)
 
     # first name tests
     def test_first_name_must_not_be_blank(self):
