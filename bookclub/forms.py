@@ -204,7 +204,7 @@ class ApplicationForm(forms.ModelForm):
 
     def save(self, user):
         """Create a new application."""
-        club = self.cleaned_data.get('applicants_dropdown')
+        # club = self.cleaned_data.get('applicants_dropdown')
         app = Application.objects.create(
             club=self.cleaned_data.get('club'),
             applicant=self.cleaned_data.get('applicant'),
