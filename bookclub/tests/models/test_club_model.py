@@ -123,3 +123,18 @@ class ClubModelTestCase(TestCase):
     
     def test_get_location_method(self):
         self.assertEqual(self.club_bush_house.get_location(), "Strand, London")
+
+    # testing a couple of exceptions raised
+    
+    def test_cannot_make_organiser_organiser_again(self):
+        self.club_bush_house.make_member(self.user_two)
+        self.club_bush_house.make_organiser(self.user_two)
+        with self.assertRaises(ValueError):
+            self.club_bush_house.make_organiser(self.user_two)
+            
+    def test_cannot_demote_organiser_twice(self):
+        self.club_bush_house.make_member(self.user_two)
+        self.club_bush_house.make_organiser(self.user_two)
+        self.club_bush_house.demote_organiser(self.user_two)
+        with self.assertRaises(ValueError):
+            self.club_bush_house.demote_organiser(self.user_two)
