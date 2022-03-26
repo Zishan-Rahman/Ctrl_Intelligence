@@ -75,10 +75,10 @@ class TestUserListView(TestCase, LogInTester):
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        
+
     def _create_more_test_users(self, club_count=10):
-        """Adapted from Fathima Jamaal-Deen's club list view test(s).
-        
+        """Adapted from Fathima Jamal-Deen's club list view test(s).
+
         Her original method was _create_test_clubs."""
         for id in range(1, club_count+1, 1):
             User.objects.create(

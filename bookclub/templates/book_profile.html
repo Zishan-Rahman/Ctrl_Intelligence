@@ -13,14 +13,14 @@ p {
           <img src="{{ book.medium_url }}" alt="a">
           <h3 class="book-title">{{ book.title }}</h3>
           {% if book in request.user.currently_reading_books.all %}
-          <form action="{% url 'remove_from_current_reads' book.id %}" method="post">
+          <form action="{% url 'remove_from_current_reads_book_profile' book.id %}" method="post">
             {% csrf_token %}
-           <td><input type="submit" value="Remove from Reading List"></td>
+           <td><button type="submit" class="btn btn-dark" style="background-color: brown">Remove from My Reading List</button></td>
          </form>
          {% else %}
-          <form action="{% url 'add_to_current_reads' book.id %}" method="post">
+          <form action="{% url 'add_to_current_reads_book_profile' book.id %}" method="post">
             {% csrf_token %}
-           <td><input type="submit" value="Add to Reading List"></td>
+           <td><button type="submit" class="btn btn-dark" style="background-color: brown">Add to My Reading List</button></td>
          </form>
           {% endif %}
           <hr>
@@ -45,18 +45,18 @@ p {
               <option value=10>10</option>
             </select>
             <br>
-            <input type="submit" value="Submit">
+            <button type="submit" class="btn btn-dark" style="background-color: brown">Submit</button>
           </form>
 
           <br>
 
           {% if book in request.user.favourite_books.all %}
-          <form action="{% url 'Unfavourite' book.id %}" method="post">
+          <form action="{% url 'unfavourite_book_profile' book.id %}" method="post">
             {% csrf_token %}
           <button type="submit" class="btn btn-dark" style="background-color: brown">Unfavourite</button>
           </form>
           {% else %}
-           <form action="{% url 'make_favourite' book.id %}" method="post">
+           <form action="{% url 'make_favourite_book_profile' book.id %}" method="post">
              {% csrf_token %}
           <button type="submit" class="btn btn-dark" style="background-color: brown">Favourite</button>
           </form>
