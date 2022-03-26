@@ -10,10 +10,12 @@ from django.test import SimpleTestCase, TestCase
 from bookclub.models import Club
 
 
-class PaginationTests(SimpleTestCase):
+class PaginationTests(TestCase):
     """
     Tests for the Paginator and Page classes.
     """
+    fixtures = ['bookclub/tests/fixtures/default_users.json',
+                'bookclub/tests/fixtures/default_clubs.json']
 
     def check_paginator(self, params, output):
         """
@@ -419,14 +421,6 @@ class ModelPaginationTests(TestCase):
     """
     Test pagination with Django model instances
     """
-    @classmethod
-    def setUpTestData(cls):
-        # Prepare a list of objects for pagination.
-        pub_date = datetime(2005, 7, 29)
-        cls.clubs = [
-            Club.objects.create(headline=f'Club {x}', pub_date=pub_date)
-            for x in range(1, 10)
-        ]
 
     def test_first_page(self):
         paginator = Paginator(Club.objects.order_by('id'), 5)
@@ -441,43 +435,6 @@ class ModelPaginationTests(TestCase):
             p.previous_page_number()
         self.assertEqual(1, p.start_index())
         self.assertEqual(5, p.end_index())
-
-    def test_last_page(self):
-        paginator = Paginator(Club.objects.order_by('id'), 5)
-        p = paginator.page(2)
-        self.assertEqual("<Page 2 of 2>", str(p))
-        self.assertSequenceEqual(p.object_list, self.clubs[5:])
-        self.assertFalse(p.has_next())
-        self.assertTrue(p.has_previous())
-        self.assertTrue(p.has_other_pages())
-        with self.assertRaises(InvalidPage):
-            p.next_page_number()
-        self.assertEqual(1, p.previous_page_number())
-        self.assertEqual(6, p.start_index())
-        self.assertEqual(9, p.end_index())
-
-    def test_page_getitem(self):
-        """
-        Tests proper behavior of a paginator page __getitem__ (queryset
-        evaluation, slicing, exception raised).
-        """
-        paginator = Paginator(Club.objects.order_by('id'), 5)
-        p = paginator.page(1)
-
-        # Make sure object_list queryset is not evaluated by an invalid __getitem__ call.
-        # (this happens from the template engine when using eg: {% page_obj.has_previous %})
-        self.assertIsNone(p.object_list._result_cache)
-        msg = 'Page indices must be integers or slices, not str.'
-        with self.assertRaisesMessage(TypeError, msg):
-            p['has_previous']
-        self.assertIsNone(p.object_list._result_cache)
-        self.assertNotIsInstance(p.object_list, list)
-
-        # Make sure slicing the Page object with numbers and slice objects work.
-        self.assertEqual(p[0], self.clubs[0])
-        self.assertSequenceEqual(p[slice(2)], self.clubs[:2])
-        # After __getitem__ is called, object_list is a list
-        self.assertIsInstance(p.object_list, list)
 
     def test_paginating_unordered_queryset_raises_warning(self):
         msg = (
