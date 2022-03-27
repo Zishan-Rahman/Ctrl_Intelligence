@@ -37,7 +37,7 @@
     <div class="col">
 
 
-<div class="row row-cols-5" style="border-style: groove; border-color: brown; padding: 10px">
+<div class="row row-cols-5" style="border-style: groove; border-color: brown; border-radius: 5px;padding: 10px">
 
                 {% for book in recommendations %}
                     <a href="{% url 'book_profile' book.id %}" style="text-decoration: none; color: black;">
@@ -67,7 +67,7 @@
 
 
         <h4 style="padding-top: 10px;"><strong>Our Most Popular Books</strong></h4>
-<div class="row row-cols-2 h-100" style="border-style: groove; border-color: brown; padding: 10px">
+<div class="row row-cols-2 h-100" style="border-style: groove; border-color: brown; border-radius: 5px; padding: 10px">
 
                 {% for book in popular_books %}
                     <a href="{% url 'book_profile' book.id %}" style="text-decoration: none; color: black;">
