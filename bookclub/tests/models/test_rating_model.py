@@ -49,12 +49,25 @@ class RatingsModelsTestCase(TestCase):
         self.rating_one.rating = None
         self._assert_rating_is_invalid()
 
+    def test_rating_user_getter_works(self):
+        self.assertEqual(self.rating_one.get_user(),self.rating_one.user)
+
+    def test_rating_book_getter_works(self):
+        self.assertEqual(self.rating_one.get_book(),self.rating_one.book)
+        
+    def test_rating_rating_getter_works(self):
+        self.assertEqual(self.rating_one.get_rating(),self.rating_one.rating)
 
     def _assert_rating_is_valid(self):
         try:
             self.rating_one.full_clean()
         except ValidationError:
             self.fail('Test club should be valid')
+            
+    def test_validity_test_fails_when_rating_is_invalid(self):
+        self.rating_one.rating = 747
+        with self.assertRaisesMessage(AssertionError, 'Test club should be valid'):
+            self._assert_rating_is_valid()
 
     def _assert_rating_is_invalid(self):
         with self.assertRaises(ValidationError):

@@ -53,3 +53,8 @@ class PasswordFormTestCase(TestCase):
         self.form_input['password_confirmation'] = 'WrongPassword123'
         form = PasswordForm(user=self.user, data=self.form_input)
         self.assertFalse(form.is_valid())
+
+    def test_password_form_when_user_is_none_raises_error(self):
+        form = PasswordForm(user=None)
+        with self.assertRaisesMessage(AttributeError,"'PasswordForm' object has no attribute 'cleaned_data'"):
+            form.clean()

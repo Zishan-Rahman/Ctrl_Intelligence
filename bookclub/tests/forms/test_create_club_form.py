@@ -6,6 +6,9 @@ from bookclub.models import Club, User
 
 
 class CreateClubTestForm(TestCase):
+    
+    fixtures = ['bookclub/tests/fixtures/default_users.json']
+    
     def setUp(self):
         self.form_input = {
             'name': 'BookBusters',
@@ -14,6 +17,7 @@ class CreateClubTestForm(TestCase):
             'meeting_type': False,
             'organiser_has_owner_privilege': True
         }
+        self.owner = User.objects.get(pk=4)
 
     def test_club_form_has_necessary_fields(self):
         form = ClubForm()
@@ -36,3 +40,14 @@ class CreateClubTestForm(TestCase):
         self.form_input['location'] = ''
         form = ClubForm(data=self.form_input)
         self.assertFalse(form.is_valid())
+        
+    def test_create_club_form_saves_properly(self):
+        form = ClubForm(data=self.form_input)
+        club = form.save(user=self.owner)
+        self.assertEqual(club.name, 'BookBusters')
+        self.assertEqual(club.description, 'Crime and Mystery')
+        self.assertEqual(club.location, 'Cardiff')
+        self.assertEqual(club.owner, self.owner)
+        self.assertEqual(club.meeting_online, 'False')
+        self.assertEqual(club.organiser_owner, 'True')
+        

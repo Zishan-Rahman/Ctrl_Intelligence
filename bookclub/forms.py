@@ -131,29 +131,29 @@ class PasswordForm(NewPasswordMixin):
         return self.user
 
 
-class ApplicantForm(forms.Form):
-    """Form enabling owners to choose which club applications to view."""
-    applicants_dropdown = forms.ModelChoiceField(label="Select an applicant", queryset=None)
+# class ApplicantForm(forms.Form):
+#     """Form enabling owners to choose which club applications to view."""
+#     applicants_dropdown = forms.ModelChoiceField(label="Select an applicant", queryset=None)
 
-    def __init__(self, user=None, club=None, **kwargs):
-        """Construct new form instance with a user instance."""
+#     def __init__(self, user=None, club=None, **kwargs):
+#         """Construct new form instance with a user instance."""
 
-        super().__init__(**kwargs)
-        self.user = user
-        self.club = club
+#         super().__init__(**kwargs)
+#         self.user = user
+#         self.club = club
 
-        all_applicants = Application.objects.all()
-        current_applicants = []
-        current_applicants_ids = []
+#         all_applicants = Application.objects.all()
+#         current_applicants = []
+#         current_applicants_ids = []
 
-        for a in all_applicants:
-            if a.club == self.club:
-                current_applicants.append(a)
+#         for a in all_applicants:
+#             if a.club == self.club:
+#                 current_applicants.append(a)
 
-        for a in current_applicants:
-            current_applicants_ids.append(a.id)
+#         for a in current_applicants:
+#             current_applicants_ids.append(a.id)
 
-        self.fields['applicants_dropdown'].queryset = Application.objects.filter(pk__in=current_applicants_ids)
+#         self.fields['applicants_dropdown'].queryset = Application.objects.filter(pk__in=current_applicants_ids)
 
 
 class ClubForm(forms.ModelForm):
@@ -185,7 +185,7 @@ class ClubForm(forms.ModelForm):
 
     def save(self, user):
         super().save(commit=False)
-        Club.objects.create(
+        club = Club.objects.create(
             name=self.cleaned_data.get('name'),
             description=self.cleaned_data.get('description'),
             location=self.cleaned_data.get('location'),
@@ -193,24 +193,25 @@ class ClubForm(forms.ModelForm):
             meeting_online=self.cleaned_data.get('meeting_type'),
             organiser_owner=self.cleaned_data.get('organiser_has_owner_privilege')
         )
+        return club
 
 
-class ApplicationForm(forms.ModelForm):
-    """Form that enables applicants to apply to clubs"""
+# class ApplicationForm(forms.ModelForm):
+#     """Form that enables applicants to apply to clubs"""
 
-    class Meta:
-        model = Application
-        fields = "__all__"
+#     class Meta:
+#         model = Application
+#         fields = "__all__"
 
-    def save(self, user):
-        """Create a new application."""
-        club = self.cleaned_data.get('applicants_dropdown')
-        app = Application.objects.create(
-            club=self.cleaned_data.get('club'),
-            applicant=self.cleaned_data.get('applicant'),
-        )
-        app.save()
-        return app
+#     def save(self, user):
+#         """Create a new application."""
+#         # club = self.cleaned_data.get('applicants_dropdown')
+#         app = Application.objects.create(
+#             club=self.cleaned_data.get('club'),
+#             applicant=self.cleaned_data.get('applicant'),
+#         )
+#         app.save()
+#         return app
 
 
 class DateInput(forms.DateInput):

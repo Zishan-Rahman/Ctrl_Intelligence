@@ -1,5 +1,6 @@
 """View mixins."""
 from django.shortcuts import redirect
+from django.core.exceptions import ImproperlyConfigured
 
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""

@@ -34,6 +34,9 @@ class Book(models.Model):
 
     def get_title(self):
         return self.title
+    
+    def get_author(self):
+        return self.author
 
     def get_pub_year(self):
         return self.pub_year
