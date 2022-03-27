@@ -1,18 +1,21 @@
 """Tests of the home view."""
 from django.test import TestCase
 from django.urls import reverse
-from bookclub.models import User, Rating, RecommendedBook
+from bookclub.models import User, Rating, RecommendedBook, Post
 from bookclub.tests.helpers import reverse_with_next
 
 
 class HomeViewTestCase(TestCase):
     """Tests of the home view."""
 
-    fixtures = ['bookclub/tests/fixtures/default_users.json']
+    fixtures = ['bookclub/tests/fixtures/default_users.json',
+                'bookclub/tests/fixtures/default_clubs.json',
+                'bookclub/tests/fixtures/default_posts.json']
 
     def setUp(self):
         self.url = reverse('home')
         self.user = User.objects.get(email='johndoe@bookclub.com')
+        self.post = Post.objects.get(pk=1)
 
     def test_home_url(self):
         self.assertEqual(self.url, '/home/')
@@ -54,7 +57,8 @@ class HomeViewTestCase(TestCase):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f' <h4 style="padding-top: 10px;"><strong>Our Most Popular Books</strong></h4>\n<div class="row '
-                      f'row-cols-2 h-100" style="border-style: groove; border-color: brown; padding: 10px">', html)
+                      f'row-cols-2 h-100" style="border-style: groove; border-color: brown; border-radius: 5px; '
+                      f'padding: 10px">', html)
 
     def test_home_still_shows_top_books_when_enough_books_rated(self):
         self.client.login(email=self.user.email, password='Password123')
@@ -64,7 +68,8 @@ class HomeViewTestCase(TestCase):
         user_ratings_count = Rating.objects.filter(user=self.user).count()
         self.assertEqual(10, user_ratings_count)
         self.assertIn(f' <h4 style="padding-top: 10px;"><strong>Our Most Popular Books</strong></h4>\n<div class="row '
-                      f'row-cols-2 h-100" style="border-style: groove; border-color: brown; padding: 10px">', html)
+                      f'row-cols-2 h-100" style="border-style: groove; border-color: brown; border-radius: 5px; '
+                      f'padding: 10px">', html)
 
     def test_home_does_not_show_alert_if_enough_books_rated(self):
         response = self.client.get(self.url)
@@ -91,6 +96,13 @@ class HomeViewTestCase(TestCase):
                       f'style=\'padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; '
                       f'text-transform:uppercase; font-size: 14px\'>\n                            <i class="bi '
                       f'bi-x-diamond-fill"></i> New Recommendations\n', html)
+
+    def test_home_view_has_posts(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(reverse('home'))
+        html = response.content.decode('utf8')
+        self.assertIn(f' <p class="card-text fw-bold">This is a Bush House Book Club Post</p>',
+                      html)
 
     def _create_ratings(self):
         for i in range(0, 10):

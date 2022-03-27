@@ -5,12 +5,15 @@ from bookclub.tests.helpers import reverse_with_next
 
 class UserProfileTest(TestCase):
 
-    fixtures = ['bookclub/tests/fixtures/default_users.json']
+    fixtures = ['bookclub/tests/fixtures/default_users.json',
+                'bookclub/tests/fixtures/default_user_posts.json']
 
     def setUp(self):
-        self.john = User.objects.get(email='johndoe@bookclub.com')
-        self.jane = User.objects.get(email='janedoe@bookclub.com')
-        self.url = reverse('user_profile', kwargs={'user_id': self.jane.id})
+        self.john = User.objects.get(pk=1)
+        self.jane = User.objects.get(pk=2)
+        self.joe = User.objects.get(pk=3)
+        self.sam = User.objects.get(pk=4)
+        self.url = reverse('profile')
 
     def test_user_profile_url(self):
         self.assertEqual(self.url,f'/user_profile/{self.jane.id}/')
@@ -31,65 +34,36 @@ class UserProfileTest(TestCase):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn('alt="Gravatar of', html)
-        self.assertIn('Jane Doe', html)
-        self.assertIn('janedoe@bookclub.com', html)
-        self.assertIn('Adventure', html)
-        self.assertIn('Oxford', html)
-        self.assertIn('32', html)
-        self.assertIn('Just another fake user', html)
+        self.assertIn('John Doe', html)
+        self.assertIn('johndoe@bookclub.com', html)
+        self.assertIn('Science fiction', html)
+        self.assertIn('London', html)
+        self.assertIn('39', html)
+        self.assertIn('Im just an abstract concept!', html)
 
-    def test_user_profile_has_following_button(self):
+    def test_user_profile_view_has_feed_view_button(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#following_modal"><b>{self.jane.followee_count()}</b> Following</button>', html)
+        self.assertIn(f'<a href="/user_profile/1/user_feed/" style="text-decoration: none;">View All</a>', html)
 
-    def test_view_profile_has_followers_button(self):
+    def test_user_profile_view_displays_correct_message_when_no_posts(self):
         self.client.login(email=self.john.email, password='Password123')
-        response = self.client.get(self.url)
+        response = self.client.get(reverse('user_profile', kwargs={'user_id': self.joe.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#follower_modal"><b>{self.jane.follower_count()}</b> Followers</button>', html)
+        self.assertIn(f'<p class="text-muted"><strong>{self.joe.first_name} {self.joe.last_name}</strong> does not have any posts</p>',
+                      html)
 
-    def test_user_profile_has_chat_button(self):
+    def test_user_profile_view_has_posts(self):
         self.client.login(email=self.john.email, password='Password123')
-        response = self.client.get(self.url)
+        response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<a valign="left" class="btn" href="/user_profile/{self.jane.id}/create_chat/" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">\n                                <i class="bi bi-messenger" style="font-size: 0.9rem"></i>\n                                Chat\n                              </a>', html)
+        self.assertIn(f'<h6 class="card-title text-left"><strong>This is a John Doe Post</strong></h6>',
+                      html)
 
-    def test_user_profile_has_invite_button(self):
-        self.client.login(email=self.john.email, password='Password123')
-        response = self.client.get(self.url)
+    def test_user_profile_view_does_not_display_other_user_posts(self):
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<a id="Invite" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">\n                              <i class="bi bi-envelope" style="font-size: 0.9rem"></i>\n                              Invite\n                            </a>', html)
-
-    def test_user_profile_has_follow_button_when_not_followed(self):
-        self.client.login(email=self.john.email, password='Password123')
-        response = self.client.get(self.url)
-        html = response.content.decode('utf8')
-        self.assertIn(f'<button class=\'btn btn-primary\' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: LIGHT-BLUE; text-transform:uppercase; font-size: 14px">\n                              Follow\n                            </button>', html)
-
-    def test_user_profile_has_unfollow_button_when_followed(self):
-        self.client.login(email=self.john.email, password='Password123')
-        self.john.toggle_follow(self.jane)
-        response = self.client.get(self.url)
-        html = response.content.decode('utf8')
-        self.assertIn(f'<button class=\'btn btn-secondary\' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: GREY; text-transform:uppercase; font-size: 14px">\n                              Unfollow\n                            </button>', html)
-
-    def test_follow_button_in_user_profile_works(self):
-        self.client.login(email=self.john.email, password='Password123')
-        before_followee_count = self.john.followee_count()
-        response = self.client.get('/follow_toggle/2/', follow=True)
-        redirect_url = self.url
-        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        after_followee_count = self.john.followee_count()
-        self.assertNotEqual(before_followee_count, after_followee_count)
-
-    def test_unfollow_button_in_user_profile_works(self):
-        self.client.login(email=self.john.email, password='Password123')
-        self.john.followees.add(self.jane)
-        before_followee_count = self.john.followee_count()
-        response = self.client.get('/unfollow/2/', follow=True)
-        redirect_url = self.url
-        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        after_followee_count = self.john.followee_count()
-        self.assertNotEqual(before_followee_count, after_followee_count)
+        self.assertNotIn(f'<h6 class="card-title text-left"><strong>This is a Jane Doe Post</strong></h6>',
+                         html)

@@ -32,25 +32,27 @@ class BookProfileTest(TestCase):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<img src="{self.book.medium_url}" alt="a">', html)
-        self.assertIn(f'<h3 class="book-title">{self.book.title}</h3>', html)
-        self.assertIn(f'<p class="book-isbn">ISBN: {self.book.isbn}</p>', html)
-        self.assertIn(f'<p class="book-author">Author: {self.book.author}</p>', html)
-        self.assertIn(f'<p class="book-pub-year">Published Year: {str(self.book.pub_year)}</p>', html)
-        self.assertIn(f'<p class="book-publisher">Publisher: {self.book.publisher}</p>', html)
+        self.assertIn(f'{self.book.large_url}', html)
+        self.assertIn(f'{self.book.title}', html)
+        self.assertIn(f'{self.book.isbn}', html)
+        self.assertIn(f'{self.book.author}', html)
+        self.assertIn(f'{str(self.book.pub_year)}', html)
+        self.assertIn(f'{self.book.publisher}', html)
 
     def test_book_profile_has_favourite_button_when_book_is_not_in_favourites(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Favourite</button>', html)
+        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
+                      f'24px"><i class="bi bi-star"></i></button>', html)
 
     def test_book_profile_has_unfavourite_button_when_book_is_in_favourites(self):
         self.client.login(email=self.user.email, password='Password123')
         self.user.favourite_books.add(self.book)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Unfavourite</button>', html)
+        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
+                      f'24px"><i class="bi bi-star-fill"></i></button>', html)
 
     def test_favourite_button_in_book_profile_works(self):
         self.client.login(email=self.user.email, password='Password123')
@@ -81,7 +83,7 @@ class BookProfileTest(TestCase):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<select name="ratings" id="ratings">', html)
+        self.assertIn(f'select class="form-select" name="ratings" id="ratings">', html)
 
     def test_book_profile_view_has_disqus_comments_section(self):
         self.client.login(email=self.user.email, password='Password123')
@@ -111,13 +113,15 @@ class BookProfileTest(TestCase):
         self.user.currently_reading_books.add(self.book)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Remove from My Reading List</button>', html)
+        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
+                      f'24px"><i class="bi bi-bookmarks-fill"></i></button>', html)
 
     def test_book_profile_view_has_add_to_current_reads_button_when_book_is_not_in_current_reads(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Add to My Reading List</button>', html)
+        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
+                      f'24px"><i class="bi bi-bookmarks"></i></button>', html)
 
     def test_add_to_current_reads_in_book_profile_works(self):
         self.client.login(email=self.user.email, password='Password123')
