@@ -5,7 +5,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 from bookclub.forms import PostForm
-from bookclub.models import User, Club
+from bookclub.models import User, Club, Post
 from bookclub.tests.helpers import create_posts, reverse_with_next, LogInTester
 
 
@@ -42,7 +42,7 @@ class FeedViewTestCase(TestCase, LogInTester):
 
     def test_get_club_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
-        self._create_test_clubs(settings.POSTS_PER_PAGE*2+3-1)
+        self._create_test_posts(settings.POSTS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'feed.html')
@@ -83,9 +83,9 @@ class FeedViewTestCase(TestCase, LogInTester):
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
 
-    def _create_test_clubs(self, club_count=10):
-        for id in range(1, club_count+1, 1):
-            User.objects.create(
+    def _create_test_posts(self, posts_count=10):
+        for id in range(1, posts_count+1, 1):
+            user = User.objects.create(
                 email=f'user{id}@test.org',
                 password='Password123',
                 first_name=f'First{id}',
@@ -95,11 +95,10 @@ class FeedViewTestCase(TestCase, LogInTester):
                 location=f'City {id}',
                 age=18+id
             )
-            Club.objects.create(
-                owner_id=id,
-                name=f'The {id} Book Club',
-                location=f'City {id}',
-                description=f'Description {id}',
+            Post.objects.create(
+                author=user,
+                club=self.bush_club,
+                text=f'Test post {id}'
             )
 
     def _is_logged_in(self):
