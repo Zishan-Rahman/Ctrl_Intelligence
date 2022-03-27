@@ -99,6 +99,14 @@ class CreateMessageView(View):
         message.save()
         return redirect('chat', pk=pk)
 
+    def get(self, request, msg_id):
+        message = Message.objects.get(id=msg_id)
+        current_user = request.user
+        if message.msg_to_id == current_user.id:
+            message.is_read = True
+            message.save()
+       
+
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ChatView(View):

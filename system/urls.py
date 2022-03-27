@@ -17,7 +17,7 @@ from django.urls import path
 from bookclub import views
 import notifications.urls
 from django.conf.urls import include
-from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views, notifications_views
+from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views
 from django.contrib.auth import views as auth_views
 
 
