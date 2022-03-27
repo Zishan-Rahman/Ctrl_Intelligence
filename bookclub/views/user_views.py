@@ -4,8 +4,8 @@ from django.contrib import messages
 from bookclub.templates import *
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from bookclub.models import User, Club, Message, Chat
-from bookclub.forms import UserForm
+from bookclub.models import User, Club, Message, Chat , UserPost
+from bookclub.forms import UserForm , UserPostForm
 from django.contrib.auth import login
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.decorators import login_required
@@ -82,16 +82,20 @@ def user_profile(request, user_id):
     followable = request.user != user
     followers = request.user.followers.all()
     currently_reading_books = user.currently_reading_books.all()
+    form = UserPostForm()
+    posts = UserPost.objects.filter(author=user)
+    posts = posts[:6]
 
     return render(request, 'user_profile.html',
                     {
                         'user': user,
                         'current_user': current_user,
                         'following': following,
-                        'following': following,
                         'followable': followable,
                         'user_clubs': config.user_clubs,
-                        'currently_reading_books': currently_reading_books
+                        'currently_reading_books': currently_reading_books,
+                        'form': form,
+                        'posts':posts
                     }
                  )
 @login_required
@@ -104,15 +108,19 @@ def current_user_profile(request):
     followable = request.user != user
     followers = request.user.followers.all()
     currently_reading_books = user.currently_reading_books.all()
+    form = UserPostForm()
+    posts = UserPost.objects.filter(author=current_user)
+    posts = posts[:6]
     return render(request, 'user_profile.html',
                     {
                         'user': user,
                         'current_user': current_user,
                         'following': following,
-                        'following': following,
                         'followable': followable,
                         'user_clubs': config.user_clubs,
                         'currently_reading_books': currently_reading_books,
+                        'form': form,
+                        'posts':posts
                     }
                  )
 

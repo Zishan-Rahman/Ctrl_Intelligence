@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from bookclub.models import User, Club, Application, Meeting, Post
+from bookclub.models import User, Club, Application, Meeting, Post ,UserPost
 from datetime import datetime
 from django.utils import timezone
 
@@ -301,3 +301,19 @@ class PostForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea()
         }
+
+
+
+class UserPostForm(forms.ModelForm):
+
+    class Meta:
+        """Form options."""
+
+        model = UserPost
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea()
+        }
+
+
+

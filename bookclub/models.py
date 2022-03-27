@@ -50,6 +50,7 @@ class Book(models.Model):
     def get_large_url(self):
         return self.large_url
 
+
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255, blank=False)
@@ -156,6 +157,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
+
 
 # Club Model adapted from Clucker user model and Chess club management system club model
 
@@ -376,3 +378,17 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+        
+class UserPost(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.CharField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+  
+class RecommendedBook(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    isbn = models.CharField(unique=False, max_length=12, blank=False)

@@ -21,6 +21,7 @@ class EditMeetingViewTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.get(email='johndoe@bookclub.com')
+        self.sam = User.objects.get(pk=4)
         self.club = Club.objects.get(name="Bush House Book Club")
         self.meeting = Meeting.objects.create(
             date="2023-03-03",
@@ -39,11 +40,29 @@ class EditMeetingViewTestCase(TestCase):
         self.assertEqual(self.url, f'/club_profile/{self.club.id}/meetings/{self.meeting.id}/edit')
 
     def test_edit_meeting_uses_correct_template(self):
-        login = self.client.login(email='johndoe@bookclub.com', password='Password123')
+        self.client.login(email='johndoe@bookclub.com', password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(str(response.context['user']), 'johndoe@bookclub.com')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'edit_meeting.html')
+
+    def test_cannot_hijack_edit_meeting(self):
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get(reverse('edit_meeting', kwargs={'club_id': self.club.id, 'meeting_id': self.meeting.id}), follow=True)
+        redirect_url = reverse('club_list')
+        messages_list = list(response.context['messages'])
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+
+    def test_cannot_hijack_edit_meeting_non_owner_organiser(self):
+        self.club.make_member(self.sam)
+        self.club.make_organiser(self.sam)
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get(reverse('edit_meeting', kwargs={'club_id': self.club.id, 'meeting_id': self.meeting.id}), follow=True)
+        redirect_url = reverse('club_list')
+        messages_list = list(response.context['messages'])
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
 
     def test_get_meeting(self):
         self.client.login(email=self.user.email, password='Password123')
@@ -59,7 +78,7 @@ class EditMeetingViewTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
-    def test_unsuccesful_meeting_update_with_past_date(self):
+    def test_unsuccessful_meeting_update_with_past_date(self):
         self.form_input['date'] = "2000-01-01"
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         response = self.client.post(self.url, self.form_input, club=self.club, follow=True)
@@ -75,7 +94,7 @@ class EditMeetingViewTestCase(TestCase):
 
         self.assertFalse(Meeting.objects.filter(date=self.form_input['date'], club = self.club).exists())
 
-    def test_unsuccesful_meeting_update_with_past_time(self):
+    def test_unsuccessful_meeting_update_with_past_time(self):
         self.form_input['date'] = datetime.now().date()
         self.form_input['start_time'] = (datetime.now() + timedelta(minutes=-2)).time().isoformat(timespec='seconds') #From python documentation https://docs.python.org/3/library/datetime.html#time-objects
         self.client.login(email='johndoe@bookclub.com', password='Password123')
@@ -90,7 +109,7 @@ class EditMeetingViewTestCase(TestCase):
         self.assertEqual(messages_list[0].level, messages.ERROR)
         self.assertFalse(Meeting.objects.filter(date=self.form_input['date'], club = self.club).exists())
 
-    def test_succesful_meeting_update(self):
+    def test_successful_meeting_update(self):
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         response = self.client.post(self.url, self.form_input, club=self.club, follow=True)
         response_url = reverse('home')

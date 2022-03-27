@@ -15,7 +15,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views
+from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views , user_feed_views , user_post_views
 from django.contrib.auth import views as auth_views
 
 
@@ -26,9 +26,9 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='main/password/password_reset_complete.html'), name='password_reset_complete'),
     path("password_reset", account_views.password_reset_request, name="password_reset"),
     path('', account_views.landing_page, name='landing_page'),
-    path('users/', user_views.UsersListView.as_view() , name = 'user_list'),
-    path('clubs/', club_views.ClubsListView.as_view() , name = 'club_list'),
-    path('books/', book_views.BooksListView.as_view() , name = 'book_list'),
+    path('users/', user_views.UsersListView.as_view(), name='user_list'),
+    path('clubs/', club_views.ClubsListView.as_view(), name='club_list'),
+    path('books/', book_views.BooksListView.as_view(), name='book_list'),
     path('current_reads/<int:user_id>/', book_views.current_reads, name='current_reads'),
     path('add_to_current_reads_list/<int:book_id>/', book_views.add_to_current_reads_book_list, name='add_to_current_reads_book_list'),
     path('remove_from_current_reads_list/<int:book_id>/', book_views.remove_from_current_reads_book_list, name='remove_from_current_reads_book_list'),
@@ -85,4 +85,7 @@ urlpatterns = [
     path('user_profile/<int:user_id>/unfollow/', user_views.unfollow_from_user_profile , name = 'unfollow_from_user_profile'),
     path('club_profile/<int:club_id>/new_post/', post_views.NewPostView.as_view(), name='new_post'),
     path('user_profile/<int:user_id>/create_chat/', messaging_views.createChatFromProfile, name='create_chat_from_profile'),
+    path('user_profile/<int:user_id>/user_feed/', user_feed_views.UserFeedView.as_view(), name='user_feed'),
+    path('user_profile/<int:user_id>/new_post/', user_post_views.UserNewPostView.as_view(), name='user_new_post'),
+    path('home/recommender', dashboard_views.refresh_recommendations, name='recommend')
     ]
