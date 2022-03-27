@@ -51,7 +51,7 @@
               </div>
                <div class="row">
                  <p class="follow-user">
-                   <form action="{% url 'follow_toggle' user.id %}" method='post'>
+                   <form action="{% url 'follow_from_user_profile' user.id %}" method='post'>
                      {% csrf_token %}
                             {%if user.id == request.user.id%}
                             <a valign="left" class="btn" href="{% url 'edit_profile' %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
@@ -225,7 +225,7 @@
                         <td>{{ entry.first_name }} {{ entry.last_name }}</td>
                         <td>
                           {%if entry.id != request.user.id %}
-                          <a class="btn" href="{% url 'unfollow' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                          <a class="btn" href="{% url 'unfollow_from_user_profile' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
                             Unfollow
                           </a>
                           {% endif %}
@@ -267,7 +267,7 @@
                         <td>{{ entry.first_name }} {{ entry.last_name }}</td>
                         <td>
                           {%if entry.id != request.user.id %}
-                          <a class="btn" href="{% url 'unfollow' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                          <a class="btn" href="{% url 'unfollow_from_user_profile' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
                             Unfollow
                           </a>
                           {% endif %}

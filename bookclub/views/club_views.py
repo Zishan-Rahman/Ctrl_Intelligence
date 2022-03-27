@@ -73,7 +73,7 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
         context['current_user'] = self.request.user
         return context
 
-
+@login_required
 def promote_member_to_organiser(request, c_pk, u_pk):
     """Promote member to organiser"""
     club = Club.objects.all().get(pk=c_pk)
@@ -89,7 +89,7 @@ def promote_member_to_organiser(request, c_pk, u_pk):
         messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
-
+@login_required
 def demote_organiser_to_member(request, c_pk, u_pk):
     """Demote organiser to member"""
     club = Club.objects.all().get(pk=c_pk)
@@ -101,7 +101,7 @@ def demote_organiser_to_member(request, c_pk, u_pk):
         messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
-
+@login_required
 def kick_user_from_club(request, c_pk, u_pk):
     """Promote member to organiser"""
     club = Club.objects.all().get(pk = c_pk)
@@ -113,6 +113,7 @@ def kick_user_from_club(request, c_pk, u_pk):
         messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
+@login_required
 def transfer_ownership(request, c_pk, u_pk):
     """Transfer ownership to specific member"""
     club = Club.objects.get(pk=c_pk)

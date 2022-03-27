@@ -24,6 +24,17 @@
               <td>{{ user.public_bio}}</td>
               <td>{{ user.email}}</td>
               <td>{{ user.favourite_genre }}</td>
+              {% if user in request.user.get_users_followees %}
+              <form action="{% url 'unfollow_from_user_list' user_id=user.id %}" method="post">
+                {% csrf_token %}
+                <td><button type="submit" class="btn btn-dark" style="background-color: brown">Unfollow</button></td>
+              </form>
+              {% else %}
+              <form action="{% url 'follow_from_user_list' user_id=user.id %}" method="post">
+                {% csrf_token %}
+                <td><button type="submit" class="btn btn-dark" style="background-color: brown">Follow</button></td>
+              </form>
+              {% endif %}
           </tr>
           {% endfor %}
         </tbody>

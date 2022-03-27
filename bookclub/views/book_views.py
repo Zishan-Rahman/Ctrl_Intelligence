@@ -46,31 +46,36 @@ def current_reads(request, user_id):
     books = user.currently_reading_books.all()
     return render(request, "reading_list.html", {'books':books, 'user': user})
 
+@login_required
 def add_to_current_reads(request, book_id):
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.currently_reading_books.add(book)
     messages.add_message(request, messages.SUCCESS, f"{book.title} was successfully added to your reading list!")
 
-
+@login_required
 def add_to_current_reads_book_list(request, book_id):
     add_to_current_reads(request, book_id)
     return redirect("book_list")
 
+@login_required
 def add_to_current_reads_book_profile(request, book_id):
     add_to_current_reads(request, book_id)
     return redirect("book_profile", book_id=book_id)
 
+@login_required
 def remove_from_current_reads(request, book_id):
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.currently_reading_books.remove(book)
     messages.add_message(request, messages.ERROR, f"{book.title} was successfully removed from your reading list!")
 
+@login_required
 def remove_from_current_reads_book_list(request, book_id):
     remove_from_current_reads(request, book_id)
     return redirect("book_list")
 
+@login_required
 def remove_from_current_reads_book_profile(request, book_id):
     remove_from_current_reads(request, book_id)
     return redirect("book_profile", book_id=book_id)
@@ -94,21 +99,24 @@ def update_ratings(request, book_id):
                          "You have given " + book.title + " a rating of " + request.POST.get('ratings', "0"))
     return redirect('book_profile', book_id=book_id)
 
-
+@login_required
 def make_favourite(request, book_id):
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.favourite_books.add(book)
     messages.add_message(request, messages.SUCCESS, book.title + " has been added to Favourites!")
 
+@login_required
 def make_favourite_book_list(request, book_id):
     make_favourite(request, book_id)
     return redirect('book_list')
 
+@login_required
 def make_favourite_book_profile(request, book_id):
     make_favourite(request, book_id)
     return redirect('book_profile', book_id=book_id)
 
+@login_required
 def unfavourite(request, book_id):
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
@@ -116,10 +124,12 @@ def unfavourite(request, book_id):
     messages.add_message(request, messages.ERROR, book.title + " has been removed from Favourites!")
     return redirect('book_profile', book_id=book_id)
 
+@login_required
 def unfavourite_book_list(request, book_id):
     unfavourite(request, book_id)
     return redirect('book_list')
 
+@login_required
 def unfavourite_book_profile(request, book_id):
     unfavourite(request, book_id)
     return redirect('book_profile', book_id=book_id)
