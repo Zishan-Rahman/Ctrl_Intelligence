@@ -8,6 +8,17 @@
     height: 100%;
   }
 
+#recommendationCard:hover {
+  background-color: whitesmoke;
+  box-shadow: black;
+  transform: scale(1.05);
+}
+
+#homepagePosts:hover {
+  background-color: whitesmoke;
+  box-shadow: black;
+  transform: scale(1.01);
+}
 
 
   h1.cover-heading {

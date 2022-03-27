@@ -1,14 +1,17 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from bookclub.models import Rating, Book, RecommendedBooks
+from bookclub.models import Rating, Book, RecommendedBooks, Club, Post, User
 import pandas as pd
 from surprise import SVD
 from surprise import Dataset, Reader
 import pickle
+from bookclub.views import config
 
 
 @login_required
 def home_page(request):
+    posts = get_all_club_posts(request)
+    posts = posts[:5]
     popular_books_list = get_popular_books()
     popular_books = get_recommended_books(popular_books_list)
     top_n = 10
@@ -29,7 +32,33 @@ def home_page(request):
                 RecommendedBooks.objects.create(user=request.user, isbn=item.isbn)
     else:
         recommended_books = []
-    return render(request, "home.html", {'user': request.user, 'recommendations': recommended_books, 'popular_books': popular_books[:10]})
+    return render(request, "home.html",
+                  {'user': request.user, 'recommendations': recommended_books, 'popular_books': popular_books[:10],
+                   'posts': posts})
+
+
+def club_util(request):
+    user_clubs_list = []
+    clubs = Club.objects.all()
+
+    for temp_club in clubs:
+        if request.user in temp_club.get_all_users():
+            user_clubs_list.append(temp_club)
+
+    config.user_clubs = user_clubs_list
+
+
+def get_all_club_posts(request):
+    club_util(request)
+    all_club_posts = []
+
+    for club in config.user_clubs:
+        club_posts = list(set(Post.objects.filter(club=club)))
+        if club_posts:
+            for post in club_posts:
+                all_club_posts.append(post)
+    all_club_posts.sort(key=lambda p: p.created_at, reverse=True)
+    return all_club_posts
 
 
 def get_recommended_books(recommendations_list):
