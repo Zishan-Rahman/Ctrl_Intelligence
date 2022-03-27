@@ -103,7 +103,7 @@
                     </div>
                     <div class="col-9">
                       <div class="card-body">
-                        <p class="card-text">{{ post.text }}</p>
+                        <p class="card-text fw-bold">{{ post.text }}</p>
                           <div class="row">
                               <div class="col-6">
                                   <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-person-fill"></i><a href="{% url 'user_profile' post.author.id %}" style="text-decoration: none; color: grey"> <strong>{{ post.author.get_full_name }}</strong></a></p>
