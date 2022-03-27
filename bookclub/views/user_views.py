@@ -93,7 +93,7 @@ def user_profile(request, user_id):
                       'following': following,
                       'followable': followable,
                       'user_clubs': config.user_clubs,
-                      'currently_reading_books': currently_reading_books,
+                      'currently_reading_books': currently_reading_books[:3],
                       'form': form,
                       'posts': posts
                   }
@@ -120,7 +120,7 @@ def current_user_profile(request):
                       'following': following,
                       'followable': followable,
                       'user_clubs': config.user_clubs,
-                      'currently_reading_books': currently_reading_books,
+                      'currently_reading_books': currently_reading_books[:3],
                       'form': form,
                       'posts': posts
                   }
