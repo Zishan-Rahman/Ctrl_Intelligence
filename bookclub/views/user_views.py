@@ -95,7 +95,7 @@ def user_profile(request, user_id):
                         'user_clubs': config.user_clubs,
                         'currently_reading_books': currently_reading_books,
                         'form': form,
-                        'post':posts
+                        'posts':posts
                     }
                  )
 @login_required
