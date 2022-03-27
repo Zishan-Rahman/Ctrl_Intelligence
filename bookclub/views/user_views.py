@@ -4,8 +4,8 @@ from django.contrib import messages
 from bookclub.templates import *
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from bookclub.models import User, Club, Message, Chat , UserPost
-from bookclub.forms import UserForm , UserPostForm
+from bookclub.models import User, Club, Message, Chat, UserPost
+from bookclub.forms import UserForm, UserPostForm
 from django.contrib.auth import login
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.decorators import login_required
@@ -75,7 +75,7 @@ class UsersListView(LoginRequiredMixin, ListView):
 @login_required
 def user_profile(request, user_id):
     """ Individual User's Profile Page """
-    user = User.objects.get(id = user_id)
+    user = User.objects.get(id=user_id)
     club_util(request)
     current_user = request.user
     following = request.user.is_following(user)
@@ -87,21 +87,23 @@ def user_profile(request, user_id):
     posts = posts[:6]
 
     return render(request, 'user_profile.html',
-                    {
-                        'user': user,
-                        'current_user': current_user,
-                        'following': following,
-                        'followable': followable,
-                        'user_clubs': config.user_clubs,
-                        'currently_reading_books': currently_reading_books,
-                        'form': form,
-                        'posts':posts
-                    }
-                 )
+                  {
+                      'user': user,
+                      'current_user': current_user,
+                      'following': following,
+                      'followable': followable,
+                      'user_clubs': config.user_clubs,
+                      'currently_reading_books': currently_reading_books,
+                      'form': form,
+                      'posts': posts
+                  }
+                  )
+
+
 @login_required
 def current_user_profile(request):
     """ Current User's Profile Page """
-    user = User.objects.get(id = request.user.id)
+    user = User.objects.get(id=request.user.id)
     club_util(request)
     current_user = request.user
     following = request.user.is_following(user)
@@ -112,17 +114,18 @@ def current_user_profile(request):
     posts = UserPost.objects.filter(author=current_user)
     posts = posts[:6]
     return render(request, 'user_profile.html',
-                    {
-                        'user': user,
-                        'current_user': current_user,
-                        'following': following,
-                        'followable': followable,
-                        'user_clubs': config.user_clubs,
-                        'currently_reading_books': currently_reading_books,
-                        'form': form,
-                        'posts':posts
-                    }
-                 )
+                  {
+                      'user': user,
+                      'current_user': current_user,
+                      'following': following,
+                      'followable': followable,
+                      'user_clubs': config.user_clubs,
+                      'currently_reading_books': currently_reading_books,
+                      'form': form,
+                      'posts': posts
+                  }
+                  )
+
 
 @login_required
 def follow_toggle(request, user_id):
@@ -130,6 +133,7 @@ def follow_toggle(request, user_id):
     followee = User.objects.get(id=user_id)
     current_user.toggle_follow(followee)
     return redirect('user_profile', user_id=user_id)
+
 
 @login_required
 def unfollow(request, user_id):
