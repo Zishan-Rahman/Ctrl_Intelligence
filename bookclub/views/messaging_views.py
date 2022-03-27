@@ -43,6 +43,7 @@ class CreateChatView(View):
         except:
             return redirect('create_chat')
 
+
 def createChatFromProfile(request, user_id):
     try:
         receiver = User.objects.get(id=user_id)
@@ -97,10 +98,16 @@ class ChatView(View):
     def get(self, request, pk, *args, **kwargs):
         form = MessageForm()
         chat = Chat.objects.get(pk=pk)
-        message_list = Message.objects.filter(chat__pk__contains=pk)
-        context = {
-            'chat': chat,
-            'form': form,
-            'message_list': message_list
-        }
-        return render(request, 'chat.html', context)
+        if request.user == chat.receiver or request.user == chat.user:
+
+            message_list = Message.objects.filter(chat__pk__contains=pk)
+            context = {
+                'chat': chat,
+                'form': form,
+                'message_list': message_list
+            }
+            return render(request, 'chat.html', context)
+
+        else:
+            messages.add_message(request, messages.ERROR, "Action prohibited")
+            return redirect('home')

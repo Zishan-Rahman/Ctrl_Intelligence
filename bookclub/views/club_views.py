@@ -43,7 +43,7 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
         current_club_id = self.kwargs['club_id']
         current_club = Club.objects.get(id=current_club_id)
         all_users = current_club.get_all_users()
-        current_club = Club.objects.get(id = current_club_id)
+        current_club = Club.objects.get(id=current_club_id)
         if current_club.owner == self.request.user:
             current_user_is_owner = True
         paginator = Paginator(current_club.get_all_users(), settings.USERS_PER_PAGE)
@@ -84,7 +84,7 @@ def promote_member_to_organiser(request, c_pk, u_pk):
         else:
             new_organiser = User.objects.all().get(pk=u_pk)
             club.make_organiser(new_organiser)
-            messages.add_message(request, messages.SUCCESS, str(new_organiser.get_full_name()) +" has been promoted!")
+            messages.add_message(request, messages.SUCCESS, str(new_organiser.get_full_name()) + " has been promoted!")
     else:
         messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
@@ -104,7 +104,7 @@ def demote_organiser_to_member(request, c_pk, u_pk):
 
 def kick_user_from_club(request, c_pk, u_pk):
     """Promote member to organiser"""
-    club = Club.objects.all().get(pk = c_pk)
+    club = Club.objects.all().get(pk=c_pk)
     if request.user == club.owner:
         user_to_kick = User.objects.all().get(pk=u_pk)
         club.remove_from_club(user_to_kick)
@@ -113,17 +113,18 @@ def kick_user_from_club(request, c_pk, u_pk):
         messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
+
 def transfer_ownership(request, c_pk, u_pk):
     """Transfer ownership to specific member"""
     club = Club.objects.get(pk=c_pk)
-    if request.user == club.owner :
+    if request.user == club.owner:
         new_owner = User.objects.get(pk=u_pk)
         club.make_owner(new_owner)
-        messages.add_message(request, messages.SUCCESS, "Transferred Ownership to " + str(new_owner.get_full_name()) + "!")
+        messages.add_message(request, messages.SUCCESS,
+                             "Transferred Ownership to " + str(new_owner.get_full_name()) + "!")
     else:
         messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
-
 
 
 class ClubUpdateView(LoginRequiredMixin, UpdateView):
@@ -133,9 +134,8 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "edit_club.html"
     form_class = EditClubForm
 
-
     def get_object(self, c_pk):
-        """Return the object (user) to be updated."""
+        """Return the object (club) to be updated."""
         club_to_edit = Club.objects.all().get(pk=c_pk)
         self.pk = c_pk
         return club_to_edit
@@ -156,8 +156,12 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
     def get(self, request, c_pk, *args, **kwargs):
         self.pk = c_pk
         club_to_edit = Club.objects.all().get(pk=c_pk)
-        form = self.form_class(instance=club_to_edit)
-        return render(request, 'edit_club.html', {"form": form})
+        if request.user == club_to_edit.owner:
+            form = self.form_class(instance=club_to_edit)
+            return render(request, 'edit_club.html', {"form": form})
+        else:
+            messages.add_message(self.request, messages.ERROR, "Action prohibited")
+            return redirect('club_list')
 
 
 def club_util(request):
@@ -169,8 +173,6 @@ def club_util(request):
             user_clubs_list.append(temp_club)
 
     config.user_clubs = user_clubs_list
-
-
 
 
 @login_required
@@ -188,8 +190,6 @@ def club_list(request):
             "gravatar": club.gravatar()
         })
     return render(request, 'club_list.html', {'clubs': clubs})
-
-
 
 
 @login_required
@@ -257,6 +257,7 @@ def leave_club(request, club_id):
     club.remove_from_club(current_user)
     messages.add_message(request, messages.SUCCESS, f"You have successfully left {club.name}!")
     return redirect('club_selector')
+
 
 @login_required
 def disband_club(request, c_pk):

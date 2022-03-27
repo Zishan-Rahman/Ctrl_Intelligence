@@ -1,0 +1,18 @@
+[
+  {
+    "model": "bookclub.recommendedbook",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "isbn": "0072295619"
+    }
+  },
+  {
+    "model": "bookclub.recommendedbook",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "isbn": "12345678911"
+    }
+  }
+]
