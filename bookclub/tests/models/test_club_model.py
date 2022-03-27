@@ -149,3 +149,13 @@ class ClubModelTestCase(TestCase):
         with self.assertRaises(ValueError):
             self.club_bush_house.remove_from_club(self.user_two)
             
+    def test_club_validity_test_fails_when_club_is_actually_invalid(self):
+        self.club_bush_house.description = "a" * 513
+        with self.assertRaisesMessage(AssertionError, 'Test club should be valid'):
+            self._assert_book_club_is_valid()
+            
+    def test_club_invalidity_test_fails_when_club_is_actually_valid(self):
+        self.club_bush_house.description = "a" * 512
+        with self.assertRaisesMessage(AssertionError, 'ValidationError not raised'):
+            self._assert_book_club_is_invalid()
+            
