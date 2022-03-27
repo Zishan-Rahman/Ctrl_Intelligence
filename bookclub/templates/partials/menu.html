@@ -33,7 +33,6 @@
     <li class="nav-item">
       <a class="nav-link" href="{% url 'inbox' %}">Inbox <i class="bi bi-inboxes"><span class="badge badge-light">{{ unread_count }}</span></i></a>
     </li>
-
   
   </ul>
 
@@ -50,7 +49,7 @@
       <script>
         $(function () {
           $( "#search" ).autocomplete({
-            source: '{% url 'search_autocomplete' %}',
+            source: "{% url 'search_autocomplete' %}",
             minLength: 4
           });
         });
