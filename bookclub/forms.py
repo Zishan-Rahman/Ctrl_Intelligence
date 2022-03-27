@@ -196,22 +196,22 @@ class ClubForm(forms.ModelForm):
         return club
 
 
-class ApplicationForm(forms.ModelForm):
-    """Form that enables applicants to apply to clubs"""
+# class ApplicationForm(forms.ModelForm):
+#     """Form that enables applicants to apply to clubs"""
 
-    class Meta:
-        model = Application
-        fields = "__all__"
+#     class Meta:
+#         model = Application
+#         fields = "__all__"
 
-    def save(self, user):
-        """Create a new application."""
-        # club = self.cleaned_data.get('applicants_dropdown')
-        app = Application.objects.create(
-            club=self.cleaned_data.get('club'),
-            applicant=self.cleaned_data.get('applicant'),
-        )
-        app.save()
-        return app
+#     def save(self, user):
+#         """Create a new application."""
+#         # club = self.cleaned_data.get('applicants_dropdown')
+#         app = Application.objects.create(
+#             club=self.cleaned_data.get('club'),
+#             applicant=self.cleaned_data.get('applicant'),
+#         )
+#         app.save()
+#         return app
 
 
 class DateInput(forms.DateInput):
