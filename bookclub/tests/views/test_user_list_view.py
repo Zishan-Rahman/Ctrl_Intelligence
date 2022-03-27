@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User
 from bookclub.tests.helpers import LogInTester, reverse_with_next
+from django.contrib import messages
 
 
 class TestUserListView(TestCase, LogInTester):
@@ -11,16 +12,8 @@ class TestUserListView(TestCase, LogInTester):
 
     def setUp(self):
         self.url = reverse('user_list')
-        self.user = User.objects.create(
-            first_name="Jim",
-            last_name="Doe",
-            email="jimdoe@bookclub.com",
-            public_bio="I am definitely an abstract concept...",
-            favourite_genre="Mystery",
-            location="Lancashire",
-            age=47,
-            password="pbkdf2_sha256$260000$EoTovTO51J1EMhVCgfWM0t$jQjs11u15ELqQDNthGsC+vdLoDJRn2LDjU2qE7KqKj0="
-        )
+        self.user = User.objects.get(pk=1)
+        self.jane = User.objects.get(pk=2)
 
     def test_user_list_url(self):
         self.assertEqual(self.url,'/users/')
@@ -31,6 +24,46 @@ class TestUserListView(TestCase, LogInTester):
         self._is_logged_in()
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "user_list.html")
+
+    def test_user_list_view_has_follow_button_when_not_following_user(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Follow</button>', html)
+
+    def test_user_list_view_has_unfollow_button_when_following_user(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self.user.followees.add(self.jane)
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Unfollow</button>', html)
+
+    def test_follow_button_works_from_user_list(self):
+        self.client.login(email=self.user.email, password='Password123')
+        before_followee_count = self.user.followees.count()
+        response = self.client.get(f'/users/follow/{self.jane.id}/', follow=True)
+        redirect_url = self.url
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        after_followee_count = self.user.followees.count()
+        self.assertNotEqual(before_followee_count, after_followee_count)
+
+    def test_unfollow_button_works_from_user_list(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self.user.followees.add(self.jane)
+        before_followee_count = self.user.followees.count()
+        response = self.client.get(f'/users/unfollow/{self.jane.id}/', follow=True)
+        redirect_url = self.url
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        after_followee_count = self.user.followees.count()
+        self.assertNotEqual(before_followee_count, after_followee_count)
+
+
 
     def test_get_user_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
@@ -63,7 +96,7 @@ class TestUserListView(TestCase, LogInTester):
         response = self.client.get(page_three_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_list.html')
-        self.assertEqual(len(response.context['users']), 7)
+        self.assertEqual(len(response.context['users']), 6)
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())

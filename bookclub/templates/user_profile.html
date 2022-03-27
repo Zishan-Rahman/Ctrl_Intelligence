@@ -1,7 +1,9 @@
 {% extends 'base_content.html' %}
 {% block content %}
 <style>
-.center {text-align: center;}
+.center {
+  text-align: center;
+}
 </style>
 <div class="container mt-3">
   <div class="row">
@@ -111,8 +113,6 @@
       </div>
        <div class="row">
          <p class="follow-user">
-           <form action="{% url 'follow_toggle' user.id %}" method='post'>
-             {% csrf_token %}
                     {%if user.id == request.user.id%}
                     <a valign="left" class="btn" href="{% url 'edit_profile' %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
                       <i class="bi bi-gear" style="font-size: 0.9rem;"></i>
@@ -130,13 +130,15 @@
                     &emsp;
                     {%if followable %}
                     {% if following %}
-                    <button class='btn btn-secondary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: GREY; text-transform:uppercase; font-size: 14px">
-                      Unfollow
-                    </button>
+                    <form action="{% url 'unfollow_from_user_profile' user_id=user.id %}" method="post">
+                      {% csrf_token %}
+                      <a><button type="submit" class='btn btn-secondary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: GREY; text-transform:uppercase; font-size: 14px">Unfollow</button></a>
+                    </form>
                     {% else %}
-                    <button class='btn btn-primary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: LIGHT-BLUE; text-transform:uppercase; font-size: 14px">
-                      Follow
-                    </button>
+                    <form action="{% url 'follow_from_user_profile' user_id=user.id %}" method="post">
+                      {% csrf_token %}
+                      <a><button type="submit" class='btn btn-primary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: LIGHT-BLUE; text-transform:uppercase; font-size: 14px">Follow</button></a>
+                    </form>
                     {% endif %}
                     {% endif %}
                     &emsp;
@@ -146,7 +148,7 @@
                       Invite
                     </a>
                     {%endif%}
-           </form>
+           </p>
        </div>
        <div class="row"> <br> </div>
 
@@ -229,7 +231,7 @@
                         <td>{{ entry.first_name }} {{ entry.last_name }}</td>
                         <td>
                           {%if entry.id != request.user.id %}
-                          <a class="btn" href="{% url 'unfollow' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                          <a class="btn" href="{% url 'unfollow_from_user_profile' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
                             Unfollow
                           </a>
                           {% endif %}
@@ -271,7 +273,7 @@
                         <td>{{ entry.first_name }} {{ entry.last_name }}</td>
                         <td>
                           {%if entry.id != request.user.id %}
-                          <a class="btn" href="{% url 'unfollow' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                          <a class="btn" href="{% url 'unfollow_from_user_profile' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
                             Unfollow
                           </a>
                           {% endif %}
