@@ -5,11 +5,13 @@
 {% if club.get_meetings %}
     <div class="row">
         <div class="col">
-            <h1>Meetings Archive for {{ club.name }}</h1>
+            <h2 class="text-left" style="margin-top: 10px"><strong>Meetings Archive</strong></h2>
+            <h5 class="text-muted">{{ club.name }}</h5>
             <div class="book-table">
                 <table class="table table-hover table-borderless">
                     <thead>
                   <tr>
+                      <th></th>
                       <th scope="col">Date</th>
                       <th scope="col">Start Time</th>
                       <th scope="col">Address</th>
@@ -18,14 +20,15 @@
                 </thead>
                 <tbody>
                   {% for meeting in club.get_meetings %}
-                  <tr class="clickable-row" data-href="#">
+                  <tr class="clickable-row" data-href="{% url 'edit_meeting' club.id meeting.id %}">
+                    <td><img src="{{ meeting.club.mini_gravatar }}" class="rounded-circle" alt="{{ meeting.club.name }}'s gravatar"></td>
                     <td>{{ meeting.date }}</td>
                     <td>{{ meeting.start_time }}</td>
                     <td>{{ meeting.address }}</td>
 
                       {% if request.user == club.owner or request.user in club.get_organisers and club.organiser_owner %}
 
-                    <td><a class="btn" href="{% url 'edit_meeting' club.id meeting.id %}" style="background-color: brown; color: white">Edit meeting details</a></td>
+                    <td><a class="btn text-left" href="{% url 'edit_meeting' club.id meeting.id %}" style="background-color: brown; color: white; text-transform: uppercase; font-size: 14px">Edit meeting details</a></td>
 
                     {% endif %}
                   </tr>
@@ -42,4 +45,13 @@
     </div>
 {% endif %}
 </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+  jQuery(document).ready(function($) {
+      $(".clickable-row").click(function() {
+          window.location = $(this).data("href");
+      });
+  });
+</script>
 {% endblock %}
