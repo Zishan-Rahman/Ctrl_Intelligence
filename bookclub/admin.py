@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import User, Club, Book, Application, Post, Rating, Meeting, Chat, Message
-# Register your models here.
+from .models import User, Club, Book, Application , Post, UserPost , Rating, Meeting, Chat, Message
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -39,6 +38,11 @@ class PostAdmin(admin.ModelAdmin):
         """Return the author of a given post."""
         return post.author.email
 
+@admin.register(UserPost)
+class UserPostAdmin(admin.ModelAdmin):
+    list_display = [
+        'author', 'text', 'created_at'
+        ]
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
     list_display = [
