@@ -88,6 +88,8 @@ class CreateMessageView(View):
             receiver_user=receiver,
             body=request.POST.get('message'),
         )
+        if message:
+            message.is_read = True
 
         notify.send(
             request.user,
@@ -98,13 +100,8 @@ class CreateMessageView(View):
                 )
         message.save()
         return redirect('chat', pk=pk)
-
-    def get(self, request, msg_id):
-        message = Message.objects.get(id=msg_id)
-        current_user = request.user
-        if message.msg_to_id == current_user.id:
-            message.is_read = True
-            message.save()
+        
+       
        
 
 
