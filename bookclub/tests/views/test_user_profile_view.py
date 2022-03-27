@@ -3,8 +3,8 @@ from django.urls import reverse
 from bookclub.models import User
 from bookclub.tests.helpers import reverse_with_next
 
-class UserProfileTest(TestCase):
 
+class UserProfileTest(TestCase):
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_user_posts.json']
 
@@ -16,7 +16,7 @@ class UserProfileTest(TestCase):
         self.url = reverse('profile')
 
     def test_user_profile_url(self):
-        self.assertEqual(self.url,'/profile/')
+        self.assertEqual(self.url, '/profile/')
 
     def test_user_profile_uses_correct_template(self):
         login = self.client.login(email=self.john.email, password='Password123')
@@ -51,8 +51,9 @@ class UserProfileTest(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_profile', kwargs={'user_id': self.joe.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<p class="text-muted"><strong>{self.joe.first_name} {self.joe.last_name}</strong> does not have any posts</p>',
-                      html)
+        self.assertIn(
+            f'<p class="text-muted"><strong>{self.joe.first_name} {self.joe.last_name}</strong> does not have any posts</p>',
+            html)
 
     def test_user_profile_view_has_posts(self):
         self.client.login(email=self.john.email, password='Password123')
@@ -67,3 +68,22 @@ class UserProfileTest(TestCase):
         html = response.content.decode('utf8')
         self.assertNotIn(f'<h6 class="card-title text-left"><strong>This is a Jane Doe Post</strong></h6>',
                          html)
+
+    def test_my_user_profile_view_does_not_have_follow_button(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
+        html = response.content.decode('utf8')
+        self.assertNotIn(
+            f'<button class=\'btn btn-lg float-end\' style="padding: 15px; color:white; background-color: royalblue; text-transform:uppercase; font-size: 14px">', html)
+
+    def test_my_user_profile_view_has_edit_profile_button(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
+        html = response.content.decode('utf8')
+        self.assertIn('Edit Profile', html)
+
+    def test_other_user_profile_view_does_not_have_edit_button(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(reverse('user_profile', kwargs={'user_id': self.sam.id}))
+        html = response.content.decode('utf8')
+        self.assertNotIn('Edit Profile', html)

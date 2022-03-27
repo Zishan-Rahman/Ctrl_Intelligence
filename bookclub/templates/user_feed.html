@@ -34,7 +34,7 @@
 
 {% else %}
     <div class="mt-5" style="text-align: center;">
-         <h5 class="text-muted text-center"><strong>{{ user.name }}</strong> does not have any posts</h5>
+         <h5 class="text-muted text-center"><strong>{{ user.get_full_name }}</strong> does not have any posts</h5>
     </div>
 
 {% endif %}
