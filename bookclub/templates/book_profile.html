@@ -1,38 +1,51 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<style>
-p {
-  line-height: 0.5em;
-  }
-</style>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <img src="{{ book.large_url }}" alt="a">
+            </div>
+            <div class="col-4">
+                <h2 class="text-left fw-bold"><strong>{{book.title}}</strong></h2>
+
+
+
+            </div>
+            <div class="col-4">
+                <p >ISBN: {{ book.isbn }}</p>
+              <p >Author: {{ book.author }}</p>
+              <p >Published Year: {{ book.pub_year }}</p>
+              <p >Publisher: {{ book.publisher }}</p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
 <div class="container mt-3">
   <div class="row content">
     <div class="col-12">
-      <div class="profile-text">
-        <center>
-          <img src="{{ book.medium_url }}" alt="a">
-          <h3 class="book-title">{{ book.title }}</h3>
+
           {% if book in request.user.currently_reading_books.all %}
           <form action="{% url 'remove_from_current_reads_book_profile' book.id %}" method="post">
             {% csrf_token %}
-           <td><button type="submit" class="btn btn-dark" style="background-color: brown">Remove from My Reading List</button></td>
+           <td><button type="submit" class="btn" style="background-color: brown; color: white">Remove from My Reading List</button></td>
          </form>
          {% else %}
           <form action="{% url 'add_to_current_reads_book_profile' book.id %}" method="post">
             {% csrf_token %}
-           <td><button type="submit" class="btn btn-dark" style="background-color: brown">Add to My Reading List</button></td>
+           <td><button type="submit" class="btn" style="background-color: brown; color: white"><i class="bi bi-bookmarks"></i></button></td>
          </form>
           {% endif %}
           <hr>
-          <p class="book-isbn">ISBN: {{ book.isbn }}</p>
-          <p class="book-author">Author: {{ book.author }}</p>
-          <p class="book-pub-year">Published Year: {{ book.pub_year }}</p>
-          <p class="book-publisher">Publisher: {{ book.publisher }}</p>
+
 
           <form action="{% url 'update_ratings' book.id %}" method="post">
             {% csrf_token %}
             <label for="ratings">Rate this Book!</label>
-            <select name="ratings" id="ratings">
+            <select class="form-select" name="ratings" id="ratings">
               <option value=1>1</option>
               <option value=2>2</option>
               <option value=3>3</option>
@@ -45,7 +58,7 @@ p {
               <option value=10>10</option>
             </select>
             <br>
-            <button type="submit" class="btn btn-dark" style="background-color: brown">Submit</button>
+            <button type="submit" class="btn" style="background-color: brown; color: white">Submit</button>
           </form>
 
           <br>
@@ -53,16 +66,14 @@ p {
           {% if book in request.user.favourite_books.all %}
           <form action="{% url 'unfavourite_book_profile' book.id %}" method="post">
             {% csrf_token %}
-          <button type="submit" class="btn btn-dark" style="background-color: brown">Unfavourite</button>
+          <button type="submit" class="btn" style="background-color: brown; color: white">Unfavourite</button>
           </form>
           {% else %}
            <form action="{% url 'make_favourite_book_profile' book.id %}" method="post">
              {% csrf_token %}
-          <button type="submit" class="btn btn-dark" style="background-color: brown">Favourite</button>
+          <button type="submit" class="btn" style="background-color: brown; color: white">Favourite</button>
           </form>
           {% endif %}
-        </center>
-      </div>
     </div>
   </div>
  <div id="disqus_thread"></div>
@@ -82,4 +93,3 @@ p {
     <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
 <script id="dsq-count-scr" src="//localhost-8000-b6e1mwjp94.disqus.com/count.js" async></script>
-{% endblock %}
