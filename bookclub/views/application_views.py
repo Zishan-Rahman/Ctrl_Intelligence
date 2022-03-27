@@ -11,6 +11,7 @@ from bookclub.views import club_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
 
+
 class ApplicationsView(LoginRequiredMixin, View):
     """View that handles club applications."""
 
@@ -64,22 +65,33 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
         return render(self.request, 'my_applications.html', {'applications': my_applications, 'page_obj': page_obj})
 
+
 def app_accept(request, pk):
     """Accept application"""
     app = Application.objects.all().get(pk=pk)
-    app.club.make_member(app.applicant)
-    app.delete()
-    messages.add_message(request, messages.SUCCESS, f"{app.applicant.get_full_name()} has been accepted to {app.club.name} !")
-    club_views.club_util(request)
-    return redirect('applications')
+
+    if request.user == app.club.owner:
+        app.club.make_member(app.applicant)
+        app.delete()
+        messages.add_message(request, messages.SUCCESS, "User accepted!")
+        club_views.club_util(request)
+        return redirect('applications')
+    else:
+        messages.add_message(request, messages.ERROR, "Action prohibited")
+        return redirect('my_applications')
 
 
 def app_remove(request, pk):
     """Reject application"""
     app = Application.objects.all().get(pk=pk)
-    app.delete()
-    messages.add_message(request, messages.ERROR, f"{app.applicant.get_full_name()} has been rejected from {app.club.name} !")
-    return redirect('applications')
+    if request.user == app.club.owner:
+        app.delete()
+        messages.add_message(request, messages.SUCCESS, "User rejected!")
+        return redirect('applications')
+    else:
+        messages.add_message(request, messages.ERROR, "Action prohibited")
+        return redirect('my_applications')
+
 
 @login_required
 def new_application(request, club_id):
@@ -109,6 +121,5 @@ def new_application(request, club_id):
             messages.add_message(request, messages.ERROR,
                                  f"Could not apply to the following club: {Club.objects.get(pk=club_id).name}. You have "
                                  f"already applied.")
-
 
     return redirect('my_applications')

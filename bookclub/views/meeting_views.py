@@ -75,7 +75,7 @@ class MeetingScheduler(LoginRequiredMixin, View):
         if form.is_valid():
             meeting = form.save(club=current_club)
             messages.add_message(request, messages.SUCCESS, "The meeting was scheduled!")
-            return redirect('home')
+            return redirect('club_profile', pk)
         messages.add_message(request, messages.ERROR, "The meeting was unable to be scheduled!")
         return self.render(pk)
 
@@ -83,13 +83,19 @@ class MeetingScheduler(LoginRequiredMixin, View):
         """Render meeting scheduler form"""
         current_club = Club.objects.get(pk=pk)
         form = ScheduleMeetingForm(club=current_club)
-        return render(self.request, 'schedule_meeting.html', {'form': form, 'pk':pk})
+        if self.request.user == current_club.owner or (
+                self.request.user in current_club.get_organisers() and current_club.organiser_owner):
+            return render(self.request, 'schedule_meeting.html', {'form': form, 'pk': pk})
+        else:
+            messages.add_message(self.request, messages.ERROR, "Action prohibited")
+            return redirect('club_list')
+
 
 class MeetingUpdateView(LoginRequiredMixin, UpdateView):
     """View to update a scheduled club meeting
     
     Adapted from Raisa Ahmed's ProfileUpdateView"""
-    
+
     model = ScheduleMeetingForm
     template_name = "edit_meeting.html"
     form_class = ScheduleMeetingForm
@@ -98,7 +104,7 @@ class MeetingUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Meeting updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
-    
+
     def form_vaild(self, form):
         club = form.instance.club
         form.save(club)
@@ -114,12 +120,16 @@ class MeetingUpdateView(LoginRequiredMixin, UpdateView):
             self.get_success_url()
             return redirect('home')
 
-
         messages.add_message(self.request, messages.ERROR, form.errors['__all__'].as_text())
         return render(request, 'edit_meeting.html', {"club": club, "form": form})
 
     def get(self, request, club_id, meeting_id, *args, **kwargs):
         club = Club.objects.get(id=club_id)
         meeting = Meeting.objects.get(id=meeting_id)
-        form = self.form_class(instance=meeting, club=club)
-        return render(request, 'edit_meeting.html', {"club": club,"form": form})
+        if self.request.user == club.owner or (
+                self.request.user in club.get_organisers() and club.organiser_owner):
+                form = self.form_class(instance=meeting, club=club)
+                return render(request, 'edit_meeting.html', {"club": club, "form": form})
+        else:
+            messages.add_message(self.request, messages.ERROR, "Action prohibited")
+            return redirect('club_list')
