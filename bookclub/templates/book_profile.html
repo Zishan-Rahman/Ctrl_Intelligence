@@ -3,10 +3,10 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-6 text-center">
-                <img src="{{ book.large_url }}" alt="a">
+            <div class="col-4 text-center my-auto h-100">
+                <img src="{{ book.large_url }}" alt="{{ book.title }}'s cover image" style="max-width: 420px">
             </div>
-            <div class="col-6">
+            <div class="col-8">
             <h2 class="text-left fw-bold"><strong>{{book.title}}</strong></h2>
                 <h5 class="text-muted">by {{book.author}}</h5>
             <br>
