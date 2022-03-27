@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from bookclub.models import Rating, Book, RecommendedBooks, Club, Post, User
+from bookclub.models import Rating, Book, RecommendedBook, Club, Post, User
 import pandas as pd
 from surprise import SVD
 from surprise import Dataset, Reader
@@ -20,9 +20,9 @@ def home_page(request):
     recommendations_list_isbn = []
     user_ratings_count = Rating.objects.filter(user=request.user).count()
     if user_ratings_count >= 10:
-        recommended_books_count = RecommendedBooks.objects.filter(user=request.user).count()
+        recommended_books_count = RecommendedBook.objects.filter(user=request.user).count()
         if recommended_books_count > 0:
-            recommendations_list = list(set(RecommendedBooks.objects.filter(user=request.user)))
+            recommendations_list = list(set(RecommendedBook.objects.filter(user=request.user)))
             for item in recommendations_list:
                 recommendations_list_isbn.append(item.isbn)
             recommended_books = get_recommended_books(recommendations_list_isbn)
@@ -31,7 +31,7 @@ def home_page(request):
             recommendations_list = recommender(request, request.user.id, top_n)
             recommended_books = get_recommended_books(recommendations_list)
             for item in recommended_books:
-                RecommendedBooks.objects.create(user=request.user, isbn=item.isbn)
+                RecommendedBook.objects.create(user=request.user, isbn=item.isbn)
     else:
         recommended_books = []
     return render(request, "home.html",
@@ -41,7 +41,7 @@ def home_page(request):
 
 def refresh_recommendations(request):
     try:
-        RecommendedBooks.objects.filter(user=request.user).delete()
+        RecommendedBook.objects.filter(user=request.user).delete()
     except:
         messages.add_message(request, messages.ERROR, "Unable to get your recommendations.")
     return redirect('home')
