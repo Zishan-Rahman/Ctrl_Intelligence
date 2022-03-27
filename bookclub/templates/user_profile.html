@@ -1,5 +1,8 @@
 {% extends 'base_content.html' %}
 {% block content %}
+<style>
+.center {text-align: center;}
+</style>
 <div class="container mt-3">
   <div class="row">
     <div class="col-3">
@@ -287,7 +290,7 @@
           <div class="col-5">
 
     <div class="row">
-            <div class="col-6">
+            <div class="center">
                     <h5 class="text-left"><strong>Latest Posts</strong></h5>
                     <a href="{% url 'user_feed' user.id %}" style="text-decoration: none;">View All</a>
                 </div>
