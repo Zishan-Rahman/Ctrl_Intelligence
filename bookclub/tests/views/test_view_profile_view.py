@@ -73,7 +73,7 @@ class UserProfileTest(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#following_modal"><b>{self.john.followee_count()}</b> Following</button>', html)
+        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#following_modal"><b>Following</b></button>', html)
 
     # def test_view_profile_has_followers_button(self):
     #     self.client.login(email=self.john.email, password='Password123')
