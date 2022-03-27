@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, FormView
 from bookclub.forms import UserPostForm
-from bookclub.models import User , UserPost , Club
+from bookclub.models import User, UserPost, Club
 
 
 class UserFeedView(LoginRequiredMixin, ListView):
@@ -16,7 +16,6 @@ class UserFeedView(LoginRequiredMixin, ListView):
     context_object_name = 'posts'
     pk_url_kwarg = 'user_id'
 
-
     def get_context_data(self, **kwargs):
         """Return context data, including new post form."""
         user_id = self.kwargs['user_id']
@@ -25,14 +24,13 @@ class UserFeedView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['user'] = user_id
         context['form'] = UserPostForm()
-        context['posts'] = posts
         return context
 
     def post(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
         user = User.objects.get(id=user_id)
         form = UserPostForm()
-        posts = UserPost.objects.filter(authors = user)
+        posts = UserPost.objects.filter(authors=user)
         if form.is_valid():
             return redirect('user_feed')
         return render(request, 'user_feed.html', {"user": user, "form": form, "posts": posts})
@@ -40,6 +38,6 @@ class UserFeedView(LoginRequiredMixin, ListView):
     def get(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
         user = User.objects.get(id=user_id)
-        posts = UserPost.objects.filter(author = user)
+        posts = UserPost.objects.filter(author=user)
         form = UserPostForm()
         return render(request, 'user_feed.html', {"user": user, "form": form, "posts": posts})
