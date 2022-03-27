@@ -11,10 +11,10 @@ class FollowViewFollowTest(TestCase):
     def setUp(self):
         self.user = User.objects.get(email='johndoe@bookclub.com')
         self.followee= User.objects.get(email='janedoe@bookclub.com')
-        self.url = reverse('follow_toggle', kwargs={'user_id': self.followee.id})
+        self.url = reverse('follow_from_user_profile', kwargs={'user_id': self.followee.id})
 
     def test_follow_toggle_url(self):
-        self.assertEqual(self.url,f'/follow_toggle/{self.followee.id}/')
+        self.assertEqual(self.url,f'/user_profile/{self.followee.id}/follow/')
 
     def test_get_follow_toggle_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)
