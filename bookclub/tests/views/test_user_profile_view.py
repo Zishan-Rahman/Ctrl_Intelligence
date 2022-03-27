@@ -70,8 +70,20 @@ class UserProfileTest(TestCase):
                          html)
 
     def test_my_user_profile_view_does_not_have_follow_button(self):
-        self.client.login(email=self.john.email, password='Password')
+        self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f"<button class='btn btn-lg float-end' style='padding: 15px; color:white; background-color: "
-                      f"royalblue; text-transform:uppercase; font-size: 14px'>Follow</button>", html)
+        self.assertNotIn(
+            f'<button class=\'btn btn-lg float-end\' style="padding: 15px; color:white; background-color: royalblue; text-transform:uppercase; font-size: 14px">', html)
+
+    def test_my_user_profile_view_has_edit_profile_button(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
+        html = response.content.decode('utf8')
+        self.assertIn('Edit Profile', html)
+
+    def test_other_user_profile_view_does_not_have_edit_button(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(reverse('user_profile', kwargs={'user_id': self.sam.id}))
+        html = response.content.decode('utf8')
+        self.assertNotIn('Edit Profile', html)
