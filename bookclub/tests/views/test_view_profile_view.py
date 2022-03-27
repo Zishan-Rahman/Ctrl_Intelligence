@@ -4,7 +4,7 @@ from bookclub.models import User
 from bookclub.tests.helpers import reverse_with_next
 
 
-class UserProfileTest(TestCase):
+class ViewProfileTest(TestCase):
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_user_posts.json']
 
@@ -69,17 +69,29 @@ class UserProfileTest(TestCase):
         self.assertNotIn(f'<h6 class="card-title text-left"><strong>This is a Jane Doe Post</strong></h6>',
                          html)
 
+    def test_view_profile_shows_following_number(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<a style="text-decoration: none; color: brown"><h4 class="text-left fw-bold link"><strong>{self.john.followee_count()}</strong></h4></a>', html)
+
+    def test_view_profile_shows_followers_number(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<a style="text-decoration: none; color: brown"><h4 class="text-left fw-bold link"><strong>{self.john.follower_count()}</strong></h4></a>', html)
+
     def test_view_profile_has_following_button(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#following_modal"><b>Following</b></button>', html)
 
-    # def test_view_profile_has_followers_button(self):
-    #     self.client.login(email=self.john.email, password='Password123')
-    #     response = self.client.get(self.url)
-    #     html = response.content.decode('utf8')
-    #     self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#follower_modal"><b>{self.john.follower_count()}</b> Followers</button>', html)
+    def test_view_profile_has_followers_button(self):
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#follower_modal"><b>Followers</b></button>', html)
 
     def test_my_user_profile_view_does_not_have_follow_button(self):
         self.client.login(email=self.john.email, password='Password123')
