@@ -146,11 +146,7 @@ def unfollow(request, user_id):
     current_user = request.user
     followee = User.objects.get(id=user_id)
     current_user._unfollow(followee)
-<<<<<<< HEAD
-    return redirect('user_profile', user_id=user_id)
-=======
     messages.add_message(request, messages.ERROR, f'You unfollowed {followee.get_full_name()}!')
->>>>>>> e938ba7545bf628bb3c0367e214a12a82a7a3aa5
 
 @login_required
 def unfollow_from_user_list(request, user_id):
