@@ -17,6 +17,7 @@ class ProfileViewTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.get(email='johndoe@bookclub.com')
+        self.sam = User.objects.get(pk=4)
         self.club = Club.objects.get(pk=1)
         self.url = '/club_profile/1/edit/'
         self.form_input = {
@@ -43,7 +44,15 @@ class ProfileViewTest(TestCase):
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
-    def test_unsuccesful_club_update(self):
+    def test_cannot_hijack_edit_club(self):
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get(reverse('edit_club', kwargs={'c_pk': self.club.id}), follow=True)
+        redirect_url = reverse('club_list')
+        messages_list = list(response.context['messages'])
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+
+    def test_unsuccessful_club_update(self):
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         self.form_input['name'] = ''
         before_count = Club.objects.count()

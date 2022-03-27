@@ -135,7 +135,7 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
     form_class = EditClubForm
 
     def get_object(self, c_pk):
-        """Return the object (user) to be updated."""
+        """Return the object (club) to be updated."""
         club_to_edit = Club.objects.all().get(pk=c_pk)
         self.pk = c_pk
         return club_to_edit
@@ -156,8 +156,12 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
     def get(self, request, c_pk, *args, **kwargs):
         self.pk = c_pk
         club_to_edit = Club.objects.all().get(pk=c_pk)
-        form = self.form_class(instance=club_to_edit)
-        return render(request, 'edit_club.html', {"form": form})
+        if request.user == club_to_edit.owner:
+            form = self.form_class(instance=club_to_edit)
+            return render(request, 'edit_club.html', {"form": form})
+        else:
+            messages.add_message(self.request, messages.ERROR, "Action prohibited")
+            return redirect('club_list')
 
 
 def club_util(request):
