@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from bookclub.models import Rating, Book, RecommendedBooks, Club, Post, User
 import pandas as pd
 from surprise import SVD
 from surprise import Dataset, Reader
 import pickle
 from bookclub.views import config
+from django.contrib import messages
 
 
 @login_required
@@ -15,6 +16,7 @@ def home_page(request):
     popular_books_list = get_popular_books()
     popular_books = get_recommended_books(popular_books_list)
     top_n = 10
+    recommendations_list = []
     recommendations_list_isbn = []
     user_ratings_count = Rating.objects.filter(user=request.user).count()
     if user_ratings_count >= 10:
@@ -26,7 +28,7 @@ def home_page(request):
             recommended_books = get_recommended_books(recommendations_list_isbn)
 
         else:
-            recommendations_list = recommender(request.user.id, top_n)
+            recommendations_list = recommender(request, request.user.id, top_n)
             recommended_books = get_recommended_books(recommendations_list)
             for item in recommended_books:
                 RecommendedBooks.objects.create(user=request.user, isbn=item.isbn)
@@ -35,6 +37,14 @@ def home_page(request):
     return render(request, "home.html",
                   {'user': request.user, 'recommendations': recommended_books, 'popular_books': popular_books[:10],
                    'posts': posts})
+
+
+def refresh_recommendations(request):
+    try:
+        RecommendedBooks.objects.filter(user=request.user).delete()
+    except:
+        messages.add_message(request, messages.ERROR, "Unable to get your recommendations.")
+    return redirect('home')
 
 
 def club_util(request):
@@ -77,9 +87,17 @@ def get_popular_books():
     return most_popular_list
 
 
-def recommender(user_id, top_n):
+def recommender(request, user_id, top_n):
     user_rating_df = pickle.load(open("data/user_item_rating.p", "rb"))
     new_ratings_df = pd.DataFrame(list(Rating.objects.all().values("user_id", "isbn", "rating")))
+
+    user_already_rated = Rating.objects.filter(user=request.user)
+
+    user_already_rated_isbn = []
+
+    for item in user_already_rated:
+        user_already_rated_isbn.append(item.isbn)
+
     reader = Reader(rating_scale=(1, 10))
     frames = [new_ratings_df, user_rating_df]
     result = pd.concat(frames, ignore_index=True)
@@ -95,10 +113,12 @@ def recommender(user_id, top_n):
 
     predictions = []
     for isbn in books_list:
-        prediction = algo.predict(user_id, str(isbn)).est
-        predictions.append([isbn, prediction])
+        if isbn not in user_already_rated_isbn:
+            prediction = algo.predict(user_id, str(isbn)).est
+            predictions.append([isbn, prediction])
 
     recommendations = pd.DataFrame(predictions, columns=['isbn', 'rating'])
     top_n_recommendations = recommendations.sort_values('rating', ascending=False).head(top_n)
     isbn_list = list(set(top_n_recommendations['isbn'].to_list()))
+
     return isbn_list

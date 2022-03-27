@@ -4,6 +4,7 @@ from django.urls import reverse
 from bookclub.models import User
 from bookclub.tests.helpers import reverse_with_next
 
+
 class HomeViewTestCase(TestCase):
     """Tests of the home view."""
 

@@ -21,28 +21,22 @@
 
 
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="row row-cols-3">
     {% for user_club in user_clubs %}
 
           <div class="col">
-            <div class="card h-100" style="border-color: brown">
-                <div class="row" style="margin-top: 5px">
-                    <div class="col text-center">
-                        <img src="{{ user_club.gravatar }}" class="card-img" style="height: 120px; width: 120px">
+            <div class="card h-100" id="clubSelectorCard" style="border-color: brown">
+                <div class="row h-100">
+                    <div class="col text-left">
+                        <img src="{{ user_club.gravatar }}" class="card-img">
                     </div>
                     <div class="col">
                         <div class="row">
                             <div class="card-body">
                             <h5 class="card-title"><strong>{{ user_club.name }}</strong></h5>
+                            <p class="card-text" style="color: dimgray; font-size: 14px">{{ user_club.description|slice:':120' }}...</p>
                         </div>
                         </div>
-                        <div class="row">
-                            <div class="card-body">
-                            <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-person-fill"></i> {{ user_club.owner }}</p>
-                        </div>
-                        </div>
-
-
 
                     </div>
                 </div>
@@ -64,7 +58,15 @@
                     </div>
                     <div class="col">
                         <div class="card-body">
-                            <a class="btn" href="{% url 'club_profile' user_club.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-search"></i> View</a>
+                            <div class="row">
+                                <p class="card-text float-end"><i class="bi bi-person-fill"></i> <a href="{% url 'user_profile' user_club.owner.id %}" style="text-decoration: none; color: #B0B0B0; font-size: 14px">{{ user_club.owner.get_full_name }}</a></p>
+
+                            </div>
+                            <br>
+                            <br>
+                            <div class="row mt-auto">
+                                 <a class="btn float-end" href="{% url 'club_profile' user_club.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px;"><i class="bi bi-search"></i> View</a>
+                            </div>
                         </div>
                     </div>
                 </div>

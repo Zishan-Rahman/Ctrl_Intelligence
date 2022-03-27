@@ -5,11 +5,11 @@
       <div class="alert alert-warning" role="alert">
         You need to <strong>10 books</strong> rate to receive personalised recommendations. You have rated
         {% if request.user.get_number_of_ratings == 0 %}
-            <strong>no books</strong> yet
+            <strong>0 books</strong>
         {% elif request.user.get_number_of_ratings == 1 %}
             <strong>1 book</strong>
         {% else %}
-            {{request.user.get_number_of_ratings}} books
+            <strong>{{request.user.get_number_of_ratings}}</strong> books
         {% endif %}
         so far. <a href="{% url 'book_list' %}" style="text-decoration: none; color: brown"><strong>Browse</strong></a> or search books.
       </div>
@@ -17,12 +17,26 @@
 
     {% if recommendations %}
     <div class="row">
+
+    <div class="col">
+            <h4 style="padding-top: 10px;"><strong>Recommended for {{ request.user.first_name }}</strong></h4>
+
+    </div>
+
+    <div class="col">
+        <a type="button" href="{% url 'recommend' %}" class="btn float-end" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
+                            <i class="bi bi-x-diamond-fill"></i> New Recommendations
+                        </a>
+    </div>
+        </div>
+
+  <div class="row">
+
+
+
     <div class="col">
 
 
-
-
-        <h4 style="padding-top: 10px;"><strong>Recommended for {{ request.user.first_name }}</strong></h4>
 <div class="row row-cols-5" style="border-style: groove; border-color: brown; padding: 10px">
 
                 {% for book in recommendations %}
