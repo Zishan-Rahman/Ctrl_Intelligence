@@ -14,6 +14,7 @@ from django.views.generic.list import MultipleObjectMixin
 from bookclub.models import Book, Club, User, Rating
 from django.contrib import messages
 
+
 class BooksListView(LoginRequiredMixin, ListView):
     """View that shows a list of all books."""
 
@@ -40,11 +41,13 @@ class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
         except Http404:
             return redirect('book_list')
 
+
 @login_required
 def current_reads(request, user_id):
-    user = User.objects.get(id = user_id)
+    user = User.objects.get(id=user_id)
     books = user.currently_reading_books.all()
-    return render(request, "reading_list.html", {'books':books, 'user': user})
+    return render(request, "reading_list.html", {'books': books, 'user': user})
+
 
 @login_required
 def add_to_current_reads(request, book_id):
@@ -79,6 +82,7 @@ def remove_from_current_reads_book_list(request, book_id):
 def remove_from_current_reads_book_profile(request, book_id):
     remove_from_current_reads(request, book_id)
     return redirect("book_profile", book_id=book_id)
+
 
 class Favourites(LoginRequiredMixin, ListView):
     model = Book
@@ -134,8 +138,8 @@ def unfavourite_book_profile(request, book_id):
     unfavourite(request, book_id)
     return redirect('book_profile', book_id=book_id)
 
-class MyBookRatings(LoginRequiredMixin, ListView):
 
+class MyBookRatings(LoginRequiredMixin, ListView):
     model = Rating
     template_name = "my_book_ratings.html"
     context_object_name = "ratings"

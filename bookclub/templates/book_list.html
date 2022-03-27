@@ -4,6 +4,7 @@
 <div class="container">
   <div class="book-table">
     <h2 class="text-left"><strong>Browse Books</strong></h2>
+  <h5 class="text-muted">View All Books</h5>
     <table class="table table-hover table-borderless">
         <thead>
       <tr>
@@ -24,24 +25,24 @@
         {% if entry in request.user.currently_reading_books.all %}
         <form action="{% url 'remove_from_current_reads_book_list' book_id=entry.id %}" method="post">
           {% csrf_token %}
-         <td><button type="submit" class="btn btn-dark" style="background-color: brown">Remove from My Reading List</button></td>
+         <td><button type="submit" class="btn" style="background-color: brown; color: white; font-size: 20px"><i class="bi bi-bookmarks-fill"></i></button></td>
        </form>
        {% else %}
         <form action="{% url 'add_to_current_reads_book_list' book_id=entry.id %}" method="post">
           {% csrf_token %}
-         <td><button type="submit" class="btn btn-dark" style="background-color: brown">Add to My Reading List</button></td>
+         <td><button type="submit" class="btn" style="background-color: brown; color: white; font-size: 20px"><i class="bi bi-bookmarks"></i></button></td>
        </form>
         {% endif %}
 
         {% if entry in request.user.favourite_books.all %}
         <form action="{% url 'unfavourite_book_list' book_id=entry.id %}" method="post">
           {% csrf_token %}
-          <td><button type="submit" class="btn btn-dark" style="background-color: brown">Unfavourite</button></td>
+          <td><button type="submit" class="btn" style="background-color: brown; color: white; font-size: 20px"><i class="bi bi-star-fill"></i></button></td>
         </form>
         {% else %}
          <form action="{% url 'make_favourite_book_list' book_id=entry.id %}" method="post">
            {% csrf_token %}
-          <td><button type="submit" class="btn btn-dark" style="background-color: brown">Favourite</button></td>
+          <td><button type="submit" class="btn" style="background-color: brown; color: white; font-size: 20px"><i class="bi bi-star"></i></button></td>
         </form>
         {% endif %}
 

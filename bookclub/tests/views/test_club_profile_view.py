@@ -307,14 +307,14 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<p class="card-text">This is a Bush House Book Club Post</p>',
+        self.assertIn(f' <p class="card-text fw-bold">This is a Bush House Book Club Post</p>',
                       html)
 
     def test_club_profile_view_does_not_display_other_club_posts(self):
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
         html = response.content.decode('utf8')
-        self.assertNotIn(f'<p class="card-text">This is a Bush House Book Club Post</p>',
+        self.assertNotIn(f' <p class="card-text fw-bold">This is a Bush House Book Club Post</p>',
                          html)
 
     def test_club_profile_view_displays_correct_message_when_no_posts(self):
