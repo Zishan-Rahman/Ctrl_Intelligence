@@ -19,8 +19,8 @@
   </thead>
   <tbody>
     {% for entry in page_obj %}
-    <tr>
-      <td><img src="{{ entry.book.medium_url }}" alt="a"></td>
+    <tr class="clickable-row" data-href="{% url 'book_profile' entry.book.id %}">
+      <td><img src="{{ entry.book.medium_url }}" alt="{{ entry.book.title }}" title="{{ entry.book.title }} by {{ entry.book.author }}"></td>
       <td>{{ entry.book.title }}</td>
       <td>{{ entry.book.author }}</td>
       <td>{{ entry.book.pub_year }}</td>
