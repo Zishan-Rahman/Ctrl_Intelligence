@@ -131,8 +131,12 @@ def current_user_profile(request):
 def follow_toggle(request, user_id):
     current_user = request.user
     followee = User.objects.get(id=user_id)
-    current_user.toggle_follow(followee)
-    messages.add_message(request, messages.SUCCESS, f'You now follow {followee.get_full_name()}!')
+    if followee in current_user.get_users_followees():
+        current_user.toggle_follow(followee)
+        messages.add_message(request, messages.ERROR, f'You have unfollowed {followee.get_full_name()}!')
+    else:
+        current_user.toggle_follow(followee)
+        messages.add_message(request, messages.SUCCESS, f'You now follow {followee.get_full_name()}!')
 
 @login_required
 def follow_from_user_list(request, user_id):

@@ -13,7 +13,7 @@
             </div>
             <div class="col-6">
                 <div class="row">
-                     <form action="{% url 'follow_toggle' user.id %}" method='post'>
+                     <form action="{% url 'follow_from_user_profile' user.id %}" method='post'>
                     &emsp;
                       {% csrf_token %}
                     {%if followable %}
@@ -377,12 +377,6 @@ $.expr[":"].contains = $.expr.createPseudo(function(arg) {
 </script>
 
 {% endblock %}
-
-
-
-
-
-
 
 
 
