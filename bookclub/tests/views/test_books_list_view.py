@@ -23,7 +23,6 @@ class BooksListViewTestCase(TestCase, LogInTester):
     def test_correct_book_list_template(self):
         self.client.login(email=self.user.email, password="Password123")
         response = self.client.get(self.url)
-        self._is_logged_in()
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "book_list.html")
 
@@ -106,44 +105,6 @@ class BooksListViewTestCase(TestCase, LogInTester):
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.ERROR)
         after_current_reads_count = self.user.currently_reading_books.count()
-        self.assertNotEqual(before_current_reads_count, after_current_reads_count)
-
-    def test_book_list_has_favourite_button_when_book_is_not_in_favourites(self):
-        self.client.login(email=self.user.email, password='Password123')
-        response = self.client.get(self.url)
-        html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Favourite</button>', html)
-
-    def test_book_list_has_unfavourite_button_when_book_is_in_favourites(self):
-        self.client.login(email=self.user.email, password='Password123')
-        self.user.favourite_books.add(self.book)
-        response = self.client.get(self.url)
-        html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Unfavourite</button>', html)
-
-    def test_favourite_button_in_book_list_works(self):
-        self.client.login(email=self.user.email, password='Password123')
-        before_current_reads_count = self.user.favourite_books.count()
-        response = self.client.get('/book_list/1/favourite', follow=True)
-        redirect_url = self.url
-        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        messages_list = list(response.context['messages'])
-        self.assertEqual(len(messages_list), 1)
-        self.assertEqual(messages_list[0].level, messages.SUCCESS)
-        after_current_reads_count = self.user.favourite_books.count()
-        self.assertNotEqual(before_current_reads_count, after_current_reads_count)
-
-    def test_unfavourite_button_in_book_list_works(self):
-        self.client.login(email=self.user.email, password='Password123')
-        self.user.favourite_books.add(self.book)
-        before_current_reads_count = self.user.favourite_books.count()
-        response = self.client.get('/book_list/1/unfavourite', follow=True)
-        redirect_url = self.url
-        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        messages_list = list(response.context['messages'])
-        self.assertEqual(len(messages_list), 1)
-        self.assertEqual(messages_list[0].level, messages.ERROR)
-        after_current_reads_count = self.user.favourite_books.count()
         self.assertNotEqual(before_current_reads_count, after_current_reads_count)
 
 
