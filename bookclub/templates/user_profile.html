@@ -51,8 +51,6 @@
               </div>
                <div class="row">
                  <p class="follow-user">
-                   <form action="{% url 'follow_from_user_profile' user.id %}" method='post'>
-                     {% csrf_token %}
                             {%if user.id == request.user.id%}
                             <a valign="left" class="btn" href="{% url 'edit_profile' %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
                               <i class="bi bi-gear" style="font-size: 0.9rem;"></i>
@@ -67,13 +65,15 @@
                             &emsp;
                             {%if followable %}
                             {% if following %}
-                            <button class='btn btn-secondary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: GREY; text-transform:uppercase; font-size: 14px">
-                              Unfollow
-                            </button>
+                            <form action="{% url 'unfollow_from_user_profile' user_id=user.id %}" method="post">
+                              {% csrf_token %}
+                              <td><button type="submit" class="btn btn-dark" style="background-color: brown">Unfollow</button></td>
+                            </form>
                             {% else %}
-                            <button class='btn btn-primary' style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: LIGHT-BLUE; text-transform:uppercase; font-size: 14px">
-                              Follow
-                            </button>
+                            <form action="{% url 'follow_from_user_profile' user_id=user.id %}" method="post">
+                              {% csrf_token %}
+                              <td><button type="submit" class="btn btn-dark" style="background-color: brown">Follow</button></td>
+                            </form>
                             {% endif %}
                             {% endif %}
                             &emsp;
@@ -83,7 +83,7 @@
                               Invite
                             </a>
                             {%endif%}
-                   </form>
+                          </p>
                </div>
                <div class="row"> <br> </div>
 
