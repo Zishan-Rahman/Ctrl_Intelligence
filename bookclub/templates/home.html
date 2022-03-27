@@ -3,53 +3,151 @@
     <div class="container">
       {% if request.user.get_number_of_ratings < 10 %}
       <div class="alert alert-warning" role="alert">
-        You need to rate 10 books to get better recommendations. You have rated  
+        You need to rate <strong>10 books</strong> to receive personalised recommendations. You have rated
         {% if request.user.get_number_of_ratings == 0 %}
-            no books yet
+            <strong>0 books</strong>
         {% elif request.user.get_number_of_ratings == 1 %}
-            1 book
+            <strong>1 book</strong>
         {% else %}
-            {{request.user.get_number_of_ratings}} books
+            <strong>{{request.user.get_number_of_ratings}}</strong> books
         {% endif %}
-        , so click "Browse" then "All Books" or click "Search" on the toolbar to search for books to rate!
+        so far. <a href="{% url 'book_list' %}" style="text-decoration: none; color: brown"><strong>Browse</strong></a> or search books.
       </div>
       {% endif %}
+
+    {% if recommendations or request.user.get_number_of_ratings >= 10 %}
     <div class="row">
-        <div class="col-6">
 
-        <h4 style="padding-top: 10px;"><strong>Recommended for {{ request.user.first_name }}</strong></h4>
+    <div class="col">
+            <h4 style="padding-top: 10px;"><strong>Recommended for {{ request.user.first_name }}</strong></h4>
 
-            <div class="book-table">
-    <table class="table table-hover table-borderless text-dark" style="background-color: white;border-style: groove ;border-color: brown">
-        <thead>
-      <tr>
-        <th scope="col">
-        <th scope="col">
-      </tr>
-    </thead>
-    <tbody>
-      {% for book in recommendations %}
-      <tr class="clickable-row" data-href="{% url 'book_profile' book.id %}">
-        <td><img src="{{ book.medium_url }}" alt="a"></td>
-        <td><strong>{{ book.title }}</strong></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-      </table>
-        </div>
     </div>
 
+    <div class="col">
+        <a type="button" href="{% url 'recommend' %}" class="btn float-end" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
+                            <i class="bi bi-x-diamond-fill"></i> New Recommendations
+                        </a>
+    </div>
+        </div>
+
+  <div class="row">
+
+
+
+    <div class="col">
+
+
+<div class="row row-cols-5" style="border-style: groove; border-color: brown; padding: 10px">
+
+                {% for book in recommendations %}
+                    <a href="{% url 'book_profile' book.id %}" style="text-decoration: none; color: black;">
+                <div class="card h-100 w-100" id="recommendationCard" style="max-width: 540px; border-style: none">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="{{book.large_url}}" class="img-fluid rounded-start" alt="{{book.title}}'s cover page" style="margin-top: 5px; margin-bottom: 5px">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h6 class="card-text"><strong>{{ book.title }}</strong></h6>
+      </div>
+    </div>
+  </div>
+</div>
+                    </a>
+                {% endfor %}
+</div>
+    </div>
+
+
+    </div>
+    {% endif %}
+
+    <div class="row">
     <div class="col-6">
+
+
+        <h4 style="padding-top: 10px;"><strong>Our Most Popular Books</strong></h4>
+<div class="row row-cols-2 h-100" style="border-style: groove; border-color: brown; padding: 10px">
+
+                {% for book in popular_books %}
+                    <a href="{% url 'book_profile' book.id %}" style="text-decoration: none; color: black;">
+                <div class="card h-100 w-100" id="recommendationCard" style="max-width: 540px; border-style: none">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="{{book.large_url}}" class="img-fluid rounded-start" alt="{{book.title}}'s cover page" style="margin-top: 5px; margin-bottom: 5px">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h6 class="card-text"><strong>{{ book.title }}</strong></h6>
+      </div>
+    </div>
+  </div>
+</div>
+                    </a>
+                {% endfor %}
+</div>
+    </div>
+
+    <div class="col-6 h-100">
+
+        {% if posts %}
+
+            <h4 style="padding-top: 10px;"><strong>Latest Club Posts</strong></h4>
+
+            {% for post in posts %}
+
+                <div class="card mb-3 w-100" id="homepagePosts" style="border-color: brown; border-style: groove">
+                  <div class="row g-0">
+                    <div class="col-3">
+                      <img src="{{ post.author.gravatar}}" class="img-fluid rounded-start" alt="{{post.author}}'s gravatar">
+                    </div>
+                    <div class="col-9">
+                      <div class="card-body">
+                        <p class="card-text">{{ post.text }}</p>
+                          <div class="row">
+                              <div class="col-6">
+                                  <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-person-fill"></i><a href="{% url 'user_profile' post.author.id %}" style="text-decoration: none; color: grey"> <strong>{{ post.author.get_full_name }}</strong></a></p>
+
+                              </div>
+                              <div class="col-6">
+                                  <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-building"></i><a href="{% url 'club_profile' post.club.id %}" style="text-decoration: none; color: grey"> <strong>{{ post.club.name }}</strong></a></p>
+
+                              </div>
+                          </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                <div class="card-footer">
+                        <small class="text-muted">Posted on {{ post.created_at }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+
         <div class="row">
+            <div class="col text-center">
+                <br>
+              <p class="text-muted"><strong>Your clubs</strong> do not have any posts</p>
+            </div>
+            </div>
 
-        </div>
-        <div class="row">
+    {% endif %}
 
-        </div>
+
+
     </div>
 
+
+
+
     </div>
+
+
     </div>
+
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
