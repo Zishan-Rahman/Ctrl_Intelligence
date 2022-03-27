@@ -128,7 +128,7 @@ def unfollow(request, user_id):
     current_user = request.user
     followee = User.objects.get(id=user_id)
     current_user._unfollow(followee)
-    return redirect('profile')
+    return redirect('user_profile', user_id=user_id)
 
 
 def club_util(request):
