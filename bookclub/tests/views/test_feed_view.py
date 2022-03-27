@@ -36,8 +36,71 @@ class FeedViewTestCase(TestCase, LogInTester):
     def test_get_feed_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
-        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirect_url,
+                             status_code=302, target_status_code=200)
         self.assertFalse(self._is_logged_in())
+
+    def test_get_club_list_with_pagination(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self._create_test_clubs(settings.POSTS_PER_PAGE*2+3-1)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'feed.html')
+        self.assertEqual(
+            len(response.context['posts']), settings.POSTS_PER_PAGE)
+        self.assertTrue(response.context['is_paginated'])
+        page_obj = response.context['page_obj']
+        self.assertFalse(page_obj.has_previous())
+        self.assertTrue(page_obj.has_next())
+        page_one_url = reverse('feed') + '?page=1'
+        response = self.client.get(page_one_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'feed.html')
+        self.assertEqual(
+            len(response.context['posts']), settings.POSTS__PER_PAGE)
+        page_obj = response.context['page_obj']
+        self.assertFalse(page_obj.has_previous())
+        self.assertTrue(page_obj.has_next())
+        page_two_url = reverse('feed') + '?page=2'
+        response = self.client.get(page_two_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'feed.html')
+        self.assertEqual(
+            len(response.context['posts']), settings.POSTS__PER_PAGE)
+        page_obj = response.context['page_obj']
+        self.assertTrue(page_obj.has_previous())
+        self.assertTrue(page_obj.has_next())
+        page_three_url = reverse('feed') + '?page=3'
+        response = self.client.get(page_three_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'feed.html')
+        self.assertEqual(
+            len(response.context['posts']), 2)
+        page_obj = response.context['page_obj']
+        self.assertTrue(page_obj.has_previous())
+        self.assertFalse(page_obj.has_next())
+
+    def _is_logged_in(self):
+        return '_auth_user_id' in self.client.session.keys()
+
+    def _create_test_clubs(self, club_count=10):
+        for id in range(1, club_count+1, 1):
+            User.objects.create(
+                email=f'user{id}@test.org',
+                password='Password123',
+                first_name=f'First{id}',
+                last_name=f'Last{id}',
+                public_bio=f'Bio {id}',
+                favourite_genre=f'genre {id}',
+                location=f'City {id}',
+                age=18+id
+            )
+            Club.objects.create(
+                owner_id=id,
+                name=f'The {id} Book Club',
+                location=f'City {id}',
+                description=f'Description {id}',
+            )
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
