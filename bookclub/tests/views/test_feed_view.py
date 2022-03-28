@@ -30,7 +30,7 @@ class FeedViewTestCase(TestCase, LogInTester):
         self._create_test_posts(settings.POSTS_PER_PAGE*2+3)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'feed.html')
-        form = response.context['page_obj']
+        self.assertTrue(self._is_logged_in())
 
     def test_get_feed_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)
