@@ -18,7 +18,7 @@ class ApplicationViewTestCase(TestCase):
         self.john = User.objects.get(email='johndoe@bookclub.com')
         self.jane = User.objects.get(email='janedoe@bookclub.com')
         self.joe = User.objects.get(email='joedoe@bookclub.com')
-        self.user = User.objects.get(pk=1)
+        self.sam = User.objects.get(email='samdoe@bookclub.com')
 
         self.bush_club = Club.objects.get(name='Bush House Book Club')
         self.somerset_club = Club.objects.get(name='Somerset House Book Club')
@@ -103,11 +103,35 @@ class ApplicationViewTestCase(TestCase):
         afterCount = self.strand_club.get_number_of_members()
         self.assertEqual(beforeCount, afterCount - 1)
 
+    def test_cannot_hijack_accept(self):
+        self.client.login(email=self.sam.email, password='Password123')
+        beforeCount = self.strand_club.get_number_of_members()
+        response = self.client.get('/applications/accept/3/', follow=True)
+        redirect_url = reverse('my_applications')
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        afterCount = self.strand_club.get_number_of_members()
+        self.assertEqual(beforeCount, afterCount)
+
     def test_successful_reject(self):
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = self.strand_club.get_number_of_members()
         response = self.client.get('/applications/remove/3/', follow=True)
         redirect_url = reverse('applications')
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        afterCount = self.strand_club.get_number_of_members()
+        self.assertEqual(beforeCount, afterCount)
+
+    def test_cannot_hijack_reject(self):
+        self.client.login(email=self.sam.email, password='Password123')
+        beforeCount = self.strand_club.get_number_of_members()
+        response = self.client.get('/applications/remove/3/', follow=True)
+        redirect_url = reverse('my_applications')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
@@ -121,7 +145,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_get_application_list_with_pagination(self):
-        self.client.login(email=self.user.email, password='Password123')
+        self.client.login(email=self.john.email, password='Password123')
         self._create_test_applications(settings.APPLICATIONS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)

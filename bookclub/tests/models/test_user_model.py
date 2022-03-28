@@ -17,9 +17,20 @@ class UserModelTestCase(TestCase):
 
         self.user = User.objects.get(email = 'johndoe@bookclub.com')
         self.user2 = User.objects.get(email = 'janedoe@bookclub.com')
-        
 
+    # Tests some user model methods that haven't been covered elsewhere in our testing
 
+    def test_user_model_first_name(self):
+        self.assertEqual(self.user_one.get_first_name(),"John")
+
+    def test_user_model_last_name(self):
+        self.assertEqual(self.user_one.get_last_name(),"Doe")
+
+    def test_user_model_location(self):
+        self.assertEqual(self.user_one.get_location(),"London")
+
+    def test_user_model_age(self):
+        self.assertEqual(self.user_one.get_age(),39)
 
     # first name tests
     def test_first_name_must_not_be_blank(self):
@@ -111,7 +122,7 @@ class UserModelTestCase(TestCase):
         john.toggle_follow(jane)
         self.assertFalse(john.is_following(jane))
         self.assertFalse(jane.is_following(john))
-    
+
     def test_follow_counters(self):
         john = self.user
         jane = self.user2
@@ -136,5 +147,8 @@ class UserModelTestCase(TestCase):
     def _assert_user_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.user_one.full_clean()
-    
 
+    # def test_validity_test_fails_when_user_is_invalid(self):
+    #     self.user_one.email = "johndoe@.org"
+    #     with self.assertRaisesMessage(AssertionError, "Test user should be valid"):
+    #         self._assert_user_is_invalid()

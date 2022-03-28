@@ -14,6 +14,7 @@ class MeetingModelTestCase(TestCase):
         self.jane = User.objects.get(pk=2)
         self.bush_club = Club.objects.get(pk=1)
         self.somerset_club = Club.objects.get(pk=2)
+        self.address = "example.com"
         self.today = date.today()
         self.yesterday = self.today - timedelta(days=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -21,7 +22,10 @@ class MeetingModelTestCase(TestCase):
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.past_time = time(last_hour_date_time.hour, 0)
         self.future_time = time(next_hour_date_time.hour, 0)
-        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club)
+        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, address=self.address, club=self.bush_club)
+        
+    def test_meeting_data_is_valid(self):
+        self._assert_meeting_is_valid()
 
     def test_time_cannot_be_null(self):
         self.meeting.start_time = None
@@ -36,8 +40,22 @@ class MeetingModelTestCase(TestCase):
         self._assert_meeting_is_invalid()
 
     def test_address_cannot_be_null(self):
-        self.address = None
+        self.meeting.address = None
         self._assert_meeting_is_invalid()
+
+    # Test getters
+    
+    def test_meeting_club_getter_works(self):
+        self.assertEqual(self.meeting.get_meeting_club(), self.meeting.club)
+    
+    def test_meeting_date_getter_works(self):
+        self.assertEqual(self.meeting.get_meeting_date(), self.meeting.date)
+    
+    def test_meeting_start_time_getter_works(self):
+        self.assertEqual(self.meeting.get_meeting_start_time(), self.meeting.start_time)
+    
+    def test_meeting_date_address_works(self):
+        self.assertEqual(self.meeting.get_meeting_address(), self.meeting.address)
 
     def _assert_meeting_is_valid(self):
         try:

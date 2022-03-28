@@ -3,10 +3,8 @@
 {% block content %}
     <div class="container">
     <div class="row">
-        <div class="col-12">
-   <body>
       {% if not applicants %}
-       <div class="row mt-5">
+       <div class="row mt-3">
         <div class="col-3">
 
         </div>
@@ -22,19 +20,19 @@
        <h2 class="text-left"><strong>Applications</strong></h2>
       <h5 class="text-muted">Applications made to your clubs</h5>
           <br>
+          <div class="col-12">
       <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp;
-      <div>
         <table id="myTable" class="table table-hover table-borderless">
           <thead class="table">
             <tr>
-              <th scope="col" span="1" style="width: 8%;">Club Applying To</th>
-              <th scope="col" span="1" style="width: 8%;">Name</th>
-              <th scope="col" span="1" style="width: 4%;">Age</th>
-              <th scope="col" span="1" style="width: 8%;">Date Joined</th>
-              <th scope="col" span="1" style="width: 40%;">Bio</th>
-              <th scope="col" span="1" style="width: 8%;">Their Location</th>
-              <th scope="col" span="1" style="width: 12%;"></th>
-              <th scope="col" span="1" style="width: 12%;"></th>
+              <th scope="col">Club</th>
+              <th scope="col">Name</th>
+              <th scope="col">Age</th>
+              <th scope="col" style="width: 20%;">Date Joined</th>
+              <th scope="col" style="width: 30%;">Bio</th>
+              <th scope="col">Location</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
           </thead>
       {% for a in page_obj %}
@@ -42,7 +40,7 @@
           <td>{{ a.club.name }}</td>
           <td>{{ a.applicant.first_name }} {{ a.applicant.last_name }}</td>
           <td>{{ a.applicant.age }}</td>
-          <td>{{ a.applicant.date_joined }}</td>
+          <td style="width: 20%">{{ a.applicant.date_joined }}</td>
           <td>{{ a.applicant.public_bio }}</td>
           <td>{{ a.applicant.location }}</td>
           <td><a class="btn btn-default" href="{% url 'app_accept' pk=a.pk %}"><span class="btn btn-dark" style="background-color: green">Accept</span></a></td>
@@ -50,42 +48,12 @@
         </tr>
       {% endfor %}
     </table>
-</div>
-  <div>
-    <table id="fullTable" class="table table-hover table-borderless" style="display:none">
-      <thead class="table" id="fullTableHeader">
-        <tr>
-          <th scope="col" span="1" style="width: 8%;">Club Applying To</th>
-          <th scope="col" span="1" style="width: 8%;">Name</th>
-          <th scope="col" span="1" style="width: 4%;">Age</th>
-          <th scope="col" span="1" style="width: 8%;">Date Joined</th>
-          <th scope="col" span="1" style="width: 40%;">Bio</th>
-          <th scope="col" span="1" style="width: 8%;">Their Location</th>
-          <th scope="col" span="1" style="width: 12%;"></th>
-          <th scope="col" span="1" style="width: 12%;"></th>
-        </tr>
-      </thead>
-      {% for a in applicants %}
-        <tr class="fullTableRow">
-          <td>{{ a.club.name }}</td>
-          <td>{{ a.applicant.first_name }} {{ a.applicant.last_name }}</td>
-          <td>{{ a.applicant.age }}</td>
-          <td>{{ a.applicant.date_joined }}</td>
-          <td>{{ a.applicant.public_bio }}</td>
-          <td>{{ a.applicant.location }}</td>
-          <td><a class="btn btn-default" href="{% url 'app_accept' pk=a.pk %}"><span class="btn btn-dark" style="background-color: green">Accept</span></a></td>
-          <td><a class="btn btn-default" href="{% url 'app_remove' pk=a.pk %}"><span class="btn btn-dark" style="background-color: red">Reject</span></a></td>
-        </tr>
-      {% endfor %}
-    </table>
-  </div>
+    </div>
   <div id="pag">
   {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
   </div>
   {% endif %}
   
-   </body>
-        </div>
 </div>
     </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

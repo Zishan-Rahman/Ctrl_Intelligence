@@ -35,6 +35,9 @@ class Book(models.Model):
 
     def get_title(self):
         return self.title
+    
+    def get_author(self):
+        return self.author
 
     def get_pub_year(self):
         return self.pub_year
@@ -50,6 +53,7 @@ class Book(models.Model):
 
     def get_large_url(self):
         return self.large_url
+
 
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
@@ -112,7 +116,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def gravatar(self, size=120):
         """Return a URL to the user's gravatar."""
         gravatar_object = Gravatar(self.email)
-        gravatar_url = gravatar_object.get_image(size=size, default='mp')
+        gravatar_url = gravatar_object.get_image(size=size, default='retro')
         return gravatar_url
 
     def mini_gravatar(self):
@@ -142,6 +146,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     def followee_count(self):
         return self.followees.count()
 
+    def get_users_followers(self):
+        return self.followers.all()
+
+    def get_users_followees(self):
+        return self.followees.all()
+
     def get_ratings(self):
         return Rating.objects.filter(user_id=self.id)
 
@@ -151,6 +161,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
+
 
 # Club Model adapted from Clucker user model and Chess club management system club model
 
@@ -273,7 +284,7 @@ class Club(models.Model):
     def gravatar(self, size=120):
         """Return a URL to the user's gravatar."""
         gravatar_object = Gravatar(self.name)
-        gravatar_url = gravatar_object.get_image(size=size, default='mp')
+        gravatar_url = gravatar_object.get_image(size=size, default='retro')
         return gravatar_url
 
     def mini_gravatar(self):
@@ -372,3 +383,16 @@ class Post(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+        
+class UserPost(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.CharField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+  
+class RecommendedBook(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    isbn = models.CharField(unique=False, max_length=12, blank=False)

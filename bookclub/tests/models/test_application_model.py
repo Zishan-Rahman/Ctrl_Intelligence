@@ -34,6 +34,14 @@ class ApplicationModelTestCase(TestCase):
     def test_new_application(self) -> None:
         """Test if the newly set-up application is valid at the moment."""
         self._assert_application_is_valid()
+    
+    def test_application_applicant_getter_works(self) -> None:
+        """Testing the applicant getter method in the Application model."""
+        self.assertEqual(self.application.get_applicant(),self.application.applicant)
+        
+    def test_application_club_getter_works(self) -> None:
+        """Testing the club getter method in the Application model."""
+        self.assertEqual(self.application.get_application_club(),self.application.club)
 
     def test_applicant_must_be_present(self) -> None:
         """Test if an application with no applicant is invalid."""
@@ -54,3 +62,10 @@ class ApplicationModelTestCase(TestCase):
         """Test if an applicant cannot be a club entity."""
         with self.assertRaises(ValueError):
             self.application.club = self.user_one
+            
+    def test_invalid_application_raises_validation_error(self) -> None:
+        """Test if an invalid application raises a validation error when it is checked."""
+        self.application.applicant = None
+        self.application.club = None
+        with self.assertRaisesMessage(AssertionError, "Application is not valid"):
+            self._assert_application_is_valid()
