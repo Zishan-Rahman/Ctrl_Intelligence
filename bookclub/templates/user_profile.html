@@ -252,9 +252,15 @@
                         <td>{{ entry.first_name }} {{ entry.last_name }}</td>
                         <td>
                           {%if entry.id != request.user.id %}
-                          <a class="btn" href="{% url 'follow_from_user_profile' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
-                            Unfollow
-                          </a>
+                            {%if entry in user.followees.all %}
+                            <a class="btn" href="{% url 'follow_from_user_profile' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                              Unfollow
+                            </a>
+                            {%else%}
+                            <a class="btn" href="{% url 'follow_from_user_profile' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: blue; text-transform:uppercase; font-size: 14px">
+                              Follow
+                            </a>
+                            {% endif %}
                           {% endif %}
                         </td>
                       </tr>
