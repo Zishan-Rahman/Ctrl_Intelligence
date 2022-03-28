@@ -15,7 +15,7 @@ class NavbarViewTestCase(TestCase):
         self.bush_club = Club.objects.get(name='Bush House Book Club')
         self.bush_club.make_member(self.john)
 
-    def test_navbar_displays_books_on_home_page(self):
+    def test_navbar_displays_search_on_home_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('home'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -24,7 +24,7 @@ class NavbarViewTestCase(TestCase):
                       'name="query" id="search">\n      <button class="btn btn-outline-light" '
                       'type="submit">Search</button>',  html)
 
-    def test_navbar_displays_books_on_clubs_page(self):
+    def test_navbar_displays_search_on_clubs_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_list'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -33,7 +33,7 @@ class NavbarViewTestCase(TestCase):
                       'name="query" id="search">\n      <button class="btn btn-outline-light" '
                       'type="submit">Search</button>',  html)
 
-    def test_navbar_displays_books_on_users_page(self):
+    def test_navbar_displays_search_on_users_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_list'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -42,7 +42,7 @@ class NavbarViewTestCase(TestCase):
                       'name="query" id="search">\n      <button class="btn btn-outline-light" '
                       'type="submit">Search</button>',  html)
 
-    def test_navbar_displays_books_on_books_page(self):
+    def test_navbar_displays_search_on_books_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('book_list'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -51,7 +51,7 @@ class NavbarViewTestCase(TestCase):
                       'name="query" id="search">\n      <button class="btn btn-outline-light" '
                       'type="submit">Search</button>',  html)
 
-    def test_navbar_displays_books_on_edit_profile_page(self):
+    def test_navbar_displays_search_on_edit_profile_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('profile'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -60,7 +60,7 @@ class NavbarViewTestCase(TestCase):
                       'name="query" id="search">\n      <button class="btn btn-outline-light" '
                       'type="submit">Search</button>',  html)
 
-    def test_navbar_displays_books_on_edit_password_page(self):
+    def test_navbar_displays_search_on_edit_password_page(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('password'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -68,4 +68,3 @@ class NavbarViewTestCase(TestCase):
         self.assertIn('<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" '
                       'name="query" id="search">\n      <button class="btn btn-outline-light" '
                       'type="submit">Search</button>',  html)
-

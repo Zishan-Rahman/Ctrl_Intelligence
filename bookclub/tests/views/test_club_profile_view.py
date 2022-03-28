@@ -35,6 +35,7 @@ class ClubProfileTest(TestCase, LogInTester):
     def test_correct_club_profile_template(self):
         self.client.login(email=self.john.email, password="Password123")
         response = self.client.get(self.url)
+        self._is_logged_in()
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "club_profile.html")
 

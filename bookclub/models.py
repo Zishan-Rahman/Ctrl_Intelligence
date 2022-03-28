@@ -34,6 +34,9 @@ class Book(models.Model):
 
     def get_title(self):
         return self.title
+    
+    def get_author(self):
+        return self.author
 
     def get_pub_year(self):
         return self.pub_year
@@ -141,6 +144,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def followee_count(self):
         return self.followees.count()
+
+    def get_users_followers(self):
+        return self.followers.all()
+
+    def get_users_followees(self):
+        return self.followees.all()
 
     def get_ratings(self):
         return Rating.objects.filter(user_id=self.id)
