@@ -87,7 +87,7 @@
             </div>
             <div class="row">
         {% if posts %}
-
+                <a href="{% url 'user_feed' user.id %}" style="text-decoration: none;">View All</a>
             {% for post in posts %}
 
                 <div class="card w-100 mx-auto" style="margin-top: 10px; border-color: brown">
@@ -98,17 +98,16 @@
                             </div>
 
                         <div class="card-footer">
-                            <small class="text-muted">{{ post.created_at }}</small>
+                            <small class="text-muted">{{ post.created_at|date:"M y G:i"}}</small>
                         </div>
                 </div>
             {% endfor %}
-                <a href="{% url 'user_feed' user.id %}" style="text-decoration: none;">View All</a>
         {% else %}
 
         <div class="row">
             <div class="col text-center">
                 <br>
-              <p class="text-muted"><strong>{{ user.get_full_name }}</strong> does not have any posts</p>
+              <p class="text-muted"><strong>{{ user.get_full_name }}</strong> does not have any personal posts</p>
             </div>
             </div>
 
@@ -165,7 +164,7 @@
                         <td>
                             <i class="bi bi-briefcase" style="color: brown"></i>
                         </td>
-                        <td>{{ user.date_joined }}</td>
+                        <td>{{ user.date_joined|date:"F Y" }}</td>
                     </tr>
 
                 </table>
@@ -177,6 +176,7 @@
                 <div class="row">
 
                 {% if currently_reading_books %}
+                    <a class="text-left" href="/current_reads/{{ user.id }}/" style="text-decoration: none; margin-left: 5px">View All</a>
                     <table class="table table-hover table-borderless" style="margin-left: 5px; border-style: groove; border-color: brown">
 
 
@@ -190,7 +190,7 @@
                     </tr>
                     {% endfor %}
                     </table>
-                     <a class="text-left" href="/reading_list/{{ user.id }}/" style="text-decoration: none; margin-left: 5px">View All</a>
+
                 {% else %}
 
                     <p class="fw-bold text-muted mt-3 text-center">{{ user.first_name }}'s reading list is empty</p>
