@@ -14,24 +14,6 @@ from django.views.generic import ListView
 from django.template.loader import render_to_string
 from bookclub.views import config
 
-
-@login_required
-def user_list(request):
-    users = []
-    for user in User.objects.all():
-        users.append({
-            "id": user.id,
-            "first_name": user.get_first_name,
-            "last_name": user.get_last_name,
-            "email": user.get_email,
-            "public_bio": user.get_bio,
-            "favourite_genre": user.get_favourite_genre,
-            "mini_gravatar": user.mini_gravatar(),
-            "gravatar": user.gravatar()
-        })
-    return render(request, 'user_list.html', {'users': users})
-
-
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
 
