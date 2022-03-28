@@ -18,7 +18,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for post in posts %}
+                  {% for post in page_obj %}
                   <tr class="clickable-row" data-href="#">
                     <td><img src='{{ post.author.gravatar }}' alt="{{ post.author }}'s Gravatar" class="rounded-circle"></td>
                       <td>{{ post.author.get_full_name }}</td>
@@ -28,6 +28,7 @@
                   {% endfor %}
                 </tbody>
                   </table>
+                  {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
               </div>
         </div>
     </div>
