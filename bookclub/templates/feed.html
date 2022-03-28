@@ -19,7 +19,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for post in posts %}
+            {% for post in page_obj %}
             <tr class="clickable-row" data-href="#">
               <td><img src='{{ post.author.gravatar }}' alt="{{ post.author }}'s Gravatar" class="rounded-circle"></td>
               <td>{{ post.author }}</td>

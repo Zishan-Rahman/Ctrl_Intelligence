@@ -30,7 +30,7 @@ class FeedViewTestCase(TestCase, LogInTester):
         self._create_test_posts(settings.POSTS_PER_PAGE*2+3)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'feed.html')
-        form = response.context['posts']
+        form = response.context['page_obj']
 
     def test_get_feed_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)
@@ -46,33 +46,32 @@ class FeedViewTestCase(TestCase, LogInTester):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'feed.html')
         self.assertEqual(
-            len(response.context['posts']), settings.POSTS_PER_PAGE)
-        self.assertTrue(response.context['is_paginated'])
-        page_obj = response.contexr['page_obj']
+            len(response.context['page_obj']), settings.POSTS_PER_PAGE)
+        page_obj = response.context['page_obj']
         self.assertFalse(page_obj.has_previous())
         self.assertTrue(page_obj.has_next())
-        page_one_url = response.reverse('feed') + '?page=1'
+        page_one_url = reverse('feed', kwargs={'club_id': self.bush_club.id}) + '?page=1'
         response = self.client.get(page_one_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'feed.html')
         self.assertEqual(
-            len(response.context['posts']), settings.POSTS_PER_PAGE)
-        page_two_url = response.reverse('feed') + '?page=2'
+            len(response.context['page_obj']), settings.POSTS_PER_PAGE)
+        page_two_url = reverse('feed', kwargs={'club_id': self.bush_club.id}) + '?page=2'
         response = self.client.get(page_two_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'feed.html')
         self.assertEqual(
-            len(response.context['posts']), settings.POSTS_PER_PAGE)
-        page_obj = response.contexr['page_obj']
+            len(response.context['page_obj']), settings.POSTS_PER_PAGE)
+        page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertTrue(page_obj.has_next())
-        page_three_url = response.reverse('feed') + '?page=3'
+        page_three_url = reverse('feed', kwargs={'club_id': self.bush_club.id}) + '?page=3'
         response = self.client.get(page_three_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'feed.html')
         self.assertEqual(
-            len(response.context['posts']), 3)
-        page_obj = response.contexr['page_obj']
+            len(response.context['page_obj']), 2)
+        page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())
 

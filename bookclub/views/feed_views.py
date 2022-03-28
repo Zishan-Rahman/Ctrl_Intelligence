@@ -26,8 +26,7 @@ class FeedView(LoginRequiredMixin, ListView):
         current_club_id = self.kwargs['club_id']
         current_club = Club.objects.get(id=current_club_id)
         current_user = self.request.user
-        paginator = Paginator(current_club.get_posts(),
-                              settings.POSTS_PER_PAGE)
+        paginator = Paginator(current_club.get_posts(), settings.POSTS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         authors = current_user
@@ -37,6 +36,7 @@ class FeedView(LoginRequiredMixin, ListView):
         context['form'] = PostForm()
         context['club'] = current_club_id
         context['posts'] = posts
+        context['page_obj'] = page_obj
         return context
 
     def post(self, request, *args, **kwargs):
@@ -46,13 +46,13 @@ class FeedView(LoginRequiredMixin, ListView):
         posts = Post.objects.filter(club=club)
         if form.is_valid():
             return redirect('feed')
-        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
+        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts, 'page_obj': page_obj})
 
     def get(self, request, *args, **kwargs):
         current_club_id = self.kwargs['club_id']
         club = Club.objects.all().get(pk=current_club_id)
         posts = Post.objects.filter(club=club)
-        paginator = Paginator(posts, 2)
+        paginator = Paginator(posts, settings.POSTS_PER_PAGE)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         form = PostForm()
