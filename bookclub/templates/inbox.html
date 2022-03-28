@@ -18,10 +18,11 @@
     <div class="card col-md-12 p-3 shadow-sm">
       <h5>
           {%if request.user == chat.receiver%}
-            {{ chat.user }}
+            {{ chat.user }} 
           {%else%}
-            {{ chat.receiver }}
+            {{ chat.receiver }} 
           {%endif%}
+          
       </h5>
       <a class="stretched-link" href="{% url 'chat' chat.pk %}"></a>
     </div>

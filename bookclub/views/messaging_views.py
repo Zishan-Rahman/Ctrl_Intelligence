@@ -1,3 +1,7 @@
+from atexit import register
+from django import template
+from tkinter.font import nametofont
+from wsgiref.util import request_uri
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -72,18 +76,18 @@ def createChatFromProfile(request, user_id):
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ListChatsView(View):
-
     def get(self, request, *args, **kwargs):
         chats = Chat.objects.filter(Q(user=request.user) | Q(receiver=request.user))
+        inbox_count = chats.filter(has_unread=True).count()
         context = {
-            'chats': chats
+            'chats': chats,
+            'inbox_count': inbox_count
         }
         return render(request, 'inbox.html', context)
 
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class CreateMessageView(View):
-
     def post(self, request, pk, *args, **kwargs):
         chat = Chat.objects.get(pk=pk)
         if chat.receiver == request.user:
@@ -96,17 +100,17 @@ class CreateMessageView(View):
             receiver_user=receiver,
             body=request.POST.get('message'),
         )
-
-        notify.send(
-            request.user,
-            recipient=receiver,
-            verb = 'sent you a message',
-            target=message,
-            action_object=message,
-                )
+        
+        # notify.send(
+        #     request.user,
+        #     recipient=receiver,
+        #     verb = '',
+        #     target=message,
+        #     action_object=message,
+        #         )
         message.save()
         return redirect('chat', pk=pk)
-
+       
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ChatView(View):

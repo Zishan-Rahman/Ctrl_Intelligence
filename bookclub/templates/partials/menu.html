@@ -1,5 +1,3 @@
-{% load notifications_tags %}
-{% notifications_unread as unread_count %}
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
@@ -25,15 +23,15 @@
        <div class="dropdown-divider"></div>
         <li><a class="dropdown-item" href="{% url 'club_selector' %}">My Clubs</a></li>
         <li><a class="dropdown-item" href="{% url 'favourites' %}">My Favourite Books</a></li>
-        <li><a class="dropdown-item" href="{% url 'applications' %}">My Club Applications<span class="badge badge-warning">{{ application_count }}</span></a></li>
+        <li><a class="dropdown-item" href="{% url 'applications' %}">My Club Applications<span class="badge badge-warning"></span></a></li>
         <li><a class="dropdown-item" href="{% url 'my_book_ratings' %}">My Book Ratings</a></li>
       </ul>
     </li>
 
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'inbox' %}">Inbox <i class="bi bi-inboxes"><span class="badge badge-light">{{ unread_count }}</span></i></a>
+    <li class="nav-item"> 
+      <a class="nav-link" href="{% url 'inbox' %}">Inbox <i class="bi bi-inboxes"><span class="badge badge-light">{{ inbox_count }}</span></i></a>
     </li>
-
+   
   
   </ul>
 
@@ -50,7 +48,7 @@
       <script>
         $(function () {
           $( "#search" ).autocomplete({
-            source: '{% url 'search_autocomplete' %}',
+            source: "{% url 'search_autocomplete' %}",
             minLength: 4
           });
         });
