@@ -6,6 +6,7 @@ from bookclub.models import User, Chat
 
 
 class ChatFormTestCase(TestCase):
+    """Tests for the Chat form"""
     def setUp(self):
         self.form_input = {
             'email':'janedoe@example.com'

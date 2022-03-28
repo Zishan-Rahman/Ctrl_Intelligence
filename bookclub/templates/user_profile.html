@@ -319,13 +319,13 @@
             </div>
             <div class="modal-body">
               <body>
-                <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp
-                <table id="myTable" class="table">
+                <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp;
+                <table id="myTable" class="table" style="width: 100%">
                   <thead class="table-light">
                     <tr>
-                      <th scope="col"></th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Invite</th>
+                      <th scope="col" style="width: 30%"></th>
+                      <th scope="col" style="width: 45%">Name</th>
+                      <th scope="col" style="width: 25%">Invite</th>
                     </tr>
                   </thead>
                      <tr>
@@ -357,18 +357,6 @@ $(document).ready(function(){
     if(len > 0){
       $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
         $(this).closest('tr').show();
-      });
-    }else{
-      $('.notfound').show();
-    }
-  });
-  $('#txt_name').keyup(function(){
-    var search = $(this).val();
-    $('table tbody tr').hide();
-    var len = $('table tbody tr:not(.notfound) td:nth-child(2):contains("'+search+'")').length;
-    if(len > 0){
-      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
-         $(this).closest('tr').show();
       });
     }else{
       $('.notfound').show();
