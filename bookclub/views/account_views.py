@@ -3,12 +3,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
-from bookclub.forms import PasswordForm, UserForm
-from bookclub.models import Club, User
+from bookclub.forms import PasswordForm, UserForm, UserPostForm
+from bookclub.models import Club, User, UserPost
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.edit import FormView, UpdateView
@@ -30,6 +31,7 @@ def landing_page(request):
 
 
 def password_reset_request(request):
+    site = get_current_site(request)
     if request.method == "POST":
         password_reset_form = PasswordResetForm(request.POST)
         if password_reset_form.is_valid():
@@ -41,7 +43,7 @@ def password_reset_request(request):
                     email_template_name = "main/password/password_reset_email.txt"
                     c = {
                         "email": user.email,
-                        'domain': '127.0.0.1:8000',
+                        'domain': site,
                         'site_name': 'Website',
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         'token': default_token_generator.make_token(user),

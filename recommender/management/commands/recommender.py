@@ -56,9 +56,19 @@ def pre_process():
 
     pickle.dump(user_rating_df, open('data/user_item_rating.p', 'wb'))
 
+    return user_rating_df
+
+
+def get_most_popular_books(user_rating_df):
+    most_popular_df = pd.DataFrame(user_rating_df, columns=['isbn', 'rating'])
+    most_popular_df = most_popular_df.groupby(['isbn']).agg('count')['rating'].reset_index()
+    most_popular_df = most_popular_df.sort_values('rating', ascending=False)
+    most_popular_df = most_popular_df.head(25)
+    pickle.dump(most_popular_df, open('data/most_popular_item.p', 'wb'))
+
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        pre_process()
-
+        user_rating_df = pre_process()
+        get_most_popular_books(user_rating_df)

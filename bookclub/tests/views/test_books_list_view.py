@@ -3,19 +3,19 @@ from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User, Book
 from bookclub.tests.helpers import LogInTester, reverse_with_next
-
-
+from django.contrib import messages
 
 # Books View test is adapted from the Chess Club project
 
 class BooksListViewTestCase(TestCase, LogInTester):
     """Tests of the club view."""
 
-    fixtures = ["bookclub/tests/fixtures/default_users.json"]
+    fixtures = ["bookclub/tests/fixtures/default_users.json", "bookclub/tests/fixtures/default_books.json"]
 
     def setUp(self):
         self.url = reverse('book_list')
         self.user = User.objects.get(pk=1)
+        self.book = Book.objects.get(isbn=12345678910)
 
     def test_book_list_url(self):
         self.assertEqual(self.url, '/books/')
@@ -62,10 +62,50 @@ class BooksListViewTestCase(TestCase, LogInTester):
         response = self.client.get(page_three_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'book_list.html')
-        self.assertEqual(len(response.context['books']), 2)
+        self.assertEqual(len(response.context['books']), 5)
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())
+
+    def test_book_list_view_has_remove_from_reading_list_button_when_book_is_in_reading_list(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self.user.currently_reading_books.add(self.book)
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
+                      f'20px"><i class="bi bi-bookmarks-fill"></i></button>', html)
+
+    def test_book_list_view_has_add_to_reading_list_button_when_book_is_not_in_reading_list(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
+                      f'20px"><i class="bi bi-bookmarks"></i></button>', html)
+
+    def test_add_to_reading_list_in_book_list_works(self):
+        self.client.login(email=self.user.email, password='Password123')
+        before_reading_list_count = self.user.currently_reading_books.count()
+        response = self.client.get('/books/add_to_reading_list/1/', follow=True)
+        redirect_url = self.url
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        after_reading_list_count = self.user.currently_reading_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
+
+    def test_remove_from_reading_list_in_list_profile_works(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self.user.currently_reading_books.add(self.book)
+        before_reading_list_count = self.user.currently_reading_books.count()
+        response = self.client.get('/books/remove_from_reading_list/1/', follow=True)
+        redirect_url = self.url
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        after_reading_list_count = self.user.currently_reading_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
 
     def _is_logged_in(self):
@@ -73,16 +113,6 @@ class BooksListViewTestCase(TestCase, LogInTester):
 
     def _create_test_books(self, book_count=10):
         for id in range(1, book_count+1, 1):
-            User.objects.create(
-                email=f'user{id}@test.org',
-                password='Password123',
-                first_name=f'First{id}',
-                last_name=f'Last{id}',
-                public_bio=f'Bio {id}',
-                favourite_genre=f'genre {id}',
-                location=f'City {id}',
-                age=18+id
-            )
             Book.objects.create(
                 isbn=id,
                 title=f'{id} Book',

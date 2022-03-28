@@ -115,3 +115,47 @@ class ClubModelTestCase(TestCase):
     def _assert_book_club_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.club_bush_house.full_clean()
+
+    # testing a couple of Club model methods
+
+    def test_get_description_method(self):
+        self.assertEqual(self.club_bush_house.get_description(), "Bush House Official Book Club!")
+    
+    def test_get_location_method(self):
+        self.assertEqual(self.club_bush_house.get_location(), "Strand, London")
+        
+    def test_check_if_club_organisers_have_owner_privileges(self):
+        self.assertEqual(self.club_bush_house.organiser_has_owner_privilege(), "Organiser does not have owner privileges.")
+        self.assertEqual(self.club_somerset_house.organiser_has_owner_privilege(), "Organiser has owner privileges.")
+
+    # testing a couple of exceptions raised
+    
+    def test_cannot_make_organiser_organiser_again(self):
+        self.club_bush_house.make_member(self.user_two)
+        self.club_bush_house.make_organiser(self.user_two)
+        with self.assertRaises(ValueError):
+            self.club_bush_house.make_organiser(self.user_two)
+            
+    def test_cannot_demote_organiser_twice(self):
+        self.club_bush_house.make_member(self.user_two)
+        self.club_bush_house.make_organiser(self.user_two)
+        self.club_bush_house.demote_organiser(self.user_two)
+        with self.assertRaises(ValueError):
+            self.club_bush_house.demote_organiser(self.user_two)
+            
+    def test_cannot_remove_non_member_from_club(self):
+        self.club_bush_house.make_member(self.user_two)
+        self.club_bush_house.remove_from_club(self.user_two)
+        with self.assertRaises(ValueError):
+            self.club_bush_house.remove_from_club(self.user_two)
+            
+    def test_club_validity_test_fails_when_club_is_actually_invalid(self):
+        self.club_bush_house.description = "a" * 513
+        with self.assertRaisesMessage(AssertionError, 'Test club should be valid'):
+            self._assert_book_club_is_valid()
+            
+    def test_club_invalidity_test_fails_when_club_is_actually_valid(self):
+        self.club_bush_house.description = "a" * 512
+        with self.assertRaisesMessage(AssertionError, 'ValidationError not raised'):
+            self._assert_book_club_is_invalid()
+            

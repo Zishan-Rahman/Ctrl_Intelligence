@@ -29,6 +29,7 @@
         {% if message.sender_user == request.user %}
       <div class="sent-message my-3">
         <p>{{ message.body }}</p>
+        <p id="timestamp">{{message.date|date:"M y G:i"}}</p>  
       {% if message.club %}
           <a class="btn float-end" href="{% url 'club_profile' message.club.id %}" style="color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>
           {% endif %}
@@ -36,6 +37,7 @@
     {% elif message.receiver_user == request.user%}
     <div class="received-message my-3">
       <p>{{ message.body }}</p>
+      <p id="timestamp_receiver">{{message.date|date:"M y G:i"}}</p>  
     {% if message.club %}
           <a class="btn float-end" href="{% url 'club_profile' message.club.id %}" style="color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>
           {% endif %}

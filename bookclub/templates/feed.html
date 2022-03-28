@@ -2,41 +2,43 @@
 {% load bootstrap_pagination %}
 {% block content %}
 <div class="container">
-{% if posts %}
+  {% if posts %}
 
-    <div class="row">
-        <div class="col">
-            <h1>Posts of {{ club.name }}</h1>
-            <div class="book-table">
-                <table class="table table-hover table-borderless">
-                    <thead>
-                  <tr>
-                      <th scope="col"></th>
-                      <th scope="col">Author</th>
-                      <th scope="col">Post</th>
-                      <th scope="col">Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for post in posts %}
-                  <tr class="clickable-row" data-href="#">
-                    <td><img src='{{ post.author.gravatar }}' alt="{{ post.author }}'s Gravatar" class="rounded-circle"></td>
-                    <td>{{ post.author }}</td>
-                    <td>{{ post.text }}</td>
-                    <td>{{ post.created_at }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-                  </table>
-              </div>
-        </div>
+  <div class="row">
+    <div class="col">
+      <h1>Posts of {{ club.name }}</h1>
+      <div class="book-table">
+        {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+        <table class="table table-hover table-borderless">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Author</th>
+              <th scope="col">Post</th>
+              <th scope="col">Posted on</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for post in page_obj %}
+            <tr class="clickable-row" data-href="#">
+              <td><img src='{{ post.author.gravatar }}' alt="{{ post.author }}'s Gravatar" class="rounded-circle"></td>
+              <td>{{ post.author }}</td>
+              <td>{{ post.text }}</td>
+              <td>{{ post.created_at|date:"M y G:i" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+      </div>
     </div>
+  </div>
 
-{% else %}
-    <div class="mt-5" style="text-align: center;">
-         <h5 class="text-muted text-center"><strong>{{ club.name }}</strong> does not have any posts</h5>
-    </div>
+  {% else %}
+  <div class="mt-5" style="text-align: center;">
+    <h5 class="text-muted text-center"><strong>{{ club.name }}</strong> does not have any posts</h5>
+  </div>
 
-{% endif %}
+  {% endif %}
 </div>
 {% endblock %}

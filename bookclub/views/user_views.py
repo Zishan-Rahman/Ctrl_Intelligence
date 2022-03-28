@@ -5,8 +5,8 @@ from django.template import context
 from bookclub.templates import *
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from bookclub.models import User, Club, Message, Chat
-from bookclub.forms import UserForm
+from bookclub.models import User, Club, Message, Chat, UserPost
+from bookclub.forms import UserForm, UserPostForm
 from django.contrib.auth import login
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.decorators import login_required
@@ -76,64 +76,96 @@ class UsersListView(LoginRequiredMixin, ListView):
 @login_required
 def user_profile(request, user_id):
     """ Individual User's Profile Page """
-    user = User.objects.get(id = user_id)
+    user = User.objects.get(id=user_id)
     club_util(request)
     current_user = request.user
     following = request.user.is_following(user)
     followable = request.user != user
     followers = request.user.followers.all()
     currently_reading_books = user.currently_reading_books.all()
-    already_read_books = user.already_read_books.all()
+    form = UserPostForm()
+    posts = UserPost.objects.filter(author=user)
+    posts = posts[:6]
+
     return render(request, 'user_profile.html',
-                    {
-                        'user': user,
-                        'current_user': current_user,
-                        'following': following,
-                        'following': following,
-                        'followable': followable,
-                        'user_clubs': config.user_clubs,
-                        'currently_reading_books': currently_reading_books,
-                        'already_read_books': already_read_books
-                    }
-                 )
+                  {
+                      'user': user,
+                      'current_user': current_user,
+                      'following': following,
+                      'followable': followable,
+                      'user_clubs': config.user_clubs,
+                      'currently_reading_books': currently_reading_books[:3],
+                      'form': form,
+                      'posts': posts
+                  }
+                  )
+
+
 @login_required
 def current_user_profile(request):
     """ Current User's Profile Page """
-    user = User.objects.get(id = request.user.id)
+    user = User.objects.get(id=request.user.id)
     club_util(request)
     current_user = request.user
     following = request.user.is_following(user)
     followable = request.user != user
     followers = request.user.followers.all()
     currently_reading_books = user.currently_reading_books.all()
-    already_read_books = user.already_read_books.all()
+    form = UserPostForm()
+    posts = UserPost.objects.filter(author=current_user)
+    posts = posts[:6]
     return render(request, 'user_profile.html',
-                    {
-                        'user': user,
-                        'current_user': current_user,
-                        'following': following,
-                        'following': following,
-                        'followable': followable,
-                        'user_clubs': config.user_clubs,
-                        'currently_reading_books': currently_reading_books,
-                        'already_read_books': already_read_books
-                    }
-                 )
+                  {
+                      'user': user,
+                      'current_user': current_user,
+                      'following': following,
+                      'followable': followable,
+                      'user_clubs': config.user_clubs,
+                      'currently_reading_books': currently_reading_books[:3],
+                      'form': form,
+                      'posts': posts
+                  }
+                  )
+
 
 @login_required
 def follow_toggle(request, user_id):
     current_user = request.user
     followee = User.objects.get(id=user_id)
-    current_user.toggle_follow(followee)
+    if followee in current_user.get_users_followees():
+        current_user.toggle_follow(followee)
+        messages.add_message(request, messages.ERROR, f'You have unfollowed {followee.get_full_name()}!')
+    else:
+        current_user.toggle_follow(followee)
+        messages.add_message(request, messages.SUCCESS, f'You now follow {followee.get_full_name()}!')
+
+@login_required
+def follow_from_user_list(request, user_id):
+    follow_toggle(request, user_id)
+    return redirect('user_list')
+
+@login_required
+def follow_from_user_profile(request, user_id):
+    follow_toggle(request, user_id)
     return redirect('user_profile', user_id=user_id)
+
 
 @login_required
 def unfollow(request, user_id):
     current_user = request.user
     followee = User.objects.get(id=user_id)
     current_user._unfollow(followee)
-    return redirect('profile')
+    messages.add_message(request, messages.ERROR, f'You unfollowed {followee.get_full_name()}!')
 
+@login_required
+def unfollow_from_user_list(request, user_id):
+    unfollow(request, user_id)
+    return redirect('user_list')
+
+@login_required
+def unfollow_from_user_profile(request, user_id):
+    unfollow(request, user_id)
+    return redirect('user_profile', user_id=user_id)
 
 def club_util(request):
     user_clubs_list = []

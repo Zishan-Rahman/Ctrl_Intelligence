@@ -35,6 +35,7 @@ class ClubProfileTest(TestCase, LogInTester):
     def test_correct_club_profile_template(self):
         self.client.login(email=self.john.email, password="Password123")
         response = self.client.get(self.url)
+        self._is_logged_in()
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "club_profile.html")
 
@@ -61,7 +62,7 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn('<img src=', html)
-        self.assertIn(f'alt="Gravatar of {self.bush_club.name}" class="rounded-circle profile-image">', html)
+        self.assertIn(f' alt="Gravatar of {self.bush_club.name}" class="profile-image" style="border-radius: 10px">', html)
         self.assertIn(f'<h3>{self.bush_club.name}</h3>', html)
         self.assertIn(f'<p>{self.bush_club.description}</p>', html)
         self.assertIn(f'<a href="/user_profile/{self.bush_club.owner.id}/" style="text-decoration: none;">', html)
@@ -90,12 +91,24 @@ class ClubProfileTest(TestCase, LogInTester):
             html)
 
     def test_club_profile_view_has_meetings_list_button_for_owner(self):
+        self.today = date.today()
+        next_hour_date_time = datetime.now() + timedelta(hours=1)
+        self.tomorrow = self.today + timedelta(days=1)
+        self.future_time = time(next_hour_date_time.hour, 0)
+        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club,
+                                              address='www.google.com')
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<a href="/club_profile/1/meetings" style="text-decoration: none;">View All</a>', html)
 
     def test_club_profile_view_has_meetings_list_button_for_organiser(self):
+        self.today = date.today()
+        next_hour_date_time = datetime.now() + timedelta(hours=1)
+        self.tomorrow = self.today + timedelta(days=1)
+        self.future_time = time(next_hour_date_time.hour, 0)
+        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club,
+                                              address='www.google.com')
         self.bush_club.make_organiser(self.jane)
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
@@ -103,6 +116,12 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn(f'<a href="/club_profile/1/meetings" style="text-decoration: none;">View All</a>', html)
 
     def test_club_profile_view_has_meetings_list_button_for_member(self):
+        self.today = date.today()
+        next_hour_date_time = datetime.now() + timedelta(hours=1)
+        self.tomorrow = self.today + timedelta(days=1)
+        self.future_time = time(next_hour_date_time.hour, 0)
+        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club,
+                                              address='www.google.com')
         self.bush_club.make_member(self.joe)
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)
@@ -193,7 +212,7 @@ class ClubProfileTest(TestCase, LogInTester):
         my_messages = list(response.context['messages'])
         self.assertEqual(len(my_messages), 1)
         self.assertEqual(my_messages[0].level, messages.SUCCESS)
-        self.assertEqual(my_messages[0].message, "Club Disbanded!")
+        self.assertEqual(my_messages[0].message, f'{self.bush_club.name} has been disbanded!')
         self.assertFalse(Club.objects.filter(pk=club_id).exists())
 
     def test_club_profile_view_doesnt_have_a_post_button_for_non_member(self):
@@ -307,14 +326,14 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<h6 class="card-title text-left"><strong>This is a Bush House Book Club Post</strong></h6>',
+        self.assertIn(f' <p class="card-text fw-bold">This is a Bush House Book Club Post</p>',
                       html)
 
     def test_club_profile_view_does_not_display_other_club_posts(self):
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
         html = response.content.decode('utf8')
-        self.assertNotIn(f'<h6 class="card-title text-left"><strong>This is a Bush House Book Club Post</strong></h6>',
+        self.assertNotIn(f' <p class="card-text fw-bold">This is a Bush House Book Club Post</p>',
                          html)
 
     def test_club_profile_view_displays_correct_message_when_no_posts(self):

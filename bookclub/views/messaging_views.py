@@ -28,8 +28,15 @@ class CreateChatView(View):
         email = request.POST.get('email')
         try:
             receiver = User.objects.get(email=email)
+            if receiver.id == request.user.id:
+                messages.add_message(request, messages.ERROR, "You cannot create a chat with yourself!")
+                return redirect('create_chat')
             if Chat.objects.filter(user=request.user, receiver=receiver).exists():
                 chat = Chat.objects.filter(user=request.user, receiver=receiver)[0]
+                return redirect('chat', pk=chat.pk)
+
+            elif Chat.objects.filter(user=receiver, receiver=request.user).exists():
+                chat = Chat.objects.filter(user=receiver, receiver=request.user)[0]
                 return redirect('chat', pk=chat.pk)
 
             if form.is_valid():
@@ -43,6 +50,7 @@ class CreateChatView(View):
                 return redirect('chat', pk=chat_pk)
         except:
             return redirect('create_chat')
+
 
 def createChatFromProfile(request, user_id):
     try:
@@ -106,10 +114,16 @@ class ChatView(View):
     def get(self, request, pk, *args, **kwargs):
         form = MessageForm()
         chat = Chat.objects.get(pk=pk)
-        message_list = Message.objects.filter(chat__pk__contains=pk)
-        context = {
-            'chat': chat,
-            'form': form,
-            'message_list': message_list
-        }
-        return render(request, 'chat.html', context)
+        if request.user == chat.receiver or request.user == chat.user:
+
+            message_list = Message.objects.filter(chat__pk__contains=pk)
+            context = {
+                'chat': chat,
+                'form': form,
+                'message_list': message_list
+            }
+            return render(request, 'chat.html', context)
+
+        else:
+            messages.add_message(request, messages.ERROR, "Action prohibited")
+            return redirect('home')
