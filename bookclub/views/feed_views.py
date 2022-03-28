@@ -56,4 +56,4 @@ class FeedView(LoginRequiredMixin, ListView):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         form = PostForm()
-        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
+        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts, 'page_obj': page_obj})
