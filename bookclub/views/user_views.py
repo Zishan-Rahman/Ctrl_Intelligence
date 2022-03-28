@@ -21,11 +21,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "edit_profile.html"
     form_class = UserForm
 
-    def get_object(self):
-        """Return the object (user) to be updated."""
-        user = self.request.user
-        return user
-
     def get_success_url(self):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")

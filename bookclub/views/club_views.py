@@ -134,12 +134,6 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "edit_club.html"
     form_class = EditClubForm
 
-    def get_object(self, c_pk):
-        """Return the object (club) to be updated."""
-        club_to_edit = Club.objects.all().get(pk=c_pk)
-        self.pk = c_pk
-        return club_to_edit
-
     def get_success_url(self):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Club updated!")
