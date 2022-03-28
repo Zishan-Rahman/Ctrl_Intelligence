@@ -1,7 +1,6 @@
 {% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
 {% block content %}
-
-
     <div class="container">
     <div class="row">
         <div class="col-12">
@@ -12,15 +11,26 @@
 </div>
 <div>
   <table>
-  {% for book in books %}
+    <thead>
+  <tr>
+    <th scope="col"></th>
+    <th scope="col">Title</th>
+    <th scope="col">Author</th>
+    <th scope="col">Publication Year</th>
+  </tr>
+</thead>
+  {% for book in page_obj %}
+  <tbody>
   <tr class="clickable-row" data-href="{% url 'book_profile' book.id %}">
     <td><img src="{{ book.medium_url }}" alt="a"></td>
     <td>{{ book.title }}</td>
     <td>{{ book.author }}</td>
     <td>{{ book.pub_year }}</td>
   </tr>
+</tbody>
   {% endfor %}
   </table>
+  {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
 </div>
 </div>
 {% endblock %}

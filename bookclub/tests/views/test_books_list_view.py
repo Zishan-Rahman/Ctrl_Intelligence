@@ -67,7 +67,7 @@ class BooksListViewTestCase(TestCase, LogInTester):
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())
 
-    def test_book_list_view_has_remove_from_current_reads_button_when_book_is_in_current_reads(self):
+    def test_book_list_view_has_remove_from_reading_list_button_when_book_is_in_reading_list(self):
         self.client.login(email=self.user.email, password='Password123')
         self.user.currently_reading_books.add(self.book)
         response = self.client.get(self.url)
@@ -75,37 +75,37 @@ class BooksListViewTestCase(TestCase, LogInTester):
         self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
                       f'20px"><i class="bi bi-bookmarks-fill"></i></button>', html)
 
-    def test_book_list_view_has_add_to_current_reads_button_when_book_is_not_in_current_reads(self):
+    def test_book_list_view_has_add_to_reading_list_button_when_book_is_not_in_reading_list(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
                       f'20px"><i class="bi bi-bookmarks"></i></button>', html)
 
-    def test_add_to_current_reads_in_book_list_works(self):
+    def test_add_to_reading_list_in_book_list_works(self):
         self.client.login(email=self.user.email, password='Password123')
-        before_current_reads_count = self.user.currently_reading_books.count()
-        response = self.client.get('/add_to_current_reads_list/1/', follow=True)
+        before_reading_list_count = self.user.currently_reading_books.count()
+        response = self.client.get('/add_to_reading_list_list/1/', follow=True)
         redirect_url = self.url
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
-        after_current_reads_count = self.user.currently_reading_books.count()
-        self.assertNotEqual(before_current_reads_count, after_current_reads_count)
+        after_reading_list_count = self.user.currently_reading_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
-    def test_remove_from_current_reads_in_list_profile_works(self):
+    def test_remove_from_reading_list_in_list_profile_works(self):
         self.client.login(email=self.user.email, password='Password123')
         self.user.currently_reading_books.add(self.book)
-        before_current_reads_count = self.user.currently_reading_books.count()
-        response = self.client.get('/remove_from_current_reads_list/1/', follow=True)
+        before_reading_list_count = self.user.currently_reading_books.count()
+        response = self.client.get('/remove_from_reading_list_list/1/', follow=True)
         redirect_url = self.url
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.ERROR)
-        after_current_reads_count = self.user.currently_reading_books.count()
-        self.assertNotEqual(before_current_reads_count, after_current_reads_count)
+        after_reading_list_count = self.user.currently_reading_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
 
     def _is_logged_in(self):
@@ -113,16 +113,6 @@ class BooksListViewTestCase(TestCase, LogInTester):
 
     def _create_test_books(self, book_count=10):
         for id in range(1, book_count+1, 1):
-            User.objects.create(
-                email=f'user{id}@test.org',
-                password='Password123',
-                first_name=f'First{id}',
-                last_name=f'Last{id}',
-                public_bio=f'Bio {id}',
-                favourite_genre=f'genre {id}',
-                location=f'City {id}',
-                age=18+id
-            )
             Book.objects.create(
                 isbn=id,
                 title=f'{id} Book',
