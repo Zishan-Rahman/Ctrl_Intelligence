@@ -23,31 +23,18 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 
-
 """View to handle displaying of the landing page"""
+
+
 def landing_page(request):
     if request.user.is_authenticated:
         return redirect('home')
     return render(request, 'landing_page.html')
 
 
-<<<<<<< HEAD
-
-class PasswordResetView(FormView):
-    """View that handles logging in."""
-
-    http_method_names = ['get', 'post']
-
-    def get(self, request):
-        """Display log in template."""
-        return self.render()
-
-    def post(self, request):
-=======
 def password_reset_request(request):
     site = get_current_site(request)
     if request.method == "POST":
->>>>>>> f7dfda57f1921c6b7698ebad11d3d2ccb38a1f80
         password_reset_form = PasswordResetForm(request.POST)
         if password_reset_form.is_valid():
             data = password_reset_form.cleaned_data['email']
@@ -74,7 +61,6 @@ def password_reset_request(request):
                                      'check your spam folder.')
                     return redirect("home")
             messages.error(request, 'An invalid email has been entered.')
-
 
     def render(self):
         """Render log in template with blank log in form."""
