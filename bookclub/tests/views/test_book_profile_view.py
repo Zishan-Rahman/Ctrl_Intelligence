@@ -126,7 +126,7 @@ class BookProfileTest(TestCase):
     def test_add_to_reading_list_in_book_profile_works(self):
         self.client.login(email=self.user.email, password='Password123')
         before_reading_list_count = self.user.currently_reading_books.count()
-        response = self.client.get('/add_to_reading_list_profile/1/', follow=True)
+        response = self.client.get('/book_profile/1/add_to_reading_list/', follow=True)
         redirect_url = '/book_profile/1/'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
@@ -139,7 +139,7 @@ class BookProfileTest(TestCase):
         self.client.login(email=self.user.email, password='Password123')
         self.user.currently_reading_books.add(self.book)
         before_reading_list_count = self.user.currently_reading_books.count()
-        response = self.client.get('/remove_from_reading_list_profile/1/', follow=True)
+        response = self.client.get('/book_profile/1/remove_from_reading_list/', follow=True)
         redirect_url = '/book_profile/1/'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
