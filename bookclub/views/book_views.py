@@ -76,37 +76,37 @@ class ReadingListView(LoginRequiredMixin, ListView):
         return render(request, 'reading_list.html', {"books": books, "page_obj": page_obj})
 
 @login_required
-def add_to_current_reads(request, book_id):
+def add_to_reading_list(request, book_id):
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.currently_reading_books.add(book)
     messages.add_message(request, messages.SUCCESS, f"{book.title} was successfully added to your reading list!")
 
 @login_required
-def add_to_current_reads_book_list(request, book_id):
-    add_to_current_reads(request, book_id)
+def add_to_reading_list_book_list(request, book_id):
+    add_to_reading_list(request, book_id)
     return redirect("book_list")
 
 @login_required
-def add_to_current_reads_book_profile(request, book_id):
-    add_to_current_reads(request, book_id)
+def add_to_reading_list_book_profile(request, book_id):
+    add_to_reading_list(request, book_id)
     return redirect("book_profile", book_id=book_id)
 
 @login_required
-def remove_from_current_reads(request, book_id):
+def remove_from_reading_list(request, book_id):
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.currently_reading_books.remove(book)
     messages.add_message(request, messages.ERROR, f"{book.title} was successfully removed from your reading list!")
 
 @login_required
-def remove_from_current_reads_book_list(request, book_id):
-    remove_from_current_reads(request, book_id)
+def remove_from_reading_list_book_list(request, book_id):
+    remove_from_reading_list(request, book_id)
     return redirect("book_list")
 
 @login_required
-def remove_from_current_reads_book_profile(request, book_id):
-    remove_from_current_reads(request, book_id)
+def remove_from_reading_list_book_profile(request, book_id):
+    remove_from_reading_list(request, book_id)
     return redirect("book_profile", book_id=book_id)
 
 
