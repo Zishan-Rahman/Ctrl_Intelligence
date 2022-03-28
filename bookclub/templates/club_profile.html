@@ -49,7 +49,7 @@
               <div class="col-6">
                 <h6 class="card-title">{{ meeting.date }}</h6>
                   <h6 class="card-title">{{ meeting.start_time|date:"G:i" }}</h6>
-                  <h6 class="card-title">{{ meeting.address }}</h6>
+                  <a href=//{{meeting.address}} target="_blank" rel="noopener noreferrer"><h6 class="card-title">{{ meeting.address }}</h6></a>
               </div>
 
 
@@ -261,7 +261,7 @@
                 {% csrf_token %}
                   <button type="submit" class="btn" id="leave-button" style='padding: 10px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-x-octagon"></i> Disband</button>
                 </form>
-              
+
 
               {%endif%}
 
