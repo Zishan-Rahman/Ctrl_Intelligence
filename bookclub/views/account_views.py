@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
 from bookclub.forms import PasswordForm, UserForm
-from bookclub.models import Club, User
+from bookclub.models import Club, User, Chat
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
