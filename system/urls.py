@@ -15,7 +15,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views , user_feed_views , user_post_views
+from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , club_feed_views , post_views , user_feed_views , user_post_views
 from django.contrib.auth import views as auth_views
 
 
@@ -78,7 +78,7 @@ urlpatterns = [
     path('my_book_ratings/', book_views.MyBookRatings.as_view(), name="my_book_ratings"),
     path('invite/<int:user_id>/<int:club_id>/', user_views.inviteMessage, name='invite_message'),
     path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club'),
-    path('club_profile/<int:club_id>/feed/', feed_views.FeedView.as_view(), name='feed'),
+    path('club_profile/<int:club_id>/feed/', club_feed_views.ClubFeedView.as_view(), name='feed'),
     path('user_profile/<int:user_id>/follow/', user_views.follow_from_user_profile , name = 'follow_from_user_profile'),
     path('users/follow/<int:user_id>/', user_views.follow_from_user_list , name = 'follow_from_user_list'),
     path('users/unfollow/<int:user_id>/', user_views.unfollow_from_user_list, name = 'unfollow_from_user_list'),
