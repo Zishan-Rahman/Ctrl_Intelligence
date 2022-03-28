@@ -55,7 +55,7 @@ def update_ratings(request, book_id):
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     isbn = Book.objects.get(pk=book_id).isbn
-    if Rating.objects.get(book=book, user=user).exists():
+    if Rating.objects.filter(book=book, user=user).exists():
         rating = Rating.objects.get(book=book, user=user)
         rating.rating = request.POST.get('ratings', '0')
     else:
