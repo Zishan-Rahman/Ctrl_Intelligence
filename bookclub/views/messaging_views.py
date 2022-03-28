@@ -27,8 +27,15 @@ class CreateChatView(View):
         email = request.POST.get('email')
         try:
             receiver = User.objects.get(email=email)
+            if receiver.id == request.user.id:
+                messages.add_message(request, messages.ERROR, "You cannot create a chat with yourself!")
+                return redirect('create_chat')
             if Chat.objects.filter(user=request.user, receiver=receiver).exists():
                 chat = Chat.objects.filter(user=request.user, receiver=receiver)[0]
+                return redirect('chat', pk=chat.pk)
+
+            elif Chat.objects.filter(user=receiver, receiver=request.user).exists():
+                chat = Chat.objects.filter(user=receiver, receiver=request.user)[0]
                 return redirect('chat', pk=chat.pk)
 
             if form.is_valid():

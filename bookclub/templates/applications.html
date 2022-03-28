@@ -49,6 +49,36 @@
       {% endfor %}
     </table>
     </div>
+
+          </div>
+  <div>
+    <table id="fullTable" class="table table-hover table-borderless" style="display:none">
+      <thead class="table" id="fullTableHeader">
+        <tr>
+          <th scope="col">Club Applying To</th>
+          <th scope="col">Name</th>
+          <th scope="col">Age</th>
+          <th scope="col">Date Joined</th>
+          <th scope="col">Bio</th>
+          <th scope="col">Their Location</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      {% for a in applicants %}
+        <tr class="fullTableRow">
+          <td>{{ a.club.name }}</td>
+          <td>{{ a.applicant.first_name }} {{ a.applicant.last_name }}</td>
+          <td>{{ a.applicant.age }}</td>
+          <td>{{ a.applicant.date_joined }}</td>
+          <td>{{ a.applicant.public_bio }}</td>
+          <td>{{ a.applicant.location }}</td>
+          <td><a class="btn btn-default" href="{% url 'app_accept' pk=a.pk %}"><span class="btn btn-dark" style="background-color: green">Accept</span></a></td>
+          <td><a class="btn btn-default" href="{% url 'app_remove' pk=a.pk %}"><span class="btn btn-dark" style="background-color: red">Reject</span></a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
   <div id="pag">
   {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
   </div>
@@ -59,7 +89,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
-  $('.fullTable').hide();
+  $('#fullTable').hide();
   $('#txt_searchall').keyup(function(){
     var search = $(this).val();
     $('#fullTable').show();
