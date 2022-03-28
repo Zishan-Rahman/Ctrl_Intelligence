@@ -8,8 +8,6 @@ from django.shortcuts import redirect, render
 from django.views.generic import ListView, FormView
 from bookclub.forms import PostForm
 
-class ClubFeedView(LoginRequiredMixin, ListView):
-
 
 class FeedView(LoginRequiredMixin, ListView):
     """View to display the feed of a club."""
@@ -49,7 +47,8 @@ class FeedView(LoginRequiredMixin, ListView):
         page_obj = paginator.get_page(page_number)
         if form.is_valid():
             return redirect('feed')
-        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts, 'page_obj': page_obj})
+        return render(request, 'feed.html',
+                      {"author": request.user, "club": club, "form": form, "posts": posts, 'page_obj': page_obj})
 
     def get(self, request, *args, **kwargs):
         """Handle get attempt"""
@@ -60,4 +59,5 @@ class FeedView(LoginRequiredMixin, ListView):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         form = PostForm()
-        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts, 'page_obj': page_obj})
+        return render(request, 'feed.html',
+                      {"author": request.user, "club": club, "form": form, "posts": posts, 'page_obj': page_obj})
