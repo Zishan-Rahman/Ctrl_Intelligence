@@ -96,6 +96,18 @@
     border:none;
     padding:none;
   }
+
+  #timestamp {
+    text-align: right;
+    opacity: 50%;
+    font-size: small;
+  }
+
+  #timestamp_receiver {
+    text-align: right;
+    opacity: 50%;
+    font-size: small;
+  }
   
 
 
