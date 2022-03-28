@@ -42,6 +42,11 @@ class MeetingModelTestCase(TestCase):
     def test_address_cannot_be_null(self):
         self.meeting.address = None
         self._assert_meeting_is_invalid()
+        
+    def test_validity_test_fails_when_meeting_is_invalid(self):
+        self.meeting.date = None
+        with self.assertRaisesMessage(AssertionError, "Test meeting should be valid"):
+            self._assert_meeting_is_valid()
 
     # Test getters
     
