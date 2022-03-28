@@ -130,33 +130,8 @@ class PasswordForm(NewPasswordMixin):
             self.user.save()
         return self.user
 
-
-# class ApplicantForm(forms.Form):
-#     """Form enabling owners to choose which club applications to view."""
-#     applicants_dropdown = forms.ModelChoiceField(label="Select an applicant", queryset=None)
-
-#     def __init__(self, user=None, club=None, **kwargs):
-#         """Construct new form instance with a user instance."""
-
-#         super().__init__(**kwargs)
-#         self.user = user
-#         self.club = club
-
-#         all_applicants = Application.objects.all()
-#         current_applicants = []
-#         current_applicants_ids = []
-
-#         for a in all_applicants:
-#             if a.club == self.club:
-#                 current_applicants.append(a)
-
-#         for a in current_applicants:
-#             current_applicants_ids.append(a.id)
-
-#         self.fields['applicants_dropdown'].queryset = Application.objects.filter(pk__in=current_applicants_ids)
-
-
 class ClubForm(forms.ModelForm):
+    """Form enabling users to create a new club"""
     class Meta:
         model = Club
         fields = ['name', 'description', 'location', 'meeting_type', 'organiser_has_owner_privilege']
@@ -195,34 +170,18 @@ class ClubForm(forms.ModelForm):
         )
         return club
 
-
-# class ApplicationForm(forms.ModelForm):
-#     """Form that enables applicants to apply to clubs"""
-
-#     class Meta:
-#         model = Application
-#         fields = "__all__"
-
-#     def save(self, user):
-#         """Create a new application."""
-#         # club = self.cleaned_data.get('applicants_dropdown')
-#         app = Application.objects.create(
-#             club=self.cleaned_data.get('club'),
-#             applicant=self.cleaned_data.get('applicant'),
-#         )
-#         app.save()
-#         return app
-
-
 class DateInput(forms.DateInput):
+    """Class to have calendar on date input"""
     input_type = 'date'
 
 
 class TimeInput(forms.DateInput):
+    """Class to have clock on time input"""
     input_type = 'time'
 
 
 class ScheduleMeetingForm(forms.ModelForm):
+    """Form enabling users to schedule a new meeting in a club"""
     class Meta:
         model = Meeting
         fields = ['date', 'start_time', 'address']
@@ -238,6 +197,7 @@ class ScheduleMeetingForm(forms.ModelForm):
             self.fields['address'].label = 'Meeting link'
 
     def clean(self):
+        """Clean data and make sure time is not in the past"""
         now = timezone.now()
         date = self.cleaned_data['date']
         start_time = self.cleaned_data['start_time']
@@ -247,6 +207,7 @@ class ScheduleMeetingForm(forms.ModelForm):
             raise forms.ValidationError("The meeting cannot be in the past!")
 
     def save(self, club):
+        """Save new meeting"""
         super().save(commit=False)
         meeting = Meeting.objects.create(date=self.cleaned_data.get('date'),
                                          start_time=self.cleaned_data.get('start_time'), club=club,
@@ -256,10 +217,12 @@ class ScheduleMeetingForm(forms.ModelForm):
 
 # Chat and message forms adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ChatForm(forms.Form):
+    """Form enabling users to create a new chat with another user"""
     email = forms.CharField(label='', max_length=100)
 
 
 class MessageForm(forms.Form):
+    """Form enabling users to write a message in an already existing chat"""
     message = forms.CharField(label='', max_length=1000)
 
 
@@ -290,9 +253,8 @@ class EditClubForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
-    """Form to ask user for post text.
-    The post author must be by the post creator.
-    """
+    """Form to ask user for post text for club posts.
+    The post author must be by the post creator."""
 
     class Meta:
         """Form options."""
@@ -306,7 +268,8 @@ class PostForm(forms.ModelForm):
 
 
 class UserPostForm(forms.ModelForm):
-
+    """Form to ask user for post text for profile posts.
+    The post author must be by the post creator."""
     class Meta:
         """Form options."""
 

@@ -12,6 +12,7 @@ from libgravatar import Gravatar
 
 # books model
 class Book(models.Model):
+    """Model for a book. """
     isbn = models.CharField(unique=True, max_length=12, blank=False)
     title = models.CharField(unique=False, blank=False, max_length=512)
     author = models.CharField(blank=False, max_length=512)
@@ -26,6 +27,7 @@ class Book(models.Model):
 
         ordering = ['title']
 
+    """Methods to return various information about the book"""
     def __str__(self):
         return self.title
 
@@ -56,6 +58,7 @@ class Book(models.Model):
 
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
+    """Model for a user of the application"""
     email = models.EmailField(unique=True, max_length=255, blank=False)
     first_name = models.CharField(max_length=30, blank=False)
     last_name = models.CharField(max_length=30, blank=False)
@@ -88,6 +91,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         ordering = ['last_name', 'first_name']
 
+
+    """Methods to return various information about the user"""
     def get_full_name(self):
         return f'{self.first_name} {self.last_name}'
 
@@ -166,6 +171,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Club(models.Model):
+    """Model for a club in the application"""
     name = models.CharField(unique=True, blank=False, max_length=48)
     description = models.CharField(blank=True, max_length=512)
     location = models.CharField(blank=False, max_length=96)
@@ -180,6 +186,8 @@ class Club(models.Model):
 
         ordering = ['name']
 
+
+    """Methods to return various information about the club"""
     def __str__(self):
         return self.name
 
@@ -358,12 +366,14 @@ class Meeting(models.Model):
 
 # Chat and Message models adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class Chat(models.Model):
+    """Model for a chat between users"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     has_unread = models.BooleanField(default=False)
 
 
 class Message(models.Model):
+    """Model for a message in a chat"""
     chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
     sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
@@ -374,6 +384,7 @@ class Message(models.Model):
 
 
 class Post(models.Model):
+    """Model for a club post"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
     text = models.CharField(max_length=250)
@@ -384,6 +395,7 @@ class Post(models.Model):
 
         
 class UserPost(models.Model):
+    """Model for a user profile post"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -393,5 +405,6 @@ class UserPost(models.Model):
 
   
 class RecommendedBook(models.Model):
+    """Model for a recommended book"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     isbn = models.CharField(unique=False, max_length=12, blank=False)
