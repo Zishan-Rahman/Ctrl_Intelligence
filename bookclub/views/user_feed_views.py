@@ -9,7 +9,7 @@ from bookclub.models import User, UserPost, Club
 
 
 class UserFeedView(LoginRequiredMixin, ListView):
-    """Class-based generic view for displaying a view."""
+    """Class-based generic view for displaying the user's feed."""
 
     model = UserPost
     template_name = "user_feed.html"

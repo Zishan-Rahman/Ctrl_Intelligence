@@ -17,6 +17,7 @@ from bookclub.views import config
 
 @login_required
 def user_list(request):
+    """View to see all users ont the website"""
     users = []
     for user in User.objects.all():
         users.append({
@@ -63,7 +64,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class UsersListView(LoginRequiredMixin, ListView):
-    """View that shows a list of all books."""
+    """View that shows a list of all users to paginate."""
 
     model = User
     template_name = "user_list.html"
@@ -129,6 +130,7 @@ def current_user_profile(request):
 
 @login_required
 def follow_toggle(request, user_id):
+    """View to toggle following on a specific user (follow -> unfollow or unfollow -> follow)"""
     current_user = request.user
     followee = User.objects.get(id=user_id)
     if followee in current_user.get_users_followees():
@@ -140,17 +142,20 @@ def follow_toggle(request, user_id):
 
 @login_required
 def follow_from_user_list(request, user_id):
+    """View to follow a user from the user list"""
     follow_toggle(request, user_id)
     return redirect('user_list')
 
 @login_required
 def follow_from_user_profile(request, user_id):
+    """View to follow a user from the user's profile"""
     follow_toggle(request, user_id)
     return redirect('user_profile', user_id=user_id)
 
 
 @login_required
 def unfollow(request, user_id):
+    """View to unfollow a user"""
     current_user = request.user
     followee = User.objects.get(id=user_id)
     current_user._unfollow(followee)
@@ -158,15 +163,18 @@ def unfollow(request, user_id):
 
 @login_required
 def unfollow_from_user_list(request, user_id):
+    """View to unfollow a user from the user list"""
     unfollow(request, user_id)
     return redirect('user_list')
 
 @login_required
 def unfollow_from_user_profile(request, user_id):
+    """View to unfollow a user from the user's profile"""
     unfollow(request, user_id)
     return redirect('user_profile', user_id=user_id)
 
 def club_util(request):
+    """Helper view to save all a user's clubs"""
     user_clubs_list = []
     clubs = Club.objects.all()
 
@@ -179,6 +187,7 @@ def club_util(request):
 
 @login_required
 def inviteMessage(request, user_id, club_id):
+    """View to send an invite message to a user to join a certain club"""
     club = Club.objects.get(pk=club_id)
     receiver = User.objects.get(pk=user_id)
     body = render_to_string('invite.html', {

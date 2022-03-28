@@ -44,6 +44,7 @@ class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
 
 @login_required
 def current_reads(request, user_id):
+    """View to show current reads (filtered list of books that the user is reading)"""
     user = User.objects.get(id=user_id)
     books = user.currently_reading_books.all()
     return render(request, "reading_list.html", {'books': books, 'user': user})
@@ -51,6 +52,7 @@ def current_reads(request, user_id):
 
 @login_required
 def add_to_current_reads(request, book_id):
+    """View to add a book to the user's current reads"""
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.currently_reading_books.add(book)
@@ -58,16 +60,19 @@ def add_to_current_reads(request, book_id):
 
 @login_required
 def add_to_current_reads_book_list(request, book_id):
+    """View to add a book to the user's current reads from the book list"""
     add_to_current_reads(request, book_id)
     return redirect("book_list")
 
 @login_required
 def add_to_current_reads_book_profile(request, book_id):
+    """View to add a book to the user's current reads from the user's profile"""
     add_to_current_reads(request, book_id)
     return redirect("book_profile", book_id=book_id)
 
 @login_required
 def remove_from_current_reads(request, book_id):
+    """View to remove a book to the user's current reads"""
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.currently_reading_books.remove(book)
@@ -75,16 +80,19 @@ def remove_from_current_reads(request, book_id):
 
 @login_required
 def remove_from_current_reads_book_list(request, book_id):
+    """View to remove a book to the user's current reads from the book list"""
     remove_from_current_reads(request, book_id)
     return redirect("book_list")
 
 @login_required
 def remove_from_current_reads_book_profile(request, book_id):
+    """View to remove a book to the user's current reads ffrom the user's profile"""
     remove_from_current_reads(request, book_id)
     return redirect("book_profile", book_id=book_id)
 
 
 class Favourites(LoginRequiredMixin, ListView):
+    """View to display the user's favourite books"""
     model = Book
     template_name = "favourites.html"
     context_object_name = "books"
@@ -95,6 +103,7 @@ class Favourites(LoginRequiredMixin, ListView):
 
 
 def update_ratings(request, book_id):
+    """View to handle updating the ratings of a certain book"""
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     isbn = Book.objects.get(pk=book_id).isbn
@@ -109,6 +118,7 @@ def update_ratings(request, book_id):
 
 @login_required
 def make_favourite(request, book_id):
+    """View to make a book a user's favourite"""
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.favourite_books.add(book)
@@ -116,16 +126,19 @@ def make_favourite(request, book_id):
 
 @login_required
 def make_favourite_book_list(request, book_id):
+    """View to make a book a user's favourite from the book list"""
     make_favourite(request, book_id)
     return redirect('book_list')
 
 @login_required
 def make_favourite_book_profile(request, book_id):
+    """View to make a book a user's favourite from the book's profile"""
     make_favourite(request, book_id)
     return redirect('book_profile', book_id=book_id)
 
 @login_required
 def unfavourite(request, book_id):
+    """View to remove a book from the user's favourites"""
     user = User.objects.get(pk=request.user.id)
     book = Book.objects.get(pk=book_id)
     user.favourite_books.remove(book)
@@ -134,26 +147,30 @@ def unfavourite(request, book_id):
 
 @login_required
 def unfavourite_book_list(request, book_id):
+    """View to remove a book from the user's favourites from the book list"""
     unfavourite(request, book_id)
     return redirect('book_list')
 
 @login_required
 def unfavourite_book_profile(request, book_id):
+    """View to remove a book from the user's favourites from the book's profile"""
     unfavourite(request, book_id)
     return redirect('book_profile', book_id=book_id)
 
 
 class MyBookRatings(LoginRequiredMixin, ListView):
+    """View to show the user's book ratings"""
     model = Rating
     template_name = "my_book_ratings.html"
     context_object_name = "ratings"
     paginate_by = settings.BOOKS_PER_PAGE
 
     def get(self, request):
-        """Display application template"""
+        """Display book ratings template"""
         return self.render()
 
     def render(self):
+        """Render book ratings"""
         user = User.objects.get(pk=self.request.user.id)
         ratings = Rating.objects.filter(user=user)
 

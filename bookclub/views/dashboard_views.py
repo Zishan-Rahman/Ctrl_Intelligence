@@ -11,6 +11,7 @@ from django.contrib import messages
 
 @login_required
 def home_page(request):
+    """View to handle the home page displaying"""
     posts = get_all_club_posts(request)
     posts = posts[:5]
     popular_books_list = get_popular_books()
@@ -40,6 +41,7 @@ def home_page(request):
 
 
 def refresh_recommendations(request):
+    """View to refresh book recommendations"""
     try:
         RecommendedBook.objects.filter(user=request.user).delete()
     except:
@@ -48,6 +50,7 @@ def refresh_recommendations(request):
 
 
 def club_util(request):
+    """Helper view to save a user's clubs"""
     user_clubs_list = []
     clubs = Club.objects.all()
 
@@ -59,6 +62,7 @@ def club_util(request):
 
 
 def get_all_club_posts(request):
+    """View to get all a club's posts"""
     club_util(request)
     all_club_posts = []
 
@@ -72,6 +76,7 @@ def get_all_club_posts(request):
 
 
 def get_recommended_books(recommendations_list):
+    """View to get recommended books for the user"""
     recommended_books = []
     for book in recommendations_list:
         rec_book = Book.objects.filter(isbn=book)
@@ -82,12 +87,14 @@ def get_recommended_books(recommendations_list):
 
 
 def get_popular_books():
+    """View to get most popular books"""
     most_popular_item_df = pickle.load(open("data/most_popular_item.p", 'rb'))
     most_popular_list = list(set(most_popular_item_df['isbn'].to_list()))
     return most_popular_list
 
 
 def recommender(request, user_id, top_n):
+    """View to recommend books to the user based on their ratings"""
     user_rating_df = pickle.load(open("data/user_item_rating.p", "rb"))
     new_ratings_df = pd.DataFrame(list(Rating.objects.all().values("user_id", "isbn", "rating")))
 

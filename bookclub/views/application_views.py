@@ -38,17 +38,17 @@ class ApplicationsView(LoginRequiredMixin, View):
 
 
 class MyApplicationsView(LoginRequiredMixin, View):
-    """View that handles the currently logged in user's applications (as opposed to applications of their own clubs"""
+    """View that handles the currently logged in user's outgoing applications to other clubs"""
 
     http_method_names = ['get']
 
     def get(self, request):
-        """Display application template"""
+        """Display outgoing applications template"""
         return self.render()
 
     def render(self):
         current_user = self.request.user
-        """Render all applications of this user's owned clubs"""
+        """Render all outgoing applications of this user"""
         clubs = []
         my_applications = []
         for c in Club.objects.all():
@@ -67,7 +67,7 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
 
 def app_accept(request, pk):
-    """Accept application"""
+    """View to accept an application to your club"""
     app = Application.objects.all().get(pk=pk)
 
     if request.user == app.club.owner:
@@ -82,7 +82,7 @@ def app_accept(request, pk):
 
 
 def app_remove(request, pk):
-    """Reject application"""
+    """View to reject an application to your club"""
     app = Application.objects.all().get(pk=pk)
     if request.user == app.club.owner:
         app.delete()
@@ -95,7 +95,7 @@ def app_remove(request, pk):
 
 @login_required
 def new_application(request, club_id):
-    """ Create A New Application """
+    """View to handle the creation of a new application to a club"""
 
     club_applied_to = Club.objects.get(pk=club_id)
     application_is_possible = True

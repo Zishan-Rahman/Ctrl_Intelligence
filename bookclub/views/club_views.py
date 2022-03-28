@@ -28,16 +28,18 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
     paginate_by = settings.USERS_PER_PAGE
 
     def get(self, request, *args, **kwargs):
-        """Handle get request, and redirect to book_list if book_id invalid."""
+        """Handle get request, and redirect to home if invalid."""
         try:
             return super().get(request, *args, **kwargs)
         except Http404:
             return redirect('home')
 
     def get_queryset(self):
+        """Gers all users from the given club"""
         return Club.objects.get(id=self.kwargs['club_id']).get_all_users()
 
     def get_context_data(self, *args, **kwargs):
+        """Returns all the needed context to the template"""
         current_user_is_owner = False
         context = super().get_context_data(*args, **kwargs)
         current_club_id = self.kwargs['club_id']
@@ -49,7 +51,9 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
         paginator = Paginator(current_club.get_all_users(), settings.USERS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
         for each in page_obj:
+            """Determine user level for each member in the paginated page"""
             u_id = each.pk
             if current_club.user_level(each) == "Member":
                 user_level = "Member"
@@ -75,7 +79,7 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
 
 @login_required
 def promote_member_to_organiser(request, c_pk, u_pk):
-    """Promote member to organiser"""
+    """View to promote member to organiser"""
     club = Club.objects.all().get(pk=c_pk)
     if request.user == club.owner:
         user = User.objects.all().get(pk=u_pk)
@@ -91,7 +95,7 @@ def promote_member_to_organiser(request, c_pk, u_pk):
 
 @login_required
 def demote_organiser_to_member(request, c_pk, u_pk):
-    """Demote organiser to member"""
+    """View to demote organiser to member"""
     club = Club.objects.all().get(pk=c_pk)
     if request.user == club.owner:
         new_member = User.objects.all().get(pk=u_pk)
@@ -103,7 +107,7 @@ def demote_organiser_to_member(request, c_pk, u_pk):
 
 @login_required
 def kick_user_from_club(request, c_pk, u_pk):
-    """Promote member to organiser"""
+    """View to kick a user from a club"""
     club = Club.objects.all().get(pk=c_pk)
     if request.user == club.owner:
         user_to_kick = User.objects.all().get(pk=u_pk)
@@ -115,7 +119,7 @@ def kick_user_from_club(request, c_pk, u_pk):
 
 @login_required
 def transfer_ownership(request, c_pk, u_pk):
-    """Transfer ownership to specific member"""
+    """View to transfer ownership to specific member"""
     club = Club.objects.get(pk=c_pk)
     if request.user == club.owner:
         new_owner = User.objects.get(pk=u_pk)
@@ -146,6 +150,7 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('club_profile', kwargs={'club_id': self.pk})
 
     def post(self, request, c_pk, *args, **kwargs):
+        """Handle edit attempt"""
         self.pk = c_pk
         club_to_edit = Club.objects.all().get(pk=c_pk)
         form = self.form_class(instance=club_to_edit, data=request.POST)
@@ -154,6 +159,7 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
         return render(request, 'edit_club.html', {"form": form})
 
     def get(self, request, c_pk, *args, **kwargs):
+        """Handle get request"""
         self.pk = c_pk
         club_to_edit = Club.objects.all().get(pk=c_pk)
         if request.user == club_to_edit.owner:
@@ -165,6 +171,7 @@ class ClubUpdateView(LoginRequiredMixin, UpdateView):
 
 
 def club_util(request):
+    """Helper view to save a user's clubs"""
     user_clubs_list = []
     clubs = Club.objects.all()
 
@@ -177,6 +184,7 @@ def club_util(request):
 
 @login_required
 def club_list(request):
+    """View to get a list of all user's clubs"""
     clubs = []
     for club in Club.objects.all():
         clubs.append({
@@ -194,12 +202,14 @@ def club_list(request):
 
 @login_required
 def club_selector(request):
+    """View display all clubs"""
     club_util(request)
     return render(request, "club_switcher.html", {'user_clubs': config.user_clubs, 'user': request.user})
 
 
 @login_required
 def club_selector_alt(request):
+    """View to display all clubs with a different template"""
     club_util(request)
     return render(request, "club_switcher_alt.html", {"user_clubs": config.user_clubs, 'user': request.user})
 

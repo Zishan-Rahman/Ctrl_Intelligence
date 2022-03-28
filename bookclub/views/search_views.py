@@ -12,6 +12,7 @@ from django.db.models.functions import Concat
 
 @login_required
 def search(request):
+    """View to search for a book/club/user"""
     if request.method == "POST":
         query = request.POST['query']
         books = Book.objects.filter(title__contains=query) | Book.objects.filter(isbn__contains=query) | Book.objects.filter(author__contains=query) | Book.objects.filter(pub_year__contains=query) | Book.objects.filter(publisher__contains=query)
@@ -23,6 +24,7 @@ def search(request):
 
 
 def search_autocomplete(request):
+    """View to autocomplete search request"""
     if 'term' in request.GET:
         query = Book.objects.filter(title__contains=request.GET.get('term'))[:5]
         books = list()

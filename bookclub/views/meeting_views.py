@@ -27,16 +27,18 @@ class ClubMeetingsListView(LoginRequiredMixin, ListView):
     ordering = ['-meeting.date']
 
     def get(self, request, *args, **kwargs):
-        """Handle get request, and redirect to clubs list if club_id invalid."""
+        """Handle get request, and redirect to home if invalid."""
         try:
             return super().get(request, *args, **kwargs)
         except Http404:
             return redirect('home')
 
     def get_queryset(self):
+        """Return all meetings from the club"""
         return Club.objects.get(id=self.kwargs['club_id']).get_meetings()
 
     def get_context_data(self, *args, **kwargs):
+        """Return needed context to the template"""
         context = super().get_context_data(*args, **kwargs)
         current_club_id = self.kwargs['club_id']
         current_club = Club.objects.get(id=current_club_id)
@@ -50,6 +52,7 @@ class ClubMeetingsListView(LoginRequiredMixin, ListView):
 
 @login_required
 def meetings_list(request, club_id):
+    """View to display list of all meetings"""
     club = Club.objects.get(id=club_id)
     meetings = club.get_meetings()
     paginator = Paginator(meetings, 2)

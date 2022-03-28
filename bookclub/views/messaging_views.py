@@ -14,8 +14,9 @@ from django.db.models import Q
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class CreateChatView(View):
-
+    """View to create a new chat between users"""
     def get(self, request, *args, **kwargs):
+        """Handle get attempt"""
         form = ChatForm()
         context = {
             'form': form
@@ -23,18 +24,22 @@ class CreateChatView(View):
         return render(request, 'create_chat.html', context)
 
     def post(self, request, *args, **kwargs):
+        """Handle post attempt"""
         form = ChatForm(request.POST)
         email = request.POST.get('email')
         try:
             receiver = User.objects.get(email=email)
             if receiver.id == request.user.id:
+                #If chat is to itself
                 messages.add_message(request, messages.ERROR, "You cannot create a chat with yourself!")
                 return redirect('create_chat')
             if Chat.objects.filter(user=request.user, receiver=receiver).exists():
+                #If chat exists and same user started it
                 chat = Chat.objects.filter(user=request.user, receiver=receiver)[0]
                 return redirect('chat', pk=chat.pk)
 
             elif Chat.objects.filter(user=receiver, receiver=request.user).exists():
+                #If chat exists and different user started it
                 chat = Chat.objects.filter(user=receiver, receiver=request.user)[0]
                 return redirect('chat', pk=chat.pk)
 
@@ -52,6 +57,7 @@ class CreateChatView(View):
 
 
 def createChatFromProfile(request, user_id):
+    """View to create a chat from the user's profile"""
     try:
         receiver = User.objects.get(id=user_id)
         if Chat.objects.filter(user=request.user, receiver=receiver).exists():
@@ -71,6 +77,7 @@ def createChatFromProfile(request, user_id):
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ListChatsView(View):
+    """View to list all chats"""
 
     def get(self, request, *args, **kwargs):
         chats = Chat.objects.filter(Q(user=request.user) | Q(receiver=request.user))
@@ -82,6 +89,7 @@ class ListChatsView(View):
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class CreateMessageView(View):
+    """View to create a new message in an already existing chat"""
 
     def post(self, request, pk, *args, **kwargs):
         chat = Chat.objects.get(pk=pk)
@@ -101,7 +109,7 @@ class CreateMessageView(View):
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ChatView(View):
-
+    """View to display a user's open chat"""
     def get(self, request, pk, *args, **kwargs):
         form = MessageForm()
         chat = Chat.objects.get(pk=pk)

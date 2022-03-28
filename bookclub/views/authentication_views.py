@@ -24,9 +24,8 @@ import threading
 
 
 # adapted from https://www.youtube.com/watch?v=Rbkc-0rqSw8
-
-class email_sender(threading.Thread):
-
+class EmailSender(threading.Thread):
+    
     def __init__(self, email):
         self.email = email
         threading.Thread.__init__(self)
@@ -36,7 +35,7 @@ class email_sender(threading.Thread):
 
 
 class LogInView(LoginProhibitedMixin, View):
-    """View that handles log in."""
+    """View that handles logging in."""
 
     http_method_names = ['get', 'post']
     redirect_when_logged_in_url = "home"
@@ -71,6 +70,7 @@ class LogInView(LoginProhibitedMixin, View):
 
 
 def log_out(request):
+    """View to handle log out request"""
     logout(request)
     return redirect('landing_page')
 
@@ -78,6 +78,7 @@ def log_out(request):
 # adapted from https://www.youtube.com/watch?v=Rbkc-0rqSw8
 
 def send_verification_email(user, request):
+    """View to handle the sending of the verification email on signup"""
     site = get_current_site(request)
     subject = 'Bookwise: Activate your account'
     body = render_to_string('activate.html', {
@@ -88,10 +89,11 @@ def send_verification_email(user, request):
     })
 
     email = EmailMessage(subject=subject, body=body, from_email=settings.EMAIL_HOST_USER, to=[user.email])
-    email_sender(email).start()
+    EmailSender(email).start()
 
 
 def activate(request, uid, token):
+    """View to handle account activation after successful email verificaiton"""
     try:
         id = force_text(urlsafe_base64_decode(uid))
         user = User.objects.get(pk=id)
@@ -99,6 +101,7 @@ def activate(request, uid, token):
         user = None
 
     if user and generate_token.check_token(user, token):
+        """Verify user if the link was clicked (token was generated)"""
         user.is_email_verified = True
         user.save()
 
@@ -113,6 +116,7 @@ def activate(request, uid, token):
 
 @login_prohibited
 def sign_up(request):
+    """View to handle the signup attempt"""
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():

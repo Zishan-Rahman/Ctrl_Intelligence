@@ -9,7 +9,7 @@ from bookclub.models import Club, Post
 
 
 class FeedView(LoginRequiredMixin, ListView):
-    """Class-based generic view for displaying a view."""
+    """View to display the feed of a club."""
 
     model = Post
     template_name = "feed.html"
@@ -32,6 +32,7 @@ class FeedView(LoginRequiredMixin, ListView):
         return context
 
     def post(self, request, *args, **kwargs):
+        """Handle post attempt"""
         current_club_id = self.kwargs['club_id']
         club = Club.objects.all().get(pk=current_club_id)
         form = PostForm()
@@ -41,6 +42,7 @@ class FeedView(LoginRequiredMixin, ListView):
         return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts})
 
     def get(self, request, *args, **kwargs):
+        """Handle get attempt"""
         current_club_id = self.kwargs['club_id']
         club = Club.objects.all().get(pk=current_club_id)
         posts = Post.objects.filter(club=club)
