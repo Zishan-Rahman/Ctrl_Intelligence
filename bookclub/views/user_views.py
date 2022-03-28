@@ -83,21 +83,6 @@ def user_profile(request, user_id):
     followable = request.user != user
     followers = request.user.followers.all()
     currently_reading_books = user.currently_reading_books.all()
-<<<<<<< HEAD
-    already_read_books = user.already_read_books.all()
-    return render(request, 'user_profile.html',
-                    {
-                        'user': user,
-                        'current_user': current_user,
-                        'following': following,
-                        'following': following,
-                        'followable': followable,
-                        'user_clubs': config.user_clubs,
-                        'currently_reading_books': currently_reading_books,
-                        'already_read_books': already_read_books
-                    }
-                 )
-=======
     form = UserPostForm()
     posts = UserPost.objects.filter(author=user)
     posts = posts[:6]
@@ -116,7 +101,6 @@ def user_profile(request, user_id):
                   )
 
 
->>>>>>> 737f39956c231ca8a618fbfbb6d118ea929030fe
 @login_required
 def current_user_profile(request):
     """ Current User's Profile Page """
@@ -127,21 +111,6 @@ def current_user_profile(request):
     followable = request.user != user
     followers = request.user.followers.all()
     currently_reading_books = user.currently_reading_books.all()
-<<<<<<< HEAD
-    already_read_books = user.already_read_books.all()
-    return render(request, 'user_profile.html',
-                    {
-                        'user': user,
-                        'current_user': current_user,
-                        'following': following,
-                        'following': following,
-                        'followable': followable,
-                        'user_clubs': config.user_clubs,
-                        'currently_reading_books': currently_reading_books,
-                        'already_read_books': already_read_books
-                    }
-                 )
-=======
     form = UserPostForm()
     posts = UserPost.objects.filter(author=current_user)
     posts = posts[:6]
@@ -158,7 +127,6 @@ def current_user_profile(request):
                   }
                   )
 
->>>>>>> 737f39956c231ca8a618fbfbb6d118ea929030fe
 
 @login_required
 def follow_toggle(request, user_id):
