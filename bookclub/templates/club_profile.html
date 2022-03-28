@@ -58,8 +58,8 @@
             </div>
 
             </div>
-            <a href="{% url 'club_meetings' club.id %}" style="text-decoration: none;">View All</a>
             {% endfor %}
+             <a href="{% url 'club_meetings' club.id %}" style="text-decoration: none;">View All</a>
         {% else %}
 
 
@@ -134,8 +134,8 @@
                         <small class="text-muted">Posted on {{ post.created_at }}</small>
                     </div>
                 </div>
-        <a href="{% url 'feed' club.id %}" style="text-decoration: none;">View All</a>
             {% endfor %}
+        <a href="{% url 'feed' club.id %}" style="text-decoration: none;">View All</a>
         {% else %}
 
         <div class="row">
