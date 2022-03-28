@@ -17,6 +17,14 @@ class RatingsModelsTestCase(TestCase):
         self.book_2 = Book.objects.get(pk=2)
         self.rec_book_1 = RecommendedBook.objects.get(pk=1)
         self.rec_book_2 = RecommendedBook.objects.get(pk=2)
+        
+    def test_valid_book_is_valid(self):
+        self._assert_rec_book_is_valid()
+        
+    def test_invalid_book_is_invalid(self):
+        self.rec_book_1.isbn = ""
+        with self.assertRaisesMessage(AssertionError, "Test book should be valid"):
+            self._assert_rec_book_is_valid()
 
     def test_isbn_cannot_be_longer_than_12_characters(self):
         self.rec_book_1.isbn = "a" * 13
@@ -45,7 +53,7 @@ class RatingsModelsTestCase(TestCase):
         try:
             self.rec_book_1.full_clean()
         except ValidationError:
-            self.fail('Test club should be valid')
+            self.fail('Test book should be valid')
 
     def _assert_rec_book_is_invalid(self):
         with self.assertRaises(ValidationError):
