@@ -19,7 +19,6 @@
 
                 <div class="col-6">
                     <h5 class="text-left"><strong>Latest Meetings</strong></h5>
-                    <a href="{% url 'club_meetings' club.id %}" style="text-decoration: none;">View All</a>
                 </div>
 
                 <div class="col-6">
@@ -59,6 +58,7 @@
             </div>
 
             </div>
+            <a href="{% url 'club_meetings' club.id %}" style="text-decoration: none;">View All</a>
             {% endfor %}
         {% else %}
 
@@ -86,7 +86,6 @@
     <div class="row">
             <div class="col-6">
                     <h5 class="text-left"><strong>Latest Posts</strong></h5>
-                    <a href="{% url 'feed' club.id %}" style="text-decoration: none;">View All</a>
                 </div>
 
                 <div class="col-6">
@@ -135,6 +134,7 @@
                         <small class="text-muted">Posted on {{ post.created_at }}</small>
                     </div>
                 </div>
+        <a href="{% url 'feed' club.id %}" style="text-decoration: none;">View All</a>
             {% endfor %}
         {% else %}
 
