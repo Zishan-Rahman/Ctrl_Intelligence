@@ -5,7 +5,7 @@ from django.urls import reverse
 from bookclub.models import Book, User
 from bookclub.tests.helpers import LogInTester, reverse_with_next
 
-class CurrentReadsTestCase(TestCase, LogInTester):
+class ReadingListTestCase(TestCase, LogInTester):
     """Tests of the current reads view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
@@ -27,28 +27,28 @@ class CurrentReadsTestCase(TestCase, LogInTester):
         self.user.currently_reading_books.add(book)
         self.url = reverse('current_reads', kwargs={'user_id': self.user.id})
 
-    def test_current_reads__url(self):
+    def test_reading_list__url(self):
         self.assertEqual(self.url, f'/current_reads/{self.user.id}/')
 
-    def test_get_current_reads(self):
+    def test_get_reading_list(self):
         self.client.login(username=self.user.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reading_list.html')
 
-    def test_current_reads_uses_correct_template(self):
+    def test_reading_list_uses_correct_template(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reading_list.html')
 
-    def test_get_current_reads_redirects_when_not_logged_in(self):
+    def test_get_reading_list_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
 
-    def test_book_profile_has_correct_details(self):
+    def test_book_profile_in_reading_list_has_correct_details(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')

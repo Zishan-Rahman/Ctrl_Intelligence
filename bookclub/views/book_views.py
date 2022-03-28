@@ -42,12 +42,38 @@ class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
             return redirect('book_list')
 
 
-@login_required
-def current_reads(request, user_id):
-    user = User.objects.get(id=user_id)
-    books = user.currently_reading_books.all()
-    return render(request, "reading_list.html", {'books': books, 'user': user})
+class ReadingListView(LoginRequiredMixin, ListView):
 
+    model = User
+    template_name = 'reading_list.html'
+    paginate_by = settings.BOOKS_PER_PAGE
+    pk_url_kwarg = 'user_id'
+    object_list = "books"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        user_id = self.kwargs['user_id']
+        user = User.objects.get(id=user_id)
+        books = user.currently_reading_books.all()
+        context['books'] = books
+
+    def post(self, request, *args, **kwargs):
+        user_id = self.kwargs['user_id']
+        user = User.objects.get(id=user_id)
+        books = user.currently_reading_books.all()
+        paginator = Paginator(books, settings.BOOKS_PER_PAGE)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, 'reading_list.html', {"books": books, "page_obj": page_obj})
+
+    def get(self, request, *args, **kwargs):
+        user_id = self.kwargs['user_id']
+        user = User.objects.get(id=user_id)
+        books = user.currently_reading_books.all()
+        paginator = Paginator(books, settings.BOOKS_PER_PAGE)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, 'reading_list.html', {"books": books, "page_obj": page_obj})
 
 @login_required
 def add_to_current_reads(request, book_id):
