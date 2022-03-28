@@ -61,7 +61,7 @@ class ClubProfileViewTestCase(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn('<img src=', html)
-        self.assertIn(f'alt="Gravatar of {self.bush_club.name}" class="rounded-circle profile-image">', html)
+        self.assertIn(f' alt="Gravatar of {self.bush_club.name}" class="profile-image" style="border-radius: 10px">', html)
         self.assertIn(f'<h3>{self.bush_club.name}</h3>', html)
         self.assertIn(f'<p>{self.bush_club.description}</p>', html)
         self.assertIn(f'<a href="/user_profile/{self.bush_club.owner.id}/" style="text-decoration: none;">', html)
@@ -90,12 +90,24 @@ class ClubProfileViewTestCase(TestCase, LogInTester):
             html)
 
     def test_club_profile_view_has_meetings_list_button_for_owner(self):
+        self.today = date.today()
+        next_hour_date_time = datetime.now() + timedelta(hours=1)
+        self.tomorrow = self.today + timedelta(days=1)
+        self.future_time = time(next_hour_date_time.hour, 0)
+        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club,
+                                              address='www.google.com')
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<a href="/club_profile/1/meetings" style="text-decoration: none;">View All</a>', html)
 
     def test_club_profile_view_has_meetings_list_button_for_organiser(self):
+        self.today = date.today()
+        next_hour_date_time = datetime.now() + timedelta(hours=1)
+        self.tomorrow = self.today + timedelta(days=1)
+        self.future_time = time(next_hour_date_time.hour, 0)
+        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club,
+                                              address='www.google.com')
         self.bush_club.make_organiser(self.jane)
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
@@ -103,6 +115,12 @@ class ClubProfileViewTestCase(TestCase, LogInTester):
         self.assertIn(f'<a href="/club_profile/1/meetings" style="text-decoration: none;">View All</a>', html)
 
     def test_club_profile_view_has_meetings_list_button_for_member(self):
+        self.today = date.today()
+        next_hour_date_time = datetime.now() + timedelta(hours=1)
+        self.tomorrow = self.today + timedelta(days=1)
+        self.future_time = time(next_hour_date_time.hour, 0)
+        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club,
+                                              address='www.google.com')
         self.bush_club.make_member(self.joe)
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)

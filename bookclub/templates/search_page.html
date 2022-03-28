@@ -55,13 +55,22 @@
     </div>
 
   <div class="accordion-item">
+    {% if clubs %}
     <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-      <button class="accordion-button collapsed" style="background-color: brown; color: white" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+      <button class="accordion-button" style="background-color: brown; color: white" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">
         Clubs<span class="badge bg-dark" style="margin-left: 10px">{{ clubs|length }}</span>
       </button>
     </h2>
-    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
-      <div class="accordion-body">
+    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingTwo">
+    {% else %}
+	<h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+	 <button class="accordion-button collapsed" style="background-color: brown; color: white" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+        Clubs<span class="badge bg-dark" style="margin-left: 10px">{{ clubs|length }}</span>
+      </button>
+	<div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+	{% endif %}
+
+		<div class="accordion-body">
 
       {% if clubs %}
           <div class="club-results-table">
@@ -94,12 +103,20 @@
     </div>
   </div>
   <div class="accordion-item">
+	{% if users %}
     <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-      <button class="accordion-button collapsed" style="background-color: brown; color: white" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+      <button class="accordion-button" style="background-color: brown; color: white" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true" aria-controls="panelsStayOpen-collapseThree">
         Users<span class="badge bg-dark" style="margin-left: 10px">{{ users|length }}</span>
       </button>
     </h2>
-    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingThree">
+    {% else %}
+	<h2 class="accordion-header" id="panelsStayOpen-headingThree">
+	 <button class="accordion-button collapsed" style="background-color: brown; color: white" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+        Users<span class="badge bg-dark" style="margin-left: 10px">{{ users|length }}</span>
+      </button>
+	<div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+	{% endif %}
       <div class="accordion-body">
     {% if users %}
 

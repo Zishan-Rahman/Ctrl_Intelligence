@@ -9,6 +9,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.edit import FormView, UpdateView
@@ -30,6 +31,7 @@ def landing_page(request):
     return render(request, 'landing_page.html')
 
 
+<<<<<<< HEAD
 
 class PasswordResetView(FormView):
     """View that handles logging in."""
@@ -41,6 +43,11 @@ class PasswordResetView(FormView):
         return self.render()
 
     def post(self, request):
+=======
+def password_reset_request(request):
+    site = get_current_site(request)
+    if request.method == "POST":
+>>>>>>> f7dfda57f1921c6b7698ebad11d3d2ccb38a1f80
         password_reset_form = PasswordResetForm(request.POST)
         if password_reset_form.is_valid():
             data = password_reset_form.cleaned_data['email']
@@ -51,7 +58,7 @@ class PasswordResetView(FormView):
                     email_template_name = "main/password/password_reset_email.txt"
                     c = {
                         "email": user.email,
-                        'domain': '127.0.0.1:8000',
+                        'domain': site,
                         'site_name': 'Website',
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         'token': default_token_generator.make_token(user),
