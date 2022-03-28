@@ -52,7 +52,7 @@ class ViewProfileTest(TestCase):
         response = self.client.get(reverse('user_profile', kwargs={'user_id': self.joe.id}))
         html = response.content.decode('utf8')
         self.assertIn(
-            f'<p class="text-muted"><strong>{self.joe.first_name} {self.joe.last_name}</strong> does not have any posts</p>',
+            f'<p class="text-muted"><strong>{self.joe.first_name} {self.joe.last_name}</strong> does not have any personal posts</p>',
             html)
 
     def test_view_profile_view_has_posts(self):
