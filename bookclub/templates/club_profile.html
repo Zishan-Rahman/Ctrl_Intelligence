@@ -33,7 +33,7 @@
             </div>
 
         {% if meetings %}
-
+                     <a href="{% url 'club_meetings' club.id %}" style="text-decoration: none;">View All</a>
                 {% for meeting in meetings %}
                      <div class="card w-100 mx-auto" style="margin-top: 10px; border-color: black">
     <div class="card-body">
@@ -59,7 +59,6 @@
 
             </div>
             {% endfor %}
-             <a href="{% url 'club_meetings' club.id %}" style="text-decoration: none;">View All</a>
         {% else %}
 
 
@@ -104,7 +103,7 @@
     </div>
 
     {% if posts %}
-
+                <a href="{% url 'feed' club.id %}" style="text-decoration: none;">View All</a>
             {% for post in posts %}
 
 
@@ -135,7 +134,6 @@
                     </div>
                 </div>
             {% endfor %}
-        <a href="{% url 'feed' club.id %}" style="text-decoration: none;">View All</a>
         {% else %}
 
         <div class="row">
