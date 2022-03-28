@@ -5,6 +5,7 @@ from bookclub.forms import PasswordForm
 
 
 class PasswordFormTestCase(TestCase):
+    """Tests for the password form"""
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 
     def setUp(self):

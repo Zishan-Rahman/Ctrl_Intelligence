@@ -7,6 +7,7 @@ from django.contrib import messages
 
 
 class TestUserListView(TestCase, LogInTester):
+    """Tests of the user list view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 

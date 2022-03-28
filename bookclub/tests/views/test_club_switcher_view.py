@@ -6,7 +6,7 @@ from bookclub.tests.helpers import reverse_with_next
 
 
 class ClubSwitcherViewTestCase(TestCase):
-    """Tests of the navbar view."""
+    """Tests of the club switcher view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_clubs.json']

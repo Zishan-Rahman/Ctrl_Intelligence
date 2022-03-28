@@ -4,7 +4,9 @@ from bookclub.models import User
 from bookclub.tests.helpers import reverse_with_next
 
 
-class ViewProfileTest(TestCase):
+class ViewProfileTestCase(TestCase):
+    """Tests of the profile view."""
+
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_user_posts.json']
 

@@ -5,7 +5,8 @@ from django.test import TestCase
 from bookclub.models import Post, User, Club
 
 
-class PostTest(TestCase):
+class PostModelTestCase(TestCase):
+    """Tests for the club post model"""
     fixtures = ["bookclub/tests/fixtures/default_users.json",
                 "bookclub/tests/fixtures/default_clubs.json"]
 

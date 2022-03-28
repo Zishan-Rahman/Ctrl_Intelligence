@@ -11,7 +11,7 @@ from bookclub.views.club_views import transfer_ownership
 
 
 class TransferOwnershipViewsTestCase(TestCase):
-    """Tests of the promote and demote views."""
+    """Tests of the transfer ownership view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 

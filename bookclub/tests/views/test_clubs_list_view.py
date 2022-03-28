@@ -8,7 +8,7 @@ from bookclub.tests.helpers import LogInTester, reverse_with_next
 # clubs views test is adapted from the chess club project
 
 class ClubsListViewTestCase(TestCase, LogInTester):
-    """Tests of the club view."""
+    """Tests of the club list view."""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json"]
 

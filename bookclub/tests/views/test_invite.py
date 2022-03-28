@@ -8,8 +8,8 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 
 
-class InviteTestCases(TestCase):
-    """Tests of the create chats view."""
+class InviteViewTestCases(TestCase):
+    """Tests of the invite view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_clubs.json',

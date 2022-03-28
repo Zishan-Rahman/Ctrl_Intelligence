@@ -5,7 +5,8 @@ from bookclub.models import User, Book
 from bookclub.tests.helpers import reverse_with_next
 from django.contrib import messages
 
-class BookProfileTest(TestCase):
+class BookProfileTestCase(TestCase):
+    """Tests of the book profile view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json','bookclub/tests/fixtures/default_books.json']
 

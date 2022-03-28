@@ -7,6 +7,7 @@ from bookclub.models import User, Club
 # Adapted from the Clucker project and Chess club management system
 
 class ClubModelTestCase(TestCase):
+    """Tests for the Club model"""
     fixtures = ["bookclub/tests/fixtures/default_clubs.json",
                 "bookclub/tests/fixtures/default_users.json"]
 

@@ -4,7 +4,8 @@ from django.test import TestCase
 from bookclub.models import User, Rating, Book, RecommendedBook
 
 
-class RatingsModelsTestCase(TestCase):
+class RecommendedBookModelTestCase(TestCase):
+    """Tests for the recommended books model"""
     fixtures = ["bookclub/tests/fixtures/default_users.json",
                 "bookclub/tests/fixtures/default_books.json",
                 "bookclub/tests/fixtures/default_recommended_book.json"

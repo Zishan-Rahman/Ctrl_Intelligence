@@ -6,6 +6,7 @@ from bookclub.models import User, Rating, Book
 
 
 class MyBookRatingsViewTestCase(TestCase):
+    """Tests of the my book ratings view."""
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_ratings.json', 'bookclub/tests/fixtures/default_books.json']
 
     def setUp(self):

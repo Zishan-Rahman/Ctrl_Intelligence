@@ -5,7 +5,7 @@ from django import forms
 from bookclub.models import User, Chat
 
 
-class TestChatForm(TestCase):
+class ChatFormTestCase(TestCase):
     def setUp(self):
         self.form_input = {
             'email':'janedoe@example.com'

@@ -4,6 +4,7 @@ from bookclub.models import Chat, User
 
 
 class ChatModelTestCase(TestCase):
+    """Tests for the Chat model"""
     fixtures = [
         "bookclub/tests/fixtures/default_users.json",
         "bookclub/tests/fixtures/default_chats.json"

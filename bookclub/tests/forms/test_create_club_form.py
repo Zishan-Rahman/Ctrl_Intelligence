@@ -5,8 +5,8 @@ from django import forms
 from bookclub.models import Club, User
 
 
-class CreateClubTestForm(TestCase):
-    
+class CreateClubFormTestCase(TestCase):
+    """Tests for the create club form"""
     fixtures = ['bookclub/tests/fixtures/default_users.json']
     
     def setUp(self):

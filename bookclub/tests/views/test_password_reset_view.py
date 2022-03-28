@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User
 
-class PasswordResetViewTest(TestCase):
+class PasswordResetViewTestCase(TestCase):
     """Test suite for the reset password view."""
 
     fixtures = [

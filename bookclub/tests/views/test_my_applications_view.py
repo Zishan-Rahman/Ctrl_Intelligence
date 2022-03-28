@@ -7,6 +7,7 @@ from django.contrib import messages
 
 
 class MyApplicationViewTestCase(TestCase):
+    """Tests of the my applications view."""
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json',
                 'bookclub/tests/fixtures/default_applications.json']
 

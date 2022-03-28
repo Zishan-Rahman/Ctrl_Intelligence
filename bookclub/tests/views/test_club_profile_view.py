@@ -7,10 +7,9 @@ from bookclub.models import User, Club, Post, Meeting
 from bookclub.tests.helpers import LogInTester, reverse_with_next
 from datetime import timedelta, date, time, datetime
 
-"""Tests for Club Profile """
 
-
-class ClubProfileTest(TestCase, LogInTester):
+class ClubProfileViewTestCase(TestCase, LogInTester):
+    """Tests of the club profile view."""
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_clubs.json',
                 'bookclub/tests/fixtures/default_applications.json',

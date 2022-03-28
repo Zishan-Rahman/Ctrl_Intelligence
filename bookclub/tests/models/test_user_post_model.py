@@ -6,6 +6,7 @@ from bookclub.models import UserPost, User, Club
 
 
 class UserPostTest(TestCase):
+    """Tests for the user post model"""
     fixtures = ["bookclub/tests/fixtures/default_users.json"]
 
     def setUp(self):

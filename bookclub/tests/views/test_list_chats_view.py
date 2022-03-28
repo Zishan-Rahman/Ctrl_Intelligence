@@ -8,7 +8,7 @@ from django.contrib import messages
 
 
 class ListChatsViewTestCase(TestCase):
-    """Tests of the inbox view."""
+    """Tests of the inbox view (that lists chats)."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 

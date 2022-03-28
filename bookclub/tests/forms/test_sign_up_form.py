@@ -6,8 +6,8 @@ from django.contrib.auth.hashers import check_password
 from bookclub.models import User
 
 
-class TestSignUpForm(TestCase):
-
+class SignUpTestCase(TestCase):
+    """Tests for the sign up form"""
     def setUp(self):
 
         self.form_input = {

@@ -8,7 +8,7 @@ from django.contrib import messages
 # Books View test is adapted from the Chess Club project
 
 class BooksListViewTestCase(TestCase, LogInTester):
-    """Tests of the club view."""
+    """Tests of the book list view."""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json", "bookclub/tests/fixtures/default_books.json"]
 

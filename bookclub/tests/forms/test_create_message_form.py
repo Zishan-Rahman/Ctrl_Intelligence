@@ -5,7 +5,8 @@ from django import forms
 from bookclub.models import User, Message
 
 
-class TestMessageForm(TestCase):
+class MessageFormTestCase(TestCase):
+    """Tests for the Message form"""
     def setUp(self):
         self.form_input = {
             'message':'asdasd'

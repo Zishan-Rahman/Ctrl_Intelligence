@@ -5,6 +5,7 @@ from bookclub.models import User, Rating, Book
 
 
 class RatingsModelsTestCase(TestCase):
+    """Tests for the ratings model"""
     fixtures = ["bookclub/tests/fixtures/default_ratings.json",
                 "bookclub/tests/fixtures/default_users.json",
                 "bookclub/tests/fixtures/default_books.json",

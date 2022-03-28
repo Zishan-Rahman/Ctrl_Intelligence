@@ -5,6 +5,7 @@ from bookclub.models import User, UserPost
 from bookclub.forms import UserPostForm
 
 class UserPostFormTestCase(TestCase):
+    """Tests for the user post form"""
     fixtures = ["bookclub/tests/fixtures/default_users.json"]
 
     def setUp(self):

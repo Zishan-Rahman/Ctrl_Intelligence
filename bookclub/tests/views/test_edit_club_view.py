@@ -7,8 +7,8 @@ from bookclub.models import *
 from bookclub.tests.helpers import reverse_with_next
 
 
-class ProfileViewTest(TestCase):
-    """Test suite for the profile view."""
+class EditClubViewTestCase(TestCase):
+    """Test suite for the edit club view."""
 
     fixtures = [
         'bookclub/tests/fixtures/default_users.json',

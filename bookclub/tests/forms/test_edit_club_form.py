@@ -4,7 +4,8 @@ from bookclub.models import *
 from bookclub.forms import EditClubForm
 
 
-class PasswordFormTestCase(TestCase):
+class EditClubFormTestCase(TestCase):
+    """Tests for the edit club form"""
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
     def setUp(self):

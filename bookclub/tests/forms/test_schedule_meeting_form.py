@@ -7,7 +7,7 @@ from datetime import timedelta, date, time, datetime
 
 
 class ScheduleMeetingTestCase(TestCase):
-
+    """Tests for the schedule meeting form"""
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
     def setUp(self):

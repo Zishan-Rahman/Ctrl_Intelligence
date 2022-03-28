@@ -4,7 +4,8 @@ from bookclub.models import User
 from bookclub.tests.helpers import reverse_with_next
 
 
-class FollowViewFollowTest(TestCase):
+class FollowViewFollowTestCase(TestCase):
+    """Tests of the follow view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 

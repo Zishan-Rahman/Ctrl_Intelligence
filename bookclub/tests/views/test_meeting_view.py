@@ -8,6 +8,7 @@ from datetime import timedelta, date, time, datetime
 
 
 class MeetingViewTestCase(TestCase):
+    """Tests of the meeting view."""
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
     def setUp(self):

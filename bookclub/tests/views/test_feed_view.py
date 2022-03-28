@@ -9,8 +9,8 @@ from bookclub.models import User, Club
 from bookclub.tests.helpers import create_posts, reverse_with_next, LogInTester
 
 
-class FeedViewTestCase(TestCase, LogInTester):
-    """Tests of the feed view."""
+class ClubFeedViewTestCase(TestCase, LogInTester):
+    """Tests of the club feed view."""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json",
                 "bookclub/tests/fixtures/default_clubs.json"]

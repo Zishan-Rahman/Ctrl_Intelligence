@@ -8,7 +8,7 @@ from django.contrib import messages
 
 
 class KickFromClubViewTestCase(TestCase):
-    """Tests of the promote and demote views."""
+    """Tests of the kick from club view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
