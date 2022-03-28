@@ -148,7 +148,7 @@ class UserModelTestCase(TestCase):
         with self.assertRaises(ValidationError):
             self.user_one.full_clean()
 
-    # def test_validity_test_fails_when_user_is_invalid(self):
-    #     self.user_one.email = "johndoe@.org"
-    #     with self.assertRaisesMessage(AssertionError, "Test user should be valid"):
-    #         self._assert_user_is_invalid()
+    def test_validity_test_fails_when_user_is_invalid(self):
+        self.user_one.email = "johndoe@.org"
+        with self.assertRaisesMessage(AssertionError, "Test user should be valid"):
+            self._assert_user_is_valid()
