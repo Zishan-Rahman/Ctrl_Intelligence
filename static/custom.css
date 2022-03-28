@@ -45,13 +45,11 @@
     margin-right: 0;
     margin-left: auto;
     text-align: center;
-
-
   }
+
   .cover-card-block {
     opacity: 1
   }
-
 
   .inbox-icon-container {
     margin-right: 15px;
@@ -94,7 +92,6 @@
   button.link {
     background:none; 
     border:none;
-    padding:none;
   }
   
 
