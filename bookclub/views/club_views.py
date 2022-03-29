@@ -1,4 +1,3 @@
-"""Clubs related views."""
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -113,6 +112,7 @@ def kick_user_from_club(request, c_pk, u_pk):
         messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
+
 @login_required
 def transfer_ownership(request, c_pk, u_pk):
     """Transfer ownership to specific member"""
@@ -120,11 +120,11 @@ def transfer_ownership(request, c_pk, u_pk):
     if request.user == club.owner:
         new_owner = User.objects.get(pk=u_pk)
         club.make_owner(new_owner)
-        messages.add_message(request, messages.SUCCESS,
-                             "Transferred Ownership to " + str(new_owner.get_full_name()) + "!")
+        messages.add_message(request, messages.SUCCESS, "Transferred Ownership to " + str(new_owner.get_full_name()) + "!")
     else:
         messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
+
 
 
 class ClubUpdateView(LoginRequiredMixin, UpdateView):
@@ -169,6 +169,8 @@ def club_util(request):
     config.user_clubs = user_clubs_list
 
 
+
+
 @login_required
 def club_list(request):
     clubs = []
@@ -184,6 +186,8 @@ def club_list(request):
             "gravatar": club.gravatar()
         })
     return render(request, 'club_list.html', {'clubs': clubs})
+
+
 
 
 @login_required
@@ -251,7 +255,6 @@ def leave_club(request, club_id):
     club.remove_from_club(current_user)
     messages.add_message(request, messages.SUCCESS, f"You have successfully left {club.name}!")
     return redirect('club_selector')
-
 
 @login_required
 def disband_club(request, c_pk):

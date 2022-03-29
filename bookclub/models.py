@@ -80,6 +80,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     currently_reading_books = models.ManyToManyField(Book, related_name='%(class)s_currently_reading_books')
     favourite_books = models.ManyToManyField(Book)
     is_email_verified = models.BooleanField(default=False)
+    inbox_count = models.IntegerField(blank=True, null=True)
     followers = models.ManyToManyField(
         'self', symmetrical=False, related_name='followees'
     )
