@@ -14,7 +14,7 @@
                       <th scope="col"></th>
                       <th scope="col">Author</th>
                       <th scope="col">Post</th>
-                      <th scope="col">Time</th>
+                      <th scope="col">Posted on</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -23,7 +23,7 @@
                     <td><img src='{{ post.author.gravatar }}' alt="{{ post.author }}'s Gravatar" class="rounded-circle"></td>
                       <td>{{ post.author.get_full_name }}</td>
                     <td>{{ post.text }}</td>
-                    <td>{{ post.created_at }}</td>
+                    <td>{{ post.created_at|date:"M y G:i" }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -35,7 +35,7 @@
 
 {% else %}
     <div class="mt-5" style="text-align: center;">
-         <h5 class="text-muted text-center"><strong>{{ user.get_full_name }}</strong> does not have any posts</h5>
+         <h5 class="text-muted text-center"><strong>{{ user.get_full_name }}</strong> does not have any personal posts</h5>
     </div>
 
 {% endif %}
