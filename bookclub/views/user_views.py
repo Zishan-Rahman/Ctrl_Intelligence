@@ -45,8 +45,8 @@ class UserClubsListView(LoginRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         """Handle get request, and redirect to home if user_id invalid."""
-        if self.kwargs['user_id'] == request.user:
-            return redirect('my_clubs')
+        if self.kwargs['user_id'] == request.user.id:
+            return redirect('club_selector')
         try:
             return super().get(request, *args, **kwargs)
         except Http404:
