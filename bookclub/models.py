@@ -255,6 +255,9 @@ class Club(models.Model):
     def get_meetings(self):
         return Meeting.objects.filter(club_id=self.id)
 
+    def get_number_of_meetings(self):
+        return Meeting.objects.filter(club_id=self.id).count()
+
     def get_all_users(self):
         self.club_members = self.get_members()
         self.club_organisers = self.get_organisers()
