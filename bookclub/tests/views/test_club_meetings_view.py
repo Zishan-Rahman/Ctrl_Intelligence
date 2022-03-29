@@ -54,10 +54,8 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
             else:
                 self.assertIn(f'<td>12:{i} p.m.</td>', html)
             self.assertIn(f'<td>{test_meeting.address}</td>', html)
-            self.assertIn(
-                f'<td><a class="btn text-left" href="/club_profile/2/meetings/1/edit" style="background-color: brown; '
-                f'color: white; text-transform: uppercase; font-size: 14px">Edit meeting details</a></td>',
-                html)
+            self.assertIn('<a class="btn" href="/club_profile/2/meetings/4/edit" id="bookwiseGeneralBtn" '
+                          'style="text-transform: uppercase; font-size: 14px">Edit meeting details</a>', html)
 
     def test_get_club_meetings_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')

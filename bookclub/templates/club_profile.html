@@ -106,9 +106,7 @@
                 <div class="col-6">
 
                     {% if current_user == club.owner%}
-                        <button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding: 15px; text-transform:uppercase; font-size: 14px'>
-                            <i class="bi bi-chat-square-text"></i> New Post
-                        </button>
+                        <button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-square-text"></i> New Post</button>
                     {% elif current_user in club.get_organisers and club.organiser_owner  %}
                         <button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding: 15px; text-transform:uppercase; font-size: 14px'>
                             <i class="bi bi-chat-square-text"></i> New Post
@@ -164,7 +162,7 @@
 
     <div class="col-3">
     {% if current_user == club.owner %}
-        <a class="btn float-end mb-3" id="bookwiseGeneralBtn" style='padding: 15px; text-transform:uppercase; font-size: 14px' href="{% url 'edit_club' c_pk=club.id %}"><i class="bi bi-pencil-square"></i> Edit Club</a>
+        <a class="btn float-end mb-3" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px" href="{% url 'edit_club' c_pk=club.id %}"><i class="bi bi-pencil-square"></i> Edit Club</a>
     {% endif %}
 
 
@@ -209,24 +207,24 @@
             {% if current_user not in club.get_all_users%}
           <form action="{% url 'new_application' club.id %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn" id="bookwiseGeneralBtn" style='padding: 15px; text-transform:uppercase; font-size: 14px'><i class="bi bi-check-square"></i> Apply</button>
+            <button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-check-square"></i> Apply</button>
           </form>
           {%endif%}
 
               {% if current_user in club.get_members %}
               <form action="{% url 'leave_club' club.id %}" method="post">
                 {% csrf_token %}
-                  <button type="submit" class="btn" id="bookwiseGeneralBtn" style='padding: 15px; text-transform:uppercase; font-size: 14px'><i class="bi bi-box-arrow-left"></i> Leave</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>
               </form>
               {% elif current_user in club.get_organisers %}
               <form action="{% url 'leave_club' club.id %}" method="post">
                 {% csrf_token %}
-                  <button type="submit" class="btn" id="bookwiseGeneralBtn" style='padding: 15px; text-transform:uppercase; font-size: 14px'><i class="bi bi-box-arrow-left"></i> Leave</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>
               </form>
               {% elif current_user == club.get_owner %}
               <form action="{% url 'disband_club' club.id %}" method=post>
                 {% csrf_token %}
-                  <button type="submit" class="btn" id="bookwiseGeneralBtn" style='padding: 15px; text-transform:uppercase; font-size: 14px'><i class="bi bi-x-octagon"></i> Disband</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> Disband</button>
                 </form>
               
 

@@ -26,14 +26,14 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
-        self.assertIn('<a class="btn btn-default"', html)
+        self.assertIn('<td><a class="btn btn-outline-success"', html)
         self.assertIn('Promote', html)
 
     def test_demote_button_visible_for_owner(self):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
-        self.assertIn('<a class="btn btn-default"', html)
+        self.assertIn('<td><a class="btn btn-outline-dark"', html)
         self.assertIn('Demote', html)
 
     def test_promote_button_not_visible_for_member(self):

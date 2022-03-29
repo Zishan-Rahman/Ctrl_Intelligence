@@ -26,22 +26,22 @@ class KickFromClubViewTestCase(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
-        self.assertIn('<a class="btn btn-default"', html)
-        self.assertIn('Kick', html)
+        self.assertIn('<td><a class="btn btn-outline-dark"', html)
+        self.assertIn('Remove', html)
 
     def test_kick_button_not_visible_for_member(self):
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
-        self.assertNotIn('<a class="btn btn-default"', html)
-        self.assertNotIn('Kick', html)
+        self.assertNotIn('<td><a class="btn btn-outline-dark', html)
+        self.assertNotIn('Remove', html)
 
     def test_kick_button_not_visible_for_organiser(self):
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
-        self.assertNotIn('<a class="btn btn-default"', html)
-        self.assertNotIn('Kick', html)
+        self.assertNotIn('<td><a class="btn btn-outline-dark', html)
+        self.assertNotIn('Remove', html)
 
     def test_successful_member_kick(self):
         self.client.login(email=self.john.email, password='Password123')
