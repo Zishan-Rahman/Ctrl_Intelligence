@@ -127,10 +127,6 @@ def inbox_count(request):
     message_read_list = Message.objects.filter(receiver_user=request.user, is_read=False)
     request.user.inbox_count = message_read_list.count()
     print(request.user.inbox_count)
-    # context = {
-    #         'request.user.inbox_count': request.user.inbox_count
-    # }
     if request.path == '/inbox/':
         for message in message_read_list:
             message.is_read = True
-    # return render(request, 'home.html', context)
