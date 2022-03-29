@@ -14,6 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.template.loader import render_to_string
 from bookclub.views import config
+from django.core.paginator import Paginator
 
 
 @login_required
@@ -43,15 +44,31 @@ class UserClubsListView(LoginRequiredMixin, ListView):
     paginate_by = settings.CLUBS_PER_PAGE
 
     def get(self, request, *args, **kwargs):
-        """Handle get request, and redirect to book_list if book_id invalid."""
+        """Handle get request, and redirect to home if user_id invalid."""
         try:
             return super().get(request, *args, **kwargs)
         except Http404:
             return redirect('home')
         
     def get_queryset(self):
+        """Return the list of clubs for a specific user"""
         return User.objects.get(id=self.kwargs['user_id']).get_all_clubs()
-    
+
+    def get_context_data(self, *args, **kwargs):
+        """Return keyword data for the view"""
+        context = super().get_context_data(*args, **kwargs)
+        queried_user_id = self.kwargs['user_id']
+        queried_user = User.objects.get(id=queried_user_id)
+        all_clubs = queried_user.get_all_clubs()
+        paginator = Paginator(queried_user.get_all_clubs(), settings.CLUBS_PER_PAGE)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['current_user'] = queried_user
+        context['all_clubs'] = all_clubs
+        context['page_obj'] = page_obj
+        context['user'] = self.request.user
+        return context    
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
