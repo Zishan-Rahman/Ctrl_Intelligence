@@ -29,7 +29,7 @@
                       {% if request.user == club.owner or request.user in club.get_organisers and club.organiser_owner %}
 
                     <td><a class="btn" href="{% url 'edit_meeting' club.id meeting.id %}" id="bookwiseGeneralBtn" style="text-transform: uppercase; font-size: 14px">Edit meeting details</a></td>
-
+                      <td><a class="btn" href="{% url 'delete_meeting' club.id meeting.id %}" id="bookwiseGeneralBtn" style="text-transform: uppercase; font-size: 14px">Cancel Meeting</a></td>
                     {% endif %}
                   </tr>
                   {% endfor %}
