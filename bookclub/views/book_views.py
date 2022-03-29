@@ -125,10 +125,9 @@ def update_ratings(request, book_id):
     book = Book.objects.get(pk=book_id)
     isbn = Book.objects.get(pk=book_id).isbn
     if Rating.objects.filter(book=book, user=user).exists():
-        rating = Rating.objects.get(book=book, user=user)
-        rating.rating = request.POST.get('ratings', '0')
-    else:
-        Rating.objects.create(user=user, book=book, isbn=isbn, rating=request.POST.get('ratings', "0"))
+        Rating.objects.get(book=book, user=user).delete()
+        
+    Rating.objects.create(user=user, book=book, isbn=isbn, rating=request.POST.get('ratings', "0"))
     messages.add_message(request, messages.SUCCESS,
                          "You have given " + book.title + " a rating of " + request.POST.get('ratings', "0"))
     return redirect('book_profile', book_id=book_id)
