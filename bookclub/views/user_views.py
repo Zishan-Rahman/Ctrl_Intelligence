@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from bookclub.models import User, Club, Message, Chat, UserPost
 from bookclub.forms import UserForm, UserPostForm
+from django.http import Http404
 from django.contrib.auth import login
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.decorators import login_required
@@ -33,6 +34,24 @@ def user_list(request):
 
 class UserClubsListView(LoginRequiredMixin, ListView):
     """List of clubs owned by and participated by the user"""
+    
+    model = User
+    template_name = "user_clubs.html"
+    context_object_name = 'user'
+    pk_url_kwarg = 'user_id'
+    ordering = ['-name']
+    paginate_by = settings.CLUBS_PER_PAGE
+
+    def get(self, request, *args, **kwargs):
+        """Handle get request, and redirect to book_list if book_id invalid."""
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            return redirect('home')
+        
+    def get_queryset(self):
+        return User.objects.get(id=self.kwargs['user_id']).get_all_clubs()
+    
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
