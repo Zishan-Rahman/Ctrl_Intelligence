@@ -31,6 +31,8 @@ def user_list(request):
         })
     return render(request, 'user_list.html', {'users': users})
 
+class UserClubsListView(LoginRequiredMixin, ListView):
+    """List of clubs owned by and participated by the user"""
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
