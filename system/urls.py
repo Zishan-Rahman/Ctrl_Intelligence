@@ -15,7 +15,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , club_feed_views , post_views , user_feed_views , user_post_views, base_views
+from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , club_feed_views , post_views , user_feed_views , user_post_views
 from django.contrib.auth import views as auth_views
 
 
@@ -88,6 +88,5 @@ urlpatterns = [
     path('user_profile/<int:user_id>/user_feed/', user_feed_views.UserFeedView.as_view(), name='user_feed'),
     path('user_profile/<int:user_id>/new_post/', user_post_views.UserNewPostView.as_view(), name='user_new_post'),
     path('home/recommender', dashboard_views.refresh_recommendations, name='recommend'),
-    path('home/inbox_count', base_views.inbox_count, name='inbox_count'),
 
     ]

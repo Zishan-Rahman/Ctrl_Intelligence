@@ -16,6 +16,7 @@ from django.views.generic.edit import UpdateView
 from django.core.paginator import Paginator
 
 
+
 class ClubMemberListView(LoginRequiredMixin, ListView):
     """Gets the members of each club"""
 

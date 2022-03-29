@@ -15,6 +15,7 @@ from django.views.generic.edit import View, UpdateView
 from django.core.paginator import Paginator
 
 
+
 class ClubMeetingsListView(LoginRequiredMixin, ListView):
     """Gets the meetings history of each club"""
     """Adapted from ClubMembersListView"""
