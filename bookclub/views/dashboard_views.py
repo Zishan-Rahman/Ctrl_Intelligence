@@ -8,8 +8,7 @@ import pickle
 from bookclub.views import config
 from django.contrib import messages
 
-
-
+ 
 @login_required
 def home_page(request):
     config.inbox_count(request)

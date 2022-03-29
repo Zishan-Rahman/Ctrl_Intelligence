@@ -10,6 +10,7 @@ from bookclub.models import Club, Application
 from bookclub.views import club_views
 from django.views.generic.edit import View
 from django.core.paginator import Paginator
+from bookclub.views import config
 
 
 class ApplicationsView(LoginRequiredMixin, View):
@@ -67,6 +68,7 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
 
 def app_accept(request, pk):
+    
     """Accept application"""
     app = Application.objects.all().get(pk=pk)
 
@@ -95,6 +97,7 @@ def app_remove(request, pk):
 
 @login_required
 def new_application(request, club_id):
+    
     """ Create A New Application """
 
     club_applied_to = Club.objects.get(pk=club_id)
