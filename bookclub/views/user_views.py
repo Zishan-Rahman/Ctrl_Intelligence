@@ -167,13 +167,7 @@ def unfollow_from_user_profile(request, user_id):
     return redirect('user_profile', user_id=user_id)
 
 def club_util(request):
-    user_clubs_list = []
-    clubs = Club.objects.all()
-
-    for temp_club in clubs:
-        if request.user in temp_club.get_all_users():
-            user_clubs_list.append(temp_club)
-
+    user_clubs_list = request.user.get_all_clubs()
     config.user_clubs = user_clubs_list
 
 
