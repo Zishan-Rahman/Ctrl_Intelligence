@@ -5,6 +5,7 @@ from bookclub.models import User, Book
 from bookclub.tests.helpers import LogInTester, reverse_with_next
 from django.contrib import messages
 
+
 # Books View test is adapted from the Chess Club project
 
 class BooksListViewTestCase(TestCase, LogInTester):
@@ -34,7 +35,7 @@ class BooksListViewTestCase(TestCase, LogInTester):
 
     def test_get_book_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
-        self._create_test_books(settings.BOOKS_PER_PAGE*2+3-1)
+        self._create_test_books(settings.BOOKS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'book_list.html')
@@ -73,15 +74,15 @@ class BooksListViewTestCase(TestCase, LogInTester):
         self.user.currently_reading_books.add(self.book)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
-                      f'20px"><i class="bi bi-bookmarks-fill"></i></button>', html)
+        self.assertIn(f'<td><button type="submit" class="btn" id="bookwiseGeneralBtn" style="font-size: 20px"><i '
+                      f'class="bi bi-bookmarks-fill"></i></button></td>', html)
 
     def test_book_list_view_has_add_to_reading_list_button_when_book_is_not_in_reading_list(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
-                      f'20px"><i class="bi bi-bookmarks"></i></button>', html)
+        self.assertIn(f'<td><button type="submit" class="btn" id="bookwiseGeneralBtn" style="font-size: 20px"><i '
+                      f'class="bi bi-bookmarks"></i></button></td>', html)
 
     def test_add_to_reading_list_in_book_list_works(self):
         self.client.login(email=self.user.email, password='Password123')
@@ -108,17 +109,16 @@ class BooksListViewTestCase(TestCase, LogInTester):
         after_reading_list_count = self.user.currently_reading_books.count()
         self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
-
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
 
     def _create_test_books(self, book_count=10):
-        for id in range(1, book_count+1, 1):
+        for id in range(1, book_count + 1, 1):
             Book.objects.create(
                 isbn=id,
                 title=f'{id} Book',
                 author=f'user {id}',
-                pub_year=2010+id,
+                pub_year=2010 + id,
                 publisher=f'{id} Publisher',
                 small_url=f'small{id}@example.org',
                 medium_url=f'medium{id}@example.org',

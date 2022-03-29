@@ -42,7 +42,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertIn('<td>30</td>', html)
         self.assertIn('<td>Just another fake user again</td>', html)
         self.assertIn('<td>Manchester</td>', html)
-        self.assertIn('<a class="btn btn-default"', html)
+        self.assertIn('<td><a class="btn btn-outline-success"', html)
 
     def test_no_applications(self):
         self.client.login(email=self.joe.email, password='Password123')
@@ -64,14 +64,14 @@ class ApplicationViewTestCase(TestCase):
         self.assertIn('<td>30</td>', html)
         self.assertIn('<td>Just another fake user again</td>', html)
         self.assertIn('<td>Manchester</td>', html)
-        self.assertIn('<a class="btn btn-default"', html)
+        self.assertIn('<td><a class="btn btn-outline-success"', html)
 
         self.assertIn('<td>Somerset House Book Club</td>', html)
         self.assertIn('<td>John Doe</td>', html)
         self.assertIn('<td>39</td>', html)
         self.assertIn("<td>Im just an abstract concept!</td>", html)
         self.assertIn('<td>London</td>', html)
-        self.assertIn('<a class="btn btn-default"', html)
+        self.assertIn('<td><a class="btn btn-outline-success"', html)
 
     def test_multiple_applications_to_different_clubs(self):
         self.client.login(email=self.john.email, password='Password123')
@@ -82,14 +82,14 @@ class ApplicationViewTestCase(TestCase):
         self.assertIn('<td>30</td>', html)
         self.assertIn('<td>Just another fake user again</td>', html)
         self.assertIn('<td>Manchester</td>', html)
-        self.assertIn('<a class="btn btn-default"', html)
+        self.assertIn('<td><a class="btn btn-outline-success"', html)
 
         self.assertIn('<td>Strand House Book Club</td>', html)
         self.assertIn('<td>Joe Doe</td>', html)
         self.assertIn('<td>30</td>', html)
         self.assertIn('<td>Just another fake user again</td>', html)
         self.assertIn('<td>Manchester</td>', html)
-        self.assertIn('<a class="btn btn-default"', html)
+        self.assertIn('<td><a class="btn btn-outline-success"', html)
 
     def test_successful_accept(self):
         self.client.login(email=self.john.email, password='Password123')

@@ -34,6 +34,19 @@ class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     pk_url_kwarg = 'book_id'
     object_list = "books"
 
+    def get_context_data(self, **kwargs):
+        context = super(ShowBookView, self).get_context_data(**kwargs)
+        book = Book.objects.get(pk=self.kwargs['book_id'])
+
+        if Rating.objects.filter(book=book, user=self.request.user).exists():
+            rating = Rating.objects.get(book=book, user=self.request.user)
+            context['rating'] = rating.rating
+        else:
+            rating = 0
+            context['rating'] = rating
+
+        return context
+
     def get(self, request, *args, **kwargs):
         """Handle get request, and redirect to book_list if book_id invalid."""
         try:
@@ -64,7 +77,7 @@ class ReadingListView(LoginRequiredMixin, ListView):
         paginator = Paginator(books, settings.BOOKS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        return render(request, 'reading_list.html', {"books": books, "page_obj": page_obj})
+        return render(request, 'reading_list.html', {"books": books, "user": user, "page_obj": page_obj})
 
     def get(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
@@ -73,7 +86,7 @@ class ReadingListView(LoginRequiredMixin, ListView):
         paginator = Paginator(books, settings.BOOKS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        return render(request, 'reading_list.html', {"books": books, "page_obj": page_obj})
+        return render(request, 'reading_list.html', {"books": books, "user": user, "page_obj": page_obj})
 
 @login_required
 def add_to_reading_list(request, book_id):
@@ -109,6 +122,12 @@ def remove_from_reading_list_book_profile(request, book_id):
     remove_from_reading_list(request, book_id)
     return redirect("book_profile", book_id=book_id)
 
+@login_required
+def remove_from_reading_list_page(request, book_id):
+    user_id = request.user.id
+    remove_from_reading_list(request, book_id)
+    return redirect("reading_list", user_id=user_id)
+
 
 class Favourites(LoginRequiredMixin, ListView):
     model = Book
@@ -125,10 +144,9 @@ def update_ratings(request, book_id):
     book = Book.objects.get(pk=book_id)
     isbn = Book.objects.get(pk=book_id).isbn
     if Rating.objects.filter(book=book, user=user).exists():
-        rating = Rating.objects.get(book=book, user=user)
-        rating.rating = request.POST.get('ratings', '0')
-    else:
-        Rating.objects.create(user=user, book=book, isbn=isbn, rating=request.POST.get('ratings', "0"))
+        Rating.objects.get(book=book, user=user).delete()
+
+    Rating.objects.create(user=user, book=book, isbn=isbn, rating=request.POST.get('ratings', "0"))
     messages.add_message(request, messages.SUCCESS,
                          "You have given " + book.title + " a rating of " + request.POST.get('ratings', "0"))
     return redirect('book_profile', book_id=book_id)

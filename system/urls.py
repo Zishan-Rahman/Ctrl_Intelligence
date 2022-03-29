@@ -30,6 +30,7 @@ urlpatterns = [
     path('clubs/', club_views.ClubsListView.as_view(), name='club_list'),
     path('books/', book_views.BooksListView.as_view(), name='book_list'),
     path('reading_list/<int:user_id>/', book_views.ReadingListView.as_view(), name='reading_list'),
+    path('reading_list/<int:book_id>/remove_book/', book_views.remove_from_reading_list_page, name='remove_from_reading_list'),
     path('books/add_to_reading_list/<int:book_id>/', book_views.add_to_reading_list_book_list, name='add_to_reading_list_book_list'),
     path('books/remove_from_reading_list/<int:book_id>/', book_views.remove_from_reading_list_book_list, name='remove_from_reading_list_book_list'),
     path('book_profile/<int:book_id>/add_to_reading_list/', book_views.add_to_reading_list_book_profile, name='add_to_reading_list_book_profile'),

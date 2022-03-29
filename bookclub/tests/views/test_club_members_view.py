@@ -50,7 +50,6 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
         '''Test the club owner's details (they should show up).'''
         self.assertIn(f'alt="Gravatar of {self.user.get_full_name()}" class="rounded-circle" ></td>', html)
         self.assertIn(f'<td>{self.user.get_full_name()}</td>', html)
-        self.assertIn(f'<td>{self.user.get_bio()}</td>', html)
         self.assertIn(f'<td>{self.user.get_favourite_genre()}</td>', html)
         self.assertIn(f'<td>{self.club.user_level(self.user)}</td>', html)
         '''Test the details of the 9 test users created earlier.'''
@@ -58,7 +57,6 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
             test_user = User.objects.get(email=f'user{i}@test.org')
             self.assertIn(f'alt="Gravatar of {test_user.get_full_name()}" class="rounded-circle" ></td>', html)
             self.assertIn(f'<td>{test_user.get_full_name()}</td>', html)
-            self.assertIn(f'<td>{test_user.get_bio()}</td>', html)
             self.assertIn(f'<td>{test_user.get_favourite_genre()}</td>', html)
             self.assertIn(f'<td>{self.club.user_level(test_user)}</td>', html)
 

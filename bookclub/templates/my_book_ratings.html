@@ -4,7 +4,6 @@
 <div class="container">
   {% if ratings %}
 <h2 class="text-left"><strong>My Book Ratings</strong></h2>
-      <h5 class="text-muted">All Previous Book Ratings</h5>
 <div class="book-table">
   <input type='text' id='txt_searchall' class="form-control w-50" placeholder="Search for your book ratings..." size="30">&nbsp;
   <div>
@@ -20,8 +19,8 @@
   </thead>
   <tbody>
     {% for entry in page_obj %}
-    <tr class="clickable-row" data-href="{% url 'book_profile' entry.book.id %}">
-      <td><img src="{{ entry.book.medium_url }}" alt="{{ entry.book.title }}" title="{{ entry.book.title }} by {{ entry.book.author }}"></td>
+<tr class="clickable-row" data-href="{% url 'book_profile' entry.book.id %}">
+      <td><img src="{{ entry.book.medium_url }}" alt="a"></td>
       <td>{{ entry.book.title }}</td>
       <td>{{ entry.book.author }}</td>
       <td>{{ entry.book.pub_year }}</td>
@@ -30,6 +29,9 @@
     {% endfor %}
   </tbody>
     </table>
+</div>
+<div id="pag">
+  {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
 </div>
 <div>
   <table id="fullTable" class="table table-hover table-borderless" style="display:none">
@@ -44,7 +46,7 @@
 </thead>
 <tbody>
   {% for entry in ratings %}
-  <tr>
+  <tr class="clickable-row" data-href="{% url 'book_profile' entry.book.id %}">
     <td><img src="{{ entry.book.medium_url }}" alt="Image of book"></td>
     <td>{{ entry.book.title }}</td>
     <td>{{ entry.book.author }}</td>
@@ -56,21 +58,23 @@
   </table>
 </div>
 </div>
-<div id="pag">
-  {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
 </div>
-</div>
-
 {% else %}
 <div class="mt-5" style="text-align: center;">
      <h5 class="text-muted text-center">You do not have any book ratings</h5>
 </div>
 {% endif %}
-</div>
+        <script>
+  jQuery(document).ready(function($) {
+      $(".clickable-row").click(function() {
+          window.location = $(this).data("href");
+      });
+  });
+</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
   $(document).ready(function(){
-    $('.fullTable').hide();
+    $('#fullTable').hide();
     $('#txt_searchall').keyup(function(){
       var search = $(this).val();
       $('#fullTable').show();

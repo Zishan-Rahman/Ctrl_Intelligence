@@ -1,6 +1,8 @@
 {% extends 'base_content.html' %}
 {% block content %}
 <div class="container" style="padding-top: 25px;">
+
+{% if request.user in club.get_all_users %}
   <div class="row">
     <div class="col-4">
     <div class="card w-100 text-center">
@@ -18,22 +20,28 @@
 
 
                 <div class="col-6">
-                    <h5 class="text-left"><strong>Latest Meetings</strong></h5>
+                    <div class="row">
+                       <h5 class="text-left"><strong>Latest Meetings</strong></h5>
+                    </div>
+                    <div class="row">
+                        {% if meetings %}
+                         <a href="{% url 'club_meetings' club.id %}" style="text-decoration: none;">View All</a>
+                        {% endif %}
+                    </div>
                 </div>
 
                 <div class="col-6">
 
                     {% if current_user == club.owner%}
-                            <a class="btn float-end" href="{% url 'schedule_meeting' club.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
+                            <a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'schedule_meeting' club.id %}" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
                     {% elif current_user in club.get_organisers and club.organiser_owner  %}
-                          <a class="btn float-end" href="{% url 'schedule_meeting' club.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
+                          <a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'schedule_meeting' club.id %}" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
                     {% endif %}
 
 
             </div>
 
         {% if meetings %}
-                     <a href="{% url 'club_meetings' club.id %}" style="text-decoration: none;">View All</a>
                 {% for meeting in meetings %}
                      <div class="card w-100 mx-auto" style="margin-top: 10px; border-color: black">
     <div class="card-body">
@@ -84,32 +92,40 @@
 
     <div class="row">
             <div class="col-6">
-                    <h5 class="text-left"><strong>Latest Posts</strong></h5>
+                <div class="row">
+                   <h5 class="text-left"><strong>Latest Posts</strong></h5>
+
+
                 </div>
+                <div class="row">
+                    {% if posts %}
+                    <a href="{% url 'feed' club.id %}" style="text-decoration: none;">View All</a>
+                    {% endif %}
+                </div>
+                </div>
+
 
                 <div class="col-6">
 
                     {% if current_user == club.owner%}
-                        <button type="button" class="btn float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
-                            <i class="bi bi-chat-square-text"></i> New Post
-                        </button>
+                        <button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-square-text"></i> New Post</button>
                     {% elif current_user in club.get_organisers and club.organiser_owner  %}
-                        <button type="button" class="btn float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
+                        <button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding: 15px; text-transform:uppercase; font-size: 14px'>
                             <i class="bi bi-chat-square-text"></i> New Post
                         </button>
                     {% endif %}
 
             </div>
     </div>
-    <p></p>
+
+
     {% if posts %}
-                <a href="{% url 'feed' club.id %}" style="text-decoration: none;">View All</a>
             {% for post in posts %}
 
 
-                <div class="card mb-3 w-100" id="homepagePosts" style="border-color: brown; border-style: groove">
+                <div class="card mt-2 w-100" id="homepagePosts" style="border-color: brown; border-style: groove">
                   <div class="row g-0">
-                    <div class="col-3">
+                    <div class="col-3 my-auto text-left">
                       <img src="{{ post.author.gravatar}}" id="post_icon" class="img-fluid rounded-circle" alt="{{post.author}}'s gravatar">
                     </div>
                     <div class="col-9">
@@ -148,88 +164,39 @@
 
     <div class="col-3">
     {% if current_user == club.owner %}
-        <a class="btn float-end" style='padding: 10px;color:white; margin-bottom: 20px; background-color: brown; text-transform:uppercase; font-size: 14px' href="{% url 'edit_club' c_pk=club.id %}"><i class="bi bi-pencil-square"></i> Edit Club</a>
+        <a class="btn float-end mb-3" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px" href="{% url 'edit_club' c_pk=club.id %}"><i class="bi bi-pencil-square"></i> Edit Club</a>
     {% endif %}
-      <div class="card w-100">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-3">
-              <h6 class="card-title"><i class="bi bi-geo-alt"></i></h6>
-            </div>
-            <div class="col">
-              <h6 class="card-title">{{club.location}}</h6>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div class="card w-100">
-        <div class="card-body">
-          <a href="{% url 'club_members' club.id %}" style="text-decoration: none;">
-            <div class="row">
-              <div class="col-3">
-                <h6 class="card-title"><i class="bi bi-person-badge"></i></h6>
-              </div>
-              <div class="col">
-                <h6 class="card-title">{{club.get_all_users|length}} members</h6>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-      <div class="card w-100">
-        <div class="card-body">
-          <a href="{% url 'user_profile' club.owner.id %}" style="text-decoration: none;">
-            <div class="row">
-              <div class="col-3">
-                <h6 class="card-title"><i class="bi bi-person"></i></h6>
-              </div>
-              <div class="col">
-                <h6 class="card-title">{{ club.owner.first_name }} {{ club.owner.last_name }}</h6>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-      <div class="card w-100">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-3">
-
-              {% if club.meeting_online == True %}
-              <h6 class="card-title"><i class="bi bi-wifi" style="color: green"></i></h6>
-              {% else %}
-              <h6 class="card-title"><i class="bi bi-people-fill" style="color: purple"></i></h6>
-              {% endif %}
-            </div>
-
-            <div class="col">
-              {% if club.meeting_online == True %}
-              <h6 class="card-title" style="color: green">Online</h6>
-              {% else %}
-              <h6 class="card-title" style="color: purple">In-Person</h6>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      </div>
-    {% if club.organiser_owner %}
-    <div class="card w-100">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-3">
 
 
-              <h6 class="card-title"><i class="bi bi-check-circle" style="color: #0d6ffd"></i></h6>
-            </div>
-
-            <div class="col">
-              <h6 class="card-title" style="color: #0d6ffd">Organiser Privileges</h6>
-            </div>
-          </div>
-        </div>
-      </div>
-    {% endif %}
+    <table class="table table-hover table-borderless" style="border-style: groove; border-color: brown">
+            <tr>
+                <td><i class="bi bi-geo-alt" style="color: #0d6ffd"></i></td>
+                <td style="color: #0d6ffd">{{club.location}}</td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'club_members' club.id %}" style="text-decoration: none;"><i class="bi bi-person-badge"></i></a></td>
+                <td><a href="{% url 'club_members' club.id %}" style="text-decoration: none;">{{club.get_all_users|length}} members</a></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'user_profile' club.owner.id %}" style="text-decoration: none;"><i class="bi bi-person"></i></a></td>
+                <td><a href="{% url 'user_profile' club.owner.id %}" style="text-decoration: none;">{{ club.owner.first_name }} {{ club.owner.last_name }}</a></td>
+            </tr>
+            <tr>
+                 {% if club.meeting_online == True %}
+                    <td><i class="bi bi-wifi" style="color: green"></i></td>
+                     <td style="color: green">Online</td>
+                 {% else %}
+                    <td><i class="bi bi-check-circle" style="color: purple"></i></td>
+                     <td style="color: purple">In-Person</td>
+                {% endif %}
+            </tr>
+            <tr>
+                {% if club.organiser_owner %}
+                    <td><i class="bi bi-check-circle" style="color: #0d6ffd"></i></td>
+                    <td style="color: #0d6ffd">Organiser Privileges</td>
+                {% endif %}
+            </tr>
+        </table>
 
 
     <br>
@@ -239,27 +206,30 @@
     <div class="row mx-auto">
 
 
-            {% if current_user not in club.get_all_users%}
+            {% if current_user not in club.get_all_users and club not in applied_to%}
           <form action="{% url 'new_application' club.id %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn" id="apply-button" style='padding: 10px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-check-square"></i> Apply</button>
+            <button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-check-square"></i> Apply</button>
           </form>
           {%endif%}
+        {% if club in applied_to %}
+            <button type="submit" class="btn w-50 mx-auto" aria-disabled="true" style="padding: 15px; color: white; background-color: #353535; text-transform:uppercase; font-size: 14px"><i class="bi bi-check-square"></i> Applied</button>
+        {% endif %}
 
               {% if current_user in club.get_members %}
               <form action="{% url 'leave_club' club.id %}" method="post">
                 {% csrf_token %}
-                  <button type="submit" class="btn btn-default" id="leave-button" style='padding: 10px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-box-arrow-left"></i> Leave</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>
               </form>
               {% elif current_user in club.get_organisers %}
               <form action="{% url 'leave_club' club.id %}" method="post">
                 {% csrf_token %}
-                  <button type="submit" class="btn btn-default" id="leave-button" style='padding: 10px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-box-arrow-left"></i> Leave</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>
               </form>
               {% elif current_user == club.get_owner %}
               <form action="{% url 'disband_club' club.id %}" method=post>
                 {% csrf_token %}
-                  <button type="submit" class="btn" id="leave-button" style='padding: 10px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px'><i class="bi bi-x-octagon"></i> Disband</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> Disband</button>
                 </form>
 
 
@@ -284,11 +254,88 @@
         <form action="{% url 'new_post' club.id %}" method="post">
           {% csrf_token %}
           {% include 'partials/bootstrap_form.html' with form=form %}
-          <button type="submit" class="btn btn-dark" style="background-color: brown">Post</button>
+          <button type="submit" class="btn float-end" id="bookwiseGeneralBtn" style="">Post</button>
         </form>
       </div>
     </div>
   </div>
+    {% else %}
+
+    <div class="row">
+    <div class="col-6">
+
+    <div class="card w-100">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <img src="{{ club.gravatar }}" alt="Gravatar of {{ club.name }}" class="profile-image" style="border-radius: 10px">
+            </div>
+            <div class="col-6">
+                <strong><i class="bi bi-lock-fill float-end" style="font-size: 64px; color: #353535"></i></strong>
+            </div>
+
+        </div>
+      <br>
+      <br>
+      <h3>{{ club.name }}</h3>
+      <p>{{ club.description }}</p>
+    </div>
+    </div>
+    </div>
+    <div class="col-6">
+    <div class="row">
+        <table class="table table-hover table-borderless" style="border-style: groove; border-color: brown">
+            <tr>
+                <td><i class="bi bi-geo-alt" style="color: #0d6ffd"></i></td>
+                <td style="color: #0d6ffd">{{club.location}}</td>
+            </tr>
+            <tr>
+                <td><a style="text-decoration: none;"><i class="bi bi-person-badge"></i></a></td>
+                <td><a style="text-decoration: none;">{{club.get_all_users|length}} members</a></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'user_profile' club.owner.id %}" style="text-decoration: none;"><i class="bi bi-person"></i></a></td>
+                <td><a href="{% url 'user_profile' club.owner.id %}" style="text-decoration: none;">{{ club.owner.first_name }} {{ club.owner.last_name }}</a></td>
+            </tr>
+            <tr>
+                 {% if club.meeting_online == True %}
+                    <td><i class="bi bi-wifi" style="color: green"></i></td>
+                     <td style="color: green">Online</td>
+                 {% else %}
+                    <td><i class="bi bi-check-circle" style="color: purple"></i></td>
+                     <td style="color: purple">In-Person</td>
+                {% endif %}
+            </tr>
+            <tr>
+                {% if club.organiser_owner %}
+                    <td><i class="bi bi-check-circle" style="color: #0d6ffd"></i></td>
+                    <td style="color: #0d6ffd">Organiser Privileges</td>
+                {% endif %}
+            </tr>
+        </table>
+
+    </div>
+    <div class="row">
+
+     <p class="text-muted">You must be a member of <strong>{{ club.name }}</strong> to gain access - apply below.</p>
+
+             {% if current_user not in club.get_all_users and club not in applied_to%}
+          <form action="{% url 'new_application' club.id %}" method="post" class="text-center">
+            {% csrf_token %}
+            <button type="submit" class="btn w-50" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-check-square"></i> Apply</button>
+          </form>
+          {%endif%}
+        {% if club in applied_to %}
+            <button type="submit" class="btn w-50 mx-auto" aria-disabled="true" style="padding: 15px; color: white; background-color: #353535; text-transform:uppercase; font-size: 14px"><i class="bi bi-check-square"></i> Applied</button>
+        {% endif %}
+    </div>
+    </div>
+
+    </div>
+
+
+
+    {% endif %}
 </div>
 
 

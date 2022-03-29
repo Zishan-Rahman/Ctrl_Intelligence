@@ -1,6 +1,7 @@
 {% extends 'base_content.html' %}
 {% load bootstrap_pagination %}
 {% block content %}
+{% if books %}
     <div class="container">
     <div class="row">
         <div class="col-12">
@@ -10,7 +11,7 @@
         </div>
 </div>
 <div>
-  <table>
+  <table class="table table-hover table-borderless">
     <thead>
   <tr>
     <th scope="col"></th>
@@ -26,11 +27,36 @@
     <td>{{ book.title }}</td>
     <td>{{ book.author }}</td>
     <td>{{ book.pub_year }}</td>
+    {% if user.id == request.user.id %}
+    <form action="{% url 'remove_from_reading_list' book.id %}" method="post">
+      {% csrf_token %}
+     <td><button type="submit" class="btn" id="bookwiseGeneralBtn" style="font-size: 20px"><i class="bi bi-bookmarks-fill"></i></button></td>
+   </form>
+   {% endif %}
   </tr>
 </tbody>
   {% endfor %}
   </table>
-  {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
 </div>
+      {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+
 </div>
+{% else %}
+{% if user.id == request.user.id %}
+<div class="mt-5" style="text-align: center;">
+     <h5 class="text-muted text-center">You do not have any books in your reading list</h5>
+</div>
+{% else %}
+<div class="mt-5" style="text-align: center;">
+     <h5 class="text-muted text-center">{{ user.get_full_name }} do not have any books in your reading list</h5>
+</div>
+{% endif %}
+{% endif %}
+<script>
+  jQuery(document).ready(function($) {
+      $(".clickable-row").click(function() {
+          window.location = $(this).data("href");
+      });
+  });
+</script>
 {% endblock %}
