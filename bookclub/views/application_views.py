@@ -68,30 +68,35 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
 def app_accept(request, pk):
     """Accept application"""
-    app = Application.objects.all().get(pk=pk)
-
-    if request.user == app.club.owner:
-        app.club.make_member(app.applicant)
-        app.delete()
-        messages.add_message(request, messages.SUCCESS, "User accepted!")
-        club_views.club_util(request)
+    try:
+        app = Application.objects.all().get(pk=pk)
+        if request.user == app.club.owner:
+            app.club.make_member(app.applicant)
+            app.delete()
+            messages.add_message(request, messages.SUCCESS, "User accepted!")
+            club_views.club_util(request)
+            return redirect('applications')
+        else:
+            messages.add_message(request, messages.ERROR, "Action prohibited")
+            return redirect('my_applications')
+    except Application.DoesNotExist:
+        messages.add_message(request, messages.ERROR, "Too many inputs")
         return redirect('applications')
-    else:
-        messages.add_message(request, messages.ERROR, "Action prohibited")
-        return redirect('my_applications')
-
 
 def app_remove(request, pk):
     """Reject application"""
-    app = Application.objects.all().get(pk=pk)
-    if request.user == app.club.owner:
-        app.delete()
-        messages.add_message(request, messages.SUCCESS, "User rejected!")
+    try:
+        app = Application.objects.all().get(pk=pk)
+        if request.user == app.club.owner:
+            app.delete()
+            messages.add_message(request, messages.SUCCESS, "User rejected!")
+            return redirect('applications')
+        else:
+            messages.add_message(request, messages.ERROR, "Action prohibited")
+            return redirect('my_applications')
+    except Application.DoesNotExist:
+        messages.add_message(request, messages.ERROR, "Too many inputs")
         return redirect('applications')
-    else:
-        messages.add_message(request, messages.ERROR, "Action prohibited")
-        return redirect('my_applications')
-
 
 @login_required
 def new_application(request, club_id):
