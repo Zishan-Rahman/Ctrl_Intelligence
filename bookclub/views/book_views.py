@@ -34,6 +34,19 @@ class ShowBookView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     pk_url_kwarg = 'book_id'
     object_list = "books"
 
+    def get_context_data(self, **kwargs):
+        context = super(ShowBookView, self).get_context_data(**kwargs)
+        book = Book.objects.get(pk=self.kwargs['book_id'])
+
+        if Rating.objects.filter(book=book, user=self.request.user).exists():
+            rating = Rating.objects.get(book=book, user=self.request.user)
+            context['rating'] = rating.rating
+        else:
+            rating = 0
+            context['rating'] = rating
+
+        return context
+
     def get(self, request, *args, **kwargs):
         """Handle get request, and redirect to book_list if book_id invalid."""
         try:

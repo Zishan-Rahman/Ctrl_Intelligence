@@ -8,7 +8,7 @@
       <form action="{% url 'new_club' %}" method="post">
         {% csrf_token %}
           {% include 'partials/bootstrap_form.html' with form=form %}
-        <input id="create-new-club-button" type="submit" value="Create Club" class="btn btn-md" style="background-color: brown; color: white" >
+        <input type="submit" value="Create Club" class="btn btn-md" style="" id="bookwiseGeneralBtn" >
       </form>
         </div>
   </div>

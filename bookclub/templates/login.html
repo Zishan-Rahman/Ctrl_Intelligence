@@ -17,7 +17,7 @@
    {%  csrf_token  %}
         <input type ="hidden" name="next" value ="{{ next }}">
          {%  include 'partials/bootstrap_form.html' with form=form %}
-        <input type ="submit" value ="Log in" class ="btn" style="background-color: brown; color: white">
+        <input type ="submit" value ="Log in" class ="btn" id="bookwiseGeneralBtn">
         <a href="/password_reset">Forgot password?</a>
         <table>
           <thead>
@@ -27,8 +27,8 @@
               </tr>
           </thead>
           <tbody>
-            <td style='text-align:left; vertical-align:middle'><a class="btn btn-default" href="/"><span class="btn btn-dark" style="background-color: brown">Back</span></a></td>
-            <td style='text-align:right; vertical-align:middle'><a class="btn btn-default" href="{% url 'sign_up' %}"><span class="btn btn-dark" style="background-color: brown">Not a user yet?</span></a></td>
+            <td style='text-align:left; vertical-align:middle'><a class="btn" id="bookwiseGeneralBtn" href="/">Back</a></td>
+            <td style='text-align:right; vertical-align:middle'><a class="btn" id="bookwiseGeneralBtn" href="{% url 'sign_up' %}">Not a user yet?</a></td>
           </tbody>
         </table>
      </form>

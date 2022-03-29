@@ -18,29 +18,36 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-left">
                         {% for member in page_obj %}
+                            {% if member == club.owner %}
+                            <tr class="clickable-row" data-href="{% url 'user_profile' member.id %}" style="background-color: #ffefef">
+                            {% else %}
                             <tr class="clickable-row" data-href="{% url 'user_profile' member.id %}">
+                            {% endif %}
                                 <td><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></td>
                                 <td>{{member.first_name}} {{member.last_name}}</td>
-                                <td>{{member.public_bio}}</td>
+                                <td>{{member.public_bio|slice:':240'}}...</td>
                                 <td>{{member.favourite_genre}}</td>
                                 {% if member in club.get_members%}
                                   <td>Member</td>
                                   {% if is_owner  %}
-                                    <td><a class="btn btn-default" href="{% url 'promote_member_to_organiser' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: green">Promote</span></a></td>
-                                    <td><a class="btn btn-default" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: brown">Kick</span></a></td>
-                                    <td><a class="btn btn-default" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: blue">Transfer Ownership</span></a></td>
+                                    <td><a class="btn btn-outline-success" href="{% url 'promote_member_to_organiser' c_pk=c_pk u_pk=member.id %}">Promote</a></td>
+                                    <td><a class="btn btn-outline-dark" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}">Remove</a></td>
+                                    <td><a class="btn btn-outline-primary" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}">Transfer</a></td>
                                     {%endif%}
                                     {% elif member in club.get_organisers %}
                                   <td>Organiser</td>
                                   {% if is_owner  %}
-                                     <td><a class="btn btn-default" href="{% url 'demote_organiser_to_member' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: red">Demote</span></a></td>
-                                     <td><a class="btn btn-default" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: brown">Kick</span></a></td>
-                                     <td><a class="btn btn-default" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: blue">Transfer Ownership</span></a></td>
+                                     <td><a class="btn btn-outline-danger" href="{% url 'demote_organiser_to_member' c_pk=c_pk u_pk=member.id %}">Demote</a></td>
+                                     <td><a class="btn btn-outline-dark" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}">Remove</a></td>
+                                     <td><a class="btn btn-outline-primary" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}">Transfer</a></td>
                                      {%endif%}
                                      {% else %}
-                                  <td>Owner</td>
+                                    <td>Owner</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 {% endif %}
                             </tr>
                         {% endfor %}
@@ -64,27 +71,34 @@
                     </thead>
                     <tbody>
                         {% for member in all_users %}
+                            {% if member == club.owner %}
+                            <tr class="clickable-row" data-href="{% url 'user_profile' member.id %}" style="background-color: #ffefef">
+                            {% else %}
                             <tr class="clickable-row" data-href="{% url 'user_profile' member.id %}">
+                            {% endif %}
                                 <td><img src="{{ member.mini_gravatar }}" alt="Gravatar of {{ member.first_name }} {{ member.last_name }}" class="rounded-circle" ></td>
                                 <td>{{member.first_name}} {{member.last_name}}</td>
-                                <td>{{member.public_bio}}</td>
+                                <td>{{member.public_bio|slice:':240'}}...</td>
                                 <td>{{member.favourite_genre}}</td>
                                 {% if member in club.get_members%}
                                   <td>Member</td>
                                   {% if is_owner  %}
-                                    <td><a class="btn btn-default" href="{% url 'promote_member_to_organiser' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: green">Promote</span></a></td>
-                                    <td><a class="btn btn-default" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: brown">Kick</span></a></td>
-                                    <td><a class="btn btn-default" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: blue">Transfer Ownership</span></a></td>
+                                    <td><a class="btn btn-outline-success" href="{% url 'promote_member_to_organiser' c_pk=c_pk u_pk=member.id %}">Promote</a></td>
+                                    <td><a class="btn btn-outline-dark" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}">Remove</a></td>
+                                    <td><a class="btn btn-outline-primary" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}">Transfer</a></td>
                                     {%endif%}
                                     {% elif member in club.get_organisers %}
                                   <td>Organiser</td>
                                   {% if is_owner  %}
-                                     <td><a class="btn btn-default" href="{% url 'demote_organiser_to_member' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: red">Demote</span></a></td>
-                                     <td><a class="btn btn-default" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: brown">Kick</span></a></td>
-                                     <td><a class="btn btn-default" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}"><span class="btn btn-dark" style="background-color: blue">Transfer Ownership</span></a></td>
+                                      <td><a class="btn btn-outline-danger" href="{% url 'demote_organiser_to_member' c_pk=c_pk u_pk=member.id %}">Demote</a></td>
+                                     <td><a class="btn btn-outline-dark" href="{% url 'kick_user_from_club' c_pk=c_pk u_pk=member.id %}">Remove</a></td>
+                                     <td><a class="btn btn-outline-primary" href="{% url 'transfer_ownership' c_pk=c_pk u_pk=member.id %}">Transfer</a></td>
                                      {%endif%}
                                      {% else %}
                                   <td>Owner</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 {% endif %}
                             </tr>
                         {% endfor %}
