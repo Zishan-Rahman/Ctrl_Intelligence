@@ -23,12 +23,12 @@
         <td>{{ entry.pub_year }}</td>
 
         {% if entry in request.user.currently_reading_books.all %}
-        <form action="{% url 'remove_from_current_reads_book_list' book_id=entry.id %}" method="post">
+        <form action="{% url 'remove_from_reading_list_book_list' book_id=entry.id %}" method="post">
           {% csrf_token %}
          <td><button type="submit" class="btn" style="background-color: brown; color: white; font-size: 20px"><i class="bi bi-bookmarks-fill"></i></button></td>
        </form>
        {% else %}
-        <form action="{% url 'add_to_current_reads_book_list' book_id=entry.id %}" method="post">
+        <form action="{% url 'add_to_reading_list_book_list' book_id=entry.id %}" method="post">
           {% csrf_token %}
          <td><button type="submit" class="btn" style="background-color: brown; color: white; font-size: 20px"><i class="bi bi-bookmarks"></i></button></td>
        </form>

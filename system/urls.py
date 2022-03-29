@@ -15,7 +15,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bookclub import views
-from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , feed_views , post_views , user_feed_views , user_post_views
+from bookclub.views import account_views, authentication_views, dashboard_views, book_views, club_views, user_views, search_views, application_views, meeting_views, messaging_views  , club_feed_views , post_views , user_feed_views , user_post_views
 from django.contrib.auth import views as auth_views
 
 
@@ -29,11 +29,11 @@ urlpatterns = [
     path('users/', user_views.UsersListView.as_view(), name='user_list'),
     path('clubs/', club_views.ClubsListView.as_view(), name='club_list'),
     path('books/', book_views.BooksListView.as_view(), name='book_list'),
-    path('current_reads/<int:user_id>/', book_views.current_reads, name='current_reads'),
-    path('add_to_current_reads_list/<int:book_id>/', book_views.add_to_current_reads_book_list, name='add_to_current_reads_book_list'),
-    path('remove_from_current_reads_list/<int:book_id>/', book_views.remove_from_current_reads_book_list, name='remove_from_current_reads_book_list'),
-    path('add_to_current_reads_profile/<int:book_id>/', book_views.add_to_current_reads_book_profile, name='add_to_current_reads_book_profile'),
-    path('remove_from_current_reads_profile/<int:book_id>/', book_views.remove_from_current_reads_book_profile, name='remove_from_current_reads_book_profile'),
+    path('reading_list/<int:user_id>/', book_views.ReadingListView.as_view(), name='reading_list'),
+    path('books/add_to_reading_list/<int:book_id>/', book_views.add_to_reading_list_book_list, name='add_to_reading_list_book_list'),
+    path('books/remove_from_reading_list/<int:book_id>/', book_views.remove_from_reading_list_book_list, name='remove_from_reading_list_book_list'),
+    path('book_profile/<int:book_id>/add_to_reading_list/', book_views.add_to_reading_list_book_profile, name='add_to_reading_list_book_profile'),
+    path('book_profile/<int:book_id>/remove_from_reading_list/', book_views.remove_from_reading_list_book_profile, name='remove_from_reading_list_book_profile'),
     path('sign_up/', authentication_views.sign_up, name='sign_up'),
     path('activate/<uid>/<token>', authentication_views.activate, name='activate'),
     path('login/', authentication_views.LogInView.as_view(), name='login'),
@@ -78,7 +78,7 @@ urlpatterns = [
     path('my_book_ratings/', book_views.MyBookRatings.as_view(), name="my_book_ratings"),
     path('invite/<int:user_id>/<int:club_id>/', user_views.inviteMessage, name='invite_message'),
     path('club_profile/<int:c_pk>/disband', club_views.disband_club, name='disband_club'),
-    path('club_profile/<int:club_id>/feed/', feed_views.FeedView.as_view(), name='feed'),
+    path('club_profile/<int:club_id>/feed/', club_feed_views.ClubFeedView.as_view(), name='feed'),
     path('user_profile/<int:user_id>/follow/', user_views.follow_from_user_profile , name = 'follow_from_user_profile'),
     path('users/follow/<int:user_id>/', user_views.follow_from_user_list , name = 'follow_from_user_list'),
     path('users/unfollow/<int:user_id>/', user_views.unfollow_from_user_list, name = 'unfollow_from_user_list'),

@@ -17,12 +17,12 @@
                 <div class="col-3 h-100">
 
                     {% if book in request.user.currently_reading_books.all %}
-          <form action="{% url 'remove_from_current_reads_book_profile' book.id %}" method="post">
+          <form action="{% url 'remove_from_reading_list_book_profile' book.id %}" method="post">
             {% csrf_token %}
            <button type="submit" class="btn" style="background-color: brown; color: white; font-size: 24px"><i class="bi bi-bookmarks-fill"></i></button>
          </form>
          {% else %}
-          <form action="{% url 'add_to_current_reads_book_profile' book.id %}" method="post">
+          <form action="{% url 'add_to_reading_list_book_profile' book.id %}" method="post">
             {% csrf_token %}
            <button type="submit" class="btn" style="background-color: brown; color: white; font-size: 24px"><i class="bi bi-bookmarks"></i></button>
          </form>

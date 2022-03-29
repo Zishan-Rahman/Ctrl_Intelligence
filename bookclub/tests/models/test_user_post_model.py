@@ -24,15 +24,15 @@ class UserPostTest(TestCase):
 
     def test_author_must_not_be_blank(self):
         self.post.author = None
-        with self.assertRaises(ValidationError):
-            self.post.full_clean()
+        with self.assertRaisesMessage(AssertionError, "Test message should be valid"):
+            self.test_valid_message()
 
     def test_text_must_not_be_blank(self):
         self.post.text = ''
-        with self.assertRaises(ValidationError):
-            self.post.full_clean()
+        with self.assertRaisesMessage(AssertionError, "Test message should be valid"):
+            self.test_valid_message()
 
     def test_text_must_not_be_overlong(self):
         self.post.text = 'x' * 281
-        with self.assertRaises(ValidationError):
-            self.post.full_clean()
+        with self.assertRaisesMessage(AssertionError, "Test message should be valid"):
+            self.test_valid_message()

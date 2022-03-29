@@ -56,28 +56,28 @@ class BookProfileTest(TestCase):
 
     def test_favourite_button_in_book_profile_works(self):
         self.client.login(email=self.user.email, password='Password123')
-        before_current_reads_count = self.user.favourite_books.count()
+        before_reading_list_count = self.user.favourite_books.count()
         response = self.client.get('/book_profile/1/favourite', follow=True)
         redirect_url = '/book_profile/1/'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
-        after_current_reads_count = self.user.favourite_books.count()
-        self.assertNotEqual(before_current_reads_count, after_current_reads_count)
+        after_reading_list_count = self.user.favourite_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
     def test_unfavourite_button_in_book_profile_works(self):
         self.client.login(email=self.user.email, password='Password123')
         self.user.favourite_books.add(self.book)
-        before_current_reads_count = self.user.favourite_books.count()
+        before_reading_list_count = self.user.favourite_books.count()
         response = self.client.get('/book_profile/1/unfavourite', follow=True)
         redirect_url = '/book_profile/1/'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.ERROR)
-        after_current_reads_count = self.user.favourite_books.count()
-        self.assertNotEqual(before_current_reads_count, after_current_reads_count)
+        after_reading_list_count = self.user.favourite_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
     def test_book_profile_has_dropdown_to_rate_book(self):
         self.client.login(email=self.user.email, password='Password123')
@@ -108,7 +108,7 @@ class BookProfileTest(TestCase):
 <script id="dsq-count-scr" src="//localhost-8000-b6e1mwjp94.disqus.com/count.js" async></script>"""
         self.assertIn(assertString,html)
 
-    def test_book_profile_view_has_remove_from_current_reads_button_when_book_is_in_current_reads(self):
+    def test_book_profile_view_has_remove_from_reading_list_button_when_book_is_in_reading_list(self):
         self.client.login(email=self.user.email, password='Password123')
         self.user.currently_reading_books.add(self.book)
         response = self.client.get(self.url)
@@ -116,37 +116,37 @@ class BookProfileTest(TestCase):
         self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
                       f'24px"><i class="bi bi-bookmarks-fill"></i></button>', html)
 
-    def test_book_profile_view_has_add_to_current_reads_button_when_book_is_not_in_current_reads(self):
+    def test_book_profile_view_has_add_to_reading_list_button_when_book_is_not_in_reading_list(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
                       f'24px"><i class="bi bi-bookmarks"></i></button>', html)
 
-    def test_add_to_current_reads_in_book_profile_works(self):
+    def test_add_to_reading_list_in_book_profile_works(self):
         self.client.login(email=self.user.email, password='Password123')
-        before_current_reads_count = self.user.currently_reading_books.count()
-        response = self.client.get('/add_to_current_reads_profile/1/', follow=True)
+        before_reading_list_count = self.user.currently_reading_books.count()
+        response = self.client.get('/book_profile/1/add_to_reading_list/', follow=True)
         redirect_url = '/book_profile/1/'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
-        after_current_reads_count = self.user.currently_reading_books.count()
-        self.assertNotEqual(before_current_reads_count, after_current_reads_count)
+        after_reading_list_count = self.user.currently_reading_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
-    def test_remove_from_current_reads_in_book_profile_works(self):
+    def test_remove_from_reading_list_in_book_profile_works(self):
         self.client.login(email=self.user.email, password='Password123')
         self.user.currently_reading_books.add(self.book)
-        before_current_reads_count = self.user.currently_reading_books.count()
-        response = self.client.get('/remove_from_current_reads_profile/1/', follow=True)
+        before_reading_list_count = self.user.currently_reading_books.count()
+        response = self.client.get('/book_profile/1/remove_from_reading_list/', follow=True)
         redirect_url = '/book_profile/1/'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.ERROR)
-        after_current_reads_count = self.user.currently_reading_books.count()
-        self.assertNotEqual(before_current_reads_count, after_current_reads_count)
+        after_reading_list_count = self.user.currently_reading_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
     # def test_book_profile_view_has_add_to_books_read_button(self):
     #     self.client.login(email=self.user.email, password='Password123')

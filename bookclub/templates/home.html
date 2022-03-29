@@ -99,7 +99,7 @@
                 <div class="card mb-3 w-100" id="homepagePosts" style="border-color: brown; border-style: groove">
                   <div class="row g-0">
                     <div class="col-3">
-                      <img src="{{ post.author.gravatar}}" class="img-fluid rounded-start" alt="{{post.author}}'s gravatar">
+                      <img src="{{ post.author.gravatar}}" id="post_icon" class="img-fluid rounded-circle" alt="{{post.author}}'s gravatar">
                     </div>
                     <div class="col-9">
                       <div class="card-body">
@@ -120,7 +120,7 @@
 
                   </div>
                 <div class="card-footer">
-                        <small class="text-muted">Posted on {{ post.created_at }}</small>
+                        <small class="text-muted">{{ post.created_at|date:"M y G:i" }}</small>
                     </div>
                 </div>
             {% endfor %}

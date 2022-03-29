@@ -9,7 +9,7 @@ from bookclub.models import User, Club, Post
 from bookclub.tests.helpers import create_posts, reverse_with_next, LogInTester
 
 
-class FeedViewTestCase(TestCase, LogInTester):
+class ClubFeedViewTestCase(TestCase, LogInTester):
     """Tests of the feed view."""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json",
@@ -21,27 +21,27 @@ class FeedViewTestCase(TestCase, LogInTester):
         self.bush_club.make_member(self.user)
         self.url = reverse('feed', kwargs={'club_id': self.bush_club.id})
 
-    def test_feed_url(self):
+    def test_club_feed_url(self):
         self.assertEqual(self.url, f'/club_profile/{self.bush_club.id}/feed/')
 
-    def test_get_feed(self):
-        self.client.login(email='johndoe@bookclub.com', password="Password123")
+    def test_get_club_feed(self):
+        self.client.login(email=self.user, password="Password123")
         response = self.client.get(self.url)
-        self._create_test_posts(settings.POSTS_PER_PAGE*2+3)
+        self._create_test_club_posts(settings.POSTS_PER_PAGE*2+3)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'feed.html')
-        form = response.context['page_obj']
+        self.assertTrue(self._is_logged_in())
 
-    def test_get_feed_redirects_when_not_logged_in(self):
+    def test_get_club_feed_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url,
                              status_code=302, target_status_code=200)
         self.assertFalse(self._is_logged_in())
 
-    def test_get_feed_with_pagination(self):
-        self.client.login(email='johndoe@bookclub.com', password="Password123")
-        self._create_test_posts(settings.POSTS_PER_PAGE*2+3-1)
+    def test_get_club_feed_with_pagination(self):
+        self.client.login(email=self.user, password="Password123")
+        self._create_test_club_posts(settings.POSTS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'feed.html')
@@ -78,8 +78,8 @@ class FeedViewTestCase(TestCase, LogInTester):
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()
 
-    def _create_test_posts(self, posts_count=10):
-        for id in range(1, posts_count+1, 1):
+    def _create_test_club_posts(self, club_posts_count=10):
+        for id in range(1, club_posts_count+1, 1):
             user = User.objects.create(
                 email=f'user{id}@test.org',
                 password='Password123',
@@ -93,7 +93,7 @@ class FeedViewTestCase(TestCase, LogInTester):
             Post.objects.create(
                 author=user,
                 club=self.bush_club,
-                text=f'Test post {id}'
+                text=f'Test club posts {id}'
             )
 
     def _is_logged_in(self):

@@ -1,9 +1,5 @@
 """Adapted from clucker project"""
-"""Feed related views."""
-
-
-
-
+"""Club Feed related views."""
 from bookclub.models import Club, Post
 from django.core.paginator import Paginator
 from django.conf import settings
@@ -11,7 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, FormView
 from bookclub.forms import PostForm
-class FeedView(LoginRequiredMixin, ListView):
+
+class ClubFeedView(LoginRequiredMixin, ListView):
 
     """Class-based generic view for displaying a view."""
 
@@ -44,6 +41,9 @@ class FeedView(LoginRequiredMixin, ListView):
         club = Club.objects.all().get(pk=current_club_id)
         form = PostForm()
         posts = Post.objects.filter(club=club)
+        paginator = Paginator(posts, settings.POSTS_PER_PAGE)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
         if form.is_valid():
             return redirect('feed')
         return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts, 'page_obj': page_obj})

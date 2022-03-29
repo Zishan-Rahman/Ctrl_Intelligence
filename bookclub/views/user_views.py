@@ -14,35 +14,12 @@ from django.views.generic import ListView
 from django.template.loader import render_to_string
 from bookclub.views import config
 
-
-@login_required
-def user_list(request):
-    users = []
-    for user in User.objects.all():
-        users.append({
-            "id": user.id,
-            "first_name": user.get_first_name,
-            "last_name": user.get_last_name,
-            "email": user.get_email,
-            "public_bio": user.get_bio,
-            "favourite_genre": user.get_favourite_genre,
-            "mini_gravatar": user.mini_gravatar(),
-            "gravatar": user.gravatar()
-        })
-    return render(request, 'user_list.html', {'users': users})
-
-
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
 
     model = UserForm
     template_name = "edit_profile.html"
     form_class = UserForm
-
-    def get_object(self):
-        """Return the object (user) to be updated."""
-        user = self.request.user
-        return user
 
     def get_success_url(self):
         """Return redirect URL after successful update."""
@@ -103,28 +80,7 @@ def user_profile(request, user_id):
 @login_required
 def current_user_profile(request):
     """ Current User's Profile Page """
-    user = User.objects.get(id=request.user.id)
-    club_util(request)
-    current_user = request.user
-    following = request.user.is_following(user)
-    followable = request.user != user
-    followers = request.user.followers.all()
-    currently_reading_books = user.currently_reading_books.all()
-    form = UserPostForm()
-    posts = UserPost.objects.filter(author=current_user)
-    posts = posts[:6]
-    return render(request, 'user_profile.html',
-                  {
-                      'user': user,
-                      'current_user': current_user,
-                      'following': following,
-                      'followable': followable,
-                      'user_clubs': config.user_clubs,
-                      'currently_reading_books': currently_reading_books[:3],
-                      'form': form,
-                      'posts': posts
-                  }
-                  )
+    return user_profile(request, user_id=request.user.id)
 
 
 @login_required
