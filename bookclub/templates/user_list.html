@@ -12,7 +12,7 @@
                 <th scope="col"></th>
                 <th scope="col">Name</th>
                 <th scope="col">Bio</th>
-                <th scope="col">Email</th>
+                <th scope="col">Location</th>
                 <th scope="col">Favourite Genre</th>
             </tr>
         </thead>
@@ -20,20 +20,20 @@
           {% for user in users %}
 
           <tr class="clickable-row" data-href="{% url 'user_profile' user.id %}">
-              <td><a href="{% url 'user_profile' user.id %}"><img src="{{ user.mini_gravatar }}" alt="Gravatar of user {{ user.name }}" class="rounded-circle" ></a></td>
+              <td><a href="{% url 'user_profile' user.id %}"><img src="{{ user.mini_gravatar }}" alt="Gravatar of user {{ user.name }}" style="border-radius: 10px" ></a></td>
               <td>{{ user.first_name}} {{ user.last_name}}</td>
-              <td>{{ user.public_bio}}</td>
-              <td>{{ user.email}}</td>
+              <td>{{ user.public_bio|slice:':240'}}...</td>
+              <td>{{ user.location}}</td>
               <td>{{ user.favourite_genre }}</td>
               {% if user in request.user.get_users_followees %}
               <form action="{% url 'unfollow_from_user_list' user_id=user.id %}" method="post">
                 {% csrf_token %}
-                <td><button type="submit" class="btn btn-dark" style="background-color: brown">Unfollow</button></td>
+                <td><button type="submit" class="btn btn-outline-secondary" style="">Unfollow</button></td>
               </form>
               {% else %}
               <form action="{% url 'follow_from_user_list' user_id=user.id %}" method="post">
                 {% csrf_token %}
-                <td><button type="submit" class="btn btn-dark" style="background-color: brown">Follow</button></td>
+                <td><button type="submit" class="btn btn-outline-primary" style="">Follow</button></td>
               </form>
               {% endif %}
           </tr>

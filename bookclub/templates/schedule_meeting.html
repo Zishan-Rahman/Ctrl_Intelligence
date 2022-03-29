@@ -8,7 +8,7 @@
         <form action="{% url 'schedule_meeting' pk=pk%}" method="post">
               {% csrf_token %}
               {% include 'partials/bootstrap_form.html' with form=form %}
-              <input type="submit" value="Schedule meeting" class="btn btn-primary">
+              <input type="submit" value="Schedule Meeting" class="btn" id="bookwiseGeneralBtn">
         </form>
    </body>
         </div>
