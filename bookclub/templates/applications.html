@@ -43,8 +43,8 @@
           <td style="width: 20%">{{ a.applicant.date_joined }}</td>
           <td>{{ a.applicant.public_bio }}</td>
           <td>{{ a.applicant.location }}</td>
-          <td><a class="btn btn-default" href="{% url 'app_accept' pk=a.pk %}"><span class="btn btn-dark" style="background-color: green">Accept</span></a></td>
-          <td><a class="btn btn-default" href="{% url 'app_remove' pk=a.pk %}"><span class="btn btn-dark" style="background-color: red">Reject</span></a></td>
+          <td><a class="btn btn-outline-success" href="{% url 'app_accept' pk=a.pk %}">Accept</a></td>
+          <td><a class="btn btn-outline-danger" href="{% url 'app_remove' pk=a.pk %}">Reject</a></td>
         </tr>
       {% endfor %}
     </table>
@@ -73,8 +73,8 @@
           <td>{{ a.applicant.date_joined }}</td>
           <td>{{ a.applicant.public_bio }}</td>
           <td>{{ a.applicant.location }}</td>
-          <td><a class="btn btn-default" href="{% url 'app_accept' pk=a.pk %}"><span class="btn btn-dark" style="background-color: green">Accept</span></a></td>
-          <td><a class="btn btn-default" href="{% url 'app_remove' pk=a.pk %}"><span class="btn btn-dark" style="background-color: red">Reject</span></a></td>
+          <td><a class="btn btn-outline-success" href="{% url 'app_accept' pk=a.pk %}">Accept</a></td>
+          <td><a class="btn btn-outline-danger" href="{% url 'app_remove' pk=a.pk %}">Reject</a></td>
         </tr>
       {% endfor %}
     </table>

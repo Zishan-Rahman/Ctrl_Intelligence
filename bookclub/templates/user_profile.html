@@ -18,16 +18,16 @@
                       {% csrf_token %}
                     {%if followable %}
                     {% if following %}
-                    <button class='btn btn-lg float-end' style="padding: 15px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                    <button class='btn btn-lg btn-outline-secondary float-end' style="padding: 15px; text-transform:uppercase; font-size: 14px">
                       Unfollow
                     </button>
                     {% else %}
-                    <button class='btn btn-lg float-end' style="padding: 15px; color:white; background-color: royalblue; text-transform:uppercase; font-size: 14px">
+                    <button class='btn btn-lg btn-outline-primary float-end' style="padding: 15px; text-transform:uppercase; font-size: 14px">
                       Follow
                     </button>
                     {% endif %}
                     {%elif user.id == request.user.id%}
-                    <a class="btn float-end" href="{% url 'edit_profile' %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                    <a class="btn float-end" href="{% url 'edit_profile' %}" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px">
                       <i class="bi bi-gear" style="font-size: 0.9rem;"></i>
                       Edit Profile
                     </a>
@@ -73,12 +73,22 @@
             <div class="row">
 
                 <div class="col-6">
-                     <h5 class="text-left"><strong>Latest Posts</strong></h5>
+                    <div class="row">
+                        <h5 class="text-left"><strong>Latest Posts</strong></h5>
+
+                    </div>
+                    <div class="row">
+                        {% if posts %}
+                         <a href="{% url 'user_feed' user.id %}" style="text-decoration: none;">View All</a>
+                        {% endif %}
+
+                    </div>
+
                 </div>
 
                 <div class="col-6">
                     {%if user.id == request.user.id%}
-                    <button type="button" class="btn float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
+                    <button type="button" class="btn float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="bookwiseGeneralBtn" style='padding: 15px; text-transform:uppercase; font-size: 14px'>
                             <i class="bi bi-chat-square-text"></i> New Post
                         </button>
                     {% endif %}
@@ -87,7 +97,6 @@
             </div>
             <div class="row">
         {% if posts %}
-                <a href="{% url 'user_feed' user.id %}" style="text-decoration: none;">View All</a>
             {% for post in posts %}
 
                 <div class="card w-100 mx-auto" style="margin-top: 10px; border-color: brown">
@@ -120,14 +129,14 @@
             <div class="row">
                 <div class="col-6">
 
-                    <button id="Invite" class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="padding: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                    <button id="bookwiseGeneralBtn" class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="padding: 15px; text-transform:uppercase; font-size: 14px">
                       <i class="bi bi-envelope"></i> Invite
                     </button>
 
                 </div>
 
                 <div class="col-6">
-                    <a class="btn float-end" href="{% url 'create_chat_from_profile' user.id %}" style="padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px">
+                    <a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'create_chat_from_profile' user.id %}" style="padding: 15px; text-transform:uppercase; font-size: 14px">
                         <i class="bi bi-messenger"></i> Message
                       </a>
                 </div>
@@ -176,7 +185,7 @@
                 <div class="row">
 
                 {% if currently_reading_books %}
-                    <a class="text-left" href="/current_reads/{{ user.id }}/" style="text-decoration: none; margin-left: 5px">View All</a>
+                    <a class="text-left" href="{% url 'reading_list' user.id %}" style="text-decoration: none; margin-left: 5px">View All</a>
                     <table class="table table-hover table-borderless" style="margin-left: 5px; border-style: groove; border-color: brown">
 
 
@@ -184,7 +193,7 @@
 
                   <tr>
                         <td>
-                            <img src="{{ book.medium_url }}">
+                            <img src="{{ book.medium_url }}" alt="{{ book.title }}'s cover image">
                         </td>
                         <td>{{ book.title }}</td>
                     </tr>
@@ -221,7 +230,7 @@
         <form action="{% url 'user_new_post' user.id %}" method="post">
           {% csrf_token %}
           {% include 'partials/bootstrap_form.html' with form=form %}
-          <button type="submit" class="btn btn-dark" style="background-color: brown">Post</button>
+          <button type="submit" class="btn float-end" style="padding-left: 10px; padding-right: 10px" id="bookwiseGeneralBtn">Post</button>
         </form>
       </div>
     </div>
@@ -237,14 +246,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table id="myTable" class="table">
-                  <thead class="table-light">
-                    <tr>
-                      <th scope="col"></th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Follow</th>
-                    </tr>
-                  </thead>
+                <table class="table table table-hover table-borderless">
                      <tr>
                       {% for entry in user.followers.all %}
                       <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
@@ -281,14 +283,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table id="myTable" class="table">
-                  <thead class="table-light">
-                    <tr>
-                      <th scope="col"></th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Unfollow</th>
-                    </tr>
-                  </thead>
+                <table class="table table table-hover table-borderless">
                      <tr>
                       {% for entry in user.followees.all %}
                       <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
@@ -318,26 +313,18 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <body>
-                <input type='text' id='txt_searchall' placeholder="Search for clubs and applicants.." size="30">&nbsp
-                <table id="myTable" class="table">
-                  <thead class="table-light">
-                    <tr>
-                      <th scope="col"></th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Invite</th>
-                    </tr>
-                  </thead>
+
+                <input type='text' onkeyup="searchFunction()" id='txt_searchall' class="form-control w-50" placeholder="Search for clubs..." size="30">&nbsp
+                <table id="myTable" class="table table-hover table-borderless">
                      <tr>
                       {% for entry in user_clubs %}
                       <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
                         <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
                         <td>{{ entry.name }}</td>
-                        <td><a class="btn" href="{% url 'invite_message' user.id entry.id %}" style="background-color: brown; color: white">Invite</a></td>
+                        <td><a class="btn" id="bookwiseGeneralBtn" href="{% url 'invite_message' user.id entry.id %}">Invite</a></td>
                       </tr>
                       {% endfor %}
                   </table>
-
 
                   </body>
             </div>
@@ -349,37 +336,27 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
-$(document).ready(function(){
-  $('#txt_searchall').keyup(function(){
-    var search = $(this).val();
-    $('table tbody tr').hide();
-    var len = $('table tbody tr:not(.notfound) td:contains("'+search+'")').length;
-    if(len > 0){
-      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
-        $(this).closest('tr').show();
-      });
-    }else{
-      $('.notfound').show();
+
+// Adapted from W3 Schools - How to JS filter table
+function searchFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("txt_searchall");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
     }
-  });
-  $('#txt_name').keyup(function(){
-    var search = $(this).val();
-    $('table tbody tr').hide();
-    var len = $('table tbody tr:not(.notfound) td:nth-child(2):contains("'+search+'")').length;
-    if(len > 0){
-      $('table tbody tr:not(.notfound) td:contains("'+search+'")').each(function(){
-         $(this).closest('tr').show();
-      });
-    }else{
-      $('.notfound').show();
-    }
-  });
-});
-$.expr[":"].contains = $.expr.createPseudo(function(arg) {
-   return function( elem ) {
-     return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-   };
-});
+  }
+}
 </script>
 
 {% endblock %}

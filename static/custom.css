@@ -108,15 +108,51 @@
 
   #post_icon {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 75%;
-    height: 75%;
-    margin-top: 10%;
+    margin-left: 25%;
+    height: 64px;
+    width: 64px;
 
   }
   
+  #bookwiseGeneralBtn.btn {
+    background-color: brown;
+    color: white;
+  }
 
+  #bookwiseGeneralBtn.btn:hover {
+    background-color: white;
+    border-style: groove;
+    border-color: brown;
+    color: brown;
+  }
+
+  #logInBtn.btn {
+    background-color: brown;
+    color: white;
+  }
+
+  #logInBtn.btn:hover {
+    background-color: black;
+    border-color: white;
+    color: white;
+    border-style: groove;
+
+
+  }
+
+  #signUpBtn.btn {
+    background-color: white;
+    color: brown;
+  }
+
+  #signUpBtn.btn:hover {
+    background-color: black;
+    border-color: white;
+    color: white;
+    border-style: groove;
+
+
+  }
 
 
 

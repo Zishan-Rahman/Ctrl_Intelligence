@@ -14,9 +14,11 @@
                 <section class="text-white">
                 <form class="modal-content animate bg-black" action="{% url 'sign_up' %}" method="post">
         <h3><strong>Sign up</strong></h3>
+
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Sign up" class="btn" style="background-color: brown; color: white">
+        <input type="submit" value="Sign up" class="btn" style="" id="bookwiseGeneralBtn">
+                    <br>
         <table>
           <thead>
               <tr>
@@ -25,8 +27,8 @@
               </tr>
           </thead>
           <tbody>
-            <td style='text-align:left; vertical-align:middle'><a class="btn" href="/"><span class="btn" style="background-color: brown; color: white">Back</span></a></td>
-            <td style='text-align:right; vertical-align:middle'><a class="btn" href="{% url 'login' %}" style="background-color: brown; color: white">Already a User?</a></td>
+            <td style='text-align:left; vertical-align:middle'><a class="btn text-left" href="/" id="bookwiseGeneralBtn">Back</a></td>
+            <td style='text-align:right; vertical-align:middle'><a class="btn" href="{% url 'login' %}" id="bookwiseGeneralBtn">Already a User?</a></td>
           </tbody>
         </table>
                 </form>
