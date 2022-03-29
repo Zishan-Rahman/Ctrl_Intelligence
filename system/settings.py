@@ -10,12 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import os
+import os, bookclub, django_heroku
 from pathlib import Path
 from django.contrib.messages import constants as message_constants
-
-import bookclub
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -168,3 +165,6 @@ EMAIL_HOST_USER = 'bookwise0000@gmail.com'
 EMAIL_HOST_PASSWORD = 'Bookwise123!'
 DEFAULT_FROM_EMAIL = 'bookwise0000@gmail.com'
 SERVER_EMAIL = 'bookwise0000@gmail.com'
+
+# Activate django_heroku here
+django_heroku.settings(locals())
