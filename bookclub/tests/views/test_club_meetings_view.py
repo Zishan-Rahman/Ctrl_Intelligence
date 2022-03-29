@@ -57,7 +57,6 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
             self.assertIn('<a class="btn" href="/club_profile/2/meetings/4/edit" id="bookwiseGeneralBtn" '
                           'style="text-transform: uppercase; font-size: 14px">Edit meeting details</a>', html)
 
-
     def test_get_club_meetings_list_with_pagination(self):
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_club_meetings(settings.USERS_PER_PAGE * 2 + 3 - 1)
