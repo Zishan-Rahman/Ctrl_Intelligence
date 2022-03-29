@@ -53,7 +53,8 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
                 self.assertIn(f'<td>12:0{i} p.m.</td>', html)
             else:
                 self.assertIn(f'<td>12:{i} p.m.</td>', html)
-            self.assertIn(f'<td>{test_meeting.address}</td>', html)
+
+            self.assertIn(f'{test_meeting.address}</a></td>', html)
             self.assertIn('<a class="btn" href="/club_profile/2/meetings/4/edit" id="bookwiseGeneralBtn" '
                           'style="text-transform: uppercase; font-size: 14px">Edit meeting details</a>', html)
 

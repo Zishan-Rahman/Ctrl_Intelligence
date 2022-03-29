@@ -73,9 +73,9 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; '
-                      'text-transform:uppercase; font-size: 14px"><i class="bi bi-check-square"></i> Apply</button>',
-                      html)
+        self.assertIn('<button type="submit" class="btn w-50 mx-auto" aria-disabled="true" style="padding: 15px; '
+                      'color: white; background-color: #353535; text-transform:uppercase; font-size: 14px"><i '
+                      'class="bi bi-check-square"></i> Applied</button>', html)
 
     def test_club_profile_view_has_meetings_list_button_for_owner(self):
         self.today = date.today()
@@ -303,21 +303,21 @@ class ClubProfileTest(TestCase, LogInTester):
     """ Test to check whether some posts and meetings appear on club profile page """
 
     def test_club_profile_view_has_posts(self):
-        self.client.login(email=self.sam.email, password='Password123')
+        self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
         html = response.content.decode('utf8')
         self.assertIn(f'This is a Bush House Book Club Post',
                       html)
 
     def test_club_profile_view_does_not_display_other_club_posts(self):
-        self.client.login(email=self.sam.email, password='Password123')
+        self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
         html = response.content.decode('utf8')
         self.assertNotIn(f'This is a Bush House Book Club Post',
                          html)
 
     def test_club_profile_view_displays_correct_message_when_no_posts(self):
-        self.client.login(email=self.john.email, password='Password123')
+        self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
         html = response.content.decode('utf8')
         self.assertIn(f'<p class="text-muted"><strong>{self.temple_club.name}</strong> does not have any posts</p>',
@@ -342,13 +342,13 @@ class ClubProfileTest(TestCase, LogInTester):
         self.future_time = time(next_hour_date_time.hour, 0)
         self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club,
                                               address='www.google.com')
-        self.client.login(email=self.john.email, password='Password123')
+        self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
         html = response.content.decode('utf8')
         self.assertNotIn(f'<h6 class="card-title">www.google.com</h6>', html)
 
     def test_club_profile_view_displays_correct_message_when_no_meetings(self):
-        self.client.login(email=self.john.email, password='Password123')
+        self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
         html = response.content.decode('utf8')
         self.assertIn(f'<p class="text-muted"><strong>{self.temple_club.name}</strong> does not have any meetings</p>',

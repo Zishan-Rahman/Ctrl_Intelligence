@@ -1,6 +1,8 @@
 {% extends 'base_content.html' %}
 {% block content %}
 <div class="container" style="padding-top: 25px;">
+
+{% if request.user in club.get_all_users %}
   <div class="row">
     <div class="col-4">
     <div class="card w-100 text-center">
@@ -257,6 +259,83 @@
       </div>
     </div>
   </div>
+    {% else %}
+
+    <div class="row">
+    <div class="col-6">
+
+    <div class="card w-100">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <img src="{{ club.gravatar }}" alt="Gravatar of {{ club.name }}" class="profile-image" style="border-radius: 10px">
+            </div>
+            <div class="col-6">
+                <strong><i class="bi bi-lock-fill float-end" style="font-size: 64px; color: #353535"></i></strong>
+            </div>
+
+        </div>
+      <br>
+      <br>
+      <h3>{{ club.name }}</h3>
+      <p>{{ club.description }}</p>
+    </div>
+    </div>
+    </div>
+    <div class="col-6">
+    <div class="row">
+        <table class="table table-hover table-borderless" style="border-style: groove; border-color: brown">
+            <tr>
+                <td><i class="bi bi-geo-alt" style="color: #0d6ffd"></i></td>
+                <td style="color: #0d6ffd">{{club.location}}</td>
+            </tr>
+            <tr>
+                <td><a style="text-decoration: none;"><i class="bi bi-person-badge"></i></a></td>
+                <td><a style="text-decoration: none;">{{club.get_all_users|length}} members</a></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'user_profile' club.owner.id %}" style="text-decoration: none;"><i class="bi bi-person"></i></a></td>
+                <td><a href="{% url 'user_profile' club.owner.id %}" style="text-decoration: none;">{{ club.owner.first_name }} {{ club.owner.last_name }}</a></td>
+            </tr>
+            <tr>
+                 {% if club.meeting_online == True %}
+                    <td><i class="bi bi-wifi" style="color: green"></i></td>
+                     <td style="color: green">Online</td>
+                 {% else %}
+                    <td><i class="bi bi-check-circle" style="color: purple"></i></td>
+                     <td style="color: purple">In-Person</td>
+                {% endif %}
+            </tr>
+            <tr>
+                {% if club.organiser_owner %}
+                    <td><i class="bi bi-check-circle" style="color: #0d6ffd"></i></td>
+                    <td style="color: #0d6ffd">Organiser Privileges</td>
+                {% endif %}
+            </tr>
+        </table>
+
+    </div>
+    <div class="row">
+
+     <p class="text-muted">You must be a member of <strong>{{ club.name }}</strong> to gain access - apply below.</p>
+
+             {% if current_user not in club.get_all_users and club not in applied_to%}
+          <form action="{% url 'new_application' club.id %}" method="post" class="text-center">
+            {% csrf_token %}
+            <button type="submit" class="btn w-50" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-check-square"></i> Apply</button>
+          </form>
+          {%endif%}
+        {% if club in applied_to %}
+            <button type="submit" class="btn w-50 mx-auto" aria-disabled="true" style="padding: 15px; color: white; background-color: #353535; text-transform:uppercase; font-size: 14px"><i class="bi bi-check-square"></i> Applied</button>
+        {% endif %}
+    </div>
+    </div>
+
+    </div>
+
+
+
+    {% endif %}
 </div>
 
 
