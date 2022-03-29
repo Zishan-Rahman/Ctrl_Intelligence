@@ -87,5 +87,6 @@ urlpatterns = [
     path('user_profile/<int:user_id>/create_chat/', messaging_views.createChatFromProfile, name='create_chat_from_profile'),
     path('user_profile/<int:user_id>/user_feed/', user_feed_views.UserFeedView.as_view(), name='user_feed'),
     path('user_profile/<int:user_id>/new_post/', user_post_views.UserNewPostView.as_view(), name='user_new_post'),
-    path('home/recommender', dashboard_views.refresh_recommendations, name='recommend')
+    path('home/recommender', dashboard_views.refresh_recommendations, name='recommend'),
+    path('club_profile/<int:club_id>/meetings/<int:meeting_id>/delete', meeting_views.remove_from_meeting_list, name='delete_meeting'),
     ]
