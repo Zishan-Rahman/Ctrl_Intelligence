@@ -145,38 +145,42 @@
                         <td>
                             <i class="bi bi-book " style="color: brown"></i>
                         </td>
-                        <td>{{ user.favourite_genre }}</td>
+                        <td style="color: brown;">{{ user.favourite_genre }}</td>
                     </tr>
 
                     <tr>
                         <td>
                             <i class="bi bi-geo-alt" style="color: brown"></i>
                         </td>
-                        <td>{{ user.location }}</td>
+                        <td style="color: brown;">{{ user.location }}</td>
                     </tr>
                     <tr>
                         <td>
                             <i class="bi bi-clock-history" style="color: brown"></i>
                         </td>
-                        <td>{{ user.age }}</td>
+                        <td style="color: brown;">{{ user.age }}</td>
                     </tr>
 
                     <tr>
                         <td>
                             <i class="bi bi-briefcase" style="color: brown"></i>
                         </td>
-                        <td>{{ user.date_joined|date:"F Y" }}</td>
+                        <td style="color: brown;">{{ user.date_joined|date:"F Y" }}</td>
                     </tr>
 
 
-                    <a href="{% url 'user_clubs' user.id %}">
                     <tr>
                       <td>
+                        <a href="{% url 'user_clubs' user.id %}">
                           <i class="bi bi-suit-club" style="color: brown"></i>
+                        </a>
                       </td>
-                      <td>{{ user.get_number_of_clubs }} clubs</td>
+                      <td>
+                        <a href="{% url 'user_clubs' user.id %}" style="text-decoration: none; color: brown;">
+                          {{ user.get_number_of_clubs }} clubs
+                        </a>
+                      </td>
                     </tr>
-                    </a>
                 </table>
             </div>
 
