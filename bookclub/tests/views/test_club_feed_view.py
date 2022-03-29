@@ -4,6 +4,7 @@
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
+from django.shortcuts import redirect
 from bookclub.forms import PostForm
 from bookclub.models import User, Club, Post
 from bookclub.tests.helpers import create_posts, reverse_with_next, LogInTester
@@ -21,11 +22,22 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
         self.bush_club.make_member(self.user)
         self.url = reverse('feed', kwargs={'club_id': self.bush_club.id})
 
+    def test_post_club_feed(self):
+        self.client.login(email=self.user.email, password="Password123")
+        self._create_test_club_posts(2)
+        form_data = {'text': 'This is bush house book club post'}
+        form = PostForm(form_data)
+        response = self.client.post(self.url, {"author": self.user, "club": self.bush_club, "form": form})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(self._is_logged_in())
+        self.assertTrue(form.is_valid)
+        response = self.client.get(self.url)
+
     def test_club_feed_url(self):
         self.assertEqual(self.url, f'/club_profile/{self.bush_club.id}/feed/')
 
     def test_get_club_feed(self):
-        self.client.login(email=self.user, password="Password123")
+        self.client.login(email=self.user.email, password="Password123")
         response = self.client.get(self.url)
         self._create_test_club_posts(settings.POSTS_PER_PAGE*2+3)
         self.assertEqual(response.status_code, 200)
@@ -40,7 +52,7 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
         self.assertFalse(self._is_logged_in())
 
     def test_get_club_feed_with_pagination(self):
-        self.client.login(email=self.user, password="Password123")
+        self.client.login(email=self.user.email, password="Password123")
         self._create_test_club_posts(settings.POSTS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
