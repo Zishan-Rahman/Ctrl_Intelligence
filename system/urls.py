@@ -51,6 +51,7 @@ urlpatterns = [
     path('club_profile/<int:club_id>/members', club_views.ClubMemberListView.as_view(), name='club_members'),
     path('club_profile/<int:club_id>/meetings', meeting_views.ClubMeetingsListView.as_view(), name='club_meetings'),
     path('user_profile/<int:user_id>/', user_views.user_profile, name='user_profile'),
+    path('user_profile/<int:user_id>/clubs/', user_views.UserClubsListView.as_view(), name='user_clubs'),
     path('book_profile/<int:book_id>/', book_views.ShowBookView.as_view(), name='book_profile'),
     path('my_clubs/', club_views.club_selector, name='club_selector'),
     path('my_clubs1/', club_views.club_selector_alt, name="club_selector_alt"),
