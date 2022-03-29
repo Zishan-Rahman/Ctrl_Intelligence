@@ -167,6 +167,15 @@
                         <td>{{ user.date_joined|date:"F Y" }}</td>
                     </tr>
 
+
+                    <a href="{% url 'user_clubs' user.id %}">
+                    <tr>
+                      <td>
+                          <i class="bi bi-suit-club" style="color: brown"></i>
+                      </td>
+                      <td>{{ user.get_number_of_clubs }} clubs</td>
+                    </tr>
+                    </a>
                 </table>
             </div>
 
