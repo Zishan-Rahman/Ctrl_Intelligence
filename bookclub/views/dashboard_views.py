@@ -9,8 +9,10 @@ from bookclub.views import config
 from django.contrib import messages
 
 
+
 @login_required
 def home_page(request):
+    config.inbox_count(request)
     posts = get_all_club_posts(request)
     posts = posts[:5]
     popular_books_list = get_popular_books()
@@ -40,6 +42,7 @@ def home_page(request):
 
 
 def refresh_recommendations(request):
+    config.inbox_count(request)
     try:
         RecommendedBook.objects.filter(user=request.user).delete()
     except:
@@ -48,6 +51,7 @@ def refresh_recommendations(request):
 
 
 def club_util(request):
+    config.inbox_count(request)
     user_clubs_list = []
     clubs = Club.objects.all()
 
@@ -59,6 +63,7 @@ def club_util(request):
 
 
 def get_all_club_posts(request):
+    config.inbox_count(request)
     club_util(request)
     all_club_posts = []
 

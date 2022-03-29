@@ -28,10 +28,19 @@
       </ul>
     </li>
 
+    {% if request.user.inbox_count > 0 %}
     <li class="nav-item"> 
-      <a class="nav-link" href="{% url 'inbox' %}">Inbox <i class="bi bi-inboxes"><span class="badge badge-light">{{ inbox_count }}</span></i></a>
+      <a class="nav-link" href="{% url 'inbox' %}">Inbox <i class="bi bi-inboxes"><span class="badge badge-light">{{ request.user.inbox_count }}</span></i></a>
     </li>
-   
+    {% else %}
+      <li class="nav-item"> 
+      <a class="nav-link" href="{% url 'inbox' %}">Inbox <i class="bi bi-inboxes"><span class="badge badge-light"></span></i></a>
+    </li>
+    {% endif %}
+    
+
+    
+
   
   </ul>
 

@@ -15,6 +15,7 @@ from bookclub.models import *
 from django.views.generic.edit import View
 from django.db.models import Q
 from notifications.signals import notify
+from bookclub.views import config
 
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
@@ -99,7 +100,7 @@ class CreateMessageView(View):
             body=request.POST.get('message'),
         )
         message.save()
-        message.is_read = False       
+        message.is_read = False 
         return redirect('chat', pk=pk)
        
 
@@ -109,6 +110,14 @@ class ChatView(View):
     def get(self, request, pk, *args, **kwargs):
         form = MessageForm()
         chat = Chat.objects.get(pk=pk)
+        if Message.objects.filter(chat=chat).exists():
+            user_messages = Message.objects.filter(chat=chat)
+            for msg in user_messages:
+                print(msg)
+                if request.user == chat.receiver:
+                    msg.is_read = True
+                    msg.save()
+
         if request.user == chat.receiver or request.user == chat.user:
 
             message_list = Message.objects.filter(chat__pk__contains=pk)
@@ -123,10 +132,3 @@ class ChatView(View):
             messages.add_message(request, messages.ERROR, "Action prohibited")
             return redirect('home')
 
-def inbox_count(request):
-    message_read_list = Message.objects.filter(receiver_user=request.user, is_read=False)
-    request.user.inbox_count = message_read_list.count()
-    print(request.user.inbox_count)
-    if request.path == '/inbox/':
-        for message in message_read_list:
-            message.is_read = True
