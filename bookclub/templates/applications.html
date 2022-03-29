@@ -25,6 +25,7 @@
         <table id="myTable" class="table table-hover table-borderless">
           <thead class="table">
             <tr>
+                <th></th>
               <th scope="col">Club</th>
               <th scope="col">Name</th>
               <th scope="col">Age</th>
@@ -37,6 +38,7 @@
           </thead>
       {% for a in page_obj %}
         <tr>
+        <td><img src="{{ a.club.mini_gravatar }}"></td>
           <td>{{ a.club.name }}</td>
           <td>{{ a.applicant.first_name }} {{ a.applicant.last_name }}</td>
           <td>{{ a.applicant.age }}</td>
@@ -55,6 +57,7 @@
     <table id="fullTable" class="table table-hover table-borderless" style="display:none">
       <thead class="table" id="fullTableHeader">
         <tr>
+          <th></th>
           <th scope="col">Club Applying To</th>
           <th scope="col">Name</th>
           <th scope="col">Age</th>
@@ -67,6 +70,7 @@
       </thead>
       {% for a in applicants %}
         <tr class="fullTableRow">
+          <td><img src="{{ a.club.mini_gravatar }}"></td>
           <td>{{ a.club.name }}</td>
           <td>{{ a.applicant.first_name }} {{ a.applicant.last_name }}</td>
           <td>{{ a.applicant.age }}</td>
