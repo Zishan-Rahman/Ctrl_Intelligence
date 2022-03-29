@@ -20,11 +20,11 @@
                 </thead>
                 <tbody>
                   {% for meeting in club.get_meetings %}
-                  <tr class="clickable-row" data-href="{% url 'edit_meeting' club.id meeting.id %}">
+                  <tr>
                     <td><img src="{{ meeting.club.mini_gravatar }}" class="rounded-circle" alt="{{ meeting.club.name }}'s gravatar"></td>
                     <td>{{ meeting.date }}</td>
                     <td>{{ meeting.start_time }}</td>
-                    <td>{{ meeting.address }}</td>
+                    <td><a href=//{{meeting.address}} target="_blank" rel="noopener noreferrer">{{ meeting.address }}</a></td>
 
                       {% if request.user == club.owner or request.user in club.get_organisers and club.organiser_owner %}
 
