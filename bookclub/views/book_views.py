@@ -77,7 +77,7 @@ class ReadingListView(LoginRequiredMixin, ListView):
         paginator = Paginator(books, settings.BOOKS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        return render(request, 'reading_list.html', {"books": books, "page_obj": page_obj})
+        return render(request, 'reading_list.html', {"books": books, "user": user, "page_obj": page_obj})
 
     def get(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
@@ -86,7 +86,7 @@ class ReadingListView(LoginRequiredMixin, ListView):
         paginator = Paginator(books, settings.BOOKS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        return render(request, 'reading_list.html', {"books": books, "page_obj": page_obj})
+        return render(request, 'reading_list.html', {"books": books, "user": user, "page_obj": page_obj})
 
 @login_required
 def add_to_reading_list(request, book_id):
@@ -122,6 +122,12 @@ def remove_from_reading_list_book_profile(request, book_id):
     remove_from_reading_list(request, book_id)
     return redirect("book_profile", book_id=book_id)
 
+@login_required
+def remove_from_reading_list_page(request, book_id):
+    user_id = request.user.id
+    remove_from_reading_list(request, book_id)
+    return redirect("reading_list", user_id=user_id)
+
 
 class Favourites(LoginRequiredMixin, ListView):
     model = Book
@@ -139,7 +145,7 @@ def update_ratings(request, book_id):
     isbn = Book.objects.get(pk=book_id).isbn
     if Rating.objects.filter(book=book, user=user).exists():
         Rating.objects.get(book=book, user=user).delete()
-        
+
     Rating.objects.create(user=user, book=book, isbn=isbn, rating=request.POST.get('ratings', "0"))
     messages.add_message(request, messages.SUCCESS,
                          "You have given " + book.title + " a rating of " + request.POST.get('ratings', "0"))
