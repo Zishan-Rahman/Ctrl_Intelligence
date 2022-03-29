@@ -160,4 +160,3 @@ class UserModelTestCase(TestCase):
         jane.toggle_follow(john)
         self.assertEqual(john.followers.all()[0], john.get_users_followers()[0])
         self.assertEqual(jane.followers.all()[0], jane.get_users_followers()[0])
-        

@@ -1,0 +1,61 @@
+<!-- club list page adapted from the chess club project -->
+{% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
+{% block content %}
+<div class="container">
+  <div class="application-title">
+      <div class="row">
+          <div class="col">
+              <h2 class="text-left"><strong>{{ current_user.get_full_name }}'s Clubs</strong></h2>
+          </div>
+      </div>
+  </div>
+  <div class="book-table">
+    <table class="table table-hover table-borderless">
+        <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Location</th>
+        <th scope="col">Meeting Type</th>
+        <th scope="col">Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for club in page_obj %}
+      <tr class="clickable-row" data-href="{% url 'club_profile' club.id %}">
+        <td><a href="{% url 'club_profile' club.id %}"><img src="{{ club.mini_gravatar }}" alt="Gravatar of club {{ club.name }}" class="rounded-circle" ></a></td>
+        <td>{{ club.name }}</td>
+        <td>{{ club.description }}</td>
+        <td>{{ club.location }}</td>
+        <td style="text-transform: capitalize;">{% include 'partials/club_meeting_type.html' with club=club %}</td>
+        <td>
+          {% if current_user in club.get_organisers%}
+          <i class="bi bi-clipboard"></i><strong> Organiser </strong>
+            {% endif %}
+        {% if current_user == club.get_owner%}
+           <i class="bi bi-person-check"></i><strong> Owner </strong>
+            {% endif %}
+        {% if current_user in club.get_members%}
+           <i class="bi bi-file-person"></i><strong> Member </strong>
+            {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+      </table>
+    <div class="pagination-row">
+      {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+    </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+  jQuery(document).ready(function($) {
+      $(".clickable-row").click(function() {
+          window.location = $(this).data("href");
+      });
+  });
+</script>
+{% endblock %}

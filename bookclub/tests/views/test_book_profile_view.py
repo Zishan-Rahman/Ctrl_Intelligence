@@ -148,8 +148,15 @@ class BookProfileTest(TestCase):
         after_reading_list_count = self.user.currently_reading_books.count()
         self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
-    # def test_book_profile_view_has_add_to_books_read_button(self):
-    #     self.client.login(email=self.user.email, password='Password123')
-    #     response = self.client.get(self.url)
-    #     html = response.content.decode('utf8')
-    #     self.assertIn(f'<a class="btn btn-default" href="/add_to_books_read/1/" <span class="btn btn-dark" style=\'padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'> Add to Books Read </span></a>', html)
+    def test_book_profile_view_has_add_to_reading_list_button(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<form action="/book_profile/{self.book.id}/add_to_reading_list/" method="post">', html)
+        self.assertIn('<input type="hidden" name="csrfmiddlewaretoken" value="', html)
+        self.assertIn('">', html)
+        self.assertIn('<button type="submit" class="btn" style="background-color: brown; color: white; font-size: 24px"><i class="bi bi-bookmarks"></i></button>', html)
+        self.assertIn('</form>', html)
+        self.assertIn('<div class="col-9 my-auto h-100">', html)
+        self.assertIn('<p class="text-muted">Add to Reading List</p>', html)
+        self.assertIn('</div>', html)

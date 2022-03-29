@@ -2,7 +2,7 @@
 
 """Tests of the feed view."""
 from django.conf import settings
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from bookclub.forms import UserPostForm
 from bookclub.models import User, UserPost
@@ -22,6 +22,7 @@ class UserFeedViewTestCase(TestCase, LogInTester):
         self.assertEqual(self.url, f'/user_profile/{self.user.id}/user_feed/')
 
     def test_user_feed_details(self):
+        self.client = Client()
         self.client.login(email=self.user.email, password="Password123")
         posts = UserPost.objects.create(
             author=self.user,
@@ -30,10 +31,11 @@ class UserFeedViewTestCase(TestCase, LogInTester):
         response = self.client.get(self.url)
         self.assertEqual(response.context['user'], self.user)
         self.assertIn(posts, response.context['posts'])
-        self.assertEqual(response.context['form'], UserPostForm)
+        self.assertIsInstance(response.context['form'], UserPostForm)
         html = response.content.decode('utf8')
-
-
+        self.assertIn(f'<h1>Posts of {self.user.get_full_name()}</h1>', html)
+        self.assertIn(f'<td>{self.user.get_full_name()}</td>', html)
+        self.assertIn(f'<td>Sample user post</td>', html)
 
     def test_get_user_feed(self):
         self.client.login(email=self.user.email, password="Password123")
