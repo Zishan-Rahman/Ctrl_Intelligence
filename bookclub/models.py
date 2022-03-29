@@ -157,14 +157,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_number_of_ratings(self):
         return len(self.get_ratings())
     
-    def get_all_clubs():
+    def get_all_clubs(self):
         clubs = Club.objects.all()
         user_clubs = []
         for club in clubs:
-            for member in club.get_all_users():
-                if member in club:
-                    user_clubs.append(club)
+            if self in club.get_all_users():
+                user_clubs.append(club)
         return user_clubs
+    
+    def get_number_of_clubs(self):
+        return len(self.get_all_clubs())
 
     objects = UserManager()
 
