@@ -11,7 +11,7 @@ from django.contrib import messages
 from bookclub.templates import *
 from bookclub.forms import EditClubForm, PostForm
 from django.http import Http404
-from bookclub.models import User, Club, Post, Meeting
+from bookclub.models import User, Club, Post, Meeting, Application
 from django.views.generic.edit import UpdateView
 from django.core.paginator import Paginator
 
@@ -72,6 +72,7 @@ class ClubMemberListView(LoginRequiredMixin, ListView):
         context['current_user'] = self.request.user
         return context
 
+
 @login_required
 def promote_member_to_organiser(request, c_pk, u_pk):
     """Promote member to organiser"""
@@ -88,6 +89,7 @@ def promote_member_to_organiser(request, c_pk, u_pk):
         messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
 
+
 @login_required
 def demote_organiser_to_member(request, c_pk, u_pk):
     """Demote organiser to member"""
@@ -99,6 +101,7 @@ def demote_organiser_to_member(request, c_pk, u_pk):
     else:
         messages.add_message(request, messages.ERROR, "You do not have authority to do this!")
     return redirect('club_members', club_id=c_pk)
+
 
 @login_required
 def kick_user_from_club(request, c_pk, u_pk):
@@ -237,6 +240,10 @@ def club_profile(request, club_id):
         posts = posts[:6]
         meetings = Meeting.objects.filter(club=club)
         meetings = meetings[:3]
+        applied_to = Application.objects.filter(applicant=request.user)
+        applied_to_list = []
+        for x in applied_to:
+            applied_to_list.append(x.club)
     except:
         messages.add_message(request, messages.ERROR, "Club does not exist!")
         return redirect('club_list')
@@ -244,7 +251,8 @@ def club_profile(request, club_id):
     current_user = request.user
     is_owner = club.user_level(current_user) == "Owner"
     return render(request, 'club_profile.html', {'club': club, 'current_user': current_user, 'is_owner': is_owner,
-                                                 'posts': posts, 'meetings': meetings, 'form': form})
+                                                 'posts': posts, 'meetings': meetings, 'form': form,
+                                                 'applied_to': applied_to_list})
 
 
 @login_required
