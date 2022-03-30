@@ -109,8 +109,8 @@
   #post_icon {
     display: block;
     margin-left: 25%;
-    height: 64px;
-    width: 64px;
+    height: 72px;
+    width: 72px;
 
   }
   
@@ -136,9 +136,32 @@
     border-color: white;
     color: white;
     border-style: groove;
-
-
   }
+
+  #followBtn.btn {
+    background-color: #0275d8;
+    color: white;
+  }
+
+  #followBtn.btn:hover {
+    background-color: white;
+    color: #0275d8;
+    border-style: groove;
+    border-color: #0275d8;
+  }
+
+  #unfollowBtn.btn {
+    background-color: #292b2c;
+    color: white;
+  }
+
+  #unfollowBtn.btn:hover {
+    background-color: white;
+    color: #292b2c;
+    border-color: #292b2c;
+    border-style: groove;
+  }
+
 
   #signUpBtn.btn {
     background-color: white;

@@ -18,9 +18,9 @@
                       {% csrf_token %}
                     {%if followable %}
                     {% if following %}
-                    <button class="btn btn-lg btn-outline-secondary float-end" style="padding: 15px; text-transform:uppercase; font-size: 14px">Unfollow</button>
+                    <button class="btn btn-lg float-end" id="unfollowBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px">Unfollow</button>
                     {% else %}
-                    <button class="btn btn-lg btn-outline-primary float-end" style="padding: 15px; text-transform:uppercase; font-size: 14px">Follow</button>
+                    <button class="btn btn-lg float-end" id="followBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px">Follow</button>
                     {% endif %}
                     {%elif user.id == request.user.id%}
                     <a class="btn float-end" href="{% url 'edit_profile' %}" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px">

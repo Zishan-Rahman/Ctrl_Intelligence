@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from bookclub.models import Rating, Book, RecommendedBook, Club, Post, User
 import pandas as pd
-from surprise import SVD
+from surprise import SVD, NMF, KNNBasic, KNNWithMeans, KNNWithZScore, BaselineOnly
 from surprise import Dataset, Reader
 import pickle
 from bookclub.views import config

@@ -23,9 +23,9 @@
 
     </div>
 
-    <div class="col">
-        <a type="button" href="{% url 'recommend' %}" class="btn float-end" style='padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px'>
-                            <i class="bi bi-x-diamond-fill"></i> New Recommendations
+    <div class="col mb-1">
+        <a type="button" href="{% url 'recommend' %}" id="bookwiseGeneralBtn" class="btn float-end" style='padding: 10px; text-transform:uppercase; font-size: 14px'>
+                            <i class="bi bi-magic"></i> New Recommendations
                         </a>
     </div>
         </div>
@@ -99,7 +99,7 @@
                 <div class="card mb-3 w-100" id="homepagePosts" style="border-color: brown; border-style: groove">
                   <div class="row g-0">
                     <div class="col-3 my-auto text-left">
-                      <img src="{{ post.author.gravatar}}" id="post_icon" class="img-fluid rounded-circle" height="64" width="64" alt="{{post.author}}'s gravatar">
+                      <img src="{{ post.author.gravatar}}" id="post_icon" class="img-fluid rounded-circle" alt="{{post.author}}'s gravatar">
                     </div>
                     <div class="col-9">
                       <div class="card-body">
@@ -158,6 +158,8 @@
   });
 </script>
 
+    <br>
+    <br>
 
 {% endblock %}
 

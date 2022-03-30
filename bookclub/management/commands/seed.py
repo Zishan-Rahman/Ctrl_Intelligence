@@ -313,7 +313,7 @@ class Command(BaseCommand):
         books = books.values.tolist()
 
         books_list = ratings.isbn.value_counts().rename_axis('isbn').reset_index(name='count')
-        books_list = books_list[books_list['count'] > 10]['isbn'].to_list()
+        books_list = books_list[books_list['count'] > 5]['isbn'].to_list()
 
 
         create_books_lists = []
