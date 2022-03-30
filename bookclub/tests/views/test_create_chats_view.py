@@ -20,7 +20,7 @@ class CreateChatsViewTestCase(TestCase):
 
 
     def test_create_chats_url(self):
-        self.assertEqual(self.url, '/inbox/create_chat')
+        self.assertEqual(self.url, '/inbox/create_chat/')
 
     def test_create_chat_uses_correct_template(self):
         self.client.login(email=self.joe.email, password='Password123')
@@ -81,6 +81,16 @@ class CreateChatsViewTestCase(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
         response = self.client.post(reverse('create_chat'), {"email":"fakeuser@bookclub.com"}, follow=True)
+        response_url = reverse('create_chat')
+        self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
+        self.assertTemplateUsed(response, 'create_chat.html')
+        afterCount = Chat.objects.count()
+        self.assertEqual(beforeCount, afterCount)
+
+    def test_creation_with_not_email(self):
+        self.client.login(email=self.john.email, password='Password123')
+        beforeCount = Chat.objects.count()
+        response = self.client.post(reverse('create_chat'), {"email":"asdadadadads"}, follow=True)
         response_url = reverse('create_chat')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'create_chat.html')
