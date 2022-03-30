@@ -31,6 +31,9 @@ class UserModelTestCase(TestCase):
 
     def test_user_model_age(self):
         self.assertEqual(self.user_one.get_age(),39)
+        
+    def test_user_model_public_bio(self):
+        self.assertEqual(self.user.get_bio(),"Im just an abstract concept!")
 
     # first name tests
     def test_first_name_must_not_be_blank(self):
