@@ -58,6 +58,10 @@ def createChatFromProfile(request, user_id):
             chat = Chat.objects.filter(user=request.user, receiver=receiver)[0]
             return redirect('chat', pk=chat.pk)
 
+        elif Chat.objects.filter(user=receiver, receiver=request.user).exists():
+            chat = Chat.objects.filter(user=receiver, receiver=request.user)[0]
+            return redirect('chat', pk=chat.pk)
+
         sender_chat = Chat.objects.create(
             user=request.user,
             receiver=receiver
