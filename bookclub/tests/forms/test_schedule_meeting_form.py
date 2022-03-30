@@ -1,4 +1,3 @@
-"""Unit tests for the create meetings form."""
 from django.test import TestCase
 from bookclub.forms import ScheduleMeetingForm
 from django import forms
@@ -6,7 +5,8 @@ from bookclub.models import Club, User, Meeting
 from datetime import timedelta, date, time, datetime
 
 
-class ScheduleMeetingTestCase(TestCase):
+class TestScheduleMeeting(TestCase):
+    """Unit tests for the schedule meetings form"""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
@@ -33,36 +33,42 @@ class ScheduleMeetingTestCase(TestCase):
             'start_time':self.future_time,
             'address':'123 Road London'
         }
-
+    """Checks if online schedule meeting form has necessary fields"""
     def test_online_schedule_meeting_form_has_necessary_fields(self):
         form = ScheduleMeetingForm(club=self.bush_club)
         self.assertIn('date', form.fields)
         self.assertIn('start_time', form.fields)
         self.assertIn('address', form.fields)
 
+    """Checks if in-person schedule meeting form has necessary fields"""
     def test_in_person_schedule_meeting_form_has_necessary_fields(self):
         form = ScheduleMeetingForm(club=self.strand_club)
         self.assertIn('date', form.fields)
         self.assertIn('start_time', form.fields)
         self.assertIn('address', form.fields)
 
+    """Checks if online schedule meeting form is valid"""
     def test_valid_online_schedule_meeting_form(self):
         form = ScheduleMeetingForm(data=self.online_form_input, club=self.bush_club)
         self.assertTrue(form.is_valid())
 
+    """Checks if in-person schedule meeting form is valid"""
     def test_valid_in_person_schedule_meeting_form(self):
         form = ScheduleMeetingForm(data=self.in_person_form_input, club=self.strand_club)
         self.assertTrue(form.is_valid())
 
+    """Checks if schedule meeting form accepts valid date and time"""
     def test_form_accepts_valid_date_time(self):
         form = ScheduleMeetingForm(data=self.online_form_input, club=self.bush_club)
         self.assertTrue(form.is_valid())
 
+    """Checks if schedule meeting form rejects a date in the past"""
     def test_form_rejects_past_date(self):
         self.online_form_input['date'] = self.yesterday
         form = ScheduleMeetingForm(data=self.online_form_input, club=self.bush_club)
         self.assertFalse(form.is_valid())
 
+    """Checks if schedule meeting form is rejects a time in the past"""
     def test_form_rejects_current_date_past_time(self):
         self.online_form_input['date'] = self.today
         self.online_form_input['start_time'] = self.past_time
