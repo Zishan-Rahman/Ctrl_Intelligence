@@ -32,6 +32,8 @@
           {%if request.user == chat.receiver%}
               <td><img src="{{ chat.user.mini_gravatar }}" style="border-radius: 10px" alt=""></td>
               <td>{{ chat.user.get_full_name }}</td>
+              <td>{{ chat.user.email }}</td>
+              <td>{{ chat.user.location }}</td>
           {%else%}
             <td><img src="{{ chat.receiver.mini_gravatar }}" style="border-radius: 10px" alt=""></td>
               <td>{{ chat.receiver.get_full_name }}</td>

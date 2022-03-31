@@ -206,8 +206,11 @@ def inviteMessage(request, user_id, club_id):
         'sender': request.user.first_name,
         'club_name': club.name})
     chat_query = Chat.objects.filter(user=request.user, receiver=receiver)
+    r_chat_query = Chat.objects.filter(receiver=request.user, user=receiver)
     if chat_query:
         chat = chat_query.get()
+    elif r_chat_query:
+        chat = r_chat_query.get()
     else:
         chat = Chat(user=request.user, receiver=receiver)
         chat.save()
