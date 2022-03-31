@@ -3,8 +3,15 @@
 {% block content %}
 <div class="container">
     <div class="row">
+        <div class="col">
+           <h2 class="text-left fw-bold"><strong>Members</strong></h2>
+            <h5 class="text-left text-muted">{{ club.name }}</h5>
+        </div>
+
+    </div>
+    <div class="row">
         <div class="col-12">
-        <h2 class="text-left"><strong>Members of {{ club.get_name }}</strong></h2>
+
         <input type='text' id='txt_searchall' class="form-control w-50" placeholder="Search for clubs and applicants.." size="30">&nbsp;
             <div class="book-table">
                 <table id="myTable" class="table table-hover table-borderless">

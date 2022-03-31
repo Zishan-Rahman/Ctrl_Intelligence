@@ -38,7 +38,7 @@
           </thead>
       {% for a in page_obj %}
         <tr>
-        <td><img src="{{ a.club.mini_gravatar }}"></td>
+        <td><img src="{{ a.club.mini_gravatar }}" style="border-radius: 10px"></td>
           <td>{{ a.club.name }}</td>
           <td>{{ a.applicant.first_name }} {{ a.applicant.last_name }}</td>
           <td>{{ a.applicant.age }}</td>

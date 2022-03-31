@@ -36,7 +36,7 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self._is_logged_in())
         html = response.content.decode('utf8')
-        self.assertIn(f'<h2 class="text-left"><strong>Members of {self.club.name}</strong></h2>', html)
+        self.assertIn(f'<h5 class="text-left text-muted">{ self.club.name }</h5>', html)
 
     def test_club_members_list_view_contains_user_details(self):
         """Test some test users' details to see if they actually show up at all."""
