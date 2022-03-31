@@ -29,14 +29,14 @@ class TestUserListView(TestCase, LogInTester):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<td><button type="submit" class="btn btn-outline-primary" style="">Follow</button></td>', html)
+        self.assertIn(f'Follow</button></td>', html)
 
     def test_user_list_view_has_unfollow_button_when_following_user(self):
         self.client.login(email=self.user.email, password='Password123')
         self.user.followees.add(self.jane)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<td><button type="submit" class="btn btn-outline-secondary" style="">Unfollow</button></td>', html)
+        self.assertIn(f'Unfollow</button></td>', html)
 
     def test_follow_button_works_from_user_list(self):
         self.client.login(email=self.user.email, password='Password123')
