@@ -21,10 +21,10 @@
                 <tbody>
                   {% for post in page_obj %}
                   <tr class="clickable-row" data-href="#">
-                    <td><img src='{{ post.author.gravatar }}' alt="{{ post.author }}'s Gravatar" class="rounded-circle"></td>
+                    <td><img src='{{ post.author.mini_gravatar }}' alt="{{ post.author }}'s Gravatar" class="rounded-circle"></td>
                       <td>{{ post.author.get_full_name }}</td>
                     <td>{{ post.text }}</td>
-                    <td>{{ post.created_at|date:"M y G:i" }}</td>
+                    <td>{{ post.created_at|date:"M Y G:i" }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>

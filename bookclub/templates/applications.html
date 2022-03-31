@@ -29,7 +29,7 @@
               <th scope="col">Club</th>
               <th scope="col">Name</th>
               <th scope="col">Age</th>
-              <th scope="col" style="width: 20%;">Date Joined</th>
+              <th scope="col" style="width: 10%">Date Joined</th>
               <th scope="col" style="width: 30%;">Bio</th>
               <th scope="col">Location</th>
               <th scope="col"></th>
@@ -42,7 +42,7 @@
           <td>{{ a.club.name }}</td>
           <td>{{ a.applicant.first_name }} {{ a.applicant.last_name }}</td>
           <td>{{ a.applicant.age }}</td>
-          <td style="width: 20%">{{ a.applicant.date_joined }}</td>
+          <td style="width: 10%">{{ a.applicant.date_joined|date:"M Y" }}</td>
           <td>{{ a.applicant.public_bio }}</td>
           <td>{{ a.applicant.location }}</td>
           <td><a class="btn btn-outline-success" href="{% url 'app_accept' pk=a.pk %}">Accept</a></td>
@@ -61,7 +61,7 @@
           <th scope="col">Club</th>
           <th scope="col">Name</th>
           <th scope="col">Age</th>
-          <th scope="col" style="width: 20%;">Date Joined</th>
+          <th scope="col" style="width: 10%;">Date Joined</th>
           <th scope="col" style="width: 30%;">Bio</th>
           <th scope="col">Location</th>
           <th scope="col"></th>
@@ -74,7 +74,7 @@
           <td>{{ a.club.name }}</td>
           <td>{{ a.applicant.first_name }} {{ a.applicant.last_name }}</td>
           <td>{{ a.applicant.age }}</td>
-          <td>{{ a.applicant.date_joined }}</td>
+          <td>{{ a.applicant.date_joined|date:"M Y" }}</td>
           <td>{{ a.applicant.public_bio }}</td>
           <td>{{ a.applicant.location }}</td>
           <td><a class="btn btn-outline-success" href="{% url 'app_accept' pk=a.pk %}">Accept</a></td>
