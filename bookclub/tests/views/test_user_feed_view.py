@@ -37,7 +37,7 @@ class UserFeedViewTestCase(TestCase, LogInTester):
         self.assertIn(f'<h5 class="text-left text-muted">{self.user.get_full_name()}</h5>', html)
         self.assertIn(f'<td>{self.user.get_full_name()}</td>', html)
         self.assertIn(f'<td>Sample user post</td>', html)
-        self.assertIn(f'<td>Feb 2022 10:32</td>', html)
+        self.assertIn(f'<td>Mar 2022 10:38</td>', html)
 
     def test_get_user_feed(self):
         self.client.login(email=self.user.email, password="Password123")
