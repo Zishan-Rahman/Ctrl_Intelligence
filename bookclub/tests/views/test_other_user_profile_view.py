@@ -66,7 +66,7 @@ class OtherUserProfileTest(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-messenger"></i> Message</a>', html)
+        self.assertIn(f'style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-dots"></i> Message</a>', html)
 
     def test_other_user_profile_has_invite_button(self):
         self.client.login(email=self.john.email, password='Password123')

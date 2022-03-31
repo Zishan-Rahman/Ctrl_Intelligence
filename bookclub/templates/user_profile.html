@@ -143,7 +143,7 @@
                 </div>
 
                 <div class="col-6">
-                    <a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'create_chat_from_profile' user.id %}" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-messenger"></i> Message</a>
+                    <a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'create_chat_from_profile' user.id %}" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-dots"></i> Message</a>
                 </div>
 
 
@@ -362,25 +362,26 @@
               </h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body mx-auto w-100 text-left">
 
                 {% if user_clubs %}
 
                 <input type='text' onkeyup="searchFunction()" id='txt_searchall' class="form-control" placeholder="Search for clubs..." size="30">&nbsp
-                <table id="myTable" class="table table-hover table-borderless text-center" style="max-height: 600px; overflow: auto; display: inline-block;">
+                <table id="myTable" class="table table-hover table-borderless mx-auto w-100" style="max-height: 600px; overflow: auto; display: inline-block;">
                 <thead>
-              <tr>
+
+                <tr>
                 <th scope="col" style="width: 25%"></th>
                 <th scope="col" style="width: 50%"></th>
                 <th scope="col" style="width: 25%"></th>
-              </tr>
+                </tr>
             </thead>
 
                       {% for entry in user_clubs %}
                       <tr>
                         <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
                         <td>{{ entry.name }}</td>
-                        <td><a class="btn" id="bookwiseGeneralBtn" href="{% url 'invite_message' user.id entry.id %}">Invite</a></td>
+                        <td><a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'invite_message' user.id entry.id %}" style="padding-top: 10px; padding-bottom: 10px; text-transform:uppercase; font-size: 14px">Invite</a></td>
                       </tr>
                       {% endfor %}
                   </table>
