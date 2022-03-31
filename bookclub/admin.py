@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Club, Book, Application , Post, UserPost , Rating, Meeting, Chat, Message
+from .models import User, Club, Book, Application, Post, UserPost, Rating, Meeting, Chat, Message
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):

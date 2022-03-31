@@ -5,9 +5,8 @@
     <div class="container">
     <div class="row">
         <div class="col-12">
-   <body>
-      <h1>{{ user.get_full_name }} Reading List</h1>
-   </body>
+   <h2 class="text-left"><strong>Reading List</strong></h2>
+              <h5 class="text-muted">All Books in Your Reading List</h5>
         </div>
 </div>
 <div>
@@ -45,10 +44,12 @@
 {% if user.id == request.user.id %}
 <div class="mt-5" style="text-align: center;">
      <h5 class="text-muted text-center">You do not have any books in your reading list</h5>
+        <br>
+            <a class="btn" id="bookwiseGeneralBtn" style="text-transform: uppercase;" href="{% url 'book_list' %}">View All Books</a>
 </div>
 {% else %}
 <div class="mt-5" style="text-align: center;">
-     <h5 class="text-muted text-center">{{ user.get_full_name }} do not have any books in your reading list</h5>
+     <h5 class="text-muted text-center">{{ user.get_full_name }} does not have any books in their reading list</h5>
 </div>
 {% endif %}
 {% endif %}

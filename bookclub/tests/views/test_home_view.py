@@ -56,9 +56,7 @@ class HomeViewTestCase(TestCase):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f' <h4 style="padding-top: 10px;"><strong>Our Most Popular Books</strong></h4>\n<div class="row '
-                      f'row-cols-2 h-100" style="border-style: groove; border-color: brown; border-radius: 5px; '
-                      f'padding: 10px">', html)
+        self.assertIn(f'Our Most Popular Books', html)
 
     def test_home_still_shows_top_books_when_enough_books_rated(self):
         self.client.login(email=self.user.email, password='Password123')
@@ -67,9 +65,7 @@ class HomeViewTestCase(TestCase):
         html = response.content.decode('utf8')
         user_ratings_count = Rating.objects.filter(user=self.user).count()
         self.assertEqual(10, user_ratings_count)
-        self.assertIn(f' <h4 style="padding-top: 10px;"><strong>Our Most Popular Books</strong></h4>\n<div class="row '
-                      f'row-cols-2 h-100" style="border-style: groove; border-color: brown; border-radius: 5px; '
-                      f'padding: 10px">', html)
+        self.assertIn(f'Our Most Popular Books', html)
 
     def test_home_does_not_show_alert_if_enough_books_rated(self):
         response = self.client.get(self.url)
@@ -91,11 +87,7 @@ class HomeViewTestCase(TestCase):
         user_recs_count = RecommendedBook.objects.filter(user=self.user).count()
         self.assertEqual(10, user_recs_count)
         self.assertEqual(10, user_ratings_count)
-        self.assertIn(f'<h4 style="padding-top: 10px;"><strong>Recommended for John</strong></h4>\n\n    </div>\n\n   '
-                      f' <div class="col">\n        <a type="button" href="/home/recommender" class="btn float-end" '
-                      f'style=\'padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; '
-                      f'text-transform:uppercase; font-size: 14px\'>\n                            <i class="bi '
-                      f'bi-x-diamond-fill"></i> New Recommendations\n', html)
+        self.assertIn(f'New Recommendations', html)
 
     def test_home_view_has_posts(self):
         self.client.login(email=self.user.email, password='Password123')

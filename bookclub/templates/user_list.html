@@ -28,12 +28,12 @@
               {% if user in request.user.get_users_followees %}
               <form action="{% url 'unfollow_from_user_list' user_id=user.id %}" method="post">
                 {% csrf_token %}
-                <td><button type="submit" class="btn btn-outline-secondary" style="">Unfollow</button></td>
+                <td><button type="submit" class="btn" id="unfollowBtn">Unfollow</button></td>
               </form>
               {% else %}
               <form action="{% url 'follow_from_user_list' user_id=user.id %}" method="post">
                 {% csrf_token %}
-                <td><button type="submit" class="btn btn-outline-primary" style="">Follow</button></td>
+                <td><button type="submit" class="btn" id="followBtn" style="">Follow</button></td>
               </form>
               {% endif %}
           </tr>

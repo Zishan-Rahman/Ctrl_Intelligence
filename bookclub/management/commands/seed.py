@@ -61,7 +61,7 @@ def generate_boolean():
     return random.choice(boolean)
 
 
-def generate_owner():
+def get_random_user():
     return list(User.objects.all())[random.randint(0, User.objects.count() - 1)]
 
 
@@ -119,6 +119,8 @@ class Command(BaseCommand):
         seed_possible = self.verify_seeding_possible()
         if seed_possible:
             print()
+            print("--- Bookwise Seeder ---")
+            print()
             print("Seed books:")
             self.load_books()
             print("All books have been successfully seeded")
@@ -140,6 +142,11 @@ class Command(BaseCommand):
             print()
             self.generate_clubs()
             print('All clubs have been successfully seeded')
+            print()
+            print('Seed user events:')
+            print()
+            self.generate_user_events()
+            print('User events have been successfully seeded')
             print()
             print('Seeder has successfully completed')
 
@@ -206,7 +213,7 @@ class Command(BaseCommand):
         location = self.faker.city()
         name = location + ' Book Club'
         description = self.faker.text(512)
-        owner = generate_owner()
+        owner = get_random_user()
         meeting_online = generate_boolean()
 
         generatedClub = Club(
@@ -252,6 +259,22 @@ class Command(BaseCommand):
         for i in range(0, number_of_posts):
             text = self.faker.text(max_nb_chars=120)
             Post.objects.create(club=club, author=club_owner, text=text)
+
+    def generate_user_events(self):
+        count = 0
+        users = get_all_users_list()
+        for usr in users:
+            number_of_posts = random.randint(0, 5)
+            for i in range(0, number_of_posts):
+                text = self.faker.text(max_nb_chars=84)
+                UserPost.objects.create(author=usr, text=text)
+            number_to_follow = random.randint(5, 50)
+            for j in range(0, number_to_follow):
+                random_user = random.choice(users)
+                usr.toggle_follow(random_user)
+            count += 1
+            percent_complete = float((count/get_total_users()) * 100)
+            print(f'[ DONE: {round(percent_complete)}% ]', end='\r')
 
     def create_set_clubs(self):
         owner_john = User.objects.get(email="johndoe@bookclub.com")
@@ -313,7 +336,7 @@ class Command(BaseCommand):
         books = books.values.tolist()
 
         books_list = ratings.isbn.value_counts().rename_axis('isbn').reset_index(name='count')
-        books_list = books_list[books_list['count'] > 10]['isbn'].to_list()
+        books_list = books_list[books_list['count'] > 5]['isbn'].to_list()
 
 
         create_books_lists = []

@@ -376,7 +376,6 @@ class Chat(models.Model):
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     has_unread = models.BooleanField(default=False)
 
-
 class Message(models.Model):
     chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
     sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')

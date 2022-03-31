@@ -135,10 +135,12 @@ def follow_toggle(request, user_id):
         current_user.toggle_follow(followee)
         messages.add_message(request, messages.SUCCESS, f'You now follow {followee.get_full_name()}!')
 
+
 @login_required
 def follow_from_user_list(request, user_id):
     follow_toggle(request, user_id)
     return redirect('user_list')
+
 
 @login_required
 def follow_from_user_profile(request, user_id):
@@ -153,15 +155,18 @@ def unfollow(request, user_id):
     current_user._unfollow(followee)
     messages.add_message(request, messages.ERROR, f'You unfollowed {followee.get_full_name()}!')
 
+
 @login_required
 def unfollow_from_user_list(request, user_id):
     unfollow(request, user_id)
     return redirect('user_list')
 
+
 @login_required
 def unfollow_from_user_profile(request, user_id):
     unfollow(request, user_id)
     return redirect('user_profile', user_id=user_id)
+
 
 def club_util(request):
     user_clubs_list = request.user.get_all_clubs()

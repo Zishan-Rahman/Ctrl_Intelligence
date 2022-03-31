@@ -3,9 +3,12 @@
 <div class="container">
 
 <div class="row">
+    {% if user_clubs %}
+
     <div class="col-3">
         <div class="text">
             <h3 class="text-left"><strong>My Clubs</strong></h3>
+            <h5 class="text-muted">All Clubs You Belong To</h5>
         </div>
     </div>
     <div class="col-6">
@@ -84,6 +87,27 @@
                 </div>
 
             {% endfor %}
-  </div>
+          </div>
+
+        {% else %}
+
+        <div class="row">
+
+        <div class="col-12 text-center mt-5">
+
+
+         <h5 class="text-muted fw-bold">You are not a member of any clubs.</h5>
+            <br>
+
+        <a class="btn" id="bookwiseGeneralBtn" style="text-transform: uppercase;" href="{% url 'club_list' %}">View Clubs</a>
+
+        </div>
+
+                </div>
+
+
+    {% endif %}
+
+
 </div>
 {% endblock %}
