@@ -63,7 +63,9 @@
         <th style="width: 25%">Email</th>
         <th style="width: 25%">Location</th>
 
-  {% for user in request.user.get_users_followees %}
+  {% for user in request.user.followers.all %}
+
+      {% if user not in user_chats %}
     <tr class="clickable-row" data-href="{% url 'create_chat_from_profile' user.id %}">
 
           <td><img src="{{ user.mini_gravatar }}" style="border-radius: 10px" alt=""></td>
@@ -72,6 +74,7 @@
           <td>{{ user.location }}</td>
 
       </tr>
+      {% endif %}
   {% endfor %}
             </table>
 

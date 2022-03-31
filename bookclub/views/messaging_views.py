@@ -79,9 +79,15 @@ class ListChatsView(View):
     def get(self, request, *args, **kwargs):
         chats = Chat.objects.filter(Q(user=request.user) | Q(receiver=request.user))
         users = User.objects.all()
+        users_in_conversation_with = []
+        for chat in chats:
+            users_in_conversation_with.append(chat.user)
+            users_in_conversation_with.append(chat.receiver)
+
         context = {
             'chats': chats,
-            'users': users
+            'users': users,
+            'user_chats': users_in_conversation_with
         }
         return render(request, 'inbox.html', context)
 
