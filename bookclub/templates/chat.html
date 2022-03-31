@@ -1,27 +1,28 @@
 {% extends 'base_content.html' %}
 {% block content %}
   <div class="container">
-    <div class="row">
-        <div>
-            <a class="btn" href="{% url 'inbox' %}" id="bookwiseGeneralBtn" style="text-transform: uppercase; padding: 10px"><i class="bi bi-arrow-left"></i> Back</a>
-        </div>
-    </div>
-  <div class="row mt-5">
+  <div class="row">
       <div class="card w-100 my-auto mx-auto" style="padding: 10px; border-style: groove; border-color: brown">
         
             {%if request.user == chat.receiver%}
                 <div class="row">
-                    <div class="col-4">
-                       <a href="{% url 'user_profile' chat.user.id %}"><img src="{{ chat.user.mini_gravatar }}" alt="{{ chat.user.get_full_name }}'s gravatar" style="border-radius: 10px"></a>
+              <div class="col-1 my-auto" style="margin-right: 64px">
+                         <a class="btn h-100" href="{% url 'inbox' %}" id="bookwiseGeneralBtn" style="text-transform: uppercase; padding: 10px"><i class="bi bi-arrow-left"></i> Back</a>
+                    </div>
+                    <div class="col-1 text-right">
+                        <a href="{% url 'user_profile' chat.user.id %}"><img src="{{ chat.user.mini_gravatar }}" alt="{{ chat.user.get_full_name }}'s gravatar" style="border-radius: 10px"></a>
                     </div>
                     <div class="col-4 my-auto text-left">
-                             <h5 class="text-muted fw-bold">{{chat.receiver.get_full_name}}</h5>
-                        </div>
+                         <h5 class="text-muted fw-bold">{{chat.user.get_full_name}}</h5>
+                    </div>
                 </div>
 
             {%else%}
               <div class="row">
-                    <div class="col-1">
+              <div class="col-1 my-auto" style="margin-right: 64px">
+                         <a class="btn h-100" href="{% url 'inbox' %}" id="bookwiseGeneralBtn" style="text-transform: uppercase; padding: 10px"><i class="bi bi-arrow-left"></i> Back</a>
+                    </div>
+                    <div class="col-1 text-right">
                         <a href="{% url 'user_profile' chat.receiver.id %}"><img src="{{ chat.receiver.mini_gravatar }}" alt="{{ chat.receiver.get_full_name }}'s gravatar" style="border-radius: 10px"></a>
                     </div>
                     <div class="col-4 my-auto text-left">

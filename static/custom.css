@@ -178,4 +178,17 @@
   }
 
 
+  #startingScreensBackBtn.btn {
+    background-color: black;
+    color: white;
+  }
+
+  #startingScreensBackBtn.btn:hover {
+    color: brown;
+    transform: scale(1.25);
+  }
+
+
+
+
 
