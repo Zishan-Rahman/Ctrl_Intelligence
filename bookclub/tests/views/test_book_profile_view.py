@@ -43,16 +43,14 @@ class BookProfileTest(TestCase):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
-                      f'24px"><i class="bi bi-star"></i></button>', html)
+        self.assertIn(f'<i class="bi bi-star"></i></button>', html)
 
     def test_book_profile_has_unfavourite_button_when_book_is_in_favourites(self):
         self.client.login(email=self.user.email, password='Password123')
         self.user.favourite_books.add(self.book)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
-                      f'24px"><i class="bi bi-star-fill"></i></button>', html)
+        self.assertIn(f'<i class="bi bi-star-fill"></i></button>', html)
 
     def test_favourite_button_in_book_profile_works(self):
         self.client.login(email=self.user.email, password='Password123')
@@ -113,15 +111,13 @@ class BookProfileTest(TestCase):
         self.user.currently_reading_books.add(self.book)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
-                      f'24px"><i class="bi bi-bookmarks-fill"></i></button>', html)
+        self.assertIn(f'<i class="bi bi-bookmarks-fill"></i></button>', html)
 
     def test_book_profile_view_has_add_to_reading_list_button_when_book_is_not_in_reading_list(self):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
-                      f'24px"><i class="bi bi-bookmarks"></i></button>', html)
+        self.assertIn(f'<i class="bi bi-bookmarks"></i></button>', html)
 
     def test_add_to_reading_list_in_book_profile_works(self):
         self.client.login(email=self.user.email, password='Password123')
@@ -155,8 +151,7 @@ class BookProfileTest(TestCase):
         self.assertIn(f'<form action="/book_profile/{self.book.id}/add_to_reading_list/" method="post">', html)
         self.assertIn('<input type="hidden" name="csrfmiddlewaretoken" value="', html)
         self.assertIn('">', html)
-        self.assertIn('<button type="submit" class="btn" style="background-color: brown; color: white; font-size: 24px"><i class="bi bi-bookmarks"></i></button>', html)
+        self.assertIn('<i class="bi bi-bookmarks"></i></button>', html)
         self.assertIn('</form>', html)
-        self.assertIn('<div class="col-9 my-auto h-100">', html)
         self.assertIn('<p class="text-muted">Add to Reading List</p>', html)
         self.assertIn('</div>', html)
