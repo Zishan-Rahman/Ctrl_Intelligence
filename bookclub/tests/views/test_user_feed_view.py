@@ -33,9 +33,11 @@ class UserFeedViewTestCase(TestCase, LogInTester):
         self.assertIn(posts, response.context['posts'])
         self.assertIsInstance(response.context['form'], UserPostForm)
         html = response.content.decode('utf8')
-        self.assertIn(f'<h1>Posts of {self.user.get_full_name()}</h1>', html)
+        self.assertIn('<h2 class="text-left fw-bold"><strong>Posts</strong></h2>', html)
+        self.assertIn(f'<h5 class="text-left text-muted">{self.user.get_full_name()}</h5>', html)
         self.assertIn(f'<td>{self.user.get_full_name()}</td>', html)
         self.assertIn(f'<td>Sample user post</td>', html)
+        self.assertIn(f'<td>Feb 2022 10:32</td>', html)
 
     def test_get_user_feed(self):
         self.client.login(email=self.user.email, password="Password123")
