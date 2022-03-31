@@ -78,8 +78,10 @@ class ListChatsView(View):
 
     def get(self, request, *args, **kwargs):
         chats = Chat.objects.filter(Q(user=request.user) | Q(receiver=request.user))
+        users = User.objects.all()
         context = {
-            'chats': chats
+            'chats': chats,
+            'users': users
         }
         return render(request, 'inbox.html', context)
 

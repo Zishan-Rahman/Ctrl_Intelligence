@@ -168,6 +168,6 @@ DEFAULT_FROM_EMAIL = 'bookwise0000@gmail.com'
 SERVER_EMAIL = 'bookwise0000@gmail.com'
 
 # Activate django_heroku here
-if 'HEROKU_MODE' in os.environ or '/app' in os.environ['HOME']:
+if 'HEROKU_MODE' in os.environ:
     import django_heroku
     django_heroku.settings(locals())

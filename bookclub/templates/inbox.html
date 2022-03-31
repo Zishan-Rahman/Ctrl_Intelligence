@@ -2,30 +2,174 @@
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-md-12 p-5">
-      <h3>Your Chats</h3>
+    <div class="col-6">
+      <h2 class="text-left"><strong>My Inbox</strong></h2>
     </div>
+      <div class="col-6">
+        <form method="GET" action="{% url 'create_chat' %}">
+            <button type="button" class="btn float-end" style="text-transform: uppercase; padding: 10px" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#staticBackdropInbox">
+  <i class="bi bi-cursor-fill"></i> New Conversation
+</button>
+      </form>
+      </div>
   </div>
   <div class="row">
-    <div class="col-md-12 p-5">
-      <form method="GET" action="{% url 'create_chat' %}">
-        <button class="btn" style="background-color: brown; color: white" type="submit">Start a Conversation</button>
-      </form>
-    </div>
-  </div>
+    <div class="col-6 mt-3">
+
+    {% if chats %}
+        <h5 class="text-muted">Current Conversations</h5>
+    <br>
+
+        <table class="table table-hover table-borderless" style="max-height: 640px; overflow: auto; display: inline-block;">
+        <th style="width: 25%"></th>
+        <th style="width: 25%">Name</th>
+        <th style="width: 25%">Email</th>
+        <th style="width: 25%">Location</th>
+
   {% for chat in chats.all %}
-  <div class="row mb-3">
-    <div class="card col-md-12 p-3 shadow-sm">
-      <h5>
+      <tr class="clickable-row" data-href="{% url 'chat' chat.pk %}">
+
           {%if request.user == chat.receiver%}
-            {{ chat.user }}
+              <td><img src="{{ chat.user.mini_gravatar }}" style="border-radius: 10px" alt=""></td>
+              <td>{{ chat.user.get_full_name }}</td>
           {%else%}
-            {{ chat.receiver }}
+            <td><img src="{{ chat.receiver.mini_gravatar }}" style="border-radius: 10px" alt=""></td>
+              <td>{{ chat.receiver.get_full_name }}</td>
+              <td>{{ chat.receiver.email }}</td>
+              <td>{{ chat.receiver.location }}</td>
+
+
           {%endif%}
-      </h5>
-      <a class="stretched-link" href="{% url 'chat' chat.pk %}"></a>
+      </tr>
+  {% endfor %}
+            </table>
+        {% else %}
+
+        <h5 class="text-muted fw-bold">You have no conversations</h5>
+
+    {% endif %}
+
+</div>
+  <div class="col-6 mt-3">
+
+  {% if request.user.get_users_followers %}
+
+      <h5 class="text-muted">Connect with your followers</h5>
+        <br>
+
+        <table class="table table-hover table-borderless" style="max-height: 640px; overflow: auto; display: inline-block;">
+        <th style="width: 25%"></th>
+        <th style="width: 25%">Name</th>
+        <th style="width: 25%">Email</th>
+        <th style="width: 25%">Location</th>
+
+  {% for user in request.user.get_users_followees %}
+    <tr class="clickable-row" data-href="{% url 'create_chat_from_profile' user.id %}">
+
+          <td><img src="{{ user.mini_gravatar }}" style="border-radius: 10px" alt=""></td>
+          <td>{{ user.get_full_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.location }}</td>
+
+      </tr>
+  {% endfor %}
+            </table>
+
+      {% else %}
+
+      <h5 class="text-muted">Get to know some fellow book lovers</h5>
+        <br>
+
+       <table class="table table-hover table-borderless" style="max-height: 640px; overflow: auto; display: inline-block;">
+        <thead>
+      <tr>
+        <th style="width: 25%"></th>
+        <th style="width: 25%">Name</th>
+        <th style="width: 25%">Email</th>
+        <th style="width: 25%">Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in users|slice:':10' %}
+      <tr class="clickable-row" data-href="{% url 'create_chat_from_profile' entry.id %}">
+        <td><img src="{{ entry.mini_gravatar }}" alt="Gravatar of user {{ entry.get_full_name }}" style="border-radius: 10px" ></td>
+        <td>{{ entry.get_full_name }}</td>
+        <td>{{ entry.email }}</td>
+        <td>{{ entry.location }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+      </table>
+
+
+
+  {% endif %}
+  </div>
+  </div>
+</div>
+    <div class="modal fade" id="staticBackdropInbox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Start New Conversation</h5>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <input type='text' onkeyup="searchFunction()" id='txt_searchall' class="form-control" placeholder="Search for users..." size="30">&nbsp
+            <table class="table table-hover table-borderless" id="myTable" style="max-height: 600px; overflow: auto; display: inline-block;">
+        <thead>
+      <tr>
+        <th scope="col" style="width: 25%"></th>
+        <th scope="col" style="width: 50%">Name</th>
+        <th scope="col" style="width: 25%">Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in users %}
+      <tr class="clickable-row" data-href="{% url 'create_chat_from_profile' entry.id %}">
+        <td><img src="{{ entry.mini_gravatar }}" alt="Gravatar of user {{ entry.get_full_name }}" style="border-radius: 10px" ></td>
+        <td>{{ entry.get_full_name }}</td>
+        <td>{{ entry.location }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+      </table>
+      </div>
+
     </div>
   </div>
-  {% endfor %}
 </div>
+
+    <script>
+  jQuery(document).ready(function($) {
+      $(".clickable-row").click(function() {
+          window.location = $(this).data("href");
+      });
+  });
+</script>
+
+    <script>
+
+// Adapted from W3 Schools - How to JS filter table
+function searchFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("txt_searchall");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
 {% endblock content %}
