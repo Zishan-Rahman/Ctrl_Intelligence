@@ -1,8 +1,3 @@
-from atexit import register
-from django import template
-from tkinter.font import nametofont
-from wsgiref.util import request_uri
-from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
