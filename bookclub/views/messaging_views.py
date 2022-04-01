@@ -1,3 +1,7 @@
+from atexit import register
+from django import template
+from tkinter.font import nametofont
+from wsgiref.util import request_uri
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -10,6 +14,7 @@ from django.urls import reverse
 from bookclub.models import *
 from django.views.generic.edit import View
 from django.db.models import Q
+
 
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
@@ -75,7 +80,6 @@ def createChatFromProfile(request, user_id):
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ListChatsView(View):
-
     def get(self, request, *args, **kwargs):
         chats = Chat.objects.filter(Q(user=request.user) | Q(receiver=request.user))
         users = User.objects.all()
@@ -94,7 +98,6 @@ class ListChatsView(View):
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class CreateMessageView(View):
-
     def post(self, request, pk, *args, **kwargs):
         chat = Chat.objects.get(pk=pk)
         if chat.receiver == request.user:
@@ -108,8 +111,9 @@ class CreateMessageView(View):
             body=request.POST.get('message'),
         )
         message.save()
+        message.is_read = False 
         return redirect('chat', pk=pk)
-
+       
 
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ChatView(View):
@@ -117,6 +121,14 @@ class ChatView(View):
     def get(self, request, pk, *args, **kwargs):
         form = MessageForm()
         chat = Chat.objects.get(pk=pk)
+        if Message.objects.filter(chat=chat).exists():
+            user_messages = Message.objects.filter(chat=chat)
+            for msg in user_messages:
+                if request.user == chat.receiver:
+                    msg.is_read = True
+                    msg.save()
+
+
         if request.user == chat.receiver or request.user == chat.user:
 
             message_list = Message.objects.filter(chat__pk__contains=pk)
@@ -130,3 +142,4 @@ class ChatView(View):
         else:
             messages.add_message(request, messages.ERROR, "Action prohibited")
             return redirect('home')
+

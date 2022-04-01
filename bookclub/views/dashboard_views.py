@@ -8,9 +8,10 @@ import pickle
 from bookclub.views import config
 from django.contrib import messages
 
-
+ 
 @login_required
 def home_page(request):
+    config.inbox_count(request)
     posts = get_all_club_posts(request)
     posts = posts[:5]
     popular_books_list = get_popular_books()

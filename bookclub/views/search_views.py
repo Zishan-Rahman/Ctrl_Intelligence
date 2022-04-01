@@ -10,6 +10,7 @@ from django.db.models import Value as V
 from django.db.models.functions import Concat
 
 
+
 @login_required
 def search(request):
     if request.method == "POST":
