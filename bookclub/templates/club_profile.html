@@ -33,9 +33,9 @@
                 <div class="col-6">
 
                     {% if current_user == club.owner%}
-                            <a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'schedule_meeting' club.id %}" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
+                          <button type="submit" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#scheduleMeeting" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</button>
                     {% elif current_user in club.get_organisers and club.organiser_owner  %}
-                          <a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'schedule_meeting' club.id %}" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>
+                          <button type="submit" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#scheduleMeeting" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</button>
                     {% endif %}
 
 
@@ -108,11 +108,9 @@
                 <div class="col-6">
 
                     {% if current_user == club.owner%}
-                        <button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-square-text"></i> New Post</button>
+                        <button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#newPost" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-square-text"></i> New Post</button>
                     {% elif current_user in club.get_organisers and club.organiser_owner  %}
-                        <button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style='padding: 15px; text-transform:uppercase; font-size: 14px'>
-                            <i class="bi bi-chat-square-text"></i> New Post
-                        </button>
+                        <button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#newPost" style='padding: 15px; text-transform:uppercase; font-size: 14px'><i class="bi bi-chat-square-text"></i> New Post</button>
                     {% endif %}
 
             </div>
@@ -217,11 +215,11 @@
         {% endif %}
 
               {% if current_user in club.get_members %}
-                  <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i>Leave</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>
               {% elif current_user in club.get_organisers %}
-                  <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i>Leave</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>
               {% elif current_user == club.get_owner %}
-                  <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i>Disband</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> Disband</button>
               {%endif%}
 
                 </div>
@@ -232,17 +230,17 @@
     </div>
     <br>
 
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="newPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="newPostLabel" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Create a post</h5>
+        <h5 class="modal-title" id="newPostLabel">Create a post</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form action="{% url 'new_post' club.id %}" method="post">
           {% csrf_token %}
-          {% include 'partials/bootstrap_form.html' with form=form %}
+          {% include 'partials/bootstrap_form.html' with form=post_form %}
           <button type="submit" class="btn float-end" id="bookwiseGeneralBtn">Post</button>
         </form>
       </div>
@@ -250,6 +248,23 @@
   </div>
   </div>
 
+    <div class="modal fade" id="scheduleMeeting" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="scheduleMeetingLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="scheduleMeetingLabel">Schedule a meeting</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'schedule_meeting' club.id %}" method="post">
+          {% csrf_token %}
+          {% include 'partials/bootstrap_form.html' with form=meeting_form %}
+          <button type="submit" class="btn float-end" id="bookwiseGeneralBtn">Schedule</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
 
     <div class="modal fade" id="leaveClub" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="leaveClubLabel" aria-hidden="true">
       <div class="modal-dialog">
