@@ -117,6 +117,9 @@ class ClubModelTestCase(TestCase):
             self.club_bush_house.full_clean()
 
     # testing a couple of Club model methods
+    
+    def test_get_name_method(self):
+        self.assertEqual(self.club_bush_house.get_name(), "Bush House Book Club")
 
     def test_get_description_method(self):
         self.assertEqual(self.club_bush_house.get_description(), "Bush House Official Book Club!")
