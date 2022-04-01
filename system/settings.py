@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import os, bookclub, django_heroku
+import os
 from pathlib import Path
 from django.contrib.messages import constants as message_constants
 
@@ -169,4 +169,6 @@ DEFAULT_FROM_EMAIL = 'bookwise0000@gmail.com'
 SERVER_EMAIL = 'bookwise0000@gmail.com'
 
 # Activate django_heroku here
-django_heroku.settings(locals())
+if 'HEROKU_MODE' in os.environ or '/app' in os.environ['HOME']:
+    import django_heroku
+    django_heroku.settings(locals())

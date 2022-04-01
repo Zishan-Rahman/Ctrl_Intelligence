@@ -134,3 +134,11 @@ class MeetingUpdateView(LoginRequiredMixin, UpdateView):
         else:
             messages.add_message(self.request, messages.ERROR, "Action prohibited")
             return redirect('club_list')
+
+@login_required
+def remove_from_meeting_list(request, club_id, meeting_id, *args, **kwargs):
+    club = Club.objects.get(id=club_id)
+    meeting = Meeting.objects.get(id=meeting_id)
+    meeting.delete()
+    messages.add_message(request, messages.ERROR, f"The meeting has been cancelled")
+    return redirect("club_meetings", club_id = club_id)

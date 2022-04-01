@@ -34,10 +34,10 @@ def pre_process():
     """ Get only books and users whom have more than 10 ratings respectively """
 
     books_list = ratings.isbn.value_counts().rename_axis('isbn').reset_index(name='count')
-    books_list = books_list[books_list['count'] > 10]['isbn'].to_list()
+    books_list = books_list[books_list['count'] > 5]['isbn'].to_list()
 
     users_list = ratings.user_id.value_counts().rename_axis('user_id').reset_index(name='count')
-    users_list = users_list[users_list['count'] > 10]['user_id'].to_list()
+    users_list = users_list[users_list['count'] > 5]['user_id'].to_list()
 
     ratings = ratings[ratings['isbn'].isin(books_list)]
     ratings = ratings[ratings['user_id'].isin(users_list)]

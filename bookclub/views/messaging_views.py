@@ -64,6 +64,10 @@ def createChatFromProfile(request, user_id):
             chat = Chat.objects.filter(user=request.user, receiver=receiver)[0]
             return redirect('chat', pk=chat.pk)
 
+        elif Chat.objects.filter(user=receiver, receiver=request.user).exists():
+            chat = Chat.objects.filter(user=receiver, receiver=request.user)[0]
+            return redirect('chat', pk=chat.pk)
+
         sender_chat = Chat.objects.create(
             user=request.user,
             receiver=receiver
@@ -78,9 +82,17 @@ def createChatFromProfile(request, user_id):
 # Adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class ListChatsView(View):
     def get(self, request, *args, **kwargs):
-        chats = Chat.objects.filter(Q(user=request.user) | Q(receiver=request.user))    
+        chats = Chat.objects.filter(Q(user=request.user) | Q(receiver=request.user))
+        users = User.objects.all()
+        users_in_conversation_with = []
+        for chat in chats:
+            users_in_conversation_with.append(chat.user)
+            users_in_conversation_with.append(chat.receiver)
+
         context = {
             'chats': chats,
+            'users': users,
+            'user_chats': users_in_conversation_with
         }
         return render(request, 'inbox.html', context)
 
@@ -117,6 +129,7 @@ class ChatView(View):
                 if request.user == chat.receiver:
                     msg.is_read = True
                     msg.save()
+
 
         if request.user == chat.receiver or request.user == chat.user:
 

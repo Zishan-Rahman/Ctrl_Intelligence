@@ -268,6 +268,9 @@ class Club(models.Model):
     def get_meetings(self):
         return Meeting.objects.filter(club_id=self.id)
 
+    def get_number_of_meetings(self):
+        return Meeting.objects.filter(club_id=self.id).count()
+
     def get_all_users(self):
         self.club_members = self.get_members()
         self.club_organisers = self.get_organisers()
@@ -374,7 +377,6 @@ class Chat(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     has_unread = models.BooleanField(default=False)
-
 
 class Message(models.Model):
     chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
