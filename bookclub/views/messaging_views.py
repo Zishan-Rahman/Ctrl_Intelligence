@@ -14,7 +14,6 @@ from django.urls import reverse
 from bookclub.models import *
 from django.views.generic.edit import View
 from django.db.models import Q
-from notifications.signals import notify
 
 
 
@@ -125,7 +124,6 @@ class ChatView(View):
         if Message.objects.filter(chat=chat).exists():
             user_messages = Message.objects.filter(chat=chat)
             for msg in user_messages:
-                print(msg)
                 if request.user == chat.receiver:
                     msg.is_read = True
                     msg.save()
