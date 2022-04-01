@@ -246,6 +246,7 @@ def club_profile(request, club_id):
     """ Individual Club's Profile Page """
     try:
         club = Club.objects.get(id=club_id)
+        edit_club_form = EditClubForm()
         post_form = PostForm()
         posts = Post.objects.filter(club=club)
         posts = posts[:6]
@@ -271,6 +272,7 @@ def club_profile(request, club_id):
         'meetings': meetings,
         'post_form': post_form,
         'meeting_form': meeting_form,
+        'edit_club_form': edit_club_form,
         'applied_to': applied_to_list
         }
     )
