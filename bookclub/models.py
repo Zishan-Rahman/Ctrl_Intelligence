@@ -1,4 +1,5 @@
 import datetime
+from email.mime import application
 from django.db import models
 from django.forms import CharField, DateField, IntegerField
 from django.utils import timezone
@@ -79,6 +80,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     currently_reading_books = models.ManyToManyField(Book, related_name='%(class)s_currently_reading_books')
     favourite_books = models.ManyToManyField(Book)
     is_email_verified = models.BooleanField(default=False)
+    inbox_count = models.IntegerField(default=None, blank=True, null=True)
     followers = models.ManyToManyField(
         'self', symmetrical=False, related_name='followees'
     )

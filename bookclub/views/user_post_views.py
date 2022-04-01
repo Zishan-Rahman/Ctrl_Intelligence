@@ -9,6 +9,7 @@ from bookclub.models import UserPost, Club, User
 from django.contrib import messages
 
 
+
 class UserNewPostView(LoginRequiredMixin, CreateView):
     """Class-based generic view for new post handling."""
 

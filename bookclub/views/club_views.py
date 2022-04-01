@@ -1,4 +1,3 @@
-"""Clubs related views."""
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,6 +13,7 @@ from django.http import Http404
 from bookclub.models import User, Club, Post, Meeting, Application
 from django.views.generic.edit import UpdateView
 from django.core.paginator import Paginator
+
 
 
 class ClubMemberListView(LoginRequiredMixin, ListView):
@@ -145,6 +145,7 @@ def transfer_ownership(request, c_pk, u_pk):
         return redirect('club_members', club_id=c_pk)
 
 
+
 class ClubUpdateView(LoginRequiredMixin, UpdateView):
     """View to update club profile."""
 
@@ -187,6 +188,8 @@ def club_util(request):
     config.user_clubs = user_clubs_list
 
 
+
+
 @login_required
 def club_list(request):
     clubs = []
@@ -202,6 +205,8 @@ def club_list(request):
             "gravatar": club.gravatar()
         })
     return render(request, 'club_list.html', {'clubs': clubs})
+
+
 
 
 @login_required
@@ -286,7 +291,6 @@ def leave_club(request, club_id):
     club.remove_from_club(current_user)
     messages.add_message(request, messages.SUCCESS, f"You have successfully left {club.name}!")
     return redirect('club_selector')
-
 
 @login_required
 def disband_club(request, c_pk):
