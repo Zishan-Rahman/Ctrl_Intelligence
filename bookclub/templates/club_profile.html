@@ -217,9 +217,9 @@
         {% endif %}
 
               {% if current_user in club.get_members %}
-                  <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i>Leave</button>
               {% elif current_user in club.get_organisers %}
-                  <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>
+                  <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i>Leave</button>
               {% elif current_user == club.get_owner %}
                   <button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i>Disband</button>
               {%endif%}
