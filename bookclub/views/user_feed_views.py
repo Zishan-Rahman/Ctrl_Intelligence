@@ -9,6 +9,7 @@ from bookclub.forms import UserPostForm
 from bookclub.models import User, UserPost, Club
 
 
+
 class UserFeedView(LoginRequiredMixin, ListView):
     """Class-based generic view for displaying a view."""
 
