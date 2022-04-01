@@ -121,9 +121,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertNotIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; '
-                         'text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> '
-                         'Leave</button>', html)
+        self.assertNotIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i>Leave</button>', html)
 
     """Test if the club profile page has a leave button for a member of the club """
 
@@ -131,9 +129,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; '
-                      f'text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> '
-                      f'Leave</button>', html)
+        self.assertIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i>Leave</button>', html)
 
     """Test if the club profile page has a leave button for a organiser of a club """
 
@@ -144,9 +140,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.bush_club.make_organiser(self.user3)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; '
-                      f'text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> '
-                      f'Leave</button>', html)
+        self.assertIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i>Leave</button>', html)
 
     def test_disband_button_visible_for_owner(self):
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
@@ -155,9 +149,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.bush_club.make_owner(self.user3)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; '
-                      f'text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> Disband</button>',
-                      html)
+        self.assertIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i>Disband</button>', html)
 
     def test_disband_button_not_visible_for_member(self):
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
@@ -165,11 +157,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.bush_club.make_member(self.user3)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-
-        self.assertNotIn(f'<button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; '
-                         f'text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> '
-                         f'Disband</button>', html)
-        self.assertNotIn('Disband', html)
+        self.assertNotIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i>Disband</button>', html)
 
     def test_disband_button_not_visible_for_organiser(self):
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
@@ -178,11 +166,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.bush_club.make_organiser(self.user3)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-
-        self.assertNotIn(f'<button type="submit" class="btn" id="bookwiseGeneralBtn" style="padding: 15px; '
-                         f'text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> '
-                         f'Disband</button>', html)
-        self.assertNotIn('Disband', html)
+        self.assertNotIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i>Disband</button>', html)
 
     def test_successful_disband(self):
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
