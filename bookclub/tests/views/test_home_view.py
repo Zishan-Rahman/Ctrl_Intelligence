@@ -41,7 +41,7 @@ class HomeViewTestCase(TestCase):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'You need to rate <strong>10 books</strong> to receive personalised recommendations.', html)
+        self.assertIn(f'You need to rate <strong>20 books</strong> to receive personalised recommendations.', html)
 
     def test_home_shows_alert_if_partial_number_of_books_rated(self):
         self._create_less_ratings()
@@ -64,14 +64,14 @@ class HomeViewTestCase(TestCase):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         user_ratings_count = Rating.objects.filter(user=self.user).count()
-        self.assertEqual(10, user_ratings_count)
+        self.assertEqual(20, user_ratings_count)
         self.assertIn(f'Our Most Popular Books', html)
 
     def test_home_does_not_show_alert_if_enough_books_rated(self):
         response = self.client.get(self.url)
         self._create_ratings()
         user_ratings_count = Rating.objects.filter(user=self.user).count()
-        self.assertEqual(10, user_ratings_count)
+        self.assertEqual(20, user_ratings_count)
         self.client.login(email=self.user.email, password='Password123')
         html = response.content.decode('utf8')
         self.assertNotIn(
@@ -86,7 +86,7 @@ class HomeViewTestCase(TestCase):
         user_ratings_count = Rating.objects.filter(user=self.user).count()
         user_recs_count = RecommendedBook.objects.filter(user=self.user).count()
         self.assertEqual(10, user_recs_count)
-        self.assertEqual(10, user_ratings_count)
+        self.assertEqual(20, user_ratings_count)
         self.assertIn(f'New Recommendations', html)
 
     def test_home_view_has_posts(self):
@@ -97,7 +97,7 @@ class HomeViewTestCase(TestCase):
                       html)
 
     def _create_ratings(self):
-        for i in range(0, 10):
+        for i in range(0, 20):
             Rating.objects.create(
                 user=self.user,
                 isbn=f'12341234123{i}',
