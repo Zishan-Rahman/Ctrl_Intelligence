@@ -1,9 +1,9 @@
 {% extends 'base_content.html' %}
 {% block content %}
     <div class="container">
-      {% if request.user.get_number_of_ratings < 10 %}
+      {% if request.user.get_number_of_ratings < 20 %}
       <div class="alert alert-warning" role="alert">
-        You need to rate <strong>10 books</strong> to receive personalised recommendations. You have rated
+        You need to rate <strong>20 books</strong> to receive personalised recommendations. You have rated
         {% if request.user.get_number_of_ratings == 0 %}
             <strong>0 books</strong>
         {% elif request.user.get_number_of_ratings == 1 %}
@@ -15,7 +15,7 @@
       </div>
       {% endif %}
 
-    {% if recommendations or request.user.get_number_of_ratings >= 10 %}
+    {% if recommendations or request.user.get_number_of_ratings >= 20 %}
     <div class="row">
 
     <div class="col">
