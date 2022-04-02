@@ -80,18 +80,6 @@
             </div>
 
 
-            <div class="col-4 row">
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" id="bookwiseGeneralBtn" style="font-size: 24px;" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-book"></i> More Info
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="bookwiseGeneralBtn">
-                        <li><a class="dropdown-item" href="https://www.google.com/search?tbm=bks&q=isbn:{{book.isbn}}">Google Books</a></li>
-                        <li><a class="dropdown-item" href="https://openlibrary.org/search?isbn={{book.isbn}}">Open Library (Internet Archive)</a></li>
-                        <li><a class="dropdown-item" href="https://www.amazon.com/s?k={{book.isbn}}">Amazon.com (US Site)</a></li>
-                    </ul>
-                </div>
-            </div>
 
                     {% if rating > 0 %}
                         <div class="col-4">
@@ -161,25 +149,38 @@
                 </table>
 
                 <div class="row">
-                            <form action="{% url 'update_ratings' book.id %}" method="post">
-                    {% csrf_token %}
-                    <label for="ratings"><strong>Rate {{ book.title }}</strong>(1-10)</label>
-                    <select class="form-select" name="ratings" id="ratings">
-                      <option value=1>1</option>
-                      <option value=2>2</option>
-                      <option value=3>3</option>
-                      <option value=4>4</option>
-                      <option value=5>5</option>
-                      <option value=6>6</option>
-                      <option value=7>7</option>
-                      <option value=8>8</option>
-                      <option value=9>9</option>
-                      <option value=10>10</option>
-                    </select>
-                    <br>
-                    <button type="submit" class="btn" id="bookwiseGeneralBtn">Submit</button>
-                  </form>
-
+                    <div class="col-9">
+                        <form action="{% url 'update_ratings' book.id %}" method="post">
+                        {% csrf_token %}
+                        <label for="ratings"><strong>Rate {{ book.title }}</strong>(1-10)</label>
+                        <select class="form-select" name="ratings" id="ratings">
+                        <option value=1>1</option>
+                        <option value=2>2</option>
+                        <option value=3>3</option>
+                        <option value=4>4</option>
+                        <option value=5>5</option>
+                        <option value=6>6</option>
+                        <option value=7>7</option>
+                        <option value=8>8</option>
+                        <option value=9>9</option>
+                        <option value=10>10</option>
+                        </select>
+                        <br>
+                        <button type="submit" class="btn" id="bookwiseGeneralBtn">Submit</button>                    
+                        </form>
+                    </div>
+                    <div class="col-3 mt-auto">
+                        <div class="dropdown">
+                            <button class="btn float-end dropdown-toggle" type="button" id="bookwiseGeneralBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-book"></i> More Info
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="bookwiseGeneralBtn">
+                                <li><a class="dropdown-item" href="https://www.google.com/search?tbm=bks&q=isbn:{{book.isbn}}">Google Books</a></li>
+                                <li><a class="dropdown-item" href="https://openlibrary.org/search?isbn={{book.isbn}}">Open Library (Internet Archive)</a></li>
+                                <li><a class="dropdown-item" href="https://www.amazon.com/s?k={{book.isbn}}">Amazon.com (US Site)</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
             </div>
