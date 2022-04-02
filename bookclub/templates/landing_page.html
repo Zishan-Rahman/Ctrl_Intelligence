@@ -1,78 +1,81 @@
 {% extends 'base_content.html' %}
 {% block content %}
 <div id="cover-image">
-  <div class="card mx-auto border-danger" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title">Welcome to Bookwise</h5>
-      <p class="card-text">The place to connect with other book readers, like you!</p>
-      <button class="btn" data-bs-toggle="modal" data-bs-target="#login" id="logInBtn">Login</button>
-      <button href="{% url 'sign_up' %}" class="btn" data-bs-toggle="modal" data-bs-target="#signup" id="signUpBtn">Sign up</a>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="login" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="loginLabel">Login</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-         <form action="{% url 'login' %}" method="post">
-            {%  csrf_token  %}
-            <input type ="hidden" name="next" value ="{{ next }}">
-            {%  include 'partials/bootstrap_form.html' with form=form.login %}
-            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgot_password" style="text-decoration: none;color: slategray">Forgot Password?</a>
-            <br>
-            <input type="submit" value="Log in" class="btn w-50 mt-5" style="padding: 10px; text-transform: uppercase" id="bookwiseGeneralBtn">
-
-          </form>
+  <div class="container d-flex align-items-center justify-content-center text-center vh-100">
+    <div class="card align-self-center border-danger" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">Welcome to Bookwise</h5>
+        <p class="card-text">The place to connect with other book readers, like you!</p>
+        <button class="btn" data-bs-toggle="modal" data-bs-target="#login" id="logInBtn">Login</button>
+        <button href="{% url 'sign_up' %}" class="btn" data-bs-toggle="modal" data-bs-target="#signup" id="signUpBtn">Sign up</a>
       </div>
     </div>
   </div>
-</div>
 
 
-<div class="modal fade" id="signup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="signup_label" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="signup_label">Sign up</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-         <form action="{% url 'sign_up' %}" method="post">
-            {%  csrf_token  %}
-            {%  include 'partials/bootstrap_form.html' with form=form.signup %}
-            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#login" style="text-decoration: none;color: slategray">Already a user?</a>
-            <br>
-            <input type="submit" value="Sign Up" class="btn w-50 mt-5" style="padding: 10px; text-transform: uppercase" id="bookwiseGeneralBtn">
+  <div class="modal fade" id="login" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'login' %}" method="post">
+              {%  csrf_token  %}
+              <input type ="hidden" name="next" value ="{{ next }}">
+              {%  include 'partials/bootstrap_form.html' with form=form.login %}
+              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgot_password" style="text-decoration: none;color: slategray">Forgot Password?</a>
+              <br>
+              <input type="submit" value="Log in" class="btn w-50 mt-5" style="padding: 10px; text-transform: uppercase" id="bookwiseGeneralBtn">
 
-          </form>
+            </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="modal fade" id="forgot_password" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="forgot_password_label" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="signup_label">Forgot Password</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+  <div class="modal fade" id="signup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="signup_label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signup_label">Sign up</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'sign_up' %}" method="post">
+              {%  csrf_token  %}
+              {%  include 'partials/bootstrap_form.html' with form=form.signup %}
+              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#login" style="text-decoration: none;color: slategray">Already a user?</a>
+              <br>
+              <input type="submit" value="Sign Up" class="btn w-50 mt-5" style="padding: 10px; text-transform: uppercase" id="bookwiseGeneralBtn">
+
+            </form>
+        </div>
       </div>
-      <div class="modal-body">
-        <p class="mb-5"> Enter your email address below, and an email containing instructions for setting a new one will be sent.</p>
+    </div>
+  </div>
 
-         <form action="{% url 'password_reset' %}" method="post">
-            {%  csrf_token  %}
-            {%  include 'partials/bootstrap_form.html' with form=form.password_reset %}
-            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#login" style="text-decoration: none;color: slategray">Remember your password?</a>
-            <br>
-            <input type="submit" value="Send" class="btn w-50 mt-5" style="padding: 10px; text-transform: uppercase" id="bookwiseGeneralBtn">
+  <div class="modal fade" id="forgot_password" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="forgot_password_label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signup_label">Forgot Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-5"> Enter your email address below, and an email containing instructions for setting a new one will be sent.</p>
 
-          </form>
+          <form action="{% url 'password_reset' %}" method="post">
+              {%  csrf_token  %}
+              {%  include 'partials/bootstrap_form.html' with form=form.password_reset %}
+              <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#login" style="text-decoration: none;color: slategray">Remember your password?</a>
+              <br>
+              <input type="submit" value="Send" class="btn w-50 mt-5" style="padding: 10px; text-transform: uppercase" id="bookwiseGeneralBtn">
+
+            </form>
+        </div>
       </div>
     </div>
   </div>
