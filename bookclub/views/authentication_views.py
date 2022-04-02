@@ -132,5 +132,8 @@ def sign_up(request):
             return redirect('landing_page')
         messages.add_message(request, messages.ERROR, 'Sorry, we could not sign you up. Please check the form for any errors. ')
     else:
-        form = SignUpForm()
+        forms = {'login': LogInForm(),
+            'signup': SignUpForm(),
+            'password_reset': PasswordResetForm(),
+            }
     return render(request, 'landing_page.html', {'form': forms})

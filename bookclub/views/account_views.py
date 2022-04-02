@@ -68,7 +68,10 @@ def password_reset_request(request):
                                      'check your spam folder.')
                     return redirect("home")
             messages.error(request, 'An invalid email has been entered.')
-    password_reset_form = PasswordResetForm()
+    forms = {'login': LogInForm(),
+            'signup': SignUpForm(),
+            'password_reset': PasswordResetForm(),
+            }
     return render(request, 'landing_page.html', {'form': forms})
 
 
