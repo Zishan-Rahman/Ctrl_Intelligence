@@ -1,11 +1,13 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="card mx-auto" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">Welcome to Bookwise</h5>
-    <p class="card-text">The place to connect with other book readers, like you!</p>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#login" id="logInBtn">Login</button>
-    <button href="{% url 'sign_up' %}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#signup" id="signUpBtn">Sign up</a>
+<div id="cover-image">
+  <div class="card mx-auto border-danger" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">Welcome to Bookwise</h5>
+      <p class="card-text">The place to connect with other book readers, like you!</p>
+      <button class="btn" data-bs-toggle="modal" data-bs-target="#login" id="logInBtn">Login</button>
+      <button href="{% url 'sign_up' %}" class="btn" data-bs-toggle="modal" data-bs-target="#signup" id="signUpBtn">Sign up</a>
+    </div>
   </div>
 </div>
 

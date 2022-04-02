@@ -1,6 +1,6 @@
 
 #cover-image {
-    background: url('images/background.jpg') no-repeat center center fixed;
+    background: url('images/cover_image.jpeg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
@@ -166,6 +166,7 @@
   #signUpBtn.btn {
     background-color: white;
     color: brown;
+    border-color: brown;
   }
 
   #signUpBtn.btn:hover {
