@@ -1,17 +1,43 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div id="cover-image">
-  <div class="container d-flex align-items-center justify-content-center text-center vh-100">
-    <div class="card align-self-center border-danger" style="width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title">Welcome to Bookwise</h5>
-        <p class="card-text">The place to connect with other book readers, like you!</p>
-        <button class="btn" data-bs-toggle="modal" data-bs-target="#login" id="logInBtn">Login</button>
-        <button href="{% url 'sign_up' %}" class="btn" data-bs-toggle="modal" data-bs-target="#signup" id="signUpBtn">Sign up</a>
-      </div>
-    </div>
-  </div>
+{% load static %}
+<div id ="cover-image">
+    <div class="row h-100">
+        <div class="card cover-card vh-100 align-right">
+          <h1 class="cover-heading fw-bold text-left" style="font-size: 42px; color:white; margin-top: 100px"> <img src="{% static 'images/bookwise.svg' %}" height="60" width="40">ookwise</h1>
+          <br>
+          <p class="cover-text fw-bold text-left" style="font-size: 36px; color:white; padding-top: 20px;">Make reading social.</p>
+          <br>
+          <div class="vertical-center-bottom my-auto mx-auto">
+            <p class="cover-text fw-bold text-center" style="font-size: 14px; text-transform:uppercase; color: white"><strong>Connect with Fellow Book Lovers</strong></p>
+            <br>
+            <div class="container text-center">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#login" class="btn btn-lg" style="" id="logInBtn">
+              Log in
+            </a>
+            <div class="content" style="padding-top: 5px; padding-bottom: 5px; color:white">
+                <div class="row">
+                    <div class="col">
+            <hr style="width: 100%">
+                        </div>
+                    <div class="col-3">
+            <strong>or</strong>
+                        </div>
+                    <div class="col">
+            <hr class="ms-auto" style="width: 100%">
+                        </div>
+                    </div>
+            </div>
 
+          <p>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#signup" class="btn btn-lg" style="" id="signUpBtn">
+              Sign up
+            </a>
+          </p>
+            </div>
+          </div>
+        </div>  
+  </div>
 
   <div class="modal fade" id="login" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -80,4 +106,4 @@
     </div>
   </div>
 </div>
-{% endblock %}
+{% endblock content %}
