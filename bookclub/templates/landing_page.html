@@ -1,5 +1,5 @@
-{% extends 'base_content.html' %}
-{% block content %}
+{% extends 'base.html' %}
+{% block body %}
 {% load static %}
 <div id ="cover-image">
     <div class="row h-100">
@@ -12,7 +12,7 @@
             <p class="cover-text fw-bold text-center" style="font-size: 14px; text-transform:uppercase; color: white"><strong>Connect with Fellow Book Lovers</strong></p>
             <br>
             <div class="container text-center">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#login" class="btn btn-lg" style="" id="logInBtn">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#login" class="btn btn-lg" id="logInBtn">
               Log in
             </a>
             <div class="content" style="padding-top: 5px; padding-bottom: 5px; color:white">
@@ -106,4 +106,4 @@
     </div>
   </div>
 </div>
-{% endblock content %}
+{% endblock%}
