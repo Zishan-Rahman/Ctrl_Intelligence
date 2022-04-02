@@ -92,7 +92,7 @@
 
         {% if posts %}
 
-            <h4 style="padding-top: 10px;" class="fw-bold"><strong>Latest Club Posts</strong></h4>
+            <h4 style="padding-top: 10px;" class="fw-bold"><strong>Latest Posts</strong></h4>
 
             {% for post in posts %}
 
@@ -110,8 +110,11 @@
 
                               </div>
                               <div class="col-6">
+                                {% if post in Post.objects.all %}
                                   <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-building"></i><a href="{% url 'club_profile' post.club.id %}" style="text-decoration: none; color: grey"> <strong>{{ post.club.name }}</strong></a></p>
-
+                                {% elif post in UserPost.objects.all %}
+                                  <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-building"></i><a href="{% url 'user_profile' post.author.id %}" style="text-decoration: none; color: grey"> <strong>{{ post.author.name }}</strong></a></p>
+                                {%endif%}
                               </div>
                           </div>
 
@@ -120,16 +123,16 @@
 
                   </div>
                 <div class="card-footer">
-                        <small class="text-muted">{{ post.created_at|date:"d M Y G:i" }}</small>
-                    </div>
+                        <small class="text-muted">{{ post.created_at|date:"d M Y G:i" }}</small>  
                 </div>
+              </div>
             {% endfor %}
         {% else %}
 
         <div class="row">
             <div class="col text-center">
                 <br>
-              <p class="text-muted"><strong>Your clubs</strong> do not have any posts</p>
+              <p class="text-muted"><strong>Your clubs and people you follow</strong> do not have any posts</p>
             </div>
             </div>
 
