@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView
 from django.urls import reverse
 from bookclub.forms import PostForm
 from bookclub.models import Post, Club, User
+from bookclub.views import config
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import View
