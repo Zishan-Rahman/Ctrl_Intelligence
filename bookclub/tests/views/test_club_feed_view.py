@@ -86,6 +86,18 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())
+        
+    def test_club_feed_view_context_data(self):
+        self.client.login(email=self.user.email, password="Password123")
+        self._create_test_club_posts(settings.POSTS_PER_PAGE*2+3-1)
+        response = self.client.get(self.url)
+        context = response.context
+        self.assertEqual(context['user'], self.user)
+        self.assertTrue(context['form'])
+        self.assertEqual(context['club'], self.bush_club)
+        self.assertEqual(len(context['posts']), len(Post.objects.filter(club=self.bush_club)))
+        self.assertEqual(len(response.context['page_obj']), settings.POSTS_PER_PAGE)
+        
 
     def _is_logged_in(self):
         return '_auth_user_id' in self.client.session.keys()

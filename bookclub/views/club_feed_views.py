@@ -31,7 +31,7 @@ class ClubFeedView(LoginRequiredMixin, ListView):
     #     context = super().get_context_data(**kwargs)
     #     context['user'] = self.request.user
     #     context['form'] = PostForm()
-    #     context['club'] = current_club_id
+    #     context['club'] = current_club
     #     context['posts'] = posts
     #     context['page_obj'] = page_obj
     #     return context
