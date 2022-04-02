@@ -21,7 +21,7 @@ class PasswordResetViewTest(TestCase):
     def test_forgot_password_uses_correct_template(self):
         response = self.client.get(reverse('password_reset'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'main/password/password_reset.html')
+        self.assertTemplateUsed(response, 'landing_page.html')
 
     def test_sends_forgot_password_email(self):
         self.client.post("/password_reset", {"email": self.user.email})

@@ -28,14 +28,14 @@ class SignUpViewTestCase(TestCase, LogInTester):
 
     def test_home_uses_correct_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, 'sign_up.html')
+        self.assertTemplateUsed(response, 'landing_page.html')
 
     def test_successful_sign_up(self):
         before_count = User.objects.count()
         response = self.client.post(self.url, self.form_input, follow=True)
         after_count = User.objects.count()
         self.assertEqual(after_count, before_count + 1)
-        response_url = reverse('login')
+        response_url = reverse('landing_page')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
         user = User.objects.get(email='alexwillows@example.org')
         self.assertEqual(user.first_name, 'Alex')
@@ -51,9 +51,9 @@ class SignUpViewTestCase(TestCase, LogInTester):
     def test_get_sign_up(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        form = response.context['form']
-        self.assertTrue(isinstance(form, SignUpForm))
-        self.assertFalse(form.is_bound)
+        forms = response.context['form']
+        self.assertTrue(isinstance(forms['signup'], SignUpForm))
+        self.assertFalse(forms['signup'].is_bound)
 
     def test_unsuccessful_sign_up(self):
         self.form_input['email']='bademailexample.org'
@@ -61,8 +61,8 @@ class SignUpViewTestCase(TestCase, LogInTester):
         response = self.client.post(self.url, self.form_input)
         after_count = User.objects.count()
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'sign_up.html')
-        form = response.context['form']
-        self.assertTrue(isinstance(form, SignUpForm))
-        self.assertTrue(form.is_bound)
+        self.assertTemplateUsed(response, 'landing_page.html')
+        forms = response.context['form']
+        self.assertTrue(isinstance(forms['signup'], SignUpForm))
+        self.assertTrue(forms['signup'].is_bound)
         self.assertFalse(self._is_logged_in())

@@ -1,12 +1,13 @@
 
 #cover-image {
-    background: url('images/background.jpg') no-repeat center center fixed;
+    background: url('images/cover_image.jpeg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
     height: 100%;
   }
+
 
 #recommendationCard:hover {
   background-color: whitesmoke;
@@ -39,12 +40,14 @@
 
 
   .cover-card {
-    background-color: black;
+    background-color: rgba(255, 255, 255, 0.3);
+    /* border-color: brown; */
     max-width: 35rem;
     border-radius: 0;
-    margin-right: 0;
+    margin-right: auto;
     margin-left: auto;
     text-align: center;
+    
   }
 
   .cover-card-block {
@@ -166,6 +169,7 @@
   #signUpBtn.btn {
     background-color: white;
     color: brown;
+    border-color: brown;
   }
 
   #signUpBtn.btn:hover {
@@ -187,6 +191,8 @@
     color: brown;
     transform: scale(1.25);
   }
+
+  
 
 
 
