@@ -163,7 +163,7 @@ class BookProfileTest(TestCase):
         book_more_info_button = f"""<div class="col-4 row">
                 <div class="dropdown">
                     <button class="btn dropdown-toggle" type="button" id="bookwiseGeneralBtn" style="font-size: 24px;" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-book"></i> More info
+                        <i class="bi bi-book"></i> More Info
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="bookwiseGeneralBtn">
                         <li><a class="dropdown-item" href="https://www.google.com/search?tbm=bks&q=isbn:{self.book.isbn}">Google Books</a></li>
