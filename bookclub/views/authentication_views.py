@@ -8,6 +8,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse
 from bookclub.forms import LogInForm, SignUpForm, PasswordForm
+from django.contrib.auth.forms import PasswordResetForm
 from bookclub.models import User
 from .mixins import LoginProhibitedMixin
 from django.contrib.auth.decorators import login_required
@@ -50,9 +51,12 @@ class LogInView(LoginProhibitedMixin, View):
     def post(self, request):
         """Handle log in attempt."""
 
-        form = LogInForm(request.POST)
+        forms = {'login': LogInForm(request.POST),
+            'signup': SignUpForm(),
+            'password_reset': PasswordResetForm(),
+            }
         self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
-        user = form.get_user()
+        user = forms['login'].get_user()
         if user is not None:
             if not user.is_email_verified:
                 messages.add_message(request, messages.ERROR, "Email is not verified, please check your inbox")
@@ -66,8 +70,11 @@ class LogInView(LoginProhibitedMixin, View):
     def render(self):
         """Render log in template with blank log in form."""
 
-        form = LogInForm()
-        return render(self.request, 'login.html', {'form': form, 'next': self.next})
+        forms = {'login': LogInForm(),
+            'signup': SignUpForm(),
+            'password_reset': PasswordResetForm(),
+            }
+        return render(self.request, 'landing_page.html', {'form': forms, 'next': self.next})
 
 
 def log_out(request):
@@ -114,12 +121,16 @@ def activate(request, uid, token):
 @login_prohibited
 def sign_up(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
+        forms = {'login': LogInForm(),
+            'signup': SignUpForm(request.POST),
+            'password_reset': PasswordResetForm(),
+            }
+        if forms['signup'].is_valid():
+            user = forms['signup'].save()
             send_verification_email(user, request)
             messages.add_message(request, messages.SUCCESS, 'Verification email sent')
-            return redirect('login')
+            return redirect('landing_page')
+        messages.add_message(request, messages.ERROR, 'Sorry, we could not sign you up. Please check the form for any errors. ')
     else:
         form = SignUpForm()
-    return render(request, 'sign_up.html', {'form': form})
+    return render(request, 'landing_page.html', {'form': forms})

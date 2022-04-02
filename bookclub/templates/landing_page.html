@@ -1,42 +1,78 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block body %}
-<div id ="cover-image">
-    <div class="row h-100">
-        <div class="card cover-card vh-100 align-right">
-          <h1 class="cover-heading fw-bold text-left" style="font-size: 42px; color:white; margin-top: 100px"> <img src="{% static 'images/bookwise.svg' %}" height="60" width="40">ookwise</h1>
-          <br>
-          <p class="cover-text fw-bold text-left" style="font-size: 36px; color:white; padding-top: 20px;">Make reading social.</p>
-          <br>
-          <div class="vertical-center-bottom my-auto mx-auto">
-            <p class="cover-text fw-bold text-center" style="font-size: 14px; text-transform:uppercase; color: white"><strong>Connect with Fellow Book Lovers</strong></p>
-            <br>
-            <div class="container text-center">
-            <a href="{% url 'login' %}" class="btn btn-lg" style="" id="logInBtn">
-              Log in
-            </a>
-            <div class="content" style="padding-top: 5px; padding-bottom: 5px; color:white">
-                <div class="row">
-                    <div class="col">
-            <hr style="width: 100%">
-                        </div>
-                    <div class="col-3">
-            <strong>or</strong>
-                        </div>
-                    <div class="col">
-            <hr class="ms-auto" style="width: 100%">
-                        </div>
-                    </div>
-            </div>
-
-          <p>
-            <a href="{% url 'sign_up' %}" class="btn btn-lg" style="" id="signUpBtn">
-              Sign up
-            </a>
-          </p>
-            </div>
-          </div>
-        </div>  
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="card mx-auto" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Welcome to Bookwise</h5>
+    <p class="card-text">The place to connect with other book readers, like you!</p>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#login" id="logInBtn">Login</button>
+    <button href="{% url 'sign_up' %}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#signup" id="signUpBtn">Sign up</a>
   </div>
 </div>
-{% endblock%}
+
+<div class="modal fade" id="login" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginLabel">Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <form action="{% url 'login' %}" method="post">
+            {%  csrf_token  %}
+            <input type ="hidden" name="next" value ="{{ next }}">
+            {%  include 'partials/bootstrap_form.html' with form=form.login %}
+            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgot_password" style="text-decoration: none;color: slategray">Forgot Password?</a>
+            <br>
+            <input type="submit" value="Log in" class="btn w-50 mt-5" style="padding: 10px; text-transform: uppercase" id="bookwiseGeneralBtn">
+
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="signup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="signup_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signup_label">Sign up</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <form action="{% url 'sign_up' %}" method="post">
+            {%  csrf_token  %}
+            {%  include 'partials/bootstrap_form.html' with form=form.signup %}
+            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#login" style="text-decoration: none;color: slategray">Already a user?</a>
+            <br>
+            <input type="submit" value="Sign Up" class="btn w-50 mt-5" style="padding: 10px; text-transform: uppercase" id="bookwiseGeneralBtn">
+
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="forgot_password" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="forgot_password_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signup_label">Forgot Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-5"> Enter your email address below, and an email containing instructions for setting a new one will be sent.</p>
+
+         <form action="{% url 'password_reset' %}" method="post">
+            {%  csrf_token  %}
+            {%  include 'partials/bootstrap_form.html' with form=form.password_reset %}
+            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#login" style="text-decoration: none;color: slategray">Remember your password?</a>
+            <br>
+            <input type="submit" value="Send" class="btn w-50 mt-5" style="padding: 10px; text-transform: uppercase" id="bookwiseGeneralBtn">
+
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from bookclub.templates import *
-from bookclub.forms import PasswordForm, UserForm, UserPostForm
+from bookclub.forms import PasswordForm, SignUpForm, UserForm, UserPostForm, LogInForm
 from bookclub.models import Club, User, UserPost
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -27,13 +27,22 @@ from django.utils.encoding import force_bytes
 def landing_page(request):
     if request.user.is_authenticated:
         return redirect('home')
-    return render(request, 'landing_page.html')
+    forms = {'login': LogInForm(),
+            'signup': SignUpForm(),
+            'password_reset': PasswordResetForm(),
+            }
+    return render(request, 'landing_page.html', {'form':forms})
+
 
 
 def password_reset_request(request):
     site = get_current_site(request)
     if request.method == "POST":
-        password_reset_form = PasswordResetForm(request.POST)
+        forms = {'login': LogInForm(),
+            'signup': SignUpForm(),
+            'password_reset': PasswordResetForm(request.POST),
+            }
+        password_reset_form = forms['password_reset']
         if password_reset_form.is_valid():
             data = password_reset_form.cleaned_data['email']
             associated_users = User.objects.filter(Q(email=data))
@@ -60,8 +69,7 @@ def password_reset_request(request):
                     return redirect("home")
             messages.error(request, 'An invalid email has been entered.')
     password_reset_form = PasswordResetForm()
-    return render(request=request, template_name="main/password/password_reset.html",
-                  context={"password_reset_form": password_reset_form})
+    return render(request, 'landing_page.html', {'form': forms})
 
 
 class PasswordView(LoginRequiredMixin, FormView):
