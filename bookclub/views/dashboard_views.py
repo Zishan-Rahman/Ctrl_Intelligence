@@ -20,7 +20,7 @@ def home_page(request):
     recommendations_list = []
     recommendations_list_isbn = []
     user_ratings_count = Rating.objects.filter(user=request.user).count()
-    if user_ratings_count >= 10:
+    if user_ratings_count >= 20:
         recommended_books_count = RecommendedBook.objects.filter(user=request.user).count()
         if recommended_books_count > 0:
             recommendations_list = list(set(RecommendedBook.objects.filter(user=request.user)))
