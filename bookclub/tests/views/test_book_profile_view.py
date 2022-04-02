@@ -155,3 +155,21 @@ class BookProfileTest(TestCase):
         self.assertIn('</form>', html)
         self.assertIn('<p class="text-muted">Add to Reading List</p>', html)
         self.assertIn('</div>', html)
+        
+    def test_book_profile_view_has_more_info_button(self):
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        book_more_info_button = f"""<div class="col-4 row">
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="bookwiseGeneralBtn" style="font-size: 24px;" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-book"></i> More info
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="bookwiseGeneralBtn">
+                        <li><a class="dropdown-item" href="https://www.google.com/search?tbm=bks&q=isbn:{self.book.isbn}">Google Books</a></li>
+                        <li><a class="dropdown-item" href="https://openlibrary.org/search?isbn={self.book.isbn}">Open Library (Internet Archive)</a></li>
+                        <li><a class="dropdown-item" href="https://www.amazon.com/s?k={self.book.isbn}">Amazon.com (US Site)</a></li>
+                    </ul>
+                </div>
+            </div>"""
+        self.assertIn(book_more_info_button, html)
