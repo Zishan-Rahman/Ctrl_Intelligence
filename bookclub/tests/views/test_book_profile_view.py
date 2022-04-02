@@ -166,10 +166,11 @@ class BookProfileTest(TestCase):
                                 <i class="bi bi-book"></i> More Info
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="bookwiseGeneralBtn">
-                                <li><a class="dropdown-item" href="https://www.google.com/search?tbm=bks&q=isbn:{self.book.isbn}">Google Books</a></li>
-                                <li><a class="dropdown-item" href="https://openlibrary.org/search?isbn={self.book.isbn}">Open Library (Internet Archive)</a></li>
-                                <li><a class="dropdown-item" href="https://www.amazon.com/s?k={self.book.isbn}">Amazon.com (US Site)</a></li>
+                                <li><a class="dropdown-item" href="https://www.google.com/search?tbm=bks&q=isbn:{self.book.isbn}" target="_blank" rel="noopener noreferrer">Google Books</a></li>
+                                <li><a class="dropdown-item" href="https://openlibrary.org/search?isbn={self.book.isbn}" target="_blank" rel="noopener noreferrer">Open Library (Internet Archive)</a></li>
+                                <li><a class="dropdown-item" href="https://www.amazon.com/s?k={self.book.isbn}" target="_blank" rel="noopener noreferrer">Amazon.com (US Site)</a></li>
                             </ul>
                         </div>
-                    </div>"""
+                    </div>
+                </div>"""
         self.assertIn(book_more_info_button, html)

@@ -19,7 +19,7 @@
                     {%  csrf_token  %}
                     <input type ="hidden" name="next" value ="{{ next }}">
                      {%  include 'partials/bootstrap_form.html' with form=form %}
-                    <a href="{% url 'password_reset' %}" style="margin-right: 100%; text-decoration: none;color: slategray">Forgot password?</a>
+                    <a href="{% url 'password_reset' %}" style="text-decoration: none;color: slategray">Forgot password?</a>
                     <br>
                     <input type="submit" value="Log in" class="btn w-50 mt-5" style="padding: 10px; text-transform: uppercase" id="bookwiseGeneralBtn">
 
