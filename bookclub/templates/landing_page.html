@@ -4,6 +4,14 @@
 <div id ="cover-image">
     <div class="row h-100">
         <div class="card cover-card vh-100 align-right">
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+            {{message}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endfor %}
+          {% endif %}
           <h1 class="cover-heading fw-bold text-left" style="font-size: 42px; color:white; margin-top: 100px"> <img src="{% static 'images/bookwise.svg' %}" height="60" width="40">ookwise</h1>
           <br>
           <p class="cover-text fw-bold text-left" style="font-size: 36px; color:white; padding-top: 20px;">Make reading social.</p>

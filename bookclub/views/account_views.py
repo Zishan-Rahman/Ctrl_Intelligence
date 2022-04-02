@@ -66,7 +66,7 @@ def password_reset_request(request):
                     messages.success(request,
                                      'A message with reset password instructions has been sent to your inbox. Please '
                                      'check your spam folder.')
-                    return redirect("home")
+                    return redirect("landing_page")
             messages.error(request, 'An invalid email has been entered.')
     forms = {'login': LogInForm(),
             'signup': SignUpForm(),
