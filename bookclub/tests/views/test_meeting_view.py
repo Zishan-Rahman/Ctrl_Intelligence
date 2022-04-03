@@ -1,7 +1,7 @@
 """Unit tests for the Meeting View"""
 from django.test import TestCase
 from django.urls import reverse
-from bookclub.models import User, Club, Meeting
+from bookclub.models import User, Club, Meeting, Post
 from django.contrib import messages
 from bookclub.forms import ScheduleMeetingForm
 from datetime import timedelta, date, time, datetime
@@ -112,6 +112,10 @@ class MeetingViewTestCase(TestCase):
         self.client.login(email=self.john.get_email(), password='Password123')
         beforeCount = Meeting.objects.all().count()
         response = self.client.post('/club_profile/1/meeting/', self.online_form_input, follow=True)
+        date = self.online_form_input['date'].strftime("%d/%m/%y")
+        time = self.online_form_input['start_time'].strftime("%H:%M")
+        msg = "New meeting scheduled on " + date + " at " + time + "."
+        self.assertTrue(Post.objects.filter(author=self.john, club=self.bush_club, text=msg).exists())
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
@@ -122,7 +126,11 @@ class MeetingViewTestCase(TestCase):
         """Testing for a successful in person meeting scheduling."""
         self.client.login(email=self.john.get_email(), password='Password123')
         beforeCount = Meeting.objects.all().count()
-        response = self.client.post('/club_profile/3/meeting/', self.in_person_form_input, follow=True)
+        response = self.client.post('/club_profile/1/meeting/', self.online_form_input, follow=True)
+        date = self.online_form_input['date'].strftime("%d/%m/%y")
+        time = self.online_form_input['start_time'].strftime("%H:%M")
+        msg = "New meeting scheduled on " + date + " at " + time + "."
+        self.assertTrue(Post.objects.filter(author=self.john, club=self.bush_club, text=msg).exists())
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
@@ -135,6 +143,7 @@ class MeetingViewTestCase(TestCase):
         beforeCount = Meeting.objects.all().count()
         self.online_form_input['date'] = self.yesterday
         response = self.client.post('/club_profile/1/meeting/', self.online_form_input, follow=True)
+        self.assertFalse(Post.objects.filter(author=self.john, club=self.bush_club).exists())
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'schedule_meeting.html')
         form = response.context['form']
@@ -151,6 +160,7 @@ class MeetingViewTestCase(TestCase):
         beforeCount = Meeting.objects.all().count()
         self.in_person_form_input['date'] = self.yesterday
         response = self.client.post('/club_profile/3/meeting/', self.in_person_form_input, follow=True)
+        self.assertFalse(Post.objects.filter(author=self.john, club=self.bush_club).exists())
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'schedule_meeting.html')
         form = response.context['form']
