@@ -21,11 +21,11 @@ class MyBookRatingsViewTestCase(TestCase):
         return response, html
 
     def test_my_book_ratings_url(self):
-        """Testing the my book ratings url."""
+        """Testing my book ratings url."""
         self.assertEqual(self.url, '/my_book_ratings/')
 
     def test_my_book_ratings_uses_correct_template(self):
-        """Testing if my book ratings uses correct template."""
+        """Testing if my book ratings uses the correct template."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -42,7 +42,7 @@ class MyBookRatingsViewTestCase(TestCase):
         self.assertIn('<td>5</td>', html)
 
     def test_multiple_book_rating_have_correct_details(self):
-        """Testing if multiple book rating have the correct details."""
+        """Testing if multiple book rating has the correct details."""
         self.client.login(email=self.john.email, password="Password123")
         response, html = self.get_response_and_html()
         self.assertNotIn('You do not have any book ratings', html)

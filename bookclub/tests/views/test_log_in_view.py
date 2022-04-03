@@ -54,7 +54,7 @@ class LogInViewTestCase(TestCase, LogInTester):
         self.assertEqual(len(messages_list), 0)
 
     def test_unsuccessful_login(self):
-        """Testing for unsuccesful login."""
+        """Testing for unsuccessful login."""
         form_input = {'email': 'johndoe@example.org', 'password': 'WrongPassword123'}
         response = self.client.post(self.url, form_input)
         self.assertEqual(response.status_code, 200)

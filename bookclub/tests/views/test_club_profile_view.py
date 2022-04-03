@@ -174,7 +174,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>', html)
 
     def test_disband_button_visible_for_owner(self):
-        """Test if disband button is visble for owner on club profile page."""
+        """Test if disband button is visible for owner on club profile page."""
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
         self.client.login(email=self.user3.email, password='Password123')
         self.bush_club.make_member(self.user3)
@@ -184,7 +184,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> Disband</button>', html)
 
     def test_disband_button_not_visible_for_member(self):
-        """Test if disband button is invisble for member."""
+        """Test if disband button is invisible for member."""
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
         self.client.login(email=self.user3.email, password='Password123')
         self.bush_club.make_member(self.user3)
@@ -193,7 +193,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertNotIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> Disband</button>', html)
 
     def test_disband_button_not_visible_for_organiser(self):
-        """Test if disband button is invisble for an organiser."""
+        """Test if disband button is invisible for an organiser."""
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
         self.client.login(email=self.user3.email, password='Password123')
         self.bush_club.make_member(self.user3)
@@ -203,7 +203,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertNotIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> Disband</button>', html)
 
     def test_successful_disband(self):
-        """Test for succesfull disband of a club."""
+        """Test for successful disband of a club."""
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
         self.client.login(email=self.user3.email, password='Password123')
         self.bush_club.make_member(self.user3)
@@ -334,7 +334,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertNotIn(f'This is a Bush House Book Club Post', html)
 
     def test_club_profile_view_displays_correct_message_when_no_posts(self):
-        """Test for correct message when club profile does contains any posts."""
+        """Test for correct message when club profile does contain any posts."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
         html = response.content.decode('utf8')
