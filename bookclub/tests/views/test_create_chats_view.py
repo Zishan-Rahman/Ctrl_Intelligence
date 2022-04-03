@@ -21,7 +21,7 @@ class CreateChatsViewTestCase(TestCase):
 
     def test_create_chats_url(self):
         """Testing the create chats url."""
-        self.assertEqual(self.url, '/inbox/create_chat')
+        self.assertEqual(self.url, '/inbox/create_chat/')
 
     def test_create_chat_uses_correct_template(self):
         """Testing if create chat uses correct template."""
