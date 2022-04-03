@@ -15,7 +15,7 @@ class RecommendedBooksModelsTestCase(TestCase):
                 ]
 
     def setUp(self):
-        self.john = User.objects.get(pk=1)
+        sef.john = User.objects.get(pk=1)
         self.jane = User.objects.get(pk=2)
         self.book_1 = Book.objects.get(pk=1)
         self.book_2 = Book.objects.get(pk=2)
@@ -56,7 +56,7 @@ class RecommendedBooksModelsTestCase(TestCase):
         try:
             self.rec_book_1.full_clean()
         except ValidationError:
-            self.fail('Test club should be valid')
+            self.fail('Test recommended book should be valid')
 
     def _assert_rec_book_is_invalid(self):
         """Test if the recommended book is invalid."""

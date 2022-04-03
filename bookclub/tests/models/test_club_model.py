@@ -62,8 +62,8 @@ class ClubModelTestCase(TestCase):
         self.club_bush_house.description = "a" * 512
         self._assert_book_club_is_valid()
 
-    def test_location_may_not_contain_over_512_characters(self):
-        """Test if the club location exceeds 512 characters it is invalid"""
+    def test_description_may_not_contain_over_512_characters(self):
+        """Test if the club description exceeds 512 characters it is invalid"""
         self.club_bush_house.description = "a" * 513
         self._assert_book_club_is_invalid()
 
@@ -78,36 +78,36 @@ class ClubModelTestCase(TestCase):
         self._assert_book_club_is_invalid()
 
     def test_book_club_owners(self):
-        """Testing the primary key getter in club model"""
+        """Testing the primary key getter in Club model"""
         self.assertEqual(self.club_bush_house.owner.pk, 1)
         self.assertEqual(self.club_somerset_house.owner.pk, 2)
         self.assertEqual(self.club_strand_house.owner.pk, 1)
 
     def test_club_meeting_types(self):
-        """Testing the meeting type in the club model"""
+        """Testing the meeting type in the Club model"""
         self.assertTrue(self.club_bush_house.meeting_online)
         self.assertTrue(self.club_somerset_house.meeting_online)
         self.assertFalse(self.club_strand_house.meeting_online)
 
     def test_make_member(self):
-        """Testing the make member feature in the club model"""
+        """Testing the make member feature in the Club model"""
         self.club_bush_house.make_member(self.user_two)
         self.assertEqual(self.club_bush_house.get_members().get(pk=2), self.user_two)
 
     def test_make_organiser(self):
-        """Testing the make organiser feature in the club model"""
+        """Testing the make organiser feature in the Club model"""
         self.club_bush_house.make_member(self.user_two)
         self.club_bush_house.make_organiser(self.user_two)
         self.assertEqual(self.club_bush_house.get_organisers().get(pk=2), self.user_two)
 
     def test_make_owner(self):
-        """Testing the make owner feature in the club model"""
+        """Testing the make owner feature in the Club model"""
         self.club_bush_house.make_member(self.user_two)
         self.club_bush_house.make_owner(self.user_two)
         self.assertEqual(self.club_bush_house.owner, self.user_two)
 
     def test_remove_member_from_club(self):
-        """Testing the remove member feature in the club model"""
+        """Testing the remove member feature in the Club model"""
         self.club_temple_house.make_member(self.user_one)
         self.assertEqual(self.club_temple_house.get_members().get(pk=1), self.user_one)
         self.club_temple_house.remove_from_club(self.user_one)
@@ -115,7 +115,7 @@ class ClubModelTestCase(TestCase):
             self.club_temple_house.get_members().get(pk=1)
 
     def test_remove_organiser_from_club(self):
-        """Testing the remove organiser feature in the club model"""
+        """Testing the remove organiser feature in the Club model"""
         self.club_temple_house.make_member(self.user_one)
         self.club_temple_house.make_organiser(self.user_one)
         self.assertEqual(self.club_temple_house.user_level(self.user_one), "Organiser")
@@ -182,7 +182,7 @@ class ClubModelTestCase(TestCase):
             self._assert_book_club_is_valid()
 
     def test_club_invalidity_test_fails_when_club_is_actually_valid(self):
-        """Testing if invalidity test fails for an valid club, raises Assertion Error."""
+        """Testing if invalidity test fails for a valid club, raises Assertion Error."""
         self.club_bush_house.description = "a" * 512
         with self.assertRaisesMessage(AssertionError, 'ValidationError not raised'):
             self._assert_book_club_is_invalid()

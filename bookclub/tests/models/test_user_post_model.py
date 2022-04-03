@@ -25,7 +25,7 @@ class UserPostTest(TestCase):
         try:
             self.post.full_clean()
         except ValidationError:
-            self.fail("Test message should be valid")
+            self.fail("Test post should be valid")
 
     def test_author_must_not_be_blank(self):
         """Testing if the author is blank, a validation error is raised."""

@@ -68,11 +68,11 @@ class RatingsModelsTestCase(TestCase):
         self.assertEqual(self.rating_one.get_user(),self.rating_one.user)
 
     def test_rating_book_getter_works(self):
-        """Test the book getter method in the Ratings model"""
+        """Testing the book getter method in the Ratings model"""
         self.assertEqual(self.rating_one.get_book(),self.rating_one.book)
 
     def test_rating_rating_getter_works(self):
-        """Test the rating getter method in the Ratings model"""
+        """Testing the rating getter method in the Ratings model"""
         self.assertEqual(self.rating_one.get_rating(),self.rating_one.rating)
 
     #validity tests
@@ -82,12 +82,12 @@ class RatingsModelsTestCase(TestCase):
         try:
             self.rating_one.full_clean()
         except ValidationError:
-            self.fail('Test club should be valid')
+            self.fail('Test rating should be valid')
 
     def test_validity_test_fails_when_rating_is_invalid(self):
         """Test if the rating is invalid, assertion error is raised."""
         self.rating_one.rating = 747
-        with self.assertRaisesMessage(AssertionError, 'Test club should be valid'):
+        with self.assertRaisesMessage(AssertionError, 'Test rating should be valid'):
             self._assert_rating_is_valid()
 
     def _assert_rating_is_invalid(self):
