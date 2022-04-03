@@ -15,7 +15,7 @@ class RecommendedBooksModelsTestCase(TestCase):
                 ]
 
     def setUp(self):
-        sef.john = User.objects.get(pk=1)
+        self.john = User.objects.get(pk=1)
         self.jane = User.objects.get(pk=2)
         self.book_1 = Book.objects.get(pk=1)
         self.book_2 = Book.objects.get(pk=2)
