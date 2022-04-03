@@ -74,7 +74,7 @@ class BooksListViewTestCase(TestCase, LogInTester):
         self.assertFalse(page_obj.has_next())
 
     def test_book_list_view_has_remove_from_reading_list_button_when_book_is_in_reading_list(self):
-       """"Testing the remove from reading list button."""
+        """"Testing the remove from reading list button."""
         self.client.login(email=self.user.email, password='Password123')
         self.user.currently_reading_books.add(self.book)
         response = self.client.get(self.url)
