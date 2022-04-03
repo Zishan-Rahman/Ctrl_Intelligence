@@ -1,3 +1,4 @@
+"""Unit tests for the Favourite Books View"""
 from ast import boolop
 from django.conf import settings
 from django.test import TestCase
@@ -9,8 +10,8 @@ from bookclub.tests.helpers import LogInTester, reverse_with_next
 
 # Books View test is adapted from the Chess Club project
 
-class BooksListViewTestCase(TestCase, LogInTester):
-    """Tests of the club view."""
+class FavouriteBooksViewTestCase(TestCase, LogInTester):
+    """Test case for the Favourite Books View"""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json"]
 
@@ -19,9 +20,11 @@ class BooksListViewTestCase(TestCase, LogInTester):
         self.user = User.objects.get(pk=1)
 
     def test_favourite_book_list_url(self):
+        """Testing the favourite books url."""
         self.assertEqual(self.url, '/favourites/')
 
     def test_correct_favourite_book_list_template(self):
+        """Testing if the favourite book list uses correct template."""
         self.client.login(email=self.user.email, password="Password123")
         response = self.client.get(self.url)
         self._is_logged_in()
@@ -29,11 +32,13 @@ class BooksListViewTestCase(TestCase, LogInTester):
         self.assertTemplateUsed(response, "favourites.html")
 
     def test_get_favourite_books_list_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to my favourites."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_get_favourite_book_list_with_pagination(self):
+        """Testing for favourite books list with pagination."""
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_favourite_books(settings.BOOKS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
@@ -71,9 +76,11 @@ class BooksListViewTestCase(TestCase, LogInTester):
 
 
     def _is_logged_in(self):
+        """Testing if logged in."""
         return '_auth_user_id' in self.client.session.keys()
 
     def _create_test_favourite_books(self, book_count=10):
+        """Creation of favourite books."""
         for id in range(1, book_count+1, 1):
             self.user.favourite_books.add(Book.objects.create(
                 isbn=id,
@@ -85,7 +92,3 @@ class BooksListViewTestCase(TestCase, LogInTester):
                 medium_url=f'medium{id}@example.org',
                 large_url=f'large{id}@example.org',
             ))
-        
-        
-                
-

@@ -1,4 +1,4 @@
-"""Tests of the application view."""
+"""Unit tests of the Promote and Demote View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -8,7 +8,7 @@ from django.contrib import messages
 
 
 class PromoteDemoveViewsTestCase(TestCase):
-    """Tests of the promote and demote views."""
+    """Test case for the Promote and Demote Views"""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
@@ -23,6 +23,7 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.bush_club.make_organiser(self.jane)
 
     def test_promote_button_visible_for_owner(self):
+        """Testing if promote button is visible to owner."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
@@ -30,6 +31,7 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.assertIn('Promote', html)
 
     def test_demote_button_visible_for_owner(self):
+        """Testing if demote button is visible to owner."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
@@ -37,6 +39,7 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.assertIn('Demote', html)
 
     def test_promote_button_not_visible_for_member(self):
+        """Testing if promote button is invisible to member."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
@@ -44,6 +47,7 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.assertNotIn('Promote', html)
 
     def test_demote_button_not_visible_for_member(self):
+        """Testing if demote button is invisible to member."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
@@ -51,6 +55,7 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.assertNotIn('Demote', html)
 
     def test_promote_button_not_visible_for_organiser(self):
+        """Testing if promote button is invisible to organiser."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
@@ -58,6 +63,7 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.assertNotIn('Promote', html)
 
     def test_demote_button_not_visible_for_organiser(self):
+        """Testing if demote button is invisible to organiser."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
@@ -65,6 +71,7 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.assertNotIn('Demote', html)
 
     def test_successful_promotion(self):
+        """Testing for successful promotion of a member in a club."""
         self.client.login(email=self.john.email, password='Password123')
         beforeMemberCount = self.bush_club.get_number_of_members()
         beforeOrganiserCount = self.bush_club.get_number_organisers()
@@ -80,6 +87,7 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.assertEqual(beforeOrganiserCount, afterOrganiserCount - 1)
 
     def test_successful_demotion(self):
+        """Testing for successful demotion of an organiser in a club."""
         self.client.login(email=self.john.email, password='Password123')
         beforeMemberCount = self.bush_club.get_number_of_members()
         beforeOrganiserCount = self.bush_club.get_number_organisers()

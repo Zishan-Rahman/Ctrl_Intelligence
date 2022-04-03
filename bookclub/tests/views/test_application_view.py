@@ -1,4 +1,4 @@
-"""Tests of the application view."""
+"""Unit tests for the Application View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -8,7 +8,7 @@ from django.contrib import messages
 
 
 class ApplicationViewTestCase(TestCase):
-    """Tests of the application view."""
+    """Test case for the Application view"""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json',
                 'bookclub/tests/fixtures/default_applications.json']
@@ -25,15 +25,18 @@ class ApplicationViewTestCase(TestCase):
         self.strand_club = Club.objects.get(name='Strand House Book Club')
 
     def test_application_url(self):
+        """Testing the application url."""
         self.assertEqual(self.url, '/applications/')
 
     def test_application_uses_correct_template(self):
+        """Testing if the application uses correct template."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(reverse('applications'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'applications.html')
 
     def test_application_has_correct_details(self):
+        """Testing if the application has the correct details."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('applications'))
         html = response.content.decode('utf8')
@@ -45,6 +48,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertIn('<td><a class="btn btn-outline-success"', html)
 
     def test_no_applications(self):
+        """Testing for no application."""
         self.client.login(email=self.joe.email, password='Password123')
         applications = Application.objects.all()
         for a in applications:
@@ -56,6 +60,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertNotIn('</td>', html)
 
     def test_multiple_applications_to_same_club(self):
+        """Testing for multiple applications to join same club."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('applications'))
         html = response.content.decode('utf8')
@@ -74,6 +79,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertIn('<td><a class="btn btn-outline-success"', html)
 
     def test_multiple_applications_to_different_clubs(self):
+        """Testing for multiple application to join different clubs."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('applications'))
         html = response.content.decode('utf8')
@@ -92,6 +98,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertIn('<td><a class="btn btn-outline-success"', html)
 
     def test_successful_accept(self):
+        """Testing for a successful application to a club."""
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = self.strand_club.get_number_of_members()
         response = self.client.get('/applications/accept/3/', follow=True)
@@ -104,6 +111,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertEqual(beforeCount, afterCount - 1)
 
     def test_cannot_hijack_accept(self):
+        """Testing for a hijacked accept."""
         self.client.login(email=self.sam.email, password='Password123')
         beforeCount = self.strand_club.get_number_of_members()
         response = self.client.get('/applications/accept/3/', follow=True)
@@ -116,6 +124,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertEqual(beforeCount, afterCount)
 
     def test_successful_reject(self):
+        """Testing for a successful rejection of an application."""
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = self.strand_club.get_number_of_members()
         response = self.client.get('/applications/remove/3/', follow=True)
@@ -128,6 +137,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertEqual(beforeCount, afterCount)
 
     def test_cannot_hijack_reject(self):
+        """Testing for hijacked reject."""
         self.client.login(email=self.sam.email, password='Password123')
         beforeCount = self.strand_club.get_number_of_members()
         response = self.client.get('/applications/remove/3/', follow=True)
@@ -140,11 +150,13 @@ class ApplicationViewTestCase(TestCase):
         self.assertEqual(beforeCount, afterCount)
 
     def test_get_applications_list_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to application list."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_get_application_list_with_pagination(self):
+        """Testing for application list with pagination."""
         self.client.login(email=self.john.email, password='Password123')
         self._create_test_applications(settings.APPLICATIONS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
@@ -180,6 +192,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertFalse(page_obj.has_next())
 
     def _create_test_applications(self, my_applications_count=10):
+        """Creation of test applications."""
         apps = []
         created_club = Club.objects.create(
             owner_id=1,

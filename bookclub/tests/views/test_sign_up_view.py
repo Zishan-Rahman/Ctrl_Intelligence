@@ -1,4 +1,4 @@
-"""Tests of the sign up view """
+"""Unit tests for the Sign Up View"""
 from django.test import TestCase
 from django.contrib import messages
 from django.urls import reverse
@@ -8,7 +8,7 @@ from bookclub.models import User
 from bookclub.tests.helpers import LogInTester
 
 class SignUpViewTestCase(TestCase, LogInTester):
-    """Tests of the sign up view """
+    """Test case for the Sign Up View"""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json"]
 
@@ -24,13 +24,16 @@ class SignUpViewTestCase(TestCase, LogInTester):
         }
 
     def test_sign_up_url(self):
+        """Testing the sign up url."""
         self.assertEqual(self.url, '/sign_up/')
 
-    def test_home_uses_correct_template(self):
+    def test_sign_up_uses_correct_template(self):
+        """Testing if the sign up uses correct template."""
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, 'landing_page.html')
 
     def test_successful_sign_up(self):
+        """Testing if user successfully signed up for a Bookwise account."""
         before_count = User.objects.count()
         response = self.client.post(self.url, self.form_input, follow=True)
         after_count = User.objects.count()
@@ -49,6 +52,7 @@ class SignUpViewTestCase(TestCase, LogInTester):
         self.assertEqual(message_list[0].message, "Verification email sent")
 
     def test_get_sign_up(self):
+        """Testing to get sign up form."""
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         forms = response.context['form']
@@ -56,6 +60,7 @@ class SignUpViewTestCase(TestCase, LogInTester):
         self.assertFalse(forms['signup'].is_bound)
 
     def test_unsuccessful_sign_up(self):
+        """Testing if user unsuccessfully signed up for a Bookwise account."""
         self.form_input['email']='bademailexample.org'
         before_count = User.objects.count()
         response = self.client.post(self.url, self.form_input)
