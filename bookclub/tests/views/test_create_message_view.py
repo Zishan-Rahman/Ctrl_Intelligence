@@ -31,7 +31,7 @@ class CreateMessageViewTestCase(TestCase):
         self.assertEqual(beforeCount+1, afterCount)
 
     def test_successful_creation_when_user_is_receiver(self):
-        """Testing for a succesfull message creation, when user is recipient."""
+        """Testing for a succesfull message creation when user is recipient."""
         self.client.login(email=self.jane.email, password='Password123')
         beforeCount = Message.objects.count()
         response = self.client.post(reverse('create_message', kwargs={'pk':self.chat.pk}), {'message': "Message two"}, follow=True)

@@ -42,7 +42,7 @@ class TestCancelMeetingView(TestCase, LogInTester):
         self.assertIn(f'Cancel Meeting', html)
 
     def test_cancel_meeting_button_is_not_visible_for_member(self):
-        """"Test if cancel meeting button is invisible to members"""
+        """"Test if cancel meeting button is invisible to members."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -81,7 +81,7 @@ class TestCancelMeetingView(TestCase, LogInTester):
         self.assertNotIn(f'Cancel Meeting', html)
 
     def test_successful_cancel_meeting(self):
-        """"Testing for a succesfully cancelled meeting."""
+        """"Testing for a successfully cancelled meeting."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)

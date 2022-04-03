@@ -61,7 +61,7 @@ class InviteUsersTestCases(TestCase):
                       "page, please click the button below:\n\n</p>", html)
 
     def test_sender_user_has_join_button(self):
-        """Testing for join button."""
+        """Testing if sender has the join button."""
         self.client.login(email=self.john.email, password='Password123')
         self.client.get(reverse('invite_message', kwargs={'user_id': self.jane.id, 'club_id': self.bush_club.id}),
                         follow=True)
@@ -72,7 +72,7 @@ class InviteUsersTestCases(TestCase):
                       'text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>', html)
 
     def test_receiver_user_has_invite(self):
-        """Testing for an invitaion to a club."""
+        """Testing for an invitation to a club."""
         self.client.login(email=self.john.email, password='Password123')
         self.client.get(reverse('invite_message', kwargs={'user_id': self.jane.id, 'club_id': self.bush_club.id}),
                         follow=True)
@@ -85,7 +85,7 @@ class InviteUsersTestCases(TestCase):
                       "page, please click the button below:\n\n</p>", html)
 
     def test_receiver_user_has_join_button(self):
-        """Testing for join button."""
+        """Testing if the receiver has the join button."""
         self.client.login(email=self.john.email, password='Password123')
         self.client.get(reverse('invite_message', kwargs={'user_id': self.jane.id, 'club_id': self.bush_club.id}),
                         follow=True)

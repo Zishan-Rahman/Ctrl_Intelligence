@@ -1,4 +1,4 @@
-"""Unit tests of the Chats Viewv"""
+"""Unit tests of the Chats View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse

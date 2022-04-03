@@ -53,7 +53,7 @@ class ReadingListTestCase(TestCase, LogInTester):
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_book_profile_in_reading_list_has_correct_details(self):
-        """Testing if book profile's reading list has correct details."""
+        """Testing if book profile's reading list has the correct details."""
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')

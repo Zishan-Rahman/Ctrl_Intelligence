@@ -58,7 +58,7 @@ class ClubPostViewTestCase(TestCase):
         self.assertNotIn('</td>', html)
 
     def test_get_club_posts_list_redirects_when_not_logged_in(self):
-        """Test if not logged in, redirect to club posts"""
+        """Test if not logged in, redirect to club posts."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
