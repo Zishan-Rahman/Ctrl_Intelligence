@@ -53,7 +53,7 @@ class ReadingListTestCase(TestCase, LogInTester):
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_book_profile_in_reading_list_has_correct_details(self):
-        """Testing if book profile's reading list has correct details."""
+        """Testing if book profile's reading list has the correct details."""
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
@@ -63,6 +63,7 @@ class ReadingListTestCase(TestCase, LogInTester):
         self.assertIn(f'<td>{str(self.book.pub_year)}</td>', html)
 
     def test_reading_list_has_remove_from_reading_list_button(self):
+        """Testing if remove from reading list button shows on reading list."""
         self.client.login(email=self.user.email, password='Password123')
         self.user.currently_reading_books.add(self.book)
         response = self.client.get(self.url)
@@ -71,6 +72,7 @@ class ReadingListTestCase(TestCase, LogInTester):
                       f'class="bi bi-bookmarks-fill"></i></button></td>', html)
 
     def test_remove_from_reading_list_works(self):
+        """Testing if remove book from reading list is successful."""
         self.client.login(email=self.user.email, password='Password123')
         self.user.currently_reading_books.add(self.book)
         before_reading_list_count = self.user.currently_reading_books.count()

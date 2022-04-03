@@ -23,13 +23,13 @@ class MyApplicationViewTestCase(TestCase):
         self.strand_club = Club.objects.get(name='Strand House Book Club')
 
     def get_response_and_html(self):
-        """Testing to get the response and html."""
+        """Testing for the response and html."""
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         return response, html
 
     def test_my_application_url(self):
-        """Testing the my applications url."""
+        """Testing my applications url."""
         self.assertEqual(self.url, '/my_applications/')
 
     def test_my_application_uses_correct_template(self):
@@ -49,7 +49,7 @@ class MyApplicationViewTestCase(TestCase):
         self.assertIn('<td>Strand, London</td>', html)
 
     def test_multiple_applications_have_correct_details(self):
-        """Testing if multiple application have the correct details."""
+        """Testing if multiple applications have the correct details."""
         self.client.login(email=self.joe.email, password='Password123')
         response, html = self.get_response_and_html()
         self.assertNotIn('You have not made any applications yet.', html)
@@ -72,7 +72,7 @@ class MyApplicationViewTestCase(TestCase):
         self.assertNotIn('</td>', html)
 
     def test_view_after_application_creation(self):
-        """Testing for view after user created an application."""
+        """Testing the view after user created an application."""
         self.client.login(email=self.sam.email, password="Password123")
         self.application = Application.objects.create(applicant=self.sam, club=self.bush_club)
         response, html = self.get_response_and_html()

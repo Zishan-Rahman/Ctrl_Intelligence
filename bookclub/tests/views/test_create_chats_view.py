@@ -39,7 +39,7 @@ class CreateChatsViewTestCase(TestCase):
         self.assertIn('Start a Conversation!', html)
 
     def test_successful_creation(self):
-        """Tests to check chats are correctly created"""
+        """Testing for successful chat creation."""
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
         response = self.client.post(reverse('create_chat'), {"email":"janedoe@bookclub.com"}, follow=True)
@@ -50,7 +50,7 @@ class CreateChatsViewTestCase(TestCase):
         self.assertEqual(beforeCount+1, afterCount)
 
     def test_creation_with_yourself(self):
-        """Tests to check chats cant be created with yourself"""
+        """Testing if a user creates a chat with themselves."""
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
         response = self.client.post(reverse('create_chat'), {"email":"johndoe@bookclub.com"}, follow=True)
@@ -61,7 +61,7 @@ class CreateChatsViewTestCase(TestCase):
         self.assertEqual(beforeCount, afterCount)
 
     def test_creation_with_already_existing_and_same_sender(self):
-        """Tests to check new chats arent created when they already exist"""
+        """Testing if a chat exists with same sender."""
         chat = Chat.objects.create(user=self.john, receiver=self.jane)
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
@@ -73,7 +73,7 @@ class CreateChatsViewTestCase(TestCase):
         self.assertEqual(beforeCount, afterCount)
 
     def test_creation_with_already_existing_and_different_sender(self):
-        """Tests to check new chats arent created when they already exist"""
+        """Testing if a chat exists with different sender."""
         chat = Chat.objects.create(user=self.jane, receiver=self.john)
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
@@ -85,7 +85,7 @@ class CreateChatsViewTestCase(TestCase):
         self.assertEqual(beforeCount, afterCount)
 
     def test_creation_with_nonexistent_user(self):
-        """Tests to check new chats arent created when the user doesnt exist"""
+        """Testing a chat creation with a non-existent user."""
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
         response = self.client.post(reverse('create_chat'), {"email":"fakeuser@bookclub.com"}, follow=True)
@@ -95,8 +95,8 @@ class CreateChatsViewTestCase(TestCase):
         afterCount = Chat.objects.count()
         self.assertEqual(beforeCount, afterCount)
 
-    def test_creation_with_not_email(self):
-        """Tests to check new chats arent created when a non-email input is given"""
+    def test_creation_with_invalid_email(self):
+        """Testing a chat creation with an invalid email."""
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
         response = self.client.post(reverse('create_chat'), {"email":"asdadadadads"}, follow=True)
@@ -106,9 +106,8 @@ class CreateChatsViewTestCase(TestCase):
         afterCount = Chat.objects.count()
         self.assertEqual(beforeCount, afterCount)
 
-
     def test_successful_creation_from_profile(self):
-        """Tests to check new chats are correctly created from the profile"""
+        """Testing a successful chat creation from profile."""
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
         response = self.client.post(reverse('create_chat_from_profile', kwargs={"user_id":2}), follow=True)
@@ -119,7 +118,7 @@ class CreateChatsViewTestCase(TestCase):
         self.assertEqual(beforeCount+1, afterCount)
 
     def test_creation_with_already_existing_and_same_sender_from_profile(self):
-        """Tests to check new chats arent created when they already exist from the profile"""
+        """Testing if a chat exists with same sender, from profile."""
         chat = Chat.objects.create(user=self.john, receiver=self.jane)
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
@@ -131,7 +130,7 @@ class CreateChatsViewTestCase(TestCase):
         self.assertEqual(beforeCount, afterCount)
 
     def test_creation_with_already_existing_and_different_sender_from_profile(self):
-        """Tests to check new chats arent created when they already exist from the profile"""
+        """Testing if a chat exists with different sender, from profile."""
         chat = Chat.objects.create(user=self.jane, receiver=self.john)
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
@@ -143,7 +142,7 @@ class CreateChatsViewTestCase(TestCase):
         self.assertEqual(beforeCount, afterCount)
 
     def test_creation_with_nonexistent_user(self):
-        """Tests to check new chats arent created when the user doesnt exist from the profile"""
+        """Testing a chat creation with a non-existent user."""
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Chat.objects.count()
         response = self.client.post(reverse('create_chat_from_profile', kwargs={"user_id":100}), follow=True)

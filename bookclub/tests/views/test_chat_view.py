@@ -1,4 +1,4 @@
-"""Tests of the create chats view."""
+"""Unit tests of the Chats View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -8,7 +8,7 @@ from django.contrib import messages
 
 
 class ChatViewTestCase(TestCase):
-    """Tests of the chat view."""
+    """Test case of the Chat view"""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 
@@ -20,10 +20,8 @@ class ChatViewTestCase(TestCase):
         self.chat = Chat.objects.create(user=self.john, receiver=self.jane)
 
     def test_chat_access_if_not_yours(self):
-        """Tests to check if you can access chats that you dont belong to"""
+        """Test if incorrect chat access, redirect to home."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(reverse('chat', kwargs={'pk':self.chat.pk}))
         response_url = reverse('home')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
-
-

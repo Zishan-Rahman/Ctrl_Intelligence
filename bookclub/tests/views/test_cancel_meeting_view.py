@@ -1,3 +1,4 @@
+"""Unit tests for the Cancel Meeting View"""
 from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User, Club, Meeting, Post
@@ -7,7 +8,8 @@ from bookclub.tests.helpers import LogInTester, reverse_with_next
 from datetime import timedelta, date, time, datetime
 
 
-class CancelMeetingViewTestCase(TestCase, LogInTester):
+class TestCancelMeetingView(TestCase, LogInTester):
+    """Test case for the Cancel Meeting view"""
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_clubs.json',
                 ]
@@ -27,7 +29,7 @@ class CancelMeetingViewTestCase(TestCase, LogInTester):
 
 
     def test_cancel_meeting_button_visible_for_owner(self):
-        """Tests to check if the owner can see the cancel button"""
+        """"Test if cancel meeting button is visible to the owner of the club."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -40,7 +42,7 @@ class CancelMeetingViewTestCase(TestCase, LogInTester):
         self.assertIn(f'Cancel Meeting', html)
 
     def test_cancel_meeting_button_is_not_visible_for_member(self):
-        """Tests to check if the members cant see the cancel button"""
+        """"Test if cancel meeting button is invisible to members."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -53,7 +55,7 @@ class CancelMeetingViewTestCase(TestCase, LogInTester):
         self.assertNotIn(f'Cancel Meeting', html)
 
     def test_cancel_meeting_button_is_visible_for_organisers_when_owner_organiser_true(self):
-        """Tests to check if the organisers can see the cancel button if option toggled true"""
+        """"Test if true, cancel meeting button is visible to organisers."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -66,7 +68,7 @@ class CancelMeetingViewTestCase(TestCase, LogInTester):
         self.assertIn(f'Cancel Meeting', html)
 
     def test_cancel_meeting_button_is_not_visible_for_organisers_when_owner_organiser_false(self):
-        """Tests to check if the organisers cant see the cancel button if option toggled false"""
+        """"Test if false, cancel meeting button is invisible to the organiser."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -79,7 +81,7 @@ class CancelMeetingViewTestCase(TestCase, LogInTester):
         self.assertNotIn(f'Cancel Meeting', html)
 
     def test_successful_cancel_meeting(self):
-        """Tests to check if meetings are successfully canceled"""
+        """"Testing for a successfully cancelled meeting."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -102,4 +104,5 @@ class CancelMeetingViewTestCase(TestCase, LogInTester):
         self.assertEqual(beforeMeetingListCount, afterMeetingListCount + 1)
 
     def _is_logged_in(self):
+        """"Testing if logged in."""
         return '_auth_user_id' in self.client.session.keys()

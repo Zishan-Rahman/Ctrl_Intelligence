@@ -1,4 +1,4 @@
-"""Tests of the create chats view."""
+"""Unit tests for the Create Message View."""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -8,7 +8,7 @@ from django.contrib import messages
 
 
 class CreateMessageViewTestCase(TestCase):
-    """Tests of the create message view."""
+    """Test case for the Create Message view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 
@@ -20,7 +20,7 @@ class CreateMessageViewTestCase(TestCase):
         self.chat = Chat.objects.create(user=self.john, receiver=self.jane)
 
     def test_successful_creation_when_user_isnt_receiver(self):
-        """Tests to check new messages are created successfully"""
+        """Testing for a successful message creation, from recipient."""
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Message.objects.count()
         response = self.client.post(reverse('create_message', kwargs={'pk':self.chat.pk}), {'message': "Message"}, follow=True)
@@ -31,7 +31,7 @@ class CreateMessageViewTestCase(TestCase):
         self.assertEqual(beforeCount+1, afterCount)
 
     def test_successful_creation_when_user_is_receiver(self):
-        """Tests to check new messages are created successfully"""
+        """Testing for a successful message creation when user is recipient."""
         self.client.login(email=self.jane.email, password='Password123')
         beforeCount = Message.objects.count()
         response = self.client.post(reverse('create_message', kwargs={'pk':self.chat.pk}), {'message': "Message two"}, follow=True)
@@ -40,4 +40,3 @@ class CreateMessageViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'chat.html')
         afterCount = Message.objects.count()
         self.assertEqual(beforeCount+1, afterCount)
-

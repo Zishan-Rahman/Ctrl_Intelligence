@@ -16,7 +16,7 @@ class NavbarViewTestCase(TestCase):
         self.bush_club.make_member(self.john)
 
     def test_navbar_displays_search_on_home_page(self):
-        """Testing if navbar is displayed on home page."""
+        """Testing if navbar is displayed on the home page."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('home'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -26,7 +26,7 @@ class NavbarViewTestCase(TestCase):
                       'type="submit">Search</button>',  html)
 
     def test_navbar_displays_search_on_clubs_page(self):
-        """Testing if navbar is displayed on clubs page."""
+        """Testing if navbar is displayed on the clubs page."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_list'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -36,7 +36,7 @@ class NavbarViewTestCase(TestCase):
                       'type="submit">Search</button>',  html)
 
     def test_navbar_displays_search_on_users_page(self):
-        """Testing if navbar is displayed on users page."""
+        """Testing if navbar is displayed on the users page."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_list'))
         self.assertTemplateUsed(response, 'partials/menu.html')

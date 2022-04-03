@@ -85,14 +85,14 @@ class MeetingViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'schedule_meeting.html')
 
     def test_meeting_schedule_button_is_present_if_owner(self):
-        """Test if meeting schedule button is visble to owner of the club."""
+        """Test if meeting schedule button is visible to owner of the club."""
         self.client.login(email=self.john.get_email(), password='Password123')
         response = self.client.get('/club_profile/1/')
         html = response.content.decode('utf8')
         self.assertIn('Schedule Meeting', html)
 
     def test_meeting_schedule_button_not_present_if_not_owner(self):
-        """Test if meeting schedule button is invisble to members."""
+        """Test if meeting schedule button is invisible to members."""
         self.client.login(email=self.jane.get_email(), password='Password123')
         response = self.client.get('/club_profile/1/')
         html = response.content.decode('utf8')

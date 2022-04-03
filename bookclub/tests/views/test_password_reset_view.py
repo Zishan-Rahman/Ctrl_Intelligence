@@ -16,7 +16,7 @@ class PasswordResetViewTest(TestCase):
         self.url = reverse('password_reset')
 
     def test_forgot_password_url(self):
-        """Testing the passoword reset url."""
+        """Testing the password reset url."""
         self.assertEqual(self.url, '/password_reset')
 
     def test_forgot_password_uses_correct_template(self):

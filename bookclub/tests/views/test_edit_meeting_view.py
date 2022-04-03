@@ -58,7 +58,7 @@ class EditMeetingViewTestCase(TestCase):
         self.assertEqual(messages_list[0].level, messages.ERROR)
 
     def test_cannot_hijack_edit_meeting_non_owner_organiser(self):
-        """Test for a hijacked edit meeting view ."""
+        """Test for a hijacked edit meeting view."""
         self.club.make_member(self.sam)
         self.club.make_organiser(self.sam)
         self.client.login(email=self.sam.email, password='Password123')
