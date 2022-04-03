@@ -20,7 +20,7 @@ class CreateMessageViewTestCase(TestCase):
         self.chat = Chat.objects.create(user=self.john, receiver=self.jane)
 
     def test_successful_creation_when_user_isnt_receiver(self):
-        """Testing for a succesfull message creation, from recipient."""
+        """Testing for a successful message creation, from recipient."""
         self.client.login(email=self.john.email, password='Password123')
         beforeCount = Message.objects.count()
         response = self.client.post(reverse('create_message', kwargs={'pk':self.chat.pk}), {'message': "Message"}, follow=True)
@@ -31,7 +31,7 @@ class CreateMessageViewTestCase(TestCase):
         self.assertEqual(beforeCount+1, afterCount)
 
     def test_successful_creation_when_user_is_receiver(self):
-        """Testing for a succesfull message creation when user is recipient."""
+        """Testing for a successful message creation when user is recipient."""
         self.client.login(email=self.jane.email, password='Password123')
         beforeCount = Message.objects.count()
         response = self.client.post(reverse('create_message', kwargs={'pk':self.chat.pk}), {'message': "Message two"}, follow=True)

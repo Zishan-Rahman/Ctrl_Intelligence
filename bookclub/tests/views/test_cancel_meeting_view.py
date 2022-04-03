@@ -1,7 +1,7 @@
 """Unit tests for the Cancel Meeting View"""
 from django.test import TestCase
 from django.urls import reverse
-from bookclub.models import User, Club, Meeting
+from bookclub.models import User, Club, Meeting, Post
 from django.contrib import messages
 from bookclub.forms import ScheduleMeetingForm
 from bookclub.tests.helpers import LogInTester, reverse_with_next
@@ -91,6 +91,10 @@ class TestCancelMeetingView(TestCase, LogInTester):
         self.client.login(email=self.john.email, password='Password123')
         beforeMeetingListCount = self.bush_club.get_number_of_meetings()
         response = self.client.get('/club_profile/1/meetings/1/delete', follow=True)
+        meeting_date = self.tomorrow.strftime("%d/%m/%y")
+        meeting_time = self.future_time.strftime("%H:%M")
+        msg = "The meeting scheduled for " + meeting_date + " at " + meeting_time + " has been cancelled."
+        self.assertTrue(Post.objects.filter(author=self.john, club=self.bush_club, text=msg).exists())
         redirect_url = '/club_profile/1/meetings'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])

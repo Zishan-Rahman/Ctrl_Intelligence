@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.views.generic import ListView
-from bookclub.models import Meeting, Club
+from bookclub.models import Meeting, Club, Post
 from bookclub.views import club_views
 from django.views.generic.edit import View, UpdateView
 from django.core.paginator import Paginator
@@ -76,6 +76,10 @@ class MeetingScheduler(LoginRequiredMixin, View):
         if form.is_valid():
             meeting = form.save(club=current_club)
             messages.add_message(request, messages.SUCCESS, "The meeting was scheduled!")
+            date = form.cleaned_data['date'].strftime("%d/%m/%y")
+            time = form.cleaned_data['start_time'].strftime("%H:%M")
+            msg = "New meeting scheduled on " + date + " at " + time + "."
+            Post.objects.create(author=request.user, club=current_club, text=msg)
             return redirect('club_profile', pk)
         messages.add_message(request, messages.ERROR, "The meeting was unable to be scheduled!")
         return self.render(pk)
@@ -116,7 +120,14 @@ class MeetingUpdateView(LoginRequiredMixin, UpdateView):
         meeting = Meeting.objects.get(id=meeting_id)
         form = self.form_class(instance=meeting, club=club, data=request.POST)
         if form.is_valid():
-            Meeting.objects.filter(id=meeting_id).delete()
+            old_meeting = Meeting.objects.get(id=meeting_id)
+            old_date = old_meeting.date.strftime("%d/%m/%y")
+            old_time = old_meeting.start_time.strftime("%H:%M")
+            new_date = form.cleaned_data['date'].strftime("%d/%m/%y")
+            new_time = form.cleaned_data['start_time'].strftime("%H:%M")
+            msg = "The meeting scheduled for " + old_date + " at " + old_time + " has been rescheduled to " + new_date + " at " + new_time + "."
+            old_meeting.delete()
+            Post.objects.create(author=request.user, club=club, text=msg)
             form.save(club)
             self.get_success_url()
             return redirect('home')
@@ -139,6 +150,10 @@ class MeetingUpdateView(LoginRequiredMixin, UpdateView):
 def remove_from_meeting_list(request, club_id, meeting_id, *args, **kwargs):
     club = Club.objects.get(id=club_id)
     meeting = Meeting.objects.get(id=meeting_id)
+    old_date = meeting.date.strftime("%d/%m/%y")
+    old_time = meeting.start_time.strftime("%H:%M")
+    msg = "The meeting scheduled for " + old_date + " at " + old_time + " has been cancelled."
     meeting.delete()
+    Post.objects.create(author=request.user, club=club, text=msg)
     messages.add_message(request, messages.ERROR, f"The meeting has been cancelled")
     return redirect("club_meetings", club_id = club_id)
