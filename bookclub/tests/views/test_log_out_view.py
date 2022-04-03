@@ -33,7 +33,7 @@ class LogOutViewTestCase(TestCase, LogInTester):
         self.assertTemplateUsed(response, 'landing_page.html')
 
     def test_get_log_out_without_being_logged_in(self):
-        """Testing for log out page without being logged back in ."""
+        """Testing for log out page without being logged back in."""
         response = self.client.get(self.url, follow=True)
         response_url = reverse('landing_page')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)

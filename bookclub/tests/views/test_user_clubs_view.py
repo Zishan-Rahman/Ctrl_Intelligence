@@ -1,3 +1,4 @@
+"""Unit tests for the User Clubs View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -9,7 +10,7 @@ from bookclub.tests.helpers import LogInTester, reverse_with_next
 # user clubs test case is adapted from the clubs list test case
 
 class UserClubsListViewTestCase(TestCase, LogInTester):
-    """Tests of the club view."""
+    """Test case for the User Clubs view"""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json"]
 
@@ -20,9 +21,11 @@ class UserClubsListViewTestCase(TestCase, LogInTester):
         self.url2 = reverse('user_clubs', kwargs={'user_id': self.john.id})
 
     def test_clubs_list_url(self):
+        """Testing the user club list url."""
         self.assertEqual(self.url, f'/user_profile/{self.jane.id}/clubs/')
 
     def test_correct_user_clubs_list_template(self):
+        """Testing if user club list uses correct template."""
         self.client.login(email=self.john.email, password="Password123")
         response = self.client.get(self.url)
         self._is_logged_in()
@@ -30,11 +33,13 @@ class UserClubsListViewTestCase(TestCase, LogInTester):
         self.assertTemplateUsed(response, "user_clubs.html")
 
     def test_get_clubs_list_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to clubs list."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_get_user_clubs_list_with_pagination(self):
+        """Test for user clubs list with pagination."""
         self.client.login(email=self.john.email, password='Password123')
         self._create_test_clubs(settings.CLUBS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
@@ -72,6 +77,7 @@ class UserClubsListViewTestCase(TestCase, LogInTester):
         self.assertFalse(page_obj.has_next())
 
     def test_user_clubs_view_redirects_to_my_clubs_view_when_queried_user_is_logged_in_user(self):
+        """Test if logged in and queried, redirect to my clubs view."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url2, follow=True)
         redirect_url = reverse('club_selector')
@@ -88,9 +94,11 @@ class UserClubsListViewTestCase(TestCase, LogInTester):
             self.assertTemplateUsed(response, 'home.html')
         
     def _is_logged_in(self):
+        """Testing if logged in."""
         return '_auth_user_id' in self.client.session.keys()
 
     def _create_test_clubs(self, club_count=10):
+        """Creation of clubs."""
         for id in range(1, club_count+1, 1):
             Club.objects.create(
                 owner=self.jane,

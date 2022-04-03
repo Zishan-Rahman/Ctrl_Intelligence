@@ -23,7 +23,7 @@ class KickFromClubViewTestCase(TestCase):
         self.bush_club.make_organiser(self.jane)
 
     def test_kick_button_visible_for_owner(self):
-        """Test if kick button is visble to owner."""
+        """Test if kick button is visible to owner."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
@@ -31,7 +31,7 @@ class KickFromClubViewTestCase(TestCase):
         self.assertIn('Remove', html)
 
     def test_kick_button_not_visible_for_member(self):
-        """Test if kick button is invisble to member."""
+        """Test if kick button is invisible to member."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
@@ -39,7 +39,7 @@ class KickFromClubViewTestCase(TestCase):
         self.assertNotIn('Remove', html)
 
     def test_kick_button_not_visible_for_organiser(self):
-        """Test if kick button is invisble to organiser."""
+        """Test if kick button is invisible to organiser."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
@@ -47,7 +47,7 @@ class KickFromClubViewTestCase(TestCase):
         self.assertNotIn('Remove', html)
 
     def test_successful_member_kick(self):
-        """Testing for succesful kick of a memeber from a club."""
+        """Testing for successful kick of a memeber from a club."""
         self.client.login(email=self.john.email, password='Password123')
         beforeMemberCount = self.bush_club.get_number_of_members()
         response = self.client.get('/club_profile/1/members/3/kick', follow=True)
@@ -60,7 +60,7 @@ class KickFromClubViewTestCase(TestCase):
         self.assertEqual(beforeMemberCount, afterMemberCount + 1)
 
     def test_successful_organiser_kick(self):
-        """Testing for succesful kick of an organiser from a club."""
+        """Testing for successful kick of an organiser from a club."""
         self.client.login(email=self.john.email, password='Password123')
         beforeOrganiserCount = self.bush_club.get_number_organisers()
         response = self.client.get('/club_profile/1/members/2/kick', follow=True)

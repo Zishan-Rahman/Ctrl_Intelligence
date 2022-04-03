@@ -1,3 +1,4 @@
+"""Unit tests for the User Post View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -7,7 +8,7 @@ from django.contrib import messages
 
 
 class UserPostViewTestCase(TestCase):
-    """Tests of the user post list view."""
+    """Test case for the User Post view."""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
@@ -26,15 +27,18 @@ class UserPostViewTestCase(TestCase):
         UserPost.objects.create(author=self.jane, text="This is a user post.")
 
     def test_user_post_url(self):
+        """Testing the user post url."""
         self.assertEqual(self.url, '/user_posts/')
 
     def test_user_post_uses_correct_template(self):
+        """Testing if the user post uses correct template."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(reverse('user_posts'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_posts.html')
 
     def test_user_posts_has_correct_details(self):
+        """Testing if user post has the correct details."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_posts'))
         html = response.content.decode('utf8')
@@ -42,6 +46,7 @@ class UserPostViewTestCase(TestCase):
         self.assertIn('This is a user post.', html)
 
     def test_no_user_posts(self):
+        """Testing if no user posts are made."""
         self.client.login(email=self.joe.email, password='Password123')
         user_posts = UserPost.objects.all()
         for p in user_posts:
@@ -53,11 +58,13 @@ class UserPostViewTestCase(TestCase):
         self.assertNotIn('</td>', html)
 
     def test_get_user_posts_list_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to user posts list."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_get_user_post_list_with_pagination(self):
+        """Testing for user post list with pagination."""
         self.client.login(email=self.john.email, password='Password123')
         self._create_test_user_posts(settings.POSTS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
@@ -93,7 +100,8 @@ class UserPostViewTestCase(TestCase):
         self.assertFalse(page_obj.has_next())
 
     def _create_test_user_posts(self, my_posts_count=10):
+        """Creation of a user post."""
         posts = []
-        
+
         for id in range(1, my_posts_count + 1, 1):
             posts.append(UserPost.objects.create(author=self.jane, text="This is a user post."))

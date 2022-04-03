@@ -1,13 +1,15 @@
+"""Unit tests for the Cancel Meeting View"""
 from django.test import TestCase
 from django.urls import reverse
-from bookclub.models import User, Club, Meeting
+from bookclub.models import User, Club, Meeting, Post
 from django.contrib import messages
 from bookclub.forms import ScheduleMeetingForm
 from bookclub.tests.helpers import LogInTester, reverse_with_next
 from datetime import timedelta, date, time, datetime
 
 
-class ClubProfileTest(TestCase, LogInTester):
+class TestCancelMeetingView(TestCase, LogInTester):
+    """Test case for the Cancel Meeting view"""
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_clubs.json',
                 ]
@@ -27,6 +29,7 @@ class ClubProfileTest(TestCase, LogInTester):
 
 
     def test_cancel_meeting_button_visible_for_owner(self):
+        """"Test if cancel meeting button is visible to the owner of the club."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -39,6 +42,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn(f'Cancel Meeting', html)
 
     def test_cancel_meeting_button_is_not_visible_for_member(self):
+        """"Test if cancel meeting button is invisible to members."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -51,6 +55,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertNotIn(f'Cancel Meeting', html)
 
     def test_cancel_meeting_button_is_visible_for_organisers_when_owner_organiser_true(self):
+        """"Test if true, cancel meeting button is visible to organisers."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -63,6 +68,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn(f'Cancel Meeting', html)
 
     def test_cancel_meeting_button_is_not_visible_for_organisers_when_owner_organiser_false(self):
+        """"Test if false, cancel meeting button is invisible to the organiser."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -75,6 +81,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertNotIn(f'Cancel Meeting', html)
 
     def test_successful_cancel_meeting(self):
+        """"Testing for a successfully cancelled meeting."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -84,6 +91,10 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.john.email, password='Password123')
         beforeMeetingListCount = self.bush_club.get_number_of_meetings()
         response = self.client.get('/club_profile/1/meetings/1/delete', follow=True)
+        meeting_date = self.tomorrow.strftime("%d/%m/%y")
+        meeting_time = self.future_time.strftime("%H:%M")
+        msg = "The meeting scheduled for " + meeting_date + " at " + meeting_time + " has been cancelled."
+        self.assertTrue(Post.objects.filter(author=self.john, club=self.bush_club, text=msg).exists())
         redirect_url = '/club_profile/1/meetings'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
@@ -93,4 +104,5 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertEqual(beforeMeetingListCount, afterMeetingListCount + 1)
 
     def _is_logged_in(self):
+        """"Testing if logged in."""
         return '_auth_user_id' in self.client.session.keys()

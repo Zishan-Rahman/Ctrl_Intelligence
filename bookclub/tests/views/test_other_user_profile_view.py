@@ -88,14 +88,14 @@ class OtherUserProfileTest(TestCase):
                       f'14px"><i class="bi bi-envelope"></i> Invite</button>', html)
 
     def test_other_user_profile_has_follow_button_when_not_followed(self):
-        """Testing if other user profile has folllow button, when not followed."""
+        """Testing if other user profile has follow button, when not followed."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'Follow</button>', html)
 
     def test_other_user_profile_has_unfollow_button_when_following_user(self):
-        """Testing if other user profile has unfolllow button, when followed."""
+        """Testing if other user profile has unfollow button, when followed."""
         self.client.login(email=self.john.email, password='Password123')
         self.john.toggle_follow(self.jane)
         response = self.client.get(self.url)
@@ -103,7 +103,7 @@ class OtherUserProfileTest(TestCase):
         self.assertIn('Unfollow</button>', html)
 
     def test_follow_button_in_other_user_profile_works(self):
-        """Testing if other user profile has a working folllow button."""
+        """Testing if other user profile has a working follow button."""
         self.client.login(email=self.john.email, password='Password123')
         before_followee_count = self.john.followee_count()
         response = self.client.get(f'/user_profile/{self.jane.id}/follow/', follow=True)
