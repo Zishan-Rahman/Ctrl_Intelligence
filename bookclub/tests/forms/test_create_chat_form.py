@@ -1,4 +1,5 @@
 """Unit tests for the Create Chat Form"""
+from django.test import TestCase
 from bookclub.forms import ChatForm
 from django import forms
 from bookclub.models import User, Chat
