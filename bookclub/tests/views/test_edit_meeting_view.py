@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
 from bookclub.forms import ScheduleMeetingForm
-from bookclub.models import Club, Meeting, User
+from bookclub.models import Club, Meeting, User, Post
 from bookclub.tests.helpers import reverse_with_next
 
 class EditMeetingViewTestCase(TestCase):
@@ -89,6 +89,14 @@ class EditMeetingViewTestCase(TestCase):
         self.form_input['date'] = "2000-01-01"
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         response = self.client.post(self.url, self.form_input, club=self.club, follow=True)
+
+        old_date = datetime.strptime(self.meeting.date, "%Y-%m-%d").strftime("%d/%m/%y")
+        old_time = datetime.strptime(self.meeting.start_time, "%H:%M:%S").strftime("%H:%M")
+        new_date = datetime.strptime(self.form_input['date'], "%Y-%m-%d").strftime("%d/%m/%y")
+        new_time = datetime.strptime(self.form_input['start_time'], "%H:%M:%S").strftime("%H:%M")
+
+        msg = "The meeting scheduled for " + old_date + " at " + old_time + " has been rescheduled to " + new_date + " at " + new_time + "."
+        self.assertFalse(Post.objects.filter(author=self.user, club=self.club, text=msg).exists())
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'edit_meeting.html')
         form = response.context['form']
@@ -107,6 +115,14 @@ class EditMeetingViewTestCase(TestCase):
         self.form_input['start_time'] = (datetime.now() + timedelta(minutes=-2)).time().isoformat(timespec='seconds') #From python documentation https://docs.python.org/3/library/datetime.html#time-objects
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         response = self.client.post(self.url, self.form_input, club=self.club, follow=True)
+
+        old_date = datetime.strptime(self.meeting.date, "%Y-%m-%d").strftime("%d/%m/%y")
+        old_time = datetime.strptime(self.meeting.start_time, "%H:%M:%S").strftime("%H:%M")
+        new_date = self.form_input['date'].strftime("%d/%m/%y")
+        new_time = datetime.strptime(self.form_input['start_time'], "%H:%M:%S").strftime("%H:%M")
+
+        msg = "The meeting scheduled for " + old_date + " at " + old_time + " has been rescheduled to " + new_date + " at " + new_time + "."
+        self.assertFalse(Post.objects.filter(author=self.user, club=self.club, text=msg).exists())
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'edit_meeting.html')
         form = response.context['form']
@@ -121,6 +137,14 @@ class EditMeetingViewTestCase(TestCase):
         """Testing for a successful meeting update."""
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         response = self.client.post(self.url, self.form_input, club=self.club, follow=True)
+        
+        old_date = datetime.strptime(self.meeting.date, "%Y-%m-%d").strftime("%d/%m/%y")
+        old_time = datetime.strptime(self.meeting.start_time, "%H:%M:%S").strftime("%H:%M")
+        new_date = datetime.strptime(self.form_input['date'], "%Y-%m-%d").strftime("%d/%m/%y")
+        new_time = datetime.strptime(self.form_input['start_time'], "%H:%M:%S").strftime("%H:%M")
+
+        msg = "The meeting scheduled for " + old_date + " at " + old_time + " has been rescheduled to " + new_date + " at " + new_time + "."
+        self.assertTrue(Post.objects.filter(author=self.user, club=self.club, text=msg).exists())
         response_url = reverse('home')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'home.html')
