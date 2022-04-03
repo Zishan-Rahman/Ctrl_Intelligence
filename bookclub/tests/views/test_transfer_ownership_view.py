@@ -34,7 +34,7 @@ class TransferOwnershipViewsTestCase(TestCase):
         self.assertIn('Transfer', html)
 
     def test_transfer_owner_button_not_visible_for_member(self):
-        """Test if transfer owner button is invisble for member."""
+        """Test if transfer owner button is invisible for member."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
@@ -42,7 +42,7 @@ class TransferOwnershipViewsTestCase(TestCase):
         self.assertNotIn('Transfer Ownership', html)
 
     def test_transfer_owner_button_not_visible_for_organiser(self):
-        """Test if transfer owner button is invisble for organiser."""
+        """Test if transfer owner button is invisible for organiser."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
