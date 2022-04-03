@@ -24,16 +24,19 @@ class ClubPostViewTestCase(TestCase):
 
         Post.objects.create(author=self.joe, club=self.bush_club, text="This is a club post.")
 
-    def test_user_post_url(self):
+    def test_club_post_url(self):
+        """Tests to check the club post url"""
         self.assertEqual(self.url, '/club_posts/')
 
-    def test_user_post_uses_correct_template(self):
+    def test_club_post_uses_correct_template(self):
+        """Tests to check if the club post url uses the correct template"""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(reverse('club_posts'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'club_posts.html')
 
-    def test_user_posts_has_correct_details(self):
+    def test_club_posts_has_correct_details(self):
+        """Tests to check if the club post has the correct details"""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_posts'))
         html = response.content.decode('utf8')
@@ -42,6 +45,7 @@ class ClubPostViewTestCase(TestCase):
         self.assertIn('This is a club post.', html)
 
     def test_no_club_posts(self):
+        """Tests to check if no club posts displays the correct details"""
         self.client.login(email=self.joe.email, password='Password123')
         club_posts = Post.objects.all()
         for p in club_posts:
@@ -53,11 +57,13 @@ class ClubPostViewTestCase(TestCase):
         self.assertNotIn('</td>', html)
 
     def test_get_club_posts_list_redirects_when_not_logged_in(self):
+        """Tests to check if not logged in users are redirected when trying to access"""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_get_club_post_list_with_pagination(self):
+        """Tests to check if club posts paginate correctly"""
         self.client.login(email=self.john.email, password='Password123')
         self._create_test_club_posts(settings.POSTS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
@@ -93,6 +99,7 @@ class ClubPostViewTestCase(TestCase):
         self.assertFalse(page_obj.has_next())
 
     def _create_test_club_posts(self, my_posts_count=10):
+        """Create test clubs"""
         posts = []
         
         for id in range(1, my_posts_count + 1, 1):

@@ -20,6 +20,7 @@ class ChatViewTestCase(TestCase):
         self.chat = Chat.objects.create(user=self.john, receiver=self.jane)
 
     def test_chat_access_if_not_yours(self):
+        """Tests to check if you can access chats that you dont belong to"""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(reverse('chat', kwargs={'pk':self.chat.pk}))
         response_url = reverse('home')
