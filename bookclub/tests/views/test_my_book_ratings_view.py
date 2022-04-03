@@ -1,4 +1,4 @@
-""""Tests of the individual applications view."""
+"""Unit tests for the My Books Ratings View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -6,6 +6,7 @@ from bookclub.models import User, Rating, Book
 
 
 class MyBookRatingsViewTestCase(TestCase):
+    """Test case for My Book Ratings View"""
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_ratings.json', 'bookclub/tests/fixtures/default_books.json']
 
     def setUp(self):
@@ -14,20 +15,24 @@ class MyBookRatingsViewTestCase(TestCase):
         self.book3 = Book.objects.get(isbn=12345678912)
 
     def get_response_and_html(self):
+        """Testing for response and html."""
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         return response, html
 
     def test_my_book_ratings_url(self):
+        """Testing the my book ratings url."""
         self.assertEqual(self.url, '/my_book_ratings/')
 
     def test_my_book_ratings_uses_correct_template(self):
+        """Testing if my book ratings uses correct template."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'my_book_ratings.html')
 
     def test_single_book_rating_has_correct_details(self):
+        """Testing if single book rating has the correct details."""
         self.client.login(email=self.john.email, password="Password123")
         response, html = self.get_response_and_html()
         self.assertNotIn('You do not have any book ratings', html)
@@ -36,7 +41,8 @@ class MyBookRatingsViewTestCase(TestCase):
         self.assertIn('<td>2021</td>', html)
         self.assertIn('<td>5</td>', html)
 
-    def test_multiple_book_rating_has_correct_details(self):
+    def test_multiple_book_rating_have_correct_details(self):
+        """Testing if multiple book rating have the correct details."""
         self.client.login(email=self.john.email, password="Password123")
         response, html = self.get_response_and_html()
         self.assertNotIn('You do not have any book ratings', html)
@@ -50,6 +56,7 @@ class MyBookRatingsViewTestCase(TestCase):
         self.assertIn('<td>4</td>', html)
 
     def test_view_after_rating_creation(self):
+        """Testing view after creating a rating."""
         self.client.login(email=self.john.email, password="Password123")
         self.rating = Rating.objects.create(user=self.john, book=self.book3, isbn=self.book3.isbn, rating=7)
         response, html = self.get_response_and_html()
@@ -60,6 +67,7 @@ class MyBookRatingsViewTestCase(TestCase):
         self.assertIn('<td>7</td>', html)
 
     def test_get_my_book_ratings_list_with_pagination(self):
+        """Testing for book ratings list with pagination."""
         self.client.login(email=self.john.email, password='Password123')
         self._create_test_my_book_ratings(settings.BOOKS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
@@ -95,6 +103,7 @@ class MyBookRatingsViewTestCase(TestCase):
         self.assertFalse(page_obj.has_next())
 
     def _create_test_my_book_ratings(self, my_ratings_count=10):
+        """Creation of book ratings."""
         for id in range(1, my_ratings_count + 1, 1):
             book = Book.objects.create(
                 isbn=id,

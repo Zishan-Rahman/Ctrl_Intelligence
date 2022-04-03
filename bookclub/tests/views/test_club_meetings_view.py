@@ -1,15 +1,15 @@
+"""Unit tests for the Club Meetings View"""
 import datetime
 import time
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
-
 from bookclub.models import Meeting, User, Club
 from bookclub.tests.helpers import LogInTester, reverse_with_next
 
 
 class ClubMeetingsViewTestCase(TestCase, LogInTester):
-    """Tests of the club meetings view."""
+    """Test case for the Club Meetings view"""
     """Largely adapted from ClubMembersViewTestCase."""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json", "bookclub/tests/fixtures/default_clubs.json"]
@@ -22,22 +22,25 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
         self.url = reverse('club_meetings', kwargs={'club_id': self.club.id})
 
     def test_club_meetings_url(self):
+        """Testing the club meetings url."""
         self.assertEqual(self.url, f'/club_profile/{self.club.id}/meetings')
 
     def test_correct_club_meetings_list_template(self):
+        """Testing if the club meetings list uses correct template."""
         self.client.login(email=self.user.email, password="Password123")
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "club_meetings.html")
 
     def test_get_club_meetings_list_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to club meetings."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertFalse(self._is_logged_in())
 
     def test_club_meetings_list_view_contains_meeting_details(self):
-        """Test some test meetings' details to see if they actually show up at all."""
+        """Test some club meetings' details to see if they actually show up at all."""
         self.client.login(email=self.user.email, password="Password123")
         self._create_test_club_meetings(settings.USERS_PER_PAGE)  # Total: 10 test meetings
         response = self.client.get(self.url)
@@ -60,6 +63,7 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
                 html)
 
     def test_get_club_meetings_list_with_pagination(self):
+        """Testing for clubs meeting list with pagination."""
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_club_meetings(settings.USERS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
@@ -96,6 +100,7 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
         self.assertFalse(page_obj.has_next())
 
     def _create_test_club_meetings(self, meeting_count=10):
+        """Creation of club meetings."""
         for id in range(1, meeting_count + 1, 1):
             if id % 2 != 0:
                 Meeting.objects.create(
@@ -113,4 +118,5 @@ class ClubMeetingsViewTestCase(TestCase, LogInTester):
                 )
 
     def _is_logged_in(self):
+        """Testing if logged in."""
         return '_auth_user_id' in self.client.session.keys()

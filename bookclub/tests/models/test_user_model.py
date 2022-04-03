@@ -138,7 +138,7 @@ class UserModelTestCase(TestCase):
         self._assert_user_is_invalid()
 
     def test_toggle_follow_user(self):
-        """Testing toggle to follow a user feature."""
+        """Testing the toggle to follow a user feature."""
         john = self.user
         jane = self.user2
         self.assertFalse(john.is_following(jane))
@@ -161,8 +161,8 @@ class UserModelTestCase(TestCase):
         self.assertEqual(jane.follower_count(), 1 )
         self.assertEqual(jane.followee_count(), 1)
 
-    def test_user_cant_follow_self(self):
-        """Testing user cannot follow themselves."""
+    def test_user_cannot_follow_self(self):
+        """Testing users cannot follow themselves."""
         self.user.toggle_follow(self.user)
         self.assertEqual(self.user.follower_count(), 0 )
         self.assertEqual(self.user.followee_count(), 0 )

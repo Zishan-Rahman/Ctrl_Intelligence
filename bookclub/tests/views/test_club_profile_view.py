@@ -1,3 +1,4 @@
+"""Unit tests for the Club Profile View"""
 from django.conf import settings
 from django.shortcuts import redirect
 from django.test import TestCase
@@ -7,10 +8,9 @@ from bookclub.models import User, Club, Post, Meeting
 from bookclub.tests.helpers import LogInTester, reverse_with_next
 from datetime import timedelta, date, time, datetime
 
-"""Tests for Club Profile """
-
 
 class ClubProfileTest(TestCase, LogInTester):
+    """Test case for the Club Profile view"""
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_clubs.json',
                 'bookclub/tests/fixtures/default_applications.json',
@@ -30,9 +30,11 @@ class ClubProfileTest(TestCase, LogInTester):
         self.post_strand_club = Post.objects.get(pk=2)
 
     def test_club_profile_url(self):
+        """Testing the club profile url."""
         self.assertEqual(self.url, f'/club_profile/{self.bush_club.id}/')
 
     def test_correct_club_profile_template(self):
+        """Testing if the club profile uses correct template."""
         self.client.login(email=self.john.email, password="Password123")
         response = self.client.get(self.url)
         self._is_logged_in()
@@ -40,6 +42,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertTemplateUsed(response, "club_profile.html")
 
     def test_correct_club_profile_redirects_with_error_message_when_given_id_to_a_club_which_does_not_exist(self):
+        """Test if club is inexistent, redirect to club list."""
         self.client.login(email=self.john.email, password="Password123")
         url = reverse('club_profile', kwargs={'club_id': 500})
         redirect_url = reverse('club_list')
@@ -53,11 +56,13 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertEqual(my_messages[0].message, "Club does not exist!")
 
     def test_get_club_profile_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to club profile."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_club_profile_has_correct_details(self):
+        """Testing if club profile has the correct details."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
@@ -81,6 +86,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn('<h6 class="card-title">', html)
 
     def test_club_profile_view_has_apply_button_for_non_member(self):
+        """Testing for apply button on club profile for non members."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
@@ -91,6 +97,7 @@ class ClubProfileTest(TestCase, LogInTester):
             html)
 
     def test_club_profile_view_has_meetings_list_button_for_owner(self):
+        """Testing if owner has meetings list button on club profile."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -103,6 +110,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn(f'<a href="/club_profile/1/meetings" style="text-decoration: none;">View All</a>', html)
 
     def test_club_profile_view_has_meetings_list_button_for_organiser(self):
+        """Testing if organiser has meetings list button on club profile."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -116,6 +124,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn(f'<a href="/club_profile/1/meetings" style="text-decoration: none;">View All</a>', html)
 
     def test_club_profile_view_has_meetings_list_button_for_member(self):
+        """Testing if member has meetings list button on club profile."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -128,9 +137,8 @@ class ClubProfileTest(TestCase, LogInTester):
         html = response.content.decode('utf8')
         self.assertIn(f'<a href="/club_profile/1/meetings" style="text-decoration: none;">View All</a>', html)
 
-    """ Test if the club profile page doesn't have a leave button for a non-member of the club """
-
     def test_club_profile_view_doesnt_have_a_leave_button_for_non_member(self):
+        """ Test if the club profile page doesn't have a leave button for a non-member of the club."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
@@ -139,9 +147,8 @@ class ClubProfileTest(TestCase, LogInTester):
             f'style="background-color: brown;">Leave {self.bush_club.name}</button>',
             html)
 
-    """Test if the club profile page has a leave button for a member of the club """
-
     def test_club_profile_view_has_a_leave_button_for_club_member(self):
+        """Test if the club profile page has a leave button for a member of the club."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
@@ -149,9 +156,8 @@ class ClubProfileTest(TestCase, LogInTester):
                       f'10px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'><i '
                       f'class="bi bi-box-arrow-left"></i> Leave</button>', html)
 
-    """Test if the club profile page has a leave button for a organiser of a club """
-
     def test_club_profile_view_has_a_leave_button_for_club_organiser(self):
+        """Test if the club profile page has a leave button for an organiser of a club."""
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
         self.client.login(email=self.user3.email, password='Password123')
         self.bush_club.make_member(self.user3)
@@ -163,6 +169,7 @@ class ClubProfileTest(TestCase, LogInTester):
                       f'class="bi bi-box-arrow-left"></i> Leave</button>', html)
 
     def test_disband_button_visible_for_owner(self):
+        """Test if disband button is visble for owner on club profile page."""
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
         self.client.login(email=self.user3.email, password='Password123')
         self.bush_club.make_member(self.user3)
@@ -175,6 +182,7 @@ class ClubProfileTest(TestCase, LogInTester):
                       f'bi-x-octagon"></i> Disband</button>', html)
 
     def test_disband_button_not_visible_for_member(self):
+        """Test if disband button is invisble for member."""
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
         self.client.login(email=self.user3.email, password='Password123')
         self.bush_club.make_member(self.user3)
@@ -187,6 +195,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertNotIn('Disband', html)
 
     def test_disband_button_not_visible_for_organiser(self):
+        """Test if disband button is invisble for an organiser."""
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
         self.client.login(email=self.user3.email, password='Password123')
         self.bush_club.make_member(self.user3)
@@ -199,6 +208,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertNotIn('Disband', html)
 
     def test_successful_disband(self):
+        """Test for succesfull disband of a club."""
         self.user3 = User.objects.get(email="joedoe@bookclub.com")
         self.client.login(email=self.user3.email, password='Password123')
         self.bush_club.make_member(self.user3)
@@ -216,6 +226,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertFalse(Club.objects.filter(pk=club_id).exists())
 
     def test_club_profile_view_doesnt_have_a_post_button_for_non_member(self):
+        """Test if post button is not on club profile for non member."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
@@ -223,6 +234,7 @@ class ClubProfileTest(TestCase, LogInTester):
                          f'style="background-color: brown;">Club feed</button>', html)
 
     def test_club_profile_owner_has_a_post_button(self):
+        """Test if post button is on club profile for club owner."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
@@ -232,6 +244,7 @@ class ClubProfileTest(TestCase, LogInTester):
                       f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
 
     def test_club_owner_can_see_edit_button(self):
+        """Test if edit button is on club profile for club owner."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
@@ -240,6 +253,7 @@ class ClubProfileTest(TestCase, LogInTester):
                       f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
 
     def test_club_organiser_cannot_see_edit_button(self):
+        """Test if edit button is not on club profile for organiser."""
         self.bush_club.make_organiser(self.jane)
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
@@ -249,6 +263,7 @@ class ClubProfileTest(TestCase, LogInTester):
                          f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
 
     def test_club_member_cannot_see_edit_button(self):
+        """Test if edit button is not on club profile for member."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
@@ -257,12 +272,14 @@ class ClubProfileTest(TestCase, LogInTester):
                          f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
 
     def test_club_profile_view_has_feed_view_button_for_owner(self):
+        """Test if feed view button is on club profile for owner."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn(f'<a href="/club_profile/1/feed/" style="text-decoration: none;">View All</a>', html)
 
     def test_club_profile_view_has_feed_view_button_for_organiser(self):
+        """Test if feed view button is on club profile for organiser."""
         self.bush_club.make_organiser(self.jane)
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
@@ -270,6 +287,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn(f'<a href="/club_profile/1/feed/" style="text-decoration: none;">View All</a>', html)
 
     def test_club_profile_view_has_feed_view_button_for_member(self):
+        """Test if feed view button is on club profile for member."""
         self.bush_club.make_member(self.joe)
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)
@@ -279,6 +297,7 @@ class ClubProfileTest(TestCase, LogInTester):
     """Test the owner-organiser privilege mechanism"""
 
     def test_club_profile_view_when_owner_organiser_true_post_button(self):
+        """Test for true post button on club profile for owner and organiser."""
         self.somerset_club.make_member(self.sam)
         self.somerset_club.make_organiser(self.sam)
         self.client.login(email=self.sam.email, password='Password123')
@@ -290,6 +309,7 @@ class ClubProfileTest(TestCase, LogInTester):
                       f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
 
     def test_club_profile_view_when_owner_organiser_false_post_button(self):
+        """Test for false post button on club profile for owner and organiser."""
         self.bush_club.make_member(self.sam)
         self.bush_club.make_organiser(self.sam)
         self.client.login(email=self.sam.email, password='Password123')
@@ -301,6 +321,7 @@ class ClubProfileTest(TestCase, LogInTester):
                          f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
 
     def test_club_profile_view_when_owner_organiser_true_schedule_button(self):
+        """Test for true schedule button on club profile for owner and organiser."""
         self.somerset_club.make_member(self.sam)
         self.somerset_club.make_organiser(self.sam)
         self.client.login(email=self.sam.email, password='Password123')
@@ -311,6 +332,7 @@ class ClubProfileTest(TestCase, LogInTester):
                       f'font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>', html)
 
     def test_club_profile_view_when_owner_organiser_false_schedule_button(self):
+        """Test for false schedule button on club profile for owner and organiser."""
         self.bush_club.make_member(self.sam)
         self.bush_club.make_organiser(self.sam)
         self.client.login(email=self.sam.email, password='Password123')
@@ -323,6 +345,7 @@ class ClubProfileTest(TestCase, LogInTester):
     """ Test to check whether some posts and meetings appear on club profile page """
 
     def test_club_profile_view_has_posts(self):
+        """Test if club profile shows posts."""
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
         html = response.content.decode('utf8')
@@ -330,6 +353,7 @@ class ClubProfileTest(TestCase, LogInTester):
                       html)
 
     def test_club_profile_view_does_not_display_other_club_posts(self):
+        """Test if club profile does  not show posts from other clubs."""
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
         html = response.content.decode('utf8')
@@ -337,6 +361,7 @@ class ClubProfileTest(TestCase, LogInTester):
                          html)
 
     def test_club_profile_view_displays_correct_message_when_no_posts(self):
+        """Test for correct message when club profile does contains any posts."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
         html = response.content.decode('utf8')
@@ -344,6 +369,7 @@ class ClubProfileTest(TestCase, LogInTester):
                       html)
 
     def test_club_profile_view_has_meeting(self):
+        """Test if club profile has meeting feature."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -355,6 +381,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn(f'<h6 class="card-title">www.google.com</h6>', html)
 
     def test_club_profile_view_does_not_display_other_club_meetings(self):
+        """Test if club profile does not show meetings from other clubs."""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -366,6 +393,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertNotIn(f'<h6 class="card-title">www.google.com</h6>', html)
 
     def test_club_profile_view_displays_correct_message_when_no_meetings(self):
+        """Test for correct message on club profile when club does not have any meetings."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
         html = response.content.decode('utf8')
@@ -373,4 +401,5 @@ class ClubProfileTest(TestCase, LogInTester):
                       html)
 
     def _is_logged_in(self):
+        """Test if logged in."""
         return '_auth_user_id' in self.client.session.keys()

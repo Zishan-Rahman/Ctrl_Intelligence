@@ -1,3 +1,4 @@
+"""Unit tests for the Sign-Up Form"""
 from django.test import TestCase
 from bookclub.forms import SignUpForm
 from django import forms
@@ -6,8 +7,7 @@ from bookclub.models import User
 
 
 class TestSignUpForm(TestCase):
-    """Unit tests for the sign-up form."""
-
+    """Test case for the Sign-Up Form"""
     def setUp(self):
 
         self.form_input = {
@@ -18,13 +18,13 @@ class TestSignUpForm(TestCase):
             'password_confirmation': 'Password123'
         }
 
-    """Checks if sign-up form is valid"""
     def test_valid_sign_up_form(self):
+        """Testing for valid sign-up form."""
         form = SignUpForm(data=self.form_input)
         self.assertTrue(form.is_valid())
 
-    """Checks if sign-up form has necessary fields"""
     def test_form_has_necessary_fields(self):
+        """Tests if sign-up form has necessary fields."""
         form = SignUpForm()
         self.assertIn('email', form.fields)
         email_field = form.fields['email']
@@ -34,8 +34,8 @@ class TestSignUpForm(TestCase):
         self.assertIn('new_password', form.fields)
         self.assertIn('password_confirmation', form.fields)
 
-    """Checks if password is the same as confirmation password """
     def test_password_same_as_confirmation(self):
+        """Tests if password is the same as confirmation password."""
         self.form_input['password_confirmation'] = 'WrongPassword'
         form = SignUpForm(data=self.form_input)
         self.assertFalse(form.is_valid())

@@ -1,4 +1,4 @@
-"""Tests of the create chats view."""
+"""Unit tests for the Create Chats View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -8,7 +8,7 @@ from django.contrib import messages
 
 
 class CreateChatsViewTestCase(TestCase):
-    """Tests of the create chats view."""
+    """Test case for the Create Chats view"""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json']
 
@@ -20,15 +20,18 @@ class CreateChatsViewTestCase(TestCase):
 
 
     def test_create_chats_url(self):
+        """Testing the create chats url."""
         self.assertEqual(self.url, '/inbox/create_chat')
 
     def test_create_chat_uses_correct_template(self):
+        """Testing if create chat uses correct template."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(reverse('create_chat'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'create_chat.html')
 
     def test_create_chat_has_correct_details(self):
+        """Testing if create chat uses correct details."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('create_chat'))
         html = response.content.decode('utf8')
