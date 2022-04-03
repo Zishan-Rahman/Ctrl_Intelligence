@@ -33,7 +33,7 @@ class UserFeedView(LoginRequiredMixin, ListView):
         user_id = self.kwargs['user_id']
         user = User.objects.get(id=user_id)
         form = UserPostForm()
-        posts = UserPost.objects.filter(authors=user)
+        posts = UserPost.objects.filter(author=user)
         paginator = Paginator(posts, settings.POSTS_PER_PAGE)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
