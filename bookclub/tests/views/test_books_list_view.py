@@ -83,7 +83,7 @@ class BooksListViewTestCase(TestCase, LogInTester):
                       f'class="bi bi-bookmarks-fill"></i></button></td>', html)
 
     def test_book_list_view_has_add_to_reading_list_button_when_book_is_not_in_reading_list(self):
-"       ""Testing the add to reading list button."""
+       """"Testing the add to reading list button."""
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
