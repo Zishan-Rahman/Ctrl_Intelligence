@@ -48,7 +48,7 @@ class ApplicationViewTestCase(TestCase):
         self.assertIn('<td><a class="btn btn-outline-success"', html)
 
     def test_no_applications(self):
-        """Testing for no application."""
+        """Testing if no applications to clubs are made."""
         self.client.login(email=self.joe.email, password='Password123')
         applications = Application.objects.all()
         for a in applications:

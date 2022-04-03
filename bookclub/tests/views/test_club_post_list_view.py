@@ -1,3 +1,4 @@
+"""Unit tests for the Club Post View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -7,7 +8,7 @@ from django.contrib import messages
 
 
 class ClubPostViewTestCase(TestCase):
-    """Tests of the club post list view."""
+    """Test case for the Club Post view"""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
@@ -24,16 +25,19 @@ class ClubPostViewTestCase(TestCase):
 
         Post.objects.create(author=self.joe, club=self.bush_club, text="This is a club post.")
 
-    def test_user_post_url(self):
+    def test_club_post_url(self):
+        """Testing the user post url."""
         self.assertEqual(self.url, '/club_posts/')
 
-    def test_user_post_uses_correct_template(self):
+    def test_club_post_uses_correct_template(self):
+        """Testing if the club post uses correct template."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(reverse('club_posts'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'club_posts.html')
 
-    def test_user_posts_has_correct_details(self):
+    def test_club_posts_has_correct_details(self):
+        """Testing if the club post has the correct details."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_posts'))
         html = response.content.decode('utf8')
@@ -42,6 +46,7 @@ class ClubPostViewTestCase(TestCase):
         self.assertIn('This is a club post.', html)
 
     def test_no_club_posts(self):
+        """Testing if no club posts are made."""
         self.client.login(email=self.joe.email, password='Password123')
         club_posts = Post.objects.all()
         for p in club_posts:
@@ -53,11 +58,13 @@ class ClubPostViewTestCase(TestCase):
         self.assertNotIn('</td>', html)
 
     def test_get_club_posts_list_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to club posts"""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_get_club_post_list_with_pagination(self):
+        """Testing for club post list with pagination."""
         self.client.login(email=self.john.email, password='Password123')
         self._create_test_club_posts(settings.POSTS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
@@ -93,7 +100,8 @@ class ClubPostViewTestCase(TestCase):
         self.assertFalse(page_obj.has_next())
 
     def _create_test_club_posts(self, my_posts_count=10):
+        """Creation of a club post."""
         posts = []
-        
+
         for id in range(1, my_posts_count + 1, 1):
             posts.append(Post.objects.create(author=self.john, club=self.bush_club, text="This is a club post."))
