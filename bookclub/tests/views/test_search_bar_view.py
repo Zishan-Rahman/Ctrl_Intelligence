@@ -15,7 +15,7 @@ class SearchBarViewTest(TestCase):
         self.user = User.objects.get(pk=1)
 
     def test_search_page_url(self):
-    """Testing the search  url."""
+        """Testing the search url."""
         self.assertEqual(self.url, '/search/')
 
     def test_search_bar_uses_correct_template(self):
