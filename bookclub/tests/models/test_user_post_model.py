@@ -30,17 +30,17 @@ class UserPostTest(TestCase):
     def test_author_must_not_be_blank(self):
         """Testing if the author is blank, a validation error is raised."""
         self.post.author = None
-        with self.assertRaisesMessage(AssertionError, "Test message should be valid"):
+        with self.assertRaisesMessage(AssertionError, "Test post should be valid"):
             self.test_valid_post()
 
     def test_text_must_not_be_blank(self):
         """Testing if the text is blank, a validation error is raised."""
         self.post.text = ''
-        with self.assertRaisesMessage(AssertionError, "Test message should be valid"):
+        with self.assertRaisesMessage(AssertionError, "Test post should be valid"):
             self.test_valid_post()
 
     def test_text_must_not_be_overlong(self):
         """Testing if the text is too long, a validation error is raised."""
         self.post.text = 'x' * 281
-        with self.assertRaisesMessage(AssertionError, "Test message should be valid"):
+        with self.assertRaisesMessage(AssertionError, "Test post should be valid"):
             self.test_valid_post()

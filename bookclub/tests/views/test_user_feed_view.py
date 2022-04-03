@@ -22,6 +22,17 @@ class UserFeedViewTestCase(TestCase, LogInTester):
         """Testing the user feed url."""
         self.assertEqual(self.url, f'/user_profile/{self.user.id}/user_feed/')
 
+    def test_post_user_feed(self):
+        self.client.login(email=self.user.email, password="Password123")
+        self._create_test_user_posts(2)
+        form_data = {'text': 'This is a user post'}
+        form = UserPostForm(form_data)
+        response = self.client.post(self.url, {"author": self.user, "form": form})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(self._is_logged_in())
+        self.assertTrue(form.is_valid)
+        response = self.client.get(self.url)
+
     def test_user_feed_details(self):
         self.client = Client()
         self.client.login(email=self.user.email, password="Password123")
