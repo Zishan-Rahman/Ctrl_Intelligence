@@ -1,7 +1,7 @@
 import random
 from django.core.management.base import BaseCommand, CommandError
 from faker import Faker
-from bookclub.models import User, Club, Book
+from bookclub.models import User, Club, Book, Application, Post, UserPost
 from django.core.exceptions import ValidationError
 import csv
 import pandas as pd
@@ -45,43 +45,6 @@ def create_set_users():
     )
 
 
-def create_set_clubs():
-    owner_john = User.objects.get(email="johndoe@bookclub.com")
-    bush_house = Club.objects.create(
-        name="Bush House Book Club",
-        description="Bush House Official Book Club!",
-        location="Strand, London",
-        owner=owner_john,
-        meeting_online=True
-    )
-    bush_house.full_clean()
-    bush_house.save()
-    generate_club_hierarchy(bush_house)
-
-    owner_jane = User.objects.get(email="janedoe@bookclub.com")
-    somerset_house = Club.objects.create(
-        name="Somerset House Book Club",
-        description="Somerset House Official Book Club!",
-        location="Strand, London",
-        owner=owner_jane,
-        meeting_online=True
-    )
-    somerset_house.full_clean()
-    somerset_house.save()
-    generate_club_hierarchy(somerset_house)
-
-    strand_house = Club.objects.create(
-        name="Strand House Book Club",
-        description="Strand House Official Book Club!",
-        location="Strand, London",
-        owner=owner_john,
-        meeting_online=False
-    )
-    strand_house.full_clean()
-    strand_house.save()
-    generate_club_hierarchy(strand_house)
-
-
 def generate_genre():
     genres = ['Action', 'Adventure', 'Romance', 'Science Fiction', 'Horror', 'Non-fiction', 'Poetry', 'Thriller',
               'Classics', 'Comics', 'Crime', 'Fantasy', 'Psychological', 'Foreign', 'Biographies', 'Religious']
@@ -98,7 +61,7 @@ def generate_boolean():
     return random.choice(boolean)
 
 
-def generate_owner():
+def get_random_user():
     return list(User.objects.all())[random.randint(0, User.objects.count() - 1)]
 
 
@@ -120,6 +83,19 @@ def get_all_clubs_users(club):
 
 def generate_club_hierarchy(club):
     users = get_all_users_list()
+    for i in range(0, 15):
+        application_possible = True
+        random_user = random.choice(users)
+        all_club_users = get_all_clubs_users(club)
+        current_applications = Application.objects.filter(applicant=random_user, club=club).count()
+        if current_applications or random_user in all_club_users:
+            application_possible = False
+        if application_possible:
+            Application.objects.create(
+                applicant=random_user,
+                club=club
+            )
+
     for i in range(0, 30):
         random_user = random.choice(users)
         all_clubs_users = get_all_clubs_users(club)
@@ -143,6 +119,8 @@ class Command(BaseCommand):
         seed_possible = self.verify_seeding_possible()
         if seed_possible:
             print()
+            print("--- Bookwise Seeder ---")
+            print()
             print("Seed books:")
             self.load_books()
             print("All books have been successfully seeded")
@@ -159,11 +137,16 @@ class Command(BaseCommand):
             print()
             print('Seed clubs:')
             print()
-            create_set_clubs()
+            self.create_set_clubs()
             print('Created set clubs')
             print()
             self.generate_clubs()
             print('All clubs have been successfully seeded')
+            print()
+            print('Seed user events:')
+            print()
+            self.generate_user_events()
+            print('User events have been successfully seeded')
             print()
             print('Seeder has successfully completed')
 
@@ -230,7 +213,7 @@ class Command(BaseCommand):
         location = self.faker.city()
         name = location + ' Book Club'
         description = self.faker.text(512)
-        owner = generate_owner()
+        owner = get_random_user()
         meeting_online = generate_boolean()
 
         generatedClub = Club(
@@ -263,40 +246,123 @@ class Command(BaseCommand):
                 temp_club.full_clean()
                 temp_club.save()
                 generate_club_hierarchy(temp_club)
+                self.generate_club_posts(temp_club)
                 total_clubs = get_total_clubs()
                 percent_complete = float((total_clubs / self.TOTAL_CLUBS) * 100)
                 print(f'[ DONE: {round(percent_complete)}% | {total_clubs}/{self.TOTAL_CLUBS} ]', end='\r')
             except ValidationError:
                 pass
 
+    def generate_club_posts(self, club):
+        number_of_posts = random.randint(0, 25)
+        club_owner = club.owner
+        for i in range(0, number_of_posts):
+            text = self.faker.text(max_nb_chars=120)
+            Post.objects.create(club=club, author=club_owner, text=text)
+
+    def generate_user_events(self):
+        count = 0
+        users = get_all_users_list()
+        for usr in users:
+            number_of_posts = random.randint(0, 5)
+            for i in range(0, number_of_posts):
+                text = self.faker.text(max_nb_chars=84)
+                UserPost.objects.create(author=usr, text=text)
+            number_to_follow = random.randint(5, 50)
+            for j in range(0, number_to_follow):
+                random_user = random.choice(users)
+                usr.toggle_follow(random_user)
+            count += 1
+            percent_complete = float((count/get_total_users()) * 100)
+            print(f'[ DONE: {round(percent_complete)}% ]', end='\r')
+
+    def create_set_clubs(self):
+        owner_john = User.objects.get(email="johndoe@bookclub.com")
+        bush_house = Club.objects.create(
+            name="Bush House Book Club",
+            description="Bush House Official Book Club!",
+            location="Strand, London",
+            owner=owner_john,
+            meeting_online=True
+        )
+        bush_house.full_clean()
+        bush_house.save()
+        generate_club_hierarchy(bush_house)
+        self.generate_club_posts(bush_house)
+
+        owner_jane = User.objects.get(email="janedoe@bookclub.com")
+        somerset_house = Club.objects.create(
+            name="Somerset House Book Club",
+            description="Somerset House Official Book Club!",
+            location="Strand, London",
+            owner=owner_jane,
+            meeting_online=True
+        )
+        somerset_house.full_clean()
+        somerset_house.save()
+        generate_club_hierarchy(somerset_house)
+        self.generate_club_posts(somerset_house)
+
+        strand_house = Club.objects.create(
+            name="Strand House Book Club",
+            description="Strand House Official Book Club!",
+            location="Strand, London",
+            owner=owner_john,
+            meeting_online=False
+        )
+        strand_house.full_clean()
+        strand_house.save()
+        generate_club_hierarchy(strand_house)
+        self.generate_club_posts(strand_house)
+
     def load_books(self):
         count = 0
-        file_path_users = "data/BX_Books.csv"
 
-        with open(file_path_users, encoding='latin-1') as book_csv_file:
-            data = csv.reader(book_csv_file, delimiter=";")
-            next(data)
-            books = []
-            for row in data:
-                book = Book(
-                    isbn=row[0],
-                    title=row[1],
-                    author=row[2],
-                    pub_year=row[3],
-                    publisher=row[4],
-                    small_url=row[5],
-                    medium_url=row[6],
-                    large_url=row[7]
+        books = pd.read_csv('data/BX_Books.csv', sep=';', on_bad_lines='skip', encoding="latin-1")
+        books.columns = books.columns.str.strip().str.lower().str.replace('-', '_')
+
+        ratings = pd.read_csv('data/BX-Book-Ratings.csv', sep=';', on_bad_lines='skip', encoding="latin-1")
+        ratings.columns = ratings.columns.str.strip().str.lower().str.replace('-', '_')
+
+        ratings = ratings[ratings.book_rating != 0]
+
+        books = books[books.year_of_publication != 0]
+        books = books[books.year_of_publication != np.nan]
+        book_dates_too_old = books[books.year_of_publication < 1800]
+        book_dates_future = books[books.year_of_publication > 2022]
+        books = books.loc[~(books.isbn.isin(book_dates_too_old.isbn))]
+        books = books.loc[~(books.isbn.isin(book_dates_future.isbn))]
+
+        books = books.values.tolist()
+
+        books_list = ratings.isbn.value_counts().rename_axis('isbn').reset_index(name='count')
+        books_list = books_list[books_list['count'] > 5]['isbn'].to_list()
+
+
+        create_books_lists = []
+
+        for book in books:
+            if book[0] in books_list:
+                book_to_append = Book(
+                    isbn=book[0].upper(),
+                    title=book[1],
+                    author=book[2],
+                    pub_year=book[3],
+                    publisher=book[4],
+                    small_url=book[5],
+                    medium_url=book[6],
+                    large_url=book[7]
                 )
-                books.append(book)
+                create_books_lists.append(book_to_append)
                 count += 1
-                percent_complete = float((count / 271380) * 100)
+                percent_complete = float((count / len(books_list)) * 100)
 
-                print(f'[ DONE: {round(percent_complete)}% | {count}/271380 ]', end='\r')
+                print(f'[ DONE: {round(percent_complete)}% | {count}/{len(books_list)} ]', end='\r')
 
-                if len(books) > 5000:
-                    Book.objects.bulk_create(books)
-                    books = []
+                if len(create_books_lists) > 50:
+                    Book.objects.bulk_create(create_books_lists)
+                    create_books_lists = []
 
-            if books:
-                Book.objects.bulk_create(books)
+        if create_books_lists:
+            Book.objects.bulk_create(create_books_lists)
+

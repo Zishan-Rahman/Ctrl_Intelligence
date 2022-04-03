@@ -7,7 +7,7 @@
         <div class="col">
             <h2 class="text-left" style="margin-top: 10px"><strong>Meetings Archive</strong></h2>
             <h5 class="text-muted">{{ club.name }}</h5>
-            <div class="book-table">
+            <div class="book-table text-center">
                 <table class="table table-hover table-borderless">
                     <thead>
                   <tr>
@@ -20,16 +20,16 @@
                 </thead>
                 <tbody>
                   {% for meeting in club.get_meetings %}
-                  <tr class="clickable-row" data-href="{% url 'edit_meeting' club.id meeting.id %}">
+                  <tr>
                     <td><img src="{{ meeting.club.mini_gravatar }}" class="rounded-circle" alt="{{ meeting.club.name }}'s gravatar"></td>
                     <td>{{ meeting.date }}</td>
                     <td>{{ meeting.start_time }}</td>
-                    <td>{{ meeting.address }}</td>
+                    <td><a href=//{{meeting.address}} target="_blank" rel="noopener noreferrer">{{ meeting.address }}</a></td>
 
                       {% if request.user == club.owner or request.user in club.get_organisers and club.organiser_owner %}
 
-                    <td><a class="btn text-left" href="{% url 'edit_meeting' club.id meeting.id %}" style="background-color: brown; color: white; text-transform: uppercase; font-size: 14px">Edit meeting details</a></td>
-
+                    <td><a class="btn" href="{% url 'edit_meeting' club.id meeting.id %}" id="bookwiseGeneralBtn" style="text-transform: uppercase; font-size: 14px">Edit meeting details</a></td>
+                      <td><a class="btn" href="{% url 'delete_meeting' club.id meeting.id %}" id="bookwiseGeneralBtn" style="text-transform: uppercase; font-size: 14px">Cancel Meeting</a></td>
                     {% endif %}
                   </tr>
                   {% endfor %}

@@ -35,4 +35,4 @@ class ListChatsViewTestCase(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('inbox'))
         html = response.content.decode('utf8')
-        self.assertIn('Your Chats', html)
+        self.assertIn('My Inbox', html)

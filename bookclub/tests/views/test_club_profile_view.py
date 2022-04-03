@@ -66,35 +66,20 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn('<img src=', html)
-        self.assertIn(f' alt="Gravatar of {self.bush_club.name}" class="profile-image" style="border-radius: 10px">', html)
-        self.assertIn(f'<h3>{self.bush_club.name}</h3>', html)
-        self.assertIn(f'<p>{self.bush_club.description}</p>', html)
-        self.assertIn(f'<a href="/user_profile/{self.bush_club.owner.id}/" style="text-decoration: none;">', html)
-        self.assertIn(f'<h6 class="card-title">{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}</h6>',
+        self.assertIn(f'alt="Gravatar of {self.bush_club.name}', html)
+        self.assertIn(f'{self.bush_club.name}', html)
+        self.assertIn(f'{self.bush_club.description}', html)
+        self.assertIn(f'{self.bush_club.owner.id}', html)
+        self.assertIn(f'{self.bush_club.owner.first_name} {self.bush_club.owner.last_name}',
                       html)
-        self.assertIn(f'</a>', html)
-        self.assertIn(f'<h6 class="card-title">{self.bush_club.location}</h6>', html)
-
-    def test_club_profile_view_has_cards(self):
-        """Checks for card-specific (NOT club-specific) details in the club profile template."""
-        self.client.login(email=self.john.email, password='Password123')
-        response = self.client.get(self.url)
-        html = response.content.decode('utf8')
-        self.assertIn('<div class="card w-100">', html)
-        self.assertIn('<div class="card-body">', html)
-        self.assertIn('<h6 class="card-title">', html)
+        self.assertIn(f'{self.bush_club.location}', html)
 
     def test_club_profile_view_has_apply_button_for_non_member(self):
         """Testing for apply button on club profile for non members."""
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(
-            f'<button type="submit" class="btn" id="apply-button" style=\'padding: 10px;color:white; '
-            f'background-color: brown; text-transform:uppercase; font-size: 14px\'><i class="bi bi-check-square"></i> '
-            f'Apply</button>',
-            html)
+        self.assertIn('<button type="submit" class="btn w-50 mx-auto" aria-disabled="true" style="padding: 15px; color: white; background-color: #353535; text-transform:uppercase; font-size: 14px"><i class="bi bi-check-square"></i> Applied</button>', html)
 
     def test_club_profile_view_has_meetings_list_button_for_owner(self):
         """Testing if owner has meetings list button on club profile."""
@@ -102,8 +87,7 @@ class ClubProfileTest(TestCase, LogInTester):
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
         self.future_time = time(next_hour_date_time.hour, 0)
-        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club,
-                                              address='www.google.com')
+        self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club, address='www.google.com')
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
@@ -142,19 +126,14 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertNotIn(
-            f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" '
-            f'style="background-color: brown;">Leave {self.bush_club.name}</button>',
-            html)
+        self.assertNotIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>', html)
 
     def test_club_profile_view_has_a_leave_button_for_club_member(self):
         """Test if the club profile page has a leave button for a member of the club."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn btn-default" id="leave-button" style=\'padding: '
-                      f'10px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'><i '
-                      f'class="bi bi-box-arrow-left"></i> Leave</button>', html)
+        self.assertIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>', html)
 
     def test_club_profile_view_has_a_leave_button_for_club_organiser(self):
         """Test if the club profile page has a leave button for an organiser of a club."""
@@ -164,9 +143,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.bush_club.make_organiser(self.user3)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn btn-default" id="leave-button" style=\'padding: '
-                      f'10px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'><i '
-                      f'class="bi bi-box-arrow-left"></i> Leave</button>', html)
+        self.assertIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#leaveClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-box-arrow-left"></i> Leave</button>', html)
 
     def test_disband_button_visible_for_owner(self):
         """Test if disband button is visble for owner on club profile page."""
@@ -175,11 +152,8 @@ class ClubProfileTest(TestCase, LogInTester):
         self.bush_club.make_member(self.user3)
         self.bush_club.make_owner(self.user3)
         response = self.client.get(self.url)
-
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" id="leave-button" style=\'padding: 10px;color:white; '
-                      f'background-color: brown; text-transform:uppercase; font-size: 14px\'><i class="bi '
-                      f'bi-x-octagon"></i> Disband</button>', html)
+        self.assertIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> Disband</button>', html)
 
     def test_disband_button_not_visible_for_member(self):
         """Test if disband button is invisble for member."""
@@ -188,11 +162,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.bush_club.make_member(self.user3)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-
-        self.assertNotIn(f'<button type="submit" class="btn" id="leave-button" style=\'padding: 10px;color:white; '
-                         f'background-color: brown; text-transform:uppercase; font-size: 14px\'><i class="bi '
-                         f'bi-x-octagon"></i> Disband</button>', html)
-        self.assertNotIn('Disband', html)
+        self.assertNotIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> Disband</button>', html)
 
     def test_disband_button_not_visible_for_organiser(self):
         """Test if disband button is invisble for an organiser."""
@@ -202,10 +172,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.bush_club.make_organiser(self.user3)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-
-        self.assertNotIn(f'<button type="submit" class="btn btn-default" id="leave-button"><span class="btn btn-dark" '
-                         f'style="background-color: brown;">Disband {self.bush_club.name}</button>', html)
-        self.assertNotIn('Disband', html)
+        self.assertNotIn('<button type="submit" class="btn" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#disbandClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-x-octagon"></i> Disband</button>', html)
 
     def test_successful_disband(self):
         """Test for succesfull disband of a club."""
@@ -230,27 +197,21 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.joe.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertNotIn(f'<button type="submit" class="btn btn-default" id="post-feed"><span class="btn btn-dark" '
-                         f'style="background-color: brown;">Club feed</button>', html)
+        self.assertNotIn('<button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#newPost" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-square-text"></i> New Post</button>', html)
 
     def test_club_profile_owner_has_a_post_button(self):
         """Test if post button is on club profile for club owner."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="button" class="btn float-end" data-bs-toggle="modal" '
-                      f'data-bs-target="#staticBackdrop" style=\'padding-top: 10px; padding-bottom: 10px; '
-                      f'color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'>\n          '
-                      f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
+        self.assertIn('<button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#newPost" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-square-text"></i> New Post</button>', html)
 
     def test_club_owner_can_see_edit_button(self):
         """Test if edit button is on club profile for club owner."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f' <a class="btn float-end" style=\'padding: 10px;color:white; margin-bottom: 20px; '
-                      f'background-color: brown; text-transform:uppercase; font-size: 14px\' '
-                      f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
+        self.assertIn('<button class="btn float-end mb-3" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#editClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-pencil-square"></i> Edit Club</button>', html)
 
     def test_club_organiser_cannot_see_edit_button(self):
         """Test if edit button is not on club profile for organiser."""
@@ -258,18 +219,14 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertNotIn(f' <a class="btn float-end" style=\'padding: 10px;color:white; margin-bottom: 20px; '
-                         f'background-color: brown; text-transform:uppercase; font-size: 14px\' '
-                         f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
+        self.assertNotIn('<button class="btn float-end mb-3" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#editClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-pencil-square"></i> Edit Club</button>', html)
 
     def test_club_member_cannot_see_edit_button(self):
         """Test if edit button is not on club profile for member."""
         self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertNotIn(f' <a class="btn float-end" style=\'padding: 10px;color:white; margin-bottom: 20px; '
-                         f'background-color: brown; text-transform:uppercase; font-size: 14px\' '
-                         f'href="/club_profile/1/edit/"><i class="bi bi-pencil-square"></i> Edit Club</a>', html)
+        self.assertNotIn('<button class="btn float-end mb-3" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#editClub" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-pencil-square"></i> Edit Club</button>', html)
 
     def test_club_profile_view_has_feed_view_button_for_owner(self):
         """Test if feed view button is on club profile for owner."""
@@ -303,10 +260,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="button" class="btn float-end" data-bs-toggle="modal" '
-                      f'data-bs-target="#staticBackdrop" style=\'padding-top: 10px; padding-bottom: 10px; '
-                      f'color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'>\n          '
-                      f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
+        self.assertIn(f'New Post', html)
 
     def test_club_profile_view_when_owner_organiser_false_post_button(self):
         """Test for false post button on club profile for owner and organiser."""
@@ -315,10 +269,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
         html = response.content.decode('utf8')
-        self.assertNotIn(f'<button type="button" class="btn float-end" data-bs-toggle="modal" '
-                         f'data-bs-target="#staticBackdrop" style=\'padding-top: 10px; padding-bottom: 10px; '
-                         f'color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'>\n '
-                         f'                  <i class="bi bi-chat-square-text"></i> New Post', html)
+        self.assertNotIn('<button type="button" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#newPost" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-square-text"></i> New Post</button>', html)
 
     def test_club_profile_view_when_owner_organiser_true_schedule_button(self):
         """Test for true schedule button on club profile for owner and organiser."""
@@ -327,9 +278,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<a class="btn float-end" href="/club_profile/2/meeting/" style="padding-top: 10px; '
-                      f'padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; '
-                      f'font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>', html)
+        self.assertIn('<button type="submit" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#scheduleMeeting" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</button>', html)
 
     def test_club_profile_view_when_owner_organiser_false_schedule_button(self):
         """Test for false schedule button on club profile for owner and organiser."""
@@ -338,35 +287,30 @@ class ClubProfileTest(TestCase, LogInTester):
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
         html = response.content.decode('utf8')
-        self.assertNotIn(f'<a class="btn float-end" href="/club_profile/2/meeting/" style="padding-top: 10px; '
-                         f'padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; '
-                         f'font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</a>', html)
+        self.assertNotIn('<button type="submit" class="btn float-end" id="bookwiseGeneralBtn" data-bs-toggle="modal" data-bs-target="#scheduleMeeting" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-calendar-plus"></i> Schedule Meeting</button>', html)
 
     """ Test to check whether some posts and meetings appear on club profile page """
 
     def test_club_profile_view_has_posts(self):
         """Test if club profile shows posts."""
-        self.client.login(email=self.sam.email, password='Password123')
+        self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.bush_club.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f' <p class="card-text fw-bold">This is a Bush House Book Club Post</p>',
-                      html)
+        self.assertIn(f'This is a Bush House Book Club Post', html)
 
     def test_club_profile_view_does_not_display_other_club_posts(self):
-        """Test if club profile does  not show posts from other clubs."""
-        self.client.login(email=self.sam.email, password='Password123')
+        """Test if club profile does not show posts from other clubs."""
+        self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.somerset_club.id}))
         html = response.content.decode('utf8')
-        self.assertNotIn(f' <p class="card-text fw-bold">This is a Bush House Book Club Post</p>',
-                         html)
+        self.assertNotIn(f'This is a Bush House Book Club Post', html)
 
     def test_club_profile_view_displays_correct_message_when_no_posts(self):
         """Test for correct message when club profile does contains any posts."""
-        self.client.login(email=self.john.email, password='Password123')
+        self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<p class="text-muted"><strong>{self.temple_club.name}</strong> does not have any posts</p>',
-                      html)
+        self.assertIn(f'<p class="text-muted"><strong>{self.temple_club.name}</strong> does not have any posts</p>', html)
 
     def test_club_profile_view_has_meeting(self):
         """Test if club profile has meeting feature."""
@@ -387,18 +331,17 @@ class ClubProfileTest(TestCase, LogInTester):
         self.tomorrow = self.today + timedelta(days=1)
         self.future_time = time(next_hour_date_time.hour, 0)
         self.meeting = Meeting.objects.create(start_time=self.future_time, date=self.tomorrow, club=self.bush_club, address='www.google.com')
-        self.client.login(email=self.john.email, password='Password123')
+        self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
         html = response.content.decode('utf8')
         self.assertNotIn(f'<h6 class="card-title">www.google.com</h6>', html)
 
     def test_club_profile_view_displays_correct_message_when_no_meetings(self):
         """Test for correct message on club profile when club does not have any meetings."""
-        self.client.login(email=self.john.email, password='Password123')
+        self.client.login(email=self.jane.email, password='Password123')
         response = self.client.get(reverse('club_profile', kwargs={'club_id': self.temple_club.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<p class="text-muted"><strong>{self.temple_club.name}</strong> does not have any meetings</p>',
-                      html)
+        self.assertIn(f'<p class="text-muted"><strong>{self.temple_club.name}</strong> does not have any meetings</p>', html)
 
     def _is_logged_in(self):
         """Test if logged in."""

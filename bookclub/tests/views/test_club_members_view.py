@@ -41,7 +41,7 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self._is_logged_in())
         html = response.content.decode('utf8')
-        self.assertIn(f'<h2 class="text-left"><strong>Members of {self.club.name}</strong></h2>', html)
+        self.assertIn(f'<h5 class="text-left text-muted">{ self.club.name }</h5>', html)
 
     def test_club_members_list_view_contains_user_details(self):
         """Test some test users' details to see if they actually show up at all."""
@@ -55,7 +55,6 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
         '''Test the club owner's details (they should show up).'''
         self.assertIn(f'alt="Gravatar of {self.user.get_full_name()}" class="rounded-circle" ></td>', html)
         self.assertIn(f'<td>{self.user.get_full_name()}</td>', html)
-        self.assertIn(f'<td>{self.user.get_bio()}</td>', html)
         self.assertIn(f'<td>{self.user.get_favourite_genre()}</td>', html)
         self.assertIn(f'<td>{self.club.user_level(self.user)}</td>', html)
         '''Test the details of the 9 test users created earlier.'''
@@ -63,7 +62,6 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
             test_user = User.objects.get(email=f'user{i}@test.org')
             self.assertIn(f'alt="Gravatar of {test_user.get_full_name()}" class="rounded-circle" ></td>', html)
             self.assertIn(f'<td>{test_user.get_full_name()}</td>', html)
-            self.assertIn(f'<td>{test_user.get_bio()}</td>', html)
             self.assertIn(f'<td>{test_user.get_favourite_genre()}</td>', html)
             self.assertIn(f'<td>{self.club.user_level(test_user)}</td>', html)
 

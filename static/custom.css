@@ -1,12 +1,13 @@
 
 #cover-image {
-    background: url('images/background.jpg') no-repeat center center fixed;
+    background: url('images/cover_image.jpeg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
     height: 100%;
   }
+
 
 #recommendationCard:hover {
   background-color: whitesmoke;
@@ -39,19 +40,19 @@
 
 
   .cover-card {
-    background-color: black;
+    background-color: rgba(255, 255, 255, 0.3);
+    /* border-color: brown; */
     max-width: 35rem;
     border-radius: 0;
-    margin-right: 0;
+    margin-right: auto;
     margin-left: auto;
     text-align: center;
-
-
+    
   }
+
   .cover-card-block {
     opacity: 1
   }
-
 
   .inbox-icon-container {
     margin-right: 15px;
@@ -94,9 +95,105 @@
   button.link {
     background:none; 
     border:none;
-    padding:none;
+  }
+
+  #timestamp {
+    text-align: right;
+    opacity: 50%;
+    font-size: small;
+  }
+
+  #timestamp_receiver {
+    text-align: right;
+    opacity: 50%;
+    font-size: small;
+  }
+
+  #post_icon {
+    display: block;
+    margin-left: 15%;
+    height: 72px;
+    width: 72px;
+
   }
   
+  #bookwiseGeneralBtn.btn {
+    background-color: brown;
+    color: white;
+  }
+
+  #bookwiseGeneralBtn.btn:hover {
+    background-color: white;
+    border-style: groove;
+    border-color: brown;
+    color: brown;
+  }
+
+  #logInBtn.btn {
+    background-color: brown;
+    color: white;
+  }
+
+  #logInBtn.btn:hover {
+    background-color: black;
+    border-color: white;
+    color: white;
+    border-style: groove;
+  }
+
+  #followBtn.btn {
+    background-color: #0275d8;
+    color: white;
+  }
+
+  #followBtn.btn:hover {
+    background-color: white;
+    color: #0275d8;
+    border-style: groove;
+    border-color: #0275d8;
+  }
+
+  #unfollowBtn.btn {
+    background-color: #292b2c;
+    color: white;
+  }
+
+  #unfollowBtn.btn:hover {
+    background-color: white;
+    color: #292b2c;
+    border-color: #292b2c;
+    border-style: groove;
+  }
+
+
+  #signUpBtn.btn {
+    background-color: white;
+    color: brown;
+    border-color: brown;
+  }
+
+  #signUpBtn.btn:hover {
+    background-color: black;
+    border-color: white;
+    color: white;
+    border-style: groove;
+
+
+  }
+
+
+  #startingScreensBackBtn.btn {
+    background-color: black;
+    color: white;
+  }
+
+  #startingScreensBackBtn.btn:hover {
+    color: brown;
+    transform: scale(1.25);
+  }
+
+  
+
 
 
 

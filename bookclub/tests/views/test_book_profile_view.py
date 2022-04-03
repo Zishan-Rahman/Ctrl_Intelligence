@@ -49,8 +49,7 @@ class BookProfileTest(TestCase):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
-                      f'24px"><i class="bi bi-star"></i></button>', html)
+        self.assertIn(f'<i class="bi bi-star"></i></button>', html)
 
     def test_book_profile_has_unfavourite_button_when_book_is_in_favourites(self):
         """Testing the book profile unfavourite button."""
@@ -58,8 +57,7 @@ class BookProfileTest(TestCase):
         self.user.favourite_books.add(self.book)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
-                      f'24px"><i class="bi bi-star-fill"></i></button>', html)
+        self.assertIn(f'<i class="bi bi-star-fill"></i></button>', html)
 
     def test_favourite_button_in_book_profile_works(self):
         """Testing if book profile favourite button works."""
@@ -125,22 +123,20 @@ class BookProfileTest(TestCase):
         self.user.currently_reading_books.add(self.book)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
-                      f'24px"><i class="bi bi-bookmarks-fill"></i></button>', html)
+        self.assertIn(f'<i class="bi bi-bookmarks-fill"></i></button>', html)
 
     def test_book_profile_view_has_add_to_reading_list_button_when_book_is_not_in_reading_list(self):
         """Testing the add to reading list button in book profile view."""
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn" style="background-color: brown; color: white; font-size: '
-                      f'24px"><i class="bi bi-bookmarks"></i></button>', html)
+        self.assertIn(f'<i class="bi bi-bookmarks"></i></button>', html)
 
     def test_add_to_reading_list_in_book_profile_works(self):
         """Testing if the add to reading list button works."""
         self.client.login(email=self.user.email, password='Password123')
         before_reading_list_count = self.user.currently_reading_books.count()
-        response = self.client.get('/add_to_reading_list_profile/1/', follow=True)
+        response = self.client.get('/book_profile/1/add_to_reading_list/', follow=True)
         redirect_url = '/book_profile/1/'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
@@ -154,7 +150,7 @@ class BookProfileTest(TestCase):
         self.client.login(email=self.user.email, password='Password123')
         self.user.currently_reading_books.add(self.book)
         before_reading_list_count = self.user.currently_reading_books.count()
-        response = self.client.get('/remove_from_reading_list_profile/1/', follow=True)
+        response = self.client.get('/book_profile/1/remove_from_reading_list/', follow=True)
         redirect_url = '/book_profile/1/'
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         messages_list = list(response.context['messages'])
@@ -163,9 +159,35 @@ class BookProfileTest(TestCase):
         after_reading_list_count = self.user.currently_reading_books.count()
         self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
-    # def test_book_profile_view_has_add_to_books_read_button(self):
-    #   """Testing if book profile view has add to books read button."""
-    #     self.client.login(email=self.user.email, password='Password123')
-    #     response = self.client.get(self.url)
-    #     html = response.content.decode('utf8')
-    #     self.assertIn(f'<a class="btn btn-default" href="/add_to_books_read/1/" <span class="btn btn-dark" style=\'padding-top: 10px; padding-bottom: 10px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px\'> Add to Books Read </span></a>', html)
+    def test_book_profile_view_has_add_to_reading_list_button(self):
+        """Testing if book profile view has add to books read button."""
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<form action="/book_profile/{self.book.id}/add_to_reading_list/" method="post">', html)
+        self.assertIn('<input type="hidden" name="csrfmiddlewaretoken" value="', html)
+        self.assertIn('">', html)
+        self.assertIn('<i class="bi bi-bookmarks"></i></button>', html)
+        self.assertIn('</form>', html)
+        self.assertIn('<p class="text-muted">Add to Reading List</p>', html)
+        self.assertIn('</div>', html)
+
+    def test_book_profile_view_has_more_info_button(self):
+        """Testing if book profile view has more info button."""
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        book_more_info_button = f"""<div class="col-3 mt-auto">
+                        <div class="dropdown">
+                            <button class="btn float-end dropdown-toggle" type="button" id="bookwiseGeneralBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-book"></i> More Info
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="bookwiseGeneralBtn">
+                                <li><a class="dropdown-item" href="https://www.google.com/search?tbm=bks&q=isbn:{self.book.isbn}" target="_blank" rel="noopener noreferrer">Google Books</a></li>
+                                <li><a class="dropdown-item" href="https://openlibrary.org/search?isbn={self.book.isbn}" target="_blank" rel="noopener noreferrer">Open Library (Internet Archive)</a></li>
+                                <li><a class="dropdown-item" href="https://www.amazon.com/s?k={self.book.isbn}" target="_blank" rel="noopener noreferrer">Amazon.com (US Site)</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>"""
+        self.assertIn(book_more_info_button, html)

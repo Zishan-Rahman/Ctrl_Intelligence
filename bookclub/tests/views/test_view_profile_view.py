@@ -60,7 +60,7 @@ class ViewProfileTest(TestCase):
         response = self.client.get(reverse('user_profile', kwargs={'user_id': self.joe.id}))
         html = response.content.decode('utf8')
         self.assertIn(
-            f'<p class="text-muted"><strong>{self.joe.first_name} {self.joe.last_name}</strong> does not have any posts</p>',
+            f'<p class="text-muted"><strong>{self.joe.first_name} {self.joe.last_name}</strong> does not have any personal posts</p>',
             html)
 
     def test_view_profile_view_has_posts(self):
@@ -68,7 +68,7 @@ class ViewProfileTest(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
         html = response.content.decode('utf8')
-        self.assertIn(f'<h6 class="card-title text-left"><strong>This is a John Doe Post</strong></h6>',
+        self.assertIn(f'This is a John Doe Post',
                       html)
 
     def test_view_profile_view_does_not_display_other_user_posts(self):
@@ -76,7 +76,7 @@ class ViewProfileTest(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
         html = response.content.decode('utf8')
-        self.assertNotIn(f'<h6 class="card-title text-left"><strong>This is a Jane Doe Post</strong></h6>',
+        self.assertNotIn(f'This is a Jane Doe Post',
                          html)
 
     def test_view_profile_shows_following_number(self):
@@ -84,28 +84,28 @@ class ViewProfileTest(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<a style="text-decoration: none; color: brown"><h4 class="text-left fw-bold link"><strong>{self.john.followee_count()}</strong></h4></a>', html)
+        self.assertIn(f'{self.john.followee_count()}', html)
 
     def test_view_profile_shows_followers_number(self):
         """Testing if profile shows followers number."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<a style="text-decoration: none; color: brown"><h4 class="text-left fw-bold link"><strong>{self.john.follower_count()}</strong></h4></a>', html)
+        self.assertIn(f'{self.john.follower_count()}', html)
 
     def test_view_profile_has_following_button(self):
         """Testing if profile contains following button."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#following_modal"><b>Following</b></button>', html)
+        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#following_modal">Following</button>', html)
 
     def test_view_profile_has_followers_button(self):
         """Testing if profile contains followers button."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#follower_modal"><b>Followers</b></button>', html)
+        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#follower_modal">Followers</button>', html)
 
     def test_my_user_profile_view_does_not_have_follow_button(self):
         """Testing if my profile does not have follow button."""

@@ -33,7 +33,7 @@ class TestUserListView(TestCase, LogInTester):
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Follow</button>', html)
+        self.assertIn(f'Follow</button></td>', html)
 
     def test_user_list_view_has_unfollow_button_when_following_user(self):
         """Testing for unfollow button, if following the user, on user list."""
@@ -41,7 +41,7 @@ class TestUserListView(TestCase, LogInTester):
         self.user.followees.add(self.jane)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button type="submit" class="btn btn-dark" style="background-color: brown">Unfollow</button>', html)
+        self.assertIn(f'Unfollow</button></td>', html)
 
     def test_follow_button_works_from_user_list(self):
         """Testing if follow button works on user list."""

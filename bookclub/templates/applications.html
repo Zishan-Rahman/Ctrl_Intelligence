@@ -2,21 +2,21 @@
 {% load bootstrap_pagination %}
 {% block content %}
     <div class="container">
-    <div class="row">
       {% if not applicants %}
-       <div class="row mt-3">
+       <div class="row mt-5">
         <div class="col-3">
 
         </div>
         <div class="col-6 text-center">
          <h5 class="text-muted">There are no applications to your clubs.</h5>
             <br>
-        <a class="btn" style="background-color: brown; text-transform: uppercase; color: white" href="{% url 'user_list' %}">Invite Users</a>
+        <a class="btn" id="bookwiseGeneralBtn" style="text-transform: uppercase;" href="{% url 'user_list' %}">Invite Users</a>
         </div>
         <div class="col-3">
 
         </div>
       {% else %}
+           <div class="row">
        <h2 class="text-left"><strong>Applications</strong></h2>
       <h5 class="text-muted">Applications made to your clubs</h5>
           <br>
@@ -25,10 +25,11 @@
         <table id="myTable" class="table table-hover table-borderless">
           <thead class="table">
             <tr>
+              <th scope="col"></th>
               <th scope="col">Club</th>
               <th scope="col">Name</th>
               <th scope="col">Age</th>
-              <th scope="col" style="width: 20%;">Date Joined</th>
+              <th scope="col" style="width: 10%">Date Joined</th>
               <th scope="col" style="width: 30%;">Bio</th>
               <th scope="col">Location</th>
               <th scope="col"></th>
@@ -37,14 +38,15 @@
           </thead>
       {% for a in page_obj %}
         <tr>
+        <td><img src="{{ a.club.mini_gravatar }}" style="border-radius: 10px"></td>
           <td>{{ a.club.name }}</td>
           <td>{{ a.applicant.first_name }} {{ a.applicant.last_name }}</td>
           <td>{{ a.applicant.age }}</td>
-          <td style="width: 20%">{{ a.applicant.date_joined }}</td>
+          <td style="width: 10%">{{ a.applicant.date_joined|date:"M Y" }}</td>
           <td>{{ a.applicant.public_bio }}</td>
           <td>{{ a.applicant.location }}</td>
-          <td><a class="btn btn-default" href="{% url 'app_accept' pk=a.pk %}"><span class="btn btn-dark" style="background-color: green">Accept</span></a></td>
-          <td><a class="btn btn-default" href="{% url 'app_remove' pk=a.pk %}"><span class="btn btn-dark" style="background-color: red">Reject</span></a></td>
+          <td><a class="btn btn-outline-success" href="{% url 'app_accept' pk=a.pk %}">Accept</a></td>
+          <td><a class="btn btn-outline-danger" href="{% url 'app_remove' pk=a.pk %}">Reject</a></td>
         </tr>
       {% endfor %}
     </table>
@@ -55,26 +57,28 @@
     <table id="fullTable" class="table table-hover table-borderless" style="display:none">
       <thead class="table" id="fullTableHeader">
         <tr>
-          <th scope="col">Club Applying To</th>
+          <th scope="col"></th>
+          <th scope="col">Club</th>
           <th scope="col">Name</th>
           <th scope="col">Age</th>
-          <th scope="col">Date Joined</th>
-          <th scope="col">Bio</th>
-          <th scope="col">Their Location</th>
+          <th scope="col" style="width: 10%;">Date Joined</th>
+          <th scope="col" style="width: 30%;">Bio</th>
+          <th scope="col">Location</th>
           <th scope="col"></th>
           <th scope="col"></th>
         </tr>
       </thead>
       {% for a in applicants %}
         <tr class="fullTableRow">
+          <td><img src="{{ a.club.mini_gravatar }}"></td>
           <td>{{ a.club.name }}</td>
           <td>{{ a.applicant.first_name }} {{ a.applicant.last_name }}</td>
           <td>{{ a.applicant.age }}</td>
-          <td>{{ a.applicant.date_joined }}</td>
+          <td>{{ a.applicant.date_joined|date:"M Y" }}</td>
           <td>{{ a.applicant.public_bio }}</td>
           <td>{{ a.applicant.location }}</td>
-          <td><a class="btn btn-default" href="{% url 'app_accept' pk=a.pk %}"><span class="btn btn-dark" style="background-color: green">Accept</span></a></td>
-          <td><a class="btn btn-default" href="{% url 'app_remove' pk=a.pk %}"><span class="btn btn-dark" style="background-color: red">Reject</span></a></td>
+          <td><a class="btn btn-outline-success" href="{% url 'app_accept' pk=a.pk %}">Accept</a></td>
+          <td><a class="btn btn-outline-danger" href="{% url 'app_remove' pk=a.pk %}">Reject</a></td>
         </tr>
       {% endfor %}
     </table>

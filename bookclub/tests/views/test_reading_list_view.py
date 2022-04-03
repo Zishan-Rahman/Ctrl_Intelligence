@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import Book, User
 from bookclub.tests.helpers import LogInTester, reverse_with_next
+from django.contrib import messages
 
 class ReadingListTestCase(TestCase, LogInTester):
     """Test case for the Reading List View"""
@@ -60,6 +61,28 @@ class ReadingListTestCase(TestCase, LogInTester):
         self.assertIn(f'<td>{self.book.title}</td>', html)
         self.assertIn(f'<td>{self.book.author}</td>', html)
         self.assertIn(f'<td>{str(self.book.pub_year)}</td>', html)
+
+    def test_reading_list_has_remove_from_reading_list_button(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self.user.currently_reading_books.add(self.book)
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        self.assertIn(f'<td><button type="submit" class="btn" id="bookwiseGeneralBtn" style="font-size: 20px"><i '
+                      f'class="bi bi-bookmarks-fill"></i></button></td>', html)
+
+    def test_remove_from_reading_list_works(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self.user.currently_reading_books.add(self.book)
+        before_reading_list_count = self.user.currently_reading_books.count()
+        response = self.client.get(f'/reading_list/{self.book.id}/remove_book/', follow=True)
+        redirect_url = self.url
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        after_reading_list_count = self.user.currently_reading_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
+
 
     def test_get_reading_list_with_pagination(self):
         """Testing for reading list with pagination."""

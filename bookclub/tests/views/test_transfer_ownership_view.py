@@ -30,8 +30,8 @@ class TransferOwnershipViewsTestCase(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get('/club_profile/1/members')
         html = response.content.decode('utf8')
-        self.assertIn('<a class="btn btn-default"', html)
-        self.assertIn('Transfer Ownership', html)
+        self.assertIn('<td><a class="btn btn-outline-primary"', html)
+        self.assertIn('Transfer', html)
 
     def test_transfer_owner_button_not_visible_for_member(self):
         """Test if transfer owner button is invisble for member."""

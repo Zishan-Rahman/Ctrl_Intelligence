@@ -1,19 +1,35 @@
 {% extends 'base_content.html' %}
 {% block content %}
   <div class="container">
-    <div class="row">
-        <div>
-            <a class="btn btn-default right" href="{% url 'inbox' %}"><span class="btn btn-dark" style="float: right; background-color: brown">Back</span></a>
-        </div>
-      <div class="card col-md-12 mt-5 p-3 shadow-sm">
+  <div class="row">
+      <div class="card w-100 my-auto mx-auto" style="padding: 10px; border-style: groove; border-color: brown">
         
-        <h5>
             {%if request.user == chat.receiver%}
-              {{ chat.user }}
+                <div class="row">
+              <div class="col-1 my-auto" style="margin-right: 64px">
+                         <a class="btn h-100" href="{% url 'inbox' %}" id="bookwiseGeneralBtn" style="text-transform: uppercase; padding: 10px"><i class="bi bi-arrow-left"></i> Back</a>
+                    </div>
+                    <div class="col-1 text-right">
+                        <a href="{% url 'user_profile' chat.user.id %}"><img src="{{ chat.user.mini_gravatar }}" alt="{{ chat.user.get_full_name }}'s gravatar" style="border-radius: 10px"></a>
+                    </div>
+                    <div class="col-4 my-auto text-left">
+                         <h5 class="text-muted fw-bold">{{chat.user.get_full_name}}</h5>
+                    </div>
+                </div>
+
             {%else%}
-              {{ chat.receiver }}
+              <div class="row">
+              <div class="col-1 my-auto" style="margin-right: 64px">
+                         <a class="btn h-100" href="{% url 'inbox' %}" id="bookwiseGeneralBtn" style="text-transform: uppercase; padding: 10px"><i class="bi bi-arrow-left"></i> Back</a>
+                    </div>
+                    <div class="col-1 text-right">
+                        <a href="{% url 'user_profile' chat.receiver.id %}"><img src="{{ chat.receiver.mini_gravatar }}" alt="{{ chat.receiver.get_full_name }}'s gravatar" style="border-radius: 10px"></a>
+                    </div>
+                    <div class="col-4 my-auto text-left">
+                         <h5 class="text-muted fw-bold">{{chat.receiver.get_full_name}}</h5>
+                    </div>
+                </div>
             {%endif%}
-        </h5>
       </div>
     </div>
     {% if message_list.all.count == 0 %}
@@ -29,6 +45,7 @@
         {% if message.sender_user == request.user %}
       <div class="sent-message my-3">
         <p>{{ message.body }}</p>
+        <p id="timestamp">{{ message.date|date:"d M Y G:i" }}</p>
       {% if message.club %}
           <a class="btn float-end" href="{% url 'club_profile' message.club.id %}" style="color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>
           {% endif %}
@@ -36,6 +53,7 @@
     {% elif message.receiver_user == request.user%}
     <div class="received-message my-3">
       <p>{{ message.body }}</p>
+      <p id="timestamp_receiver">{{ message.date|date:"d M Y G:i" }}</p>
     {% if message.club %}
           <a class="btn float-end" href="{% url 'club_profile' message.club.id %}" style="color:white; background-color: brown; text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>
           {% endif %}
@@ -45,11 +63,11 @@
   </div>
   {% endfor %}
   <div class="row">
-    <div class="card col-md-12 p-3 shadow-sm">
+    <div class="card p-3" style="border-style: groove; border-color: brown">
       <form method="POST" action="{% url 'create_message' chat.pk %}" enctype="multipart/form-data">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
-          <button type="submit" class="btn" style="background-color: brown; color: white">Send</button>
+          <button type="submit" class="btn" id="bookwiseGeneralBtn">Send</button>
       </form>
     </div>
 </div>

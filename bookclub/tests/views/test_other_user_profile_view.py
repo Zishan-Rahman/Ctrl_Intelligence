@@ -48,49 +48,51 @@ class OtherUserProfileTest(TestCase):
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<a style="text-decoration: none; color: brown"><h4 class="text-left fw-bold link"><strong>{self.john.followee_count()}</strong></h4></a>', html)
+        self.assertIn(f'<a style="text-decoration: none; color: #292b2c"><h4 class="text-left fw-bold link"><strong>{self.john.followee_count()}</strong></h4></a>', html)
 
     def test_view_profile_shows_followers_number(self):
         """Testing if user profile shows followers number."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<a style="text-decoration: none; color: brown"><h4 class="text-left fw-bold link"><strong>{self.john.follower_count()}</strong></h4></a>', html)
+        self.assertIn(f'<a style="text-decoration: none; color: #292b2c"><h4 class="text-left fw-bold link"><strong>{self.john.follower_count()}</strong></h4></a>', html)
 
     def test_view_profile_has_following_button(self):
         """Testing if user profile has following button."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#following_modal"><b>Following</b></button>', html)
+        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#following_modal">Following</button>', html)
 
     def test_view_profile_has_followers_button(self):
         """Testing if user profile has followers button."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button class="link" data-bs-toggle="modal" data-bs-target="#follower_modal"><b>Followers</b></button>', html)
+        self.assertIn(f'Followers</button>', html)
 
     def test_other_user_profile_has_message_button(self):
         """Testing if user profile has message button."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<a class="btn float-end" href="/user_profile/{self.jane.id}/create_chat/" style="padding: 15px;color:white; background-color: brown; text-transform:uppercase; font-size: 14px">\n                        <i class="bi bi-messenger"></i> Message\n                      </a>', html)
+        self.assertIn(f'style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-dots"></i> Message</a>', html)
 
     def test_other_user_profile_has_invite_button(self):
         """Testing if user profile has invite button."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button id="Invite" class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="padding: 15px; color:white; background-color: brown; text-transform:uppercase; font-size: 14px">\n                      <i class="bi bi-envelope"></i> Invite\n                    </button>', html)
+        self.assertIn(f'<button id="bookwiseGeneralBtn" class="btn btn-lg" data-bs-toggle="modal" '
+                      f'data-bs-target="#exampleModal_1" style="padding: 15px; text-transform:uppercase; font-size: '
+                      f'14px"><i class="bi bi-envelope"></i> Invite</button>', html)
 
     def test_other_user_profile_has_follow_button_when_not_followed(self):
         """Testing if other user profile has folllow button, when not followed."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button class=\'btn btn-lg float-end\' style="padding: 15px; color:white; background-color: royalblue; text-transform:uppercase; font-size: 14px">\n                      Follow\n                    </button>', html)
+        self.assertIn(f'Follow</button>', html)
 
     def test_other_user_profile_has_unfollow_button_when_following_user(self):
         """Testing if other user profile has unfolllow button, when followed."""
@@ -98,7 +100,7 @@ class OtherUserProfileTest(TestCase):
         self.john.toggle_follow(self.jane)
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
-        self.assertIn(f'<button class=\'btn btn-lg float-end\' style="padding: 15px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">\n                      Unfollow\n                    </button>', html)
+        self.assertIn('Unfollow</button>', html)
 
     def test_follow_button_in_other_user_profile_works(self):
         """Testing if other user profile has a working folllow button."""

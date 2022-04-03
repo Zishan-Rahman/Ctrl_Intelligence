@@ -23,17 +23,17 @@ class LogInViewTestCase(TestCase, LogInTester):
         """Testing if the login uses correct template."""
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'login.html')
+        self.assertTemplateUsed(response, 'landing_page.html')
 
     def test_get_login(self):
         """Testing for login page."""
         response = self.client.get(self.url)       #getting login view
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'login.html')
-        form = response.context['form']
+        self.assertTemplateUsed(response, 'landing_page.html')
+        forms = response.context['form']
         next = response.context['next']
-        self.assertTrue(isinstance(form, LogInForm))
-        self.assertFalse(form.is_bound)             #display data entered again
+        self.assertTrue(isinstance(forms['login'], LogInForm))
+        self.assertFalse(forms['login'].is_bound)             #display data entered again
         self.assertFalse(next)                      #line asserts that the template is rendered without value for next
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 0)
@@ -44,11 +44,11 @@ class LogInViewTestCase(TestCase, LogInTester):
         self.url = reverse_with_next('login', destination_url)
         response = self.client.get(self.url)         #getting login view
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'login.html')
-        form = response.context['form']
+        self.assertTemplateUsed(response, 'landing_page.html')
+        forms = response.context['form']
         next = response.context['next']
-        self.assertTrue(isinstance(form, LogInForm))
-        self.assertFalse(form.is_bound)              #display data entered again
+        self.assertTrue(isinstance(forms['login'], LogInForm))
+        self.assertFalse(forms['login'].is_bound)           #display data entered again
         self.assertEqual(next, destination_url)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 0)
@@ -58,10 +58,10 @@ class LogInViewTestCase(TestCase, LogInTester):
         form_input = {'email': 'johndoe@example.org', 'password': 'WrongPassword123'}
         response = self.client.post(self.url, form_input)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'login.html')
-        form = response.context['form']
-        self.assertTrue(isinstance(form, LogInForm))
-        self.assertFalse(form.is_bound)               #display data entered again
+        self.assertTemplateUsed(response, 'landing_page.html')
+        forms = response.context['form']
+        self.assertTrue(isinstance(forms['login'], LogInForm))
+        self.assertFalse(forms['login'].is_bound)            #display data entered again
         self.assertFalse(self._is_logged_in())
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
@@ -73,10 +73,10 @@ class LogInViewTestCase(TestCase, LogInTester):
         form_input = { 'email': '', 'password': 'NoM1yag1Do' }
         response = self.client.post(self.url, form_input)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'login.html')
-        form = response.context['form']
-        self.assertTrue(isinstance(form, LogInForm))
-        self.assertFalse(form.is_bound)
+        self.assertTemplateUsed(response, 'landing_page.html')
+        forms = response.context['form']
+        self.assertTrue(isinstance(forms['login'], LogInForm))
+        self.assertFalse(forms['login'].is_bound)
         self.assertFalse(self._is_logged_in())
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
@@ -87,10 +87,10 @@ class LogInViewTestCase(TestCase, LogInTester):
         form_input = {'email': 'johndoe@example.org', 'password': ''}
         response = self.client.post(self.url, form_input)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'login.html')
-        form = response.context['form']
-        self.assertTrue(isinstance(form, LogInForm))
-        self.assertFalse(form.is_bound)                #display data entered again
+        self.assertTemplateUsed(response, 'landing_page.html')
+        forms = response.context['form']
+        self.assertTrue(isinstance(forms['login'], LogInForm))
+        self.assertFalse(forms['login'].is_bound)               #display data entered again
         self.assertFalse(self._is_logged_in())
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
@@ -143,10 +143,10 @@ class LogInViewTestCase(TestCase, LogInTester):
         form_input = {'email': 'johndoe@example.org', 'password': 'Password123'}            #valid credential
         response = self.client.post(self.url, form_input, follow=True)                      #as we want client to follow redirect all the way to follow
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'login.html')
-        form = response.context['form']
-        self.assertTrue(isinstance(form, LogInForm))
-        self.assertFalse(form.is_bound)                                                     #display data entered again
+        self.assertTemplateUsed(response, 'landing_page.html')
+        forms = response.context['form']
+        self.assertTrue(isinstance(forms['login'], LogInForm))
+        self.assertFalse(forms['login'].is_bound)                                                #display data entered again
         self.assertFalse(self._is_logged_in())
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
@@ -159,10 +159,10 @@ class LogInViewTestCase(TestCase, LogInTester):
         form_input = {'email': 'johndoe@bookclub.com', 'password': 'Password123'}
         response = self.client.post(self.url, form_input, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'login.html')
-        form = response.context['form']
-        self.assertTrue(isinstance(form, LogInForm))
-        self.assertFalse(form.is_bound)
+        self.assertTemplateUsed(response, 'landing_page.html')
+        forms = response.context['form']
+        self.assertTrue(isinstance(forms['login'], LogInForm))
+        self.assertFalse(forms['login'].is_bound)
         self.assertFalse(self._is_logged_in())
         message_list = list(response.context['messages'])
         self.assertEqual(len(message_list), 1)
