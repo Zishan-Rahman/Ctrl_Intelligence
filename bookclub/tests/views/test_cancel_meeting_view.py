@@ -7,7 +7,7 @@ from bookclub.tests.helpers import LogInTester, reverse_with_next
 from datetime import timedelta, date, time, datetime
 
 
-class ClubProfileTest(TestCase, LogInTester):
+class CancelMeetingViewTestCase(TestCase, LogInTester):
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_clubs.json',
                 ]
@@ -27,6 +27,7 @@ class ClubProfileTest(TestCase, LogInTester):
 
 
     def test_cancel_meeting_button_visible_for_owner(self):
+        """Tests to check if the owner can see the cancel button"""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -39,6 +40,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn(f'Cancel Meeting', html)
 
     def test_cancel_meeting_button_is_not_visible_for_member(self):
+        """Tests to check if the members cant see the cancel button"""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -51,6 +53,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertNotIn(f'Cancel Meeting', html)
 
     def test_cancel_meeting_button_is_visible_for_organisers_when_owner_organiser_true(self):
+        """Tests to check if the organisers can see the cancel button if option toggled true"""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -63,6 +66,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertIn(f'Cancel Meeting', html)
 
     def test_cancel_meeting_button_is_not_visible_for_organisers_when_owner_organiser_false(self):
+        """Tests to check if the organisers cant see the cancel button if option toggled false"""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)
@@ -75,6 +79,7 @@ class ClubProfileTest(TestCase, LogInTester):
         self.assertNotIn(f'Cancel Meeting', html)
 
     def test_successful_cancel_meeting(self):
+        """Tests to check if meetings are successfully canceled"""
         self.today = date.today()
         next_hour_date_time = datetime.now() + timedelta(hours=1)
         self.tomorrow = self.today + timedelta(days=1)

@@ -13,6 +13,7 @@ from libgravatar import Gravatar
 
 # books model
 class Book(models.Model):
+    """A model for a book"""
     isbn = models.CharField(unique=True, max_length=12, blank=False)
     title = models.CharField(unique=False, blank=False, max_length=512)
     author = models.CharField(blank=False, max_length=512)
@@ -57,6 +58,7 @@ class Book(models.Model):
 
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
+    """A model for a user"""
     email = models.EmailField(unique=True, max_length=255, blank=False)
     first_name = models.CharField(max_length=30, blank=False)
     last_name = models.CharField(max_length=30, blank=False)
@@ -179,6 +181,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Club(models.Model):
+    """A model for a club"""
     name = models.CharField(unique=True, blank=False, max_length=48)
     description = models.CharField(blank=True, max_length=512)
     location = models.CharField(blank=False, max_length=96)
@@ -374,11 +377,13 @@ class Meeting(models.Model):
 
 # Chat and Message models adapted from https://legionscript.medium.com/building-a-social-media-app-with-django-and-python-part-14-direct-messages-pt-1-1a6b8bd9fc40
 class Chat(models.Model):
+    """A model for a chat between users"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     has_unread = models.BooleanField(default=False)
 
 class Message(models.Model):
+    """A model for a message in a chat"""
     chat = models.ForeignKey('Chat', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
     sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
@@ -389,6 +394,7 @@ class Message(models.Model):
 
 
 class Post(models.Model):
+    """A model for a club post"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, blank=False, on_delete=models.CASCADE)
     text = models.CharField(max_length=250)
@@ -399,6 +405,7 @@ class Post(models.Model):
 
         
 class UserPost(models.Model):
+    """A model for a user post"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -408,5 +415,6 @@ class UserPost(models.Model):
 
   
 class RecommendedBook(models.Model):
+    """A model for a recommended book"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     isbn = models.CharField(unique=False, max_length=12, blank=False)

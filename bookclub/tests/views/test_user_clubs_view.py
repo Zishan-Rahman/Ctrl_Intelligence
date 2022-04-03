@@ -19,9 +19,11 @@ class UserClubsListViewTestCase(TestCase, LogInTester):
         self.url2 = reverse('user_clubs', kwargs={'user_id': self.john.id})
 
     def test_clubs_list_url(self):
+        """Tests the club list url"""
         self.assertEqual(self.url, f'/user_profile/{self.jane.id}/clubs/')
 
     def test_correct_user_clubs_list_template(self):
+        """Tests to check the club list uses the correct template"""
         self.client.login(email=self.john.email, password="Password123")
         response = self.client.get(self.url)
         self._is_logged_in()
@@ -29,11 +31,13 @@ class UserClubsListViewTestCase(TestCase, LogInTester):
         self.assertTemplateUsed(response, "user_clubs.html")
 
     def test_get_clubs_list_redirects_when_not_logged_in(self):
+        """Tests to check the club list redirects if a non-logged in user tries to access it"""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_get_user_clubs_list_with_pagination(self):
+        """Tests to check the club list paginates correctly"""
         self.client.login(email=self.john.email, password='Password123')
         self._create_test_clubs(settings.CLUBS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
@@ -71,6 +75,7 @@ class UserClubsListViewTestCase(TestCase, LogInTester):
         self.assertFalse(page_obj.has_next())
 
     def test_user_clubs_view_redirects_to_my_clubs_view_when_queried_user_is_logged_in_user(self):
+        """Tests to check the club list redirects if a non-logged in user tries to access it"""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url2, follow=True)
         redirect_url = reverse('club_selector')
@@ -81,6 +86,7 @@ class UserClubsListViewTestCase(TestCase, LogInTester):
         return '_auth_user_id' in self.client.session.keys()
 
     def _create_test_clubs(self, club_count=10):
+        """Creates test clubs"""
         for id in range(1, club_count+1, 1):
             Club.objects.create(
                 owner=self.jane,
