@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
+from django.urls.exceptions import NoReverseMatch
 from bookclub.models import User, Club
 from bookclub.tests.helpers import LogInTester, reverse_with_next
 
@@ -82,7 +83,16 @@ class UserClubsListViewTestCase(TestCase, LogInTester):
         redirect_url = reverse('club_selector')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'club_switcher.html')
-
+        
+    def test_user_clubs_view_redirects_to_home_page_when_queried_user_does_not_exist(self):
+        self.client.login(email=self.john.email, password='Password123')
+        url = reverse('user_clubs', kwargs={'user_id': 0})
+        with self.assertRaisesMessage(User.DoesNotExist, "User matching query does not exist."):
+            response = self.client.get(url, follow=True)
+            redirect_url = reverse('home')
+            self.assertRedirects(response, redirect_url, status_code=404, target_status_code=404)
+            self.assertTemplateUsed(response, 'home.html')
+        
     def _is_logged_in(self):
         """Testing if logged in."""
         return '_auth_user_id' in self.client.session.keys()

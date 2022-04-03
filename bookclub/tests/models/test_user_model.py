@@ -38,6 +38,9 @@ class UserModelTestCase(TestCase):
     def test_user_model_age(self):
         """Testing the age getter in the User model."""
         self.assertEqual(self.user_one.get_age(),39)
+        
+    def test_user_model_public_bio(self):
+        self.assertEqual(self.user.get_bio(),"Im just an abstract concept!")
 
     # first name tests
     def test_first_name_must_not_be_blank(self):
@@ -183,3 +186,11 @@ class UserModelTestCase(TestCase):
         self.user_one.email = "johndoe@.org"
         with self.assertRaisesMessage(AssertionError, "Test user should be valid"):
             self._assert_user_is_valid()
+
+    def test_users_have_followers(self):
+        john = self.user
+        jane = self.user2
+        john.toggle_follow(jane)
+        jane.toggle_follow(john)
+        self.assertEqual(john.followers.all()[0], john.get_users_followers()[0])
+        self.assertEqual(jane.followers.all()[0], jane.get_users_followers()[0])

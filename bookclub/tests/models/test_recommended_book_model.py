@@ -21,6 +21,14 @@ class RecommendedBooksModelsTestCase(TestCase):
         self.book_2 = Book.objects.get(pk=2)
         self.rec_book_1 = RecommendedBook.objects.get(pk=1)
         self.rec_book_2 = RecommendedBook.objects.get(pk=2)
+        
+    def test_valid_book_is_valid(self):
+        self._assert_rec_book_is_valid()
+        
+    def test_invalid_book_is_invalid(self):
+        self.rec_book_1.isbn = ""
+        with self.assertRaisesMessage(AssertionError, "Test recommended book should be valid"):
+            self._assert_rec_book_is_valid()
 
     def test_isbn_cannot_be_longer_than_12_characters(self):
         """Test if the isbn exceeds 12 characters, it is invalid."""

@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib import messages
-from bookclub.models import User, Club, Post, Meeting
+from bookclub.models import User, Club, Post, Meeting, Application
 from bookclub.tests.helpers import LogInTester, reverse_with_next
 from datetime import timedelta, date, time, datetime
 
@@ -80,6 +80,34 @@ class ClubProfileTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         self.assertIn('<button type="submit" class="btn w-50 mx-auto" aria-disabled="true" style="padding: 15px; color: white; background-color: #353535; text-transform:uppercase; font-size: 14px"><i class="bi bi-check-square"></i> Applied</button>', html)
+
+    def test_club_profile_view_can_successfully_apply_for_non_member(self):
+        self.client.login(email=self.joe.email, password='Password123')
+        before_application_count = Application.objects.filter(club=self.temple_club).count()
+        response = self.client.post(f'/new_application/{self.temple_club.id}/', follow=True)
+        self.temple_club.refresh_from_db()
+        redirect_url = f'/my_applications/'
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        after_application_count = Application.objects.filter(club=self.temple_club).count()
+        self.assertNotEqual(before_application_count, after_application_count)
+
+    def test_club_profile_view_can_unsuccessfully_apply_for_member(self):
+        self.client.login(email=self.joe.email, password='Password123')
+        self.temple_club.make_member(self.joe)
+        before_application_count = Application.objects.filter(club=self.temple_club).count()
+        response = self.client.post(f'/new_application/{self.temple_club.id}/', follow=True)
+        self.temple_club.refresh_from_db()
+        redirect_url = f'/my_applications/'
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        after_application_count = Application.objects.filter(club=self.temple_club).count()
+        self.assertEqual(before_application_count, after_application_count)
+
 
     def test_club_profile_view_has_meetings_list_button_for_owner(self):
         """Testing if owner has meetings list button on club profile."""

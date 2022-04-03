@@ -27,6 +27,7 @@ class BooksListViewTestCase(TestCase, LogInTester):
         """Testing if the book list uses correct template."""
         self.client.login(email=self.user.email, password="Password123")
         response = self.client.get(self.url)
+        self.assertTrue(self._is_logged_in())
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "book_list.html")
 

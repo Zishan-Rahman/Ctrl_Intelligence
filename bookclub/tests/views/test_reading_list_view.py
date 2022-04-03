@@ -13,6 +13,7 @@ class ReadingListTestCase(TestCase, LogInTester):
 
     def setUp(self):
         self.user = User.objects.get(email='johndoe@bookclub.com')
+        self.jane = User.objects.get(email='janedoe@bookclub.com')
         id = 1234
         book = Book.objects.create(
             isbn=id,
@@ -27,6 +28,7 @@ class ReadingListTestCase(TestCase, LogInTester):
         self.book = book
         self.user.currently_reading_books.add(book)
         self.url = reverse('reading_list', kwargs={'user_id': self.user.id})
+
 
     def test_reading_list__url(self):
         """Testing the reading list url."""
@@ -85,6 +87,13 @@ class ReadingListTestCase(TestCase, LogInTester):
         after_reading_list_count = self.user.currently_reading_books.count()
         self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
+    def test_cant_remove_from_janes_reading_list(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self.jane.currently_reading_books.add(self.book)
+        response = self.client.get(reverse('reading_list', kwargs={'user_id': self.jane.id}))
+        html = response.content.decode('utf8')
+        self.assertNotIn(f'<td><button type="submit" class="btn" id="bookwiseGeneralBtn" style="font-size: 20px"><i '
+                      f'class="bi bi-bookmarks-fill"></i></button></td>', html)
 
     def test_get_reading_list_with_pagination(self):
         """Testing for reading list with pagination."""
