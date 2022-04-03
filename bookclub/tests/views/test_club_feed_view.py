@@ -1,6 +1,5 @@
 # Adapted from Clucker project
-
-"""Tests of the feed view."""
+"""Unit tests for the Club Feed View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -11,7 +10,7 @@ from bookclub.tests.helpers import create_posts, reverse_with_next, LogInTester
 
 
 class ClubFeedViewTestCase(TestCase, LogInTester):
-    """Tests of the feed view."""
+    """Test case for the Club Feed view"""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json",
                 "bookclub/tests/fixtures/default_clubs.json"]
@@ -34,9 +33,11 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
         response = self.client.get(self.url)
 
     def test_club_feed_url(self):
+        """Testing the club feed url."""
         self.assertEqual(self.url, f'/club_profile/{self.bush_club.id}/feed/')
 
     def test_get_club_feed(self):
+        """Testing to get the club feed url."""
         self.client.login(email=self.user.email, password="Password123")
         response = self.client.get(self.url)
         self._create_test_club_posts(settings.POSTS_PER_PAGE*2+3)
@@ -45,6 +46,7 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
         self.assertTrue(self._is_logged_in())
 
     def test_get_club_feed_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to club feed."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url,
@@ -52,6 +54,7 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
         self.assertFalse(self._is_logged_in())
 
     def test_get_club_feed_with_pagination(self):
+        """Testing to get the club feed with pagination."""
         self.client.login(email=self.user.email, password="Password123")
         self._create_test_club_posts(settings.POSTS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
@@ -100,9 +103,11 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
         
 
     def _is_logged_in(self):
+        """Testing if logged in."""
         return '_auth_user_id' in self.client.session.keys()
 
     def _create_test_club_posts(self, club_posts_count=10):
+        """Creation of club posts."""
         for id in range(1, club_posts_count+1, 1):
             user = User.objects.create(
                 email=f'user{id}@test.org',
@@ -119,6 +124,3 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
                 club=self.bush_club,
                 text=f'Test club posts {id}'
             )
-
-    def _is_logged_in(self):
-        return '_auth_user_id' in self.client.session.keys()

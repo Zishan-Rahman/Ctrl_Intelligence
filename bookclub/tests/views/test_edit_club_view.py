@@ -1,4 +1,4 @@
-"""Tests for the edit club view."""
+"""Unit tests for the Edit Club View"""
 from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
@@ -7,8 +7,8 @@ from bookclub.models import *
 from bookclub.tests.helpers import reverse_with_next
 
 
-class ProfileViewTest(TestCase):
-    """Test suite for the profile view."""
+class EditClubViewTest(TestCase):
+    """Test case for the Edit Club View"""
 
     fixtures = [
         'bookclub/tests/fixtures/default_users.json',
@@ -29,9 +29,11 @@ class ProfileViewTest(TestCase):
         }
 
     def test_profile_url(self):
+        """Testing the edit club profile url."""
         self.assertEqual(self.url, '/club_profile/1/edit/')
 
     def test_get_club_profile(self):
+        """Testing for club profile page."""
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -40,11 +42,13 @@ class ProfileViewTest(TestCase):
         self.assertTrue(isinstance(form, EditClubForm))
 
     def test_get_profile_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to club profile."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_cannot_hijack_edit_club(self):
+        """Testing for a hijacked edit club page."""
         self.client.login(email=self.sam.email, password='Password123')
         response = self.client.get(reverse('edit_club', kwargs={'c_pk': self.club.id}), follow=True)
         redirect_url = reverse('club_list')
@@ -53,6 +57,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(messages_list[0].level, messages.ERROR)
 
     def test_unsuccessful_club_update(self):
+        """Testing for unsuccessful club profile updates."""
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         self.form_input['name'] = ''
         before_count = Club.objects.count()
@@ -71,6 +76,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(self.club.meeting_online, True)
 
     def test_unsuccessful_club_update_due_to_duplicate_name(self):
+        """Testing for unsuccessful club profile updates due to duplicate name."""
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         self.form_input['name'] = 'Somerset House Book Club'
         before_count = Club.objects.count()
@@ -89,6 +95,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(self.club.meeting_online, True)
 
     def test_successful_profile_update(self):
+        """Testing for successful club profile update."""
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         before_count = Club.objects.count()
         response = self.client.post(self.url, self.form_input, follow=True)

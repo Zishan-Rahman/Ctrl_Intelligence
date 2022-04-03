@@ -1,3 +1,4 @@
+"""Unit tests for the Club List View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -8,7 +9,7 @@ from bookclub.tests.helpers import LogInTester, reverse_with_next
 # clubs views test is adapted from the chess club project
 
 class ClubsListViewTestCase(TestCase, LogInTester):
-    """Tests of the club view."""
+    """Test case for the Club List View"""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json"]
 
@@ -17,9 +18,11 @@ class ClubsListViewTestCase(TestCase, LogInTester):
         self.user = User.objects.get(pk=1)
 
     def test_clubs_list_url(self):
+        """Testing the club list url."""
         self.assertEqual(self.url, '/clubs/')
 
     def test_correct_club_list_template(self):
+        """Testing if the club list uses correct template."""
         self.client.login(email=self.user.email, password="Password123")
         response = self.client.get(self.url)
         self._is_logged_in()
@@ -27,11 +30,13 @@ class ClubsListViewTestCase(TestCase, LogInTester):
         self.assertTemplateUsed(response, "club_list.html")
 
     def test_get_clubs_list_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to my clubs list."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_get_club_list_with_pagination(self):
+        """Testing for club list with pagination."""
         self.client.login(email=self.user.email, password='Password123')
         self._create_test_clubs(settings.CLUBS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
@@ -69,9 +74,11 @@ class ClubsListViewTestCase(TestCase, LogInTester):
 
 
     def _is_logged_in(self):
+        """Testing if logged in."""
         return '_auth_user_id' in self.client.session.keys()
 
     def _create_test_clubs(self, club_count=10):
+        """Creation of a club."""
         for id in range(1, club_count+1, 1):
             User.objects.create(
                 email=f'user{id}@test.org',

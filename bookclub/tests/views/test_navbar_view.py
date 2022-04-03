@@ -1,4 +1,4 @@
-"""Tests of the navbar view."""
+"""Unit tests of the Navbar View."""
 from django.test import TestCase
 from django.urls import reverse
 from bookclub.models import User, Club
@@ -6,7 +6,7 @@ from bookclub.tests.helpers import reverse_with_next
 
 
 class NavbarViewTestCase(TestCase):
-    """Tests of the navbar view."""
+    """Test case for the Navbar View"""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json']
 
@@ -16,6 +16,7 @@ class NavbarViewTestCase(TestCase):
         self.bush_club.make_member(self.john)
 
     def test_navbar_displays_search_on_home_page(self):
+        """Testing if navbar is displayed on home page."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('home'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -25,6 +26,7 @@ class NavbarViewTestCase(TestCase):
                       'type="submit">Search</button>',  html)
 
     def test_navbar_displays_search_on_clubs_page(self):
+        """Testing if navbar is displayed on clubs page."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('club_list'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -34,6 +36,7 @@ class NavbarViewTestCase(TestCase):
                       'type="submit">Search</button>',  html)
 
     def test_navbar_displays_search_on_users_page(self):
+        """Testing if navbar is displayed on users page."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_list'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -43,6 +46,7 @@ class NavbarViewTestCase(TestCase):
                       'type="submit">Search</button>',  html)
 
     def test_navbar_displays_search_on_books_page(self):
+        """Testing if navbar is displayed on books page."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('book_list'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -52,6 +56,7 @@ class NavbarViewTestCase(TestCase):
                       'type="submit">Search</button>',  html)
 
     def test_navbar_displays_search_on_edit_profile_page(self):
+        """Testing if navbar is displayed on edit profile page."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('profile'))
         self.assertTemplateUsed(response, 'partials/menu.html')
@@ -61,6 +66,7 @@ class NavbarViewTestCase(TestCase):
                       'type="submit">Search</button>',  html)
 
     def test_navbar_displays_search_on_edit_password_page(self):
+        """Testing if navbar is displayed on edit password page."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('password'))
         self.assertTemplateUsed(response, 'partials/menu.html')
