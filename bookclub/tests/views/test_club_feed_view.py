@@ -87,7 +87,7 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())
         
-    def test_club_feed_view_context_data(self):
+    def test_club_feed_view_shows_relevant_data_when_logged_in(self):
         self.client.login(email=self.user.email, password="Password123")
         self._create_test_club_posts(settings.POSTS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
