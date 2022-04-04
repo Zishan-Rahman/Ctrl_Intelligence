@@ -24,12 +24,9 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
     def test_post_club_feed(self):
         self.client.login(email=self.user.email, password="Password123")
         self._create_test_club_posts(2)
-        form_data = {'text': 'This is bush house book club post'}
-        form = PostForm(form_data)
-        response = self.client.post(self.url, {"author": self.user, "club": self.bush_club, "form": form})
+        response = self.client.get(self.url, {"club_id": self.bush_club.id})
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self._is_logged_in())
-        self.assertTrue(form.is_valid)
         response = self.client.get(self.url)
 
     def test_club_feed_url(self):
