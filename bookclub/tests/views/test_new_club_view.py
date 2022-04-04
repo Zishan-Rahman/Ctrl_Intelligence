@@ -4,6 +4,7 @@ from django.test import TestCase
 from bookclub.forms import ClubForm
 from django.urls import reverse
 from bookclub.models import User, Club
+from django.contrib import messages
 
 class NewClubViewTestCase(TestCase):
     """Unit tests of the create club view"""
@@ -57,6 +58,11 @@ class NewClubViewTestCase(TestCase):
         self.assertEqual(after_count, before_count + 1)
         response_url = reverse("club_selector")
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        self.assertEqual(messages_list[0].message,
+                         "Club has been created!")
         club = Club.objects.get(name='BookBusters')
         self.assertEqual(club.name, 'BookBusters')
         self.assertEqual(club.location, 'Cardiff')
