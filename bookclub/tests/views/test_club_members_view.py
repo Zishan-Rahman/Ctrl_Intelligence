@@ -101,6 +101,15 @@ class ClubMembersViewTestCase(TestCase, LogInTester):
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())
+        
+    def test_club_members_view_redirects_when_club_does_not_exist(self):
+        """Testing for redirect to home page when non-existent club queried."""
+        self.client.login(email=self.user.email, password='Password123')
+        with self.assertRaisesMessage(Club.DoesNotExist, "User matching query does not exist."):
+            response = self.client.get('/club_profile/100000000000/members', follow=True)
+            redirect_url = reverse('home')
+            self.assertRedirects(response, redirect_url, status_code=404, target_status_code=404)
+            self.assertTemplateUsed(response, 'home.html')
 
     def _create_test_club_members(self, user_count=10):
         """Creation of club members."""
