@@ -30,7 +30,18 @@ class SearchBarViewTest(TestCase):
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-
+        
+    # def test_search_for_something(self):
+    #     """Test if searchbar works adequately."""
+    #     self.client.login(email=self.user.email, password='Password123')
+    #     response = self.client.post(reverse('search_page'), kwargs={'query': 'Alison'})
+    #     context = response.context
+    #     print(context)
+    #     books = context['books']
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTemplateUsed(response, 'search_page.html')
+    #     self.assertQuerysetEqual(books, Book.objects.filter(title__contains='Alison'), transform= lambda x:x)
+        
     def test_queryset_filter(self):
         """Testing for working filter feature."""
         response = self.client.get(reverse('login'))
