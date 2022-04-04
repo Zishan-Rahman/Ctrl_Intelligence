@@ -29,18 +29,6 @@ class UserFeedView(LoginRequiredMixin, ListView):
     #     context['form'] = UserPostForm()
     #     return context
 
-    def post(self, request, *args, **kwargs):
-        user_id = self.kwargs['user_id']
-        user = User.objects.get(id=user_id)
-        form = UserPostForm()
-        posts = UserPost.objects.filter(author=user)
-        paginator = Paginator(posts, settings.POSTS_PER_PAGE)
-        page_number = self.request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        if form.is_valid():
-            return redirect('user_feed')
-        return render(request, 'user_feed.html', {"user": user, "form": form, "posts": posts, "page_obj": page_obj})
-
     def get(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
         user = User.objects.get(id=user_id)

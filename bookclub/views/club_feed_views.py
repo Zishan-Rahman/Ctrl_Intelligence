@@ -36,18 +36,6 @@ class ClubFeedView(LoginRequiredMixin, ListView):
         context['page_obj'] = page_obj
         return context
 
-    def post(self, request, *args, **kwargs):
-        current_club_id = self.kwargs['club_id']
-        club = Club.objects.all().get(pk=current_club_id)
-        form = PostForm()
-        posts = Post.objects.filter(club=club)
-        paginator = Paginator(posts, settings.POSTS_PER_PAGE)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        if form.is_valid():
-            return redirect('feed')
-        return render(request, 'feed.html', {"author": request.user, "club": club, "form": form, "posts": posts, 'page_obj': page_obj})
-
     def get(self, request, *args, **kwargs):
         current_club_id = self.kwargs['club_id']
         club = Club.objects.all().get(pk=current_club_id)
