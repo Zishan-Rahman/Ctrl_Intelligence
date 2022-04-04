@@ -101,3 +101,21 @@ class PromoteDemoveViewsTestCase(TestCase):
         afterOrganiserCount = self.bush_club.get_number_organisers()
         self.assertEqual(beforeMemberCount, afterMemberCount - 1)
         self.assertEqual(beforeOrganiserCount, afterOrganiserCount + 1)
+
+    def test_unsuccessful_demotion(self):
+        """Testing for unsuccessful demotion of an organiser in a club."""
+        self.client.login(email=self.joe.email, password='Password123')
+        beforeMemberCount = self.bush_club.get_number_of_members()
+        beforeOrganiserCount = self.bush_club.get_number_organisers()
+        response = self.client.get('/club_profile/1/members/2/demote', follow=True)
+        redirect_url = '/club_profile/1/members'
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        afterMemberCount = self.bush_club.get_number_of_members()
+        afterOrganiserCount = self.bush_club.get_number_organisers()
+        self.assertNotEqual(beforeMemberCount, afterMemberCount - 1)
+        self.assertNotEqual(beforeOrganiserCount, afterOrganiserCount + 1)
+        self.assertEqual(messages_list[0].message,
+                         "You do not have authority to do this!")
