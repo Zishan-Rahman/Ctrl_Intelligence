@@ -154,6 +154,19 @@ class ApplicationViewTestCase(TestCase):
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        
+    def test_redirect_if_application_does_not_exist(self):
+        """Test application views redirect if an application doesn't exist."""
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get('/applications/accept/10000000000000/', follow=True)
+        redirect_url = reverse('applications')
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.client.logout()
+        self.client.login(email=self.sam.email, password='Password123')
+        response = self.client.get('/applications/remove/10000000000000/', follow=True)
+        redirect_url = reverse('applications')
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.client.logout()
 
     def test_get_application_list_with_pagination(self):
         """Testing for application list with pagination."""
