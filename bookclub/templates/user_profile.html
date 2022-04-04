@@ -8,7 +8,7 @@
             <div class="card w-100" style="border-style: groove; border-color: brown">
     <div class="card-body">
         <div class="row">
-            <div class="col-6 text-center">
+            <div class="col-6 text-center mb-2">
                 <img src="{{ user.gravatar }}" alt="Gravatar of {{ user.get_full_name }}" class="rounded-circle profile-image">
             </div>
             <div class="col-6">
@@ -18,9 +18,9 @@
                       {% csrf_token %}
                     {%if followable %}
                     {% if following %}
-                    <button class="btn btn-lg btn-outline-secondary float-end" style="padding: 15px; text-transform:uppercase; font-size: 14px">Unfollow</button>
+                    <button class="btn btn-lg float-end" id="unfollowBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px">Unfollow</button>
                     {% else %}
-                    <button class="btn btn-lg btn-outline-primary float-end" style="padding: 15px; text-transform:uppercase; font-size: 14px">Follow</button>
+                    <button class="btn btn-lg float-end" id="followBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px">Follow</button>
                     {% endif %}
                     {%elif user.id == request.user.id%}
                     <a class="btn float-end" href="{% url 'edit_profile' %}" id="bookwiseGeneralBtn" style="padding: 15px; text-transform:uppercase; font-size: 14px">
@@ -40,12 +40,12 @@
                 <small class="text-muted fw-bold">{{user.email}}</small>
                     </div>
               <div class="col-3">
-                  <a style="text-decoration: none; color: brown"><h4 class="text-left fw-bold link"><strong>{{user.followee_count}}</strong></h4></a>
-                <button class="link" data-bs-toggle="modal" data-bs-target="#following_modal"><b>Following</b></button>
+                  <a style="text-decoration: none; color: #292b2c"><h4 class="text-left fw-bold link"><strong>{{user.followee_count}}</strong></h4></a>
+                <button class="link" data-bs-toggle="modal" data-bs-target="#following_modal">Following</button>
             </div>
             <div class="col-3">
-                <a style="text-decoration: none; color: brown"><h4 class="text-left fw-bold link"><strong>{{user.follower_count}}</strong></h4></a>
-              <button class="link" data-bs-toggle="modal" data-bs-target="#follower_modal"><b>Followers</b></button>
+                <a style="text-decoration: none; color: #292b2c"><h4 class="text-left fw-bold link"><strong>{{user.follower_count}}</strong></h4></a>
+              <button class="link" data-bs-toggle="modal" data-bs-target="#follower_modal">Followers</button>
 
           </div>
 
@@ -91,20 +91,34 @@
                 </div>
 
             </div>
-            <div class="row">
         {% if posts %}
             {% for post in posts %}
 
-                <div class="card w-100 mx-auto" style="margin-top: 10px; border-color: brown">
+                <div class="card mt-2 w-100" id="homepagePosts" style="border-color: brown; border-style: groove">
+                  <div class="row g-0">
+                    <div class="col-3 my-auto">
+                      <img src="{{ post.author.gravatar}}" id="post_icon" class="img-fluid rounded-circle" alt="{{post.author}}'s gravatar">
+                    </div>
+                    <div class="col-9">
+                      <div class="card-body">
+                        <p class="card-text fw-bold">{{ post.text }}</p>
+                          <div class="row">
+                              <div class="col-6">
+                                  <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-person-fill"></i><a href="{% url 'user_profile' post.author.id %}" style="text-decoration: none; color: grey"> <strong>{{ post.author.get_full_name }}</strong></a></p>
 
-                            <div class="card-body">
-                            <h6 class="card-title text-left"><strong>{{ post.text }}</strong></h6>
-                                <p class="card-text" style="color: #B0B0B0; font-size: 14px"><i class="bi bi-person-fill"></i> {{ post.author.get_full_name }}</p>
-                            </div>
+                              </div>
+                              <div class="col-6">
 
-                        <div class="card-footer">
-                            <small class="text-muted">{{ post.created_at|date:"M y G:i"}}</small>
-                        </div>
+                              </div>
+                          </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                <div class="card-footer">
+                        <small class="text-muted">{{ post.created_at|date:"d M Y G:i" }}</small>
+                    </div>
                 </div>
             {% endfor %}
         {% else %}
@@ -117,7 +131,6 @@
             </div>
 
     {% endif %}
-    </div>
 
         </div>
         <div class="col-3">
@@ -130,7 +143,7 @@
                 </div>
 
                 <div class="col-6">
-                    <a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'create_chat_from_profile' user.id %}" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-messenger"></i> Message</a>
+                    <a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'create_chat_from_profile' user.id %}" style="padding: 15px; text-transform:uppercase; font-size: 14px"><i class="bi bi-chat-dots"></i> Message</a>
                 </div>
 
 
@@ -138,21 +151,21 @@
             {% endif %}
 
 
-            <div class="row mt-3" style="margin-left: 5px">
+            <div class="row mt-3" style="">
 
                 <table class="table table-borderless table-hover" style="border-radius: 5px; border-style: groove; border-color: brown">
                     <tr>
                         <td>
                             <i class="bi bi-book " style="color: brown"></i>
                         </td>
-                        <td style="color: brown;">{{ user.favourite_genre }}</td>
+                        <td style="color: #292b2c;">{{ user.favourite_genre }}</td>
                     </tr>
 
                     <tr>
                         <td>
-                            <i class="bi bi-geo-alt" style="color: brown"></i>
+                             <i class="bi bi-geo-alt" style="color: brown"></i>
                         </td>
-                        <td style="color: brown;">{{ user.location }}</td>
+                        <td style="color: #292b2c;">{{ user.location }}</td>
                     </tr>
                     <tr>
                         <td>
@@ -160,14 +173,14 @@
                             <path fill-rule="evenodd" d="M8 9.984C10.403 9.506 12 7.48 12 5a4 4 0 0 0-8 0c0 2.48 1.597 4.506 4 4.984ZM13 5c0 2.837-1.789 5.227-4.52 5.901l.244.487a.25.25 0 1 1-.448.224l-.008-.017c.008.11.02.202.037.29.054.27.161.488.419 1.003.288.578.235 1.15.076 1.629-.157.469-.422.867-.588 1.115l-.004.007a.25.25 0 1 1-.416-.278c.168-.252.4-.6.533-1.003.133-.396.163-.824-.049-1.246l-.013-.028c-.24-.48-.38-.758-.448-1.102a3.177 3.177 0 0 1-.052-.45l-.04.08a.25.25 0 1 1-.447-.224l.244-.487C4.789 10.227 3 7.837 3 5a5 5 0 0 1 10 0Zm-6.938-.495a2.003 2.003 0 0 1 1.443-1.443C7.773 2.994 8 2.776 8 2.5c0-.276-.226-.504-.498-.459a3.003 3.003 0 0 0-2.46 2.461c-.046.272.182.498.458.498s.494-.227.562-.495Z"/>
                           </svg>
                         </td>
-                        <td style="color: brown;">{{ user.age }}</td>
+                        <td style="color: #292b2c;">{{ user.age }}</td>
                     </tr>
 
                     <tr>
                         <td>
                             <i class="bi bi-briefcase" style="color: brown"></i>
                         </td>
-                        <td style="color: brown;">{{ user.date_joined|date:"F Y" }}</td>
+                        <td style="color: #292b2c;;">{{ user.date_joined|date:"F Y" }}</td>
                     </tr>
 
 
@@ -178,29 +191,29 @@
                         </a>
                       </td>
                       <td>
-                        <a href="{% url 'user_clubs' user.id %}" style="text-decoration: none; color: brown;">
-                          {{ user.get_number_of_clubs }} clubs
+                        <a href="{% url 'user_clubs' user.id %}" style="text-decoration: none; color: #292b2c;">
+                           {{ user.get_number_of_clubs }} clubs
                         </a>
                       </td>
                     </tr>
                 </table>
             </div>
 
-                <div class="row mt-3" style="margin-left: 5px">
+                <div class="row mt-3" style="">
                     <h6 style="background-color: brown; padding: 10px; color: white;text-align: center;">Reading List</h6>
                 </div>
                 <div class="row">
 
                 {% if currently_reading_books %}
-                    <a class="text-left" href="{% url 'reading_list' user.id %}" style="text-decoration: none; margin-left: 5px">View All</a>
+                    <a class="text-left" href="{% url 'reading_list' user.id %}" style="text-decoration: none;">View All</a>
 
-                    <table class="table table-hover table-borderless" style="margin-left: 5px; border-style: groove; border-color: brown">
+                    <table class="table table-hover table-borderless" style="border-style: groove; border-color: brown">
 
 
                     {% for book in currently_reading_books %}
 
                   <tr>
-                        <td>
+                        <td style="width: 50%">
                             <img src="{{ book.medium_url }}" alt="{{ book.title }}'s cover image">
                         </td>
                         <td>{{ book.title }}</td>
@@ -222,7 +235,6 @@
         </div>
     </div>
 
-    </div>
 
 
 
@@ -254,20 +266,30 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table table-hover table-borderless">
-                     <tr>
+
+            {% if user.followers.all %}
+                <table class="table table table-hover table-borderless" style="max-height: 600px; overflow: auto; display: inline-block;">
+
+                <thead>
+              <tr>
+                <th scope="col" style="width: 25%"></th>
+                <th scope="col" style="width: 50%"></th>
+                <th scope="col" style="width: 25%"></th>
+              </tr>
+            </thead>
+
                       {% for entry in user.followers.all %}
-                      <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
+                      <tr>
                         <td><a href="{% url 'user_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
-                        <td>{{ entry.first_name }} {{ entry.last_name }}</td>
-                        <td>
+                        <td class="text-left">{{ entry.first_name }} {{ entry.last_name }}</td>
+                        <td class="text-center">
                           {%if entry.id != request.user.id %}
                             {%if entry in user.followees.all %}
-                            <a class="btn" href="{% url 'follow_from_user_profile' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                            <a class="btn" href="{% url 'unfollow_from_user_profile' entry.id %}" id="unfollowBtn" style="padding-top: 10px; padding-bottom: 10px; text-transform:uppercase; font-size: 14px">
                               Unfollow
                             </a>
                             {%else%}
-                            <a class="btn" href="{% url 'follow_from_user_profile' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: blue; text-transform:uppercase; font-size: 14px">
+                            <a class="btn" href="{% url 'follow_from_user_profile' entry.id %}" id="followBtn" style="padding-top: 10px; padding-bottom: 10px; text-transform:uppercase; font-size: 14px">
                               Follow
                             </a>
                             {% endif %}
@@ -276,6 +298,10 @@
                       </tr>
                       {% endfor %}
                   </table>
+
+                {% else %}
+                    <p class="text-muted text-center"><b>Nothing to see here</b></p>
+            {% endif %}
             </div>
           </div>
         </div>
@@ -291,15 +317,25 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table table-hover table-borderless">
-                     <tr>
+
+            {% if user.followees.all %}
+                <table class="table table table-hover table-borderless" style="max-height: 600px; overflow: auto; display: inline-block;">
+
+                <thead>
+              <tr>
+                <th scope="col" style="width: 25%"></th>
+                <th scope="col" style="width: 50%"></th>
+                <th scope="col" style="width: 25%"></th>
+              </tr>
+            </thead>
+
                       {% for entry in user.followees.all %}
-                      <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
+                      <tr>
                         <td><a href="{% url 'user_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
-                        <td>{{ entry.first_name }} {{ entry.last_name }}</td>
-                        <td>
+                        <td class="text-left">{{ entry.first_name }} {{ entry.last_name }}</td>
+                        <td class="text-center">
                           {%if entry.id != request.user.id %}
-                          <a class="btn" href="{% url 'follow_from_user_profile' entry.id %}" style="padding-top: 10px; padding-bottom: 10px; color:white; background-color: grey; text-transform:uppercase; font-size: 14px">
+                          <a class="btn" href="{% url 'unfollow_from_user_profile' entry.id %}" id="unfollowBtn" style="padding-top: 10px; padding-bottom: 10px; text-transform:uppercase; font-size: 14px">
                             Unfollow
                           </a>
                           {% endif %}
@@ -307,6 +343,12 @@
                       </tr>
                       {% endfor %}
                   </table>
+                {% else %}
+
+                <p class="text-muted text-center"><b>Nothing to see here</b></p>
+
+            {% endif %}
+
             </div>
           </div>
         </div>
@@ -320,21 +362,37 @@
               </h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body mx-auto w-100 text-left">
 
-                <input type='text' onkeyup="searchFunction()" id='txt_searchall' class="form-control w-50" placeholder="Search for clubs..." size="30">&nbsp
-                <table id="myTable" class="table table-hover table-borderless">
-                     <tr>
+                {% if user_clubs %}
+
+                <input type='text' onkeyup="searchFunction()" id='txt_searchall' class="form-control" placeholder="Search for clubs..." size="30">&nbsp
+                <table id="myTable" class="table table-hover table-borderless mx-auto w-100" style="max-height: 600px; overflow: auto; display: inline-block;">
+                <thead class="w-100 mx-auto">
+
+                <tr>
+                <th scope="col" style="width: 25%"></th>
+                <th scope="col" style="width: 50%"></th>
+                <th scope="col" style="width: 25%"></th>
+                </tr>
+            </thead>
+
                       {% for entry in user_clubs %}
-                      <tr class="clickable-row" data-href="{% url 'club_profile' entry.id %}">
-                        <td><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
-                        <td>{{ entry.name }}</td>
-                        <td><a class="btn" id="bookwiseGeneralBtn" href="{% url 'invite_message' user.id entry.id %}">Invite</a></td>
+                      <tr>
+                        <td style="width: 25%"><a href="{% url 'club_profile' entry.id %}"><img src="{{ entry.mini_gravatar }}" alt="Gravatar of club {{ entry.name }}" class="rounded-circle" ></a></td>
+                        <td style="width: 25%">{{ entry.name }}</td>
+                        <td style="width: 25%"><a class="btn float-end" id="bookwiseGeneralBtn" href="{% url 'invite_message' user.id entry.id %}" style="padding-top: 10px; padding-bottom: 10px; text-transform:uppercase; font-size: 14px">Invite</a></td>
                       </tr>
                       {% endfor %}
                   </table>
 
-                  </body>
+                {% else %}
+
+                <p class="text-muted text-center"><b>Nothing to see here</b></p>
+
+
+            {% endif %}
+
             </div>
           </div>
         </div>

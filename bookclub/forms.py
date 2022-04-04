@@ -172,10 +172,12 @@ class ClubForm(forms.ModelForm):
 
 
 class DateInput(forms.DateInput):
+    """Class to have calendar on date input"""
     input_type = 'date'
 
 
 class TimeInput(forms.DateInput):
+    """Class to have clock on time input"""
     input_type = 'time'
 
 
@@ -198,7 +200,7 @@ class ScheduleMeetingForm(forms.ModelForm):
         now = timezone.now()
         date = self.cleaned_data['date']
         start_time = self.cleaned_data['start_time']
-        if date < datetime.now().date():
+        if date < datetime.now().date(): #make sure meeting is not in the past
             raise forms.ValidationError("The meeting cannot be in the past!")
         elif date == datetime.now().date() and start_time < datetime.now().time():
             raise forms.ValidationError("The meeting cannot be in the past!")
@@ -263,7 +265,9 @@ class PostForm(forms.ModelForm):
 
 
 class UserPostForm(forms.ModelForm):
-
+    """Form to ask user for post text.
+    The post author must be by the post creator.
+    """
     class Meta:
         """Form options."""
 

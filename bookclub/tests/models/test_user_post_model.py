@@ -1,12 +1,16 @@
 # adapted from clucker
-
+"""Unit tests for the User Post model"""
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from bookclub.models import UserPost, User, Club
 
 
 class UserPostTest(TestCase):
-    fixtures = ["bookclub/tests/fixtures/default_users.json"]
+    """Test case for the User Post model of Bookwise"""
+
+    fixtures = [
+        # Some already defined users to use for our application
+        "bookclub/tests/fixtures/default_users.json"]
 
     def setUp(self):
         super(TestCase, self).setUp()
@@ -16,23 +20,27 @@ class UserPostTest(TestCase):
             text="example",
         )
 
-    def test_valid_message(self):
+    def test_valid_post(self):
+        """Test if the user post is valid."""
         try:
             self.post.full_clean()
         except ValidationError:
-            self.fail("Test message should be valid")
+            self.fail("Test post should be valid")
 
     def test_author_must_not_be_blank(self):
+        """Testing if the author is blank, a validation error is raised."""
         self.post.author = None
-        with self.assertRaises(ValidationError):
-            self.post.full_clean()
+        with self.assertRaisesMessage(AssertionError, "Test post should be valid"):
+            self.test_valid_post()
 
     def test_text_must_not_be_blank(self):
+        """Testing if the text is blank, a validation error is raised."""
         self.post.text = ''
-        with self.assertRaises(ValidationError):
-            self.post.full_clean()
+        with self.assertRaisesMessage(AssertionError, "Test post should be valid"):
+            self.test_valid_post()
 
     def test_text_must_not_be_overlong(self):
+        """Testing if the text is too long, a validation error is raised."""
         self.post.text = 'x' * 281
-        with self.assertRaises(ValidationError):
-            self.post.full_clean()
+        with self.assertRaisesMessage(AssertionError, "Test post should be valid"):
+            self.test_valid_post()

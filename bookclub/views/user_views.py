@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db.models import Q
 from django.contrib import messages
+from django.template import context
 from bookclub.templates import *
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -16,26 +17,9 @@ from django.template.loader import render_to_string
 from bookclub.views import config
 from django.core.paginator import Paginator
 
-
-@login_required
-def user_list(request):
-    users = []
-    for user in User.objects.all():
-        users.append({
-            "id": user.id,
-            "first_name": user.get_first_name,
-            "last_name": user.get_last_name,
-            "email": user.get_email,
-            "public_bio": user.get_bio,
-            "favourite_genre": user.get_favourite_genre,
-            "mini_gravatar": user.mini_gravatar(),
-            "gravatar": user.gravatar()
-        })
-    return render(request, 'user_list.html', {'users': users})
-
 class UserClubsListView(LoginRequiredMixin, ListView):
     """List of clubs owned by and participated by the user"""
-    
+
     model = User
     template_name = "user_clubs.html"
     context_object_name = 'user'
@@ -51,7 +35,7 @@ class UserClubsListView(LoginRequiredMixin, ListView):
             return super().get(request, *args, **kwargs)
         except Http404:
             return redirect('home')
-        
+
     def get_queryset(self):
         """Return the list of clubs for a specific user"""
         return User.objects.get(id=self.kwargs['user_id']).get_all_clubs()
@@ -70,7 +54,7 @@ class UserClubsListView(LoginRequiredMixin, ListView):
         context['all_clubs'] = all_clubs
         context['page_obj'] = page_obj
         context['user'] = self.request.user
-        return context    
+        return context
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""
@@ -78,11 +62,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = UserForm
     template_name = "edit_profile.html"
     form_class = UserForm
-
-    def get_object(self):
-        """Return the object (user) to be updated."""
-        user = self.request.user
-        return user
 
     def get_success_url(self):
         """Return redirect URL after successful update."""
@@ -157,10 +136,12 @@ def follow_toggle(request, user_id):
         current_user.toggle_follow(followee)
         messages.add_message(request, messages.SUCCESS, f'You now follow {followee.get_full_name()}!')
 
+
 @login_required
 def follow_from_user_list(request, user_id):
     follow_toggle(request, user_id)
     return redirect('user_list')
+
 
 @login_required
 def follow_from_user_profile(request, user_id):
@@ -175,15 +156,18 @@ def unfollow(request, user_id):
     current_user._unfollow(followee)
     messages.add_message(request, messages.ERROR, f'You unfollowed {followee.get_full_name()}!')
 
+
 @login_required
 def unfollow_from_user_list(request, user_id):
     unfollow(request, user_id)
     return redirect('user_list')
 
+
 @login_required
 def unfollow_from_user_profile(request, user_id):
     unfollow(request, user_id)
     return redirect('user_profile', user_id=user_id)
+
 
 def club_util(request):
     user_clubs_list = request.user.get_all_clubs()
@@ -199,8 +183,11 @@ def inviteMessage(request, user_id, club_id):
         'sender': request.user.first_name,
         'club_name': club.name})
     chat_query = Chat.objects.filter(user=request.user, receiver=receiver)
+    r_chat_query = Chat.objects.filter(receiver=request.user, user=receiver)
     if chat_query:
         chat = chat_query.get()
+    elif r_chat_query:
+        chat = r_chat_query.get()
     else:
         chat = Chat(user=request.user, receiver=receiver)
         chat.save()

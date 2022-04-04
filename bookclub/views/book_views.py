@@ -13,11 +13,12 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
 from bookclub.models import Book, Club, User, Rating
 from django.contrib import messages
+from bookclub.views import config
 
 
 class BooksListView(LoginRequiredMixin, ListView):
     """View that shows a list of all books."""
-
+    
     model = Book
     template_name = "book_list.html"
     context_object_name = "books"
@@ -185,7 +186,6 @@ def unfavourite_book_list(request, book_id):
 def unfavourite_book_profile(request, book_id):
     unfavourite(request, book_id)
     return redirect('book_profile', book_id=book_id)
-
 
 class MyBookRatings(LoginRequiredMixin, ListView):
     model = Rating

@@ -1,8 +1,8 @@
 # Adapted from Clucker project
 
-"""Tests of the feed view."""
+"""Unit tests for the User Feed View"""
 from django.conf import settings
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from bookclub.forms import UserPostForm
 from bookclub.models import User, UserPost
@@ -10,7 +10,7 @@ from bookclub.tests.helpers import create_posts, reverse_with_next, LogInTester
 
 
 class UserFeedViewTestCase(TestCase, LogInTester):
-    """Tests of the feed view."""
+    """Test case for the User Feed View"""
 
     fixtures = ["bookclub/tests/fixtures/default_users.json"]
 
@@ -19,10 +19,40 @@ class UserFeedViewTestCase(TestCase, LogInTester):
         self.url = reverse('user_feed', kwargs={'user_id': self.user.id})
 
     def test_user_feed_url(self):
+        """Testing the user feed url."""
         self.assertEqual(self.url, f'/user_profile/{self.user.id}/user_feed/')
 
+    def test_post_user_feed(self):
+        self.client.login(email=self.user.email, password="Password123")
+        self._create_test_user_posts(2)
+        form_data = {'text': 'This is a user post'}
+        form = UserPostForm(form_data)
+        response = self.client.post(self.url, {"author": self.user, "form": form})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(self._is_logged_in())
+        self.assertTrue(form.is_valid)
+        response = self.client.get(self.url)
+
+    def test_user_feed_details(self):
+        self.client = Client()
+        self.client.login(email=self.user.email, password="Password123")
+        posts = UserPost.objects.create(
+            author=self.user,
+            text=f'Sample user post'
+        )
+        response = self.client.get(self.url)
+        self.assertEqual(response.context['user'], self.user)
+        self.assertIn(posts, response.context['posts'])
+        self.assertIsInstance(response.context['form'], UserPostForm)
+        html = response.content.decode('utf8')
+        self.assertIn('<h2 class="text-left fw-bold"><strong>Posts</strong></h2>', html)
+        self.assertIn(f'<h5 class="text-left text-muted">{self.user.get_full_name()}</h5>', html)
+        self.assertIn(f'<td>{self.user.get_full_name()}</td>', html)
+        self.assertIn(f'<td>Sample user post</td>', html)
+
     def test_get_user_feed(self):
-        self.client.login(email=self.user, password="Password123")
+        """Test for user feed."""
+        self.client.login(email=self.user.email, password="Password123")
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_feed.html')
@@ -31,13 +61,15 @@ class UserFeedViewTestCase(TestCase, LogInTester):
         self.assertFalse(form.is_bound)
 
     def test_get_user_feed_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to user feed."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertFalse(self._is_logged_in())
 
     def test_get_user_feed_with_pagination(self):
-        self.client.login(email=self.user, password="Password123")
+        """Test for user feed with pagination."""
+        self.client.login(email=self.user.email, password="Password123")
         self._create_test_user_posts(settings.POSTS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -69,6 +101,7 @@ class UserFeedViewTestCase(TestCase, LogInTester):
         self.assertFalse(page_obj.has_next())
 
     def _create_test_user_posts(self, user_posts_count=10):
+        """Creation of user post."""
         for id in range(1, user_posts_count+1, 1):
             UserPost.objects.create(
                 author=self.user,
@@ -76,4 +109,5 @@ class UserFeedViewTestCase(TestCase, LogInTester):
             )
 
     def _is_logged_in(self):
+        """Test if logged in."""
         return '_auth_user_id' in self.client.session.keys()

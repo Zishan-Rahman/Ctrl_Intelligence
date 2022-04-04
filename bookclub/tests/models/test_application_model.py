@@ -1,10 +1,11 @@
+"""Unit tests for the Application model"""
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from bookclub.models import *
 
 
 class ApplicationModelTestCase(TestCase):
-    """Test case for the Application model of the Bookclubs application"""
+    """Test case for the Application model of Bookwise"""
 
     fixtures = [
         # Some already defined users and book clubs to use for our application
@@ -34,11 +35,11 @@ class ApplicationModelTestCase(TestCase):
     def test_new_application(self) -> None:
         """Test if the newly set-up application is valid at the moment."""
         self._assert_application_is_valid()
-    
+
     def test_application_applicant_getter_works(self) -> None:
         """Testing the applicant getter method in the Application model."""
         self.assertEqual(self.application.get_applicant(),self.application.applicant)
-        
+
     def test_application_club_getter_works(self) -> None:
         """Testing the club getter method in the Application model."""
         self.assertEqual(self.application.get_application_club(),self.application.club)
@@ -62,7 +63,7 @@ class ApplicationModelTestCase(TestCase):
         """Test if an applicant cannot be a club entity."""
         with self.assertRaises(ValueError):
             self.application.club = self.user_one
-            
+
     def test_invalid_application_raises_validation_error(self) -> None:
         """Test if an invalid application raises a validation error when it is checked."""
         self.application.applicant = None
