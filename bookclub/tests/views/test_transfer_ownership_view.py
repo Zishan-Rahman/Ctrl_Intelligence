@@ -62,3 +62,17 @@ class TransferOwnershipViewsTestCase(TestCase):
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
         after_owner = self.bush_club.get_owner()
         self.assertNotEqual(before_owner, after_owner)
+
+    def test_unsuccessful_transfer_of_ownership(self):
+        """Testing for unsuccessful transfer of ownership of a club that isn't owned by the user."""
+        self.client.login(email=self.joe.email, password="Password123")
+        before_owner = self.joe
+        response = self.client.get(reverse(transfer_ownership, kwargs={'c_pk': self.bush_club.id, 'u_pk': self.jane.id}), follow=True)
+        self.bush_club.refresh_from_db()
+        redirect_url = f"/club_profile/{self.bush_club.id}/members"
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        after_owner = self.bush_club.get_owner()
+        self.assertNotEqual(before_owner, after_owner)

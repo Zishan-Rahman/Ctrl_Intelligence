@@ -371,6 +371,20 @@ class ClubProfileTest(TestCase, LogInTester):
         html = response.content.decode('utf8')
         self.assertIn(f'<p class="text-muted"><strong>{self.temple_club.name}</strong> does not have any meetings</p>', html)
 
+    def test_successful_leave_club(self):
+        """Test if a user is able to successfully leave a club"""
+        self.user3 = User.objects.get(email="joedoe@bookclub.com")
+        self.client.login(email=self.user3.email, password='Password123')
+        self.bush_club.make_member(self.user3)
+        club_id = self.bush_club.id
+        response = self.client.post(f'/leave_club/{club_id}/' , follow = True)
+        redirect_url = reverse('club_selector')
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        my_messages = list(response.context['messages'])
+        self.assertEqual(len(my_messages), 1)
+        self.assertEqual(my_messages[0].level, messages.SUCCESS)
+        self.assertEqual(my_messages[0].message, f'You have successfully left {self.bush_club.name}!')
+
     def _is_logged_in(self):
         """Test if logged in."""
         return '_auth_user_id' in self.client.session.keys()

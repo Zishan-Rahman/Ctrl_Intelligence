@@ -118,6 +118,33 @@ class BooksListViewTestCase(TestCase, LogInTester):
         after_reading_list_count = self.user.currently_reading_books.count()
         self.assertNotEqual(before_reading_list_count, after_reading_list_count)
 
+    def test_unfavourite_button_in_book_list_works(self):
+        """Testing if book list unfavourite button works."""
+        self.client.login(email=self.user.email, password='Password123')
+        self.user.favourite_books.add(self.book)
+        before_reading_list_count = self.user.favourite_books.count()
+        response = self.client.get('/book_list/1/unfavourite', follow=True)
+        redirect_url = '/books/'
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        after_reading_list_count = self.user.favourite_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
+
+    def test_favourite_button_in_book_list_works(self):
+        """Testing if book list favourite button works."""
+        self.client.login(email=self.user.email, password='Password123')
+        before_reading_list_count = self.user.favourite_books.count()
+        response = self.client.get('/book_list/1/favourite', follow=True)
+        redirect_url = '/books/'
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        after_reading_list_count = self.user.favourite_books.count()
+        self.assertNotEqual(before_reading_list_count, after_reading_list_count)
+
     def _is_logged_in(self):
         """Testing if logged in."""
         return '_auth_user_id' in self.client.session.keys()
