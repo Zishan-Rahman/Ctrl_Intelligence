@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from bookclub.models import User, Club, Application, Meeting, Post ,UserPost
+from bookclub.models import User, Club, Meeting, Post, UserPost
 from datetime import datetime
 from django.utils import timezone
 
