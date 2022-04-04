@@ -54,16 +54,6 @@ class NewPostView(LoginRequiredMixin, CreateView):
     def handle_no_permission(self):
         return redirect('login')
 
-def club_util(request):
-    user_clubs_list = []
-    clubs = Club.objects.all()
-
-    for temp_club in clubs:
-        if request.user in temp_club.get_all_users():
-            user_clubs_list.append(temp_club)
-
-    config.user_clubs = user_clubs_list
-
 def get_all_club_posts(request):
 
     user_clubs_list = []
