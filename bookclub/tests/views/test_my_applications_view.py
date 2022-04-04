@@ -1,4 +1,4 @@
-"""Tests of the individual applications view."""
+"""Unit tests of the Individual Applications View."""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -7,6 +7,7 @@ from django.contrib import messages
 
 
 class MyApplicationViewTestCase(TestCase):
+    """Test case for the My Application View"""
     fixtures = ['bookclub/tests/fixtures/default_users.json', 'bookclub/tests/fixtures/default_clubs.json',
                 'bookclub/tests/fixtures/default_applications.json']
 
@@ -22,20 +23,24 @@ class MyApplicationViewTestCase(TestCase):
         self.strand_club = Club.objects.get(name='Strand House Book Club')
 
     def get_response_and_html(self):
+        """Testing for the response and html."""
         response = self.client.get(self.url)
         html = response.content.decode('utf8')
         return response, html
 
     def test_my_application_url(self):
+        """Testing my applications url."""
         self.assertEqual(self.url, '/my_applications/')
 
-    def test_home_uses_correct_template(self):
+    def test_my_application_uses_correct_template(self):
+        """Testing if my application uses correct template."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'my_applications.html')
 
     def test_single_application_has_correct_details(self):
+        """Testing if single application has the correct details."""
         self.client.login(email=self.john.email, password="Password123")
         response, html = self.get_response_and_html()
         self.assertNotIn('You have not made any applications yet.', html)
@@ -44,6 +49,7 @@ class MyApplicationViewTestCase(TestCase):
         self.assertIn('<td>Strand, London</td>', html)
 
     def test_multiple_applications_have_correct_details(self):
+        """Testing if multiple applications have the correct details."""
         self.client.login(email=self.joe.email, password='Password123')
         response, html = self.get_response_and_html()
         self.assertNotIn('You have not made any applications yet.', html)
@@ -58,6 +64,7 @@ class MyApplicationViewTestCase(TestCase):
         self.assertIn('<td>Strand, London</td>', html)
 
     def test_no_applications(self):
+        """Testing if user has not made an application."""
         self.client.login(email=self.jane.email, password='Password123')
         response, html = self.get_response_and_html()
         self.assertIn('You have not made any applications yet.', html)
@@ -65,6 +72,7 @@ class MyApplicationViewTestCase(TestCase):
         self.assertNotIn('</td>', html)
 
     def test_view_after_application_creation(self):
+        """Testing the view after user created an application."""
         self.client.login(email=self.sam.email, password="Password123")
         self.application = Application.objects.create(applicant=self.sam, club=self.bush_club)
         response, html = self.get_response_and_html()
@@ -74,6 +82,7 @@ class MyApplicationViewTestCase(TestCase):
         self.assertIn('<td>Strand, London</td>', html)
 
     def test_get_application_list_with_pagination(self):
+        """Testing for application list with pagination."""
         self.client.login(email=self.john.email, password='Password123')
         self._create_test_my_applications(settings.APPLICATIONS_PER_PAGE * 2 + 3 - 1)
         response = self.client.get(self.url)
@@ -109,6 +118,7 @@ class MyApplicationViewTestCase(TestCase):
         self.assertFalse(page_obj.has_next())
 
     def _create_test_my_applications(self, my_applications_count=10):
+        """Creation of applications."""
         my_apps = []
         for id in range(1, my_applications_count + 1, 1):
             created_club = Club.objects.create(

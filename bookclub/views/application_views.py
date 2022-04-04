@@ -109,11 +109,7 @@ def new_application(request, club_id):
 
     if request.method == 'POST':
         current_members = club_applied_to.get_all_users()
-        if request.user in current_members:
-            application_is_possible = False
-
-        current_applications = Application.objects.filter(applicant=request.user, club=club_applied_to).count()
-        if current_applications:
+        if request.user in current_members or Application.objects.filter(applicant=request.user, club=club_applied_to).exists():
             application_is_possible = False
 
         if application_is_possible:

@@ -1,4 +1,4 @@
-"""Tests of the create chats view."""
+"""Unit tests for the Invite Users View"""
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
@@ -8,8 +8,8 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 
 
-class InviteTestCases(TestCase):
-    """Tests of the create chats view."""
+class InviteUsersTestCases(TestCase):
+    """Test case for the Invite Users View"""
 
     fixtures = ['bookclub/tests/fixtures/default_users.json',
                 'bookclub/tests/fixtures/default_clubs.json',
@@ -26,26 +26,31 @@ class InviteTestCases(TestCase):
         self.url = reverse('invite_message', kwargs={'club_id': self.bush_club.id, 'user_id': self.john.id})
 
     def test_invite_url(self):
+        """Testing the invite url."""
         self.assertEqual(self.url, f'/invite/{self.john.id}/1/')
 
     def test_invite_uses_correct_template(self):
+        """Testing if invite uses correct template."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_profile', kwargs={'user_id': self.john.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_profile.html')
 
     def test_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to my invite message."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_user_profile_has_invite(self):
+        """Testing for invite on user profile."""
         self.client.login(email=self.john.email, password='Password123')
         response = self.client.get(reverse('user_profile', kwargs={'user_id': self.jane.id}))
         html = response.content.decode('utf8')
         self.assertIn('Invite', html)
 
     def test_sender_user_invite_sent(self):
+        """Testing if invite is sent."""
         self.client.login(email=self.john.email, password='Password123')
         self.client.get(reverse('invite_message', kwargs={'user_id': self.jane.id, 'club_id': self.bush_club.id}),
                         follow=True)
@@ -56,6 +61,7 @@ class InviteTestCases(TestCase):
                       "page, please click the button below:\n\n</p>", html)
 
     def test_sender_user_has_join_button(self):
+        """Testing if sender has the join button."""
         self.client.login(email=self.john.email, password='Password123')
         self.client.get(reverse('invite_message', kwargs={'user_id': self.jane.id, 'club_id': self.bush_club.id}),
                         follow=True)
@@ -66,6 +72,7 @@ class InviteTestCases(TestCase):
                       'text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>', html)
 
     def test_receiver_user_has_invite(self):
+        """Testing for an invitation to a club."""
         self.client.login(email=self.john.email, password='Password123')
         self.client.get(reverse('invite_message', kwargs={'user_id': self.jane.id, 'club_id': self.bush_club.id}),
                         follow=True)
@@ -78,6 +85,7 @@ class InviteTestCases(TestCase):
                       "page, please click the button below:\n\n</p>", html)
 
     def test_receiver_user_has_join_button(self):
+        """Testing if the receiver has the join button."""
         self.client.login(email=self.john.email, password='Password123')
         self.client.get(reverse('invite_message', kwargs={'user_id': self.jane.id, 'club_id': self.bush_club.id}),
                         follow=True)
@@ -90,11 +98,9 @@ class InviteTestCases(TestCase):
                       'text-transform:uppercase; font-size: 14px"><i class="bi bi-briefcase"></i> Join</a>', html)
 
     def test_invite_message_sent_to_correct_chat(self):
+        """Testing if invite message has sent to the correct chat."""
         self.client.login(email=self.john.email, password='Password123')
         self.client.get(reverse('invite_message', kwargs={'user_id': self.sam.id, 'club_id': self.bush_club.id}),
                         follow=True)
         chat = Chat.objects.get(user=self.john, receiver=self.sam)
         self.assertEqual(chat.id, 3)
-
-
-

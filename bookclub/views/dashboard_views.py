@@ -1,18 +1,24 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from bookclub.models import Rating, Book, RecommendedBook, Club, Post
+from bookclub.models import Rating, Book, RecommendedBook, Club, Post, UserPost
 import pandas as pd
 from surprise import SVD
 from surprise import Dataset, Reader
 import pickle
 from bookclub.views import config
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import View
+from django.core.paginator import Paginator
+from django.conf import settings
+
+
 
  
 @login_required
 def home_page(request):
     config.inbox_count(request)
-    posts = get_all_club_posts(request)
+    posts = get_user_and_club_posts(request)
     posts = posts[:5]
     popular_books_list = get_popular_books()
     popular_books = get_recommended_books(popular_books_list)
@@ -20,7 +26,7 @@ def home_page(request):
     recommendations_list = []
     recommendations_list_isbn = []
     user_ratings_count = Rating.objects.filter(user=request.user).count()
-    if user_ratings_count >= 10:
+    if user_ratings_count >= 20:
         recommended_books_count = RecommendedBook.objects.filter(user=request.user).count()
         if recommended_books_count > 0:
             recommendations_list = list(set(RecommendedBook.objects.filter(user=request.user)))
@@ -35,9 +41,7 @@ def home_page(request):
                 RecommendedBook.objects.create(user=request.user, isbn=item.isbn)
     else:
         recommended_books = []
-    return render(request, "home.html",
-                  {'user': request.user, 'recommendations': recommended_books, 'popular_books': popular_books[:10],
-                   'posts': posts})
+    return render(request, "home.html", {'user': request.user, 'recommendations': recommended_books, 'popular_books': popular_books[:10], 'posts': posts})
 
 
 def refresh_recommendations(request):
@@ -58,6 +62,12 @@ def club_util(request):
 
     config.user_clubs = user_clubs_list
 
+def get_user_and_club_posts(request):
+    all_user_posts = get_all_follow_posts(request)
+    all_club_posts = get_all_club_posts(request)
+    all_posts = all_user_posts + all_club_posts
+    all_posts.sort(key=lambda p: p.created_at, reverse=True)
+    return all_posts
 
 def get_all_club_posts(request):
     club_util(request)
@@ -70,6 +80,18 @@ def get_all_club_posts(request):
                 all_club_posts.append(post)
     all_club_posts.sort(key=lambda p: p.created_at, reverse=True)
     return all_club_posts
+
+def get_all_follow_posts(request):
+    all_follow_posts = []
+    current_user = request.user
+
+    for follow in current_user.followees.all():
+        user_posts = list(set(UserPost.objects.filter(author=follow)))
+        if user_posts:
+            for post in user_posts:
+                all_follow_posts.append(post)
+    all_follow_posts.sort(key=lambda p: p.created_at, reverse=True)
+    return all_follow_posts
 
 
 def get_recommended_books(recommendations_list):

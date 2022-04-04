@@ -1,4 +1,4 @@
-"""Tests for the profile view."""
+"""Unit tests for the Edit Profile View"""
 from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
@@ -7,7 +7,7 @@ from bookclub.models import User
 from bookclub.tests.helpers import reverse_with_next
 
 class ProfileViewTest(TestCase):
-    """Test suite for the profile view."""
+    """Test case for the Edit Profile View"""
 
     fixtures = [
         'bookclub/tests/fixtures/default_users.json',
@@ -27,9 +27,11 @@ class ProfileViewTest(TestCase):
         }
 
     def test_profile_url(self):
+        """Testing the edit profile url."""
         self.assertEqual(self.url, '/profile/edit/')
 
     def test_profile_uses_correct_template(self):
+        """Testing if edit profile uses correct template."""
         login = self.client.login(email='johndoe@bookclub.com', password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(str(response.context['user']), 'johndoe@bookclub.com')
@@ -37,6 +39,7 @@ class ProfileViewTest(TestCase):
         self.assertTemplateUsed(response, 'edit_profile.html')
 
     def test_get_profile(self):
+        """Testing for profile view page."""
         self.client.login(email=self.user.email, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -46,11 +49,13 @@ class ProfileViewTest(TestCase):
         self.assertEqual(form.instance, self.user)
 
     def test_get_profile_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to edit profile."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def test_unsuccesful_profile_update(self):
+        """Testing for unsuccessful profile updates."""
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         self.form_input['email'] = 'BAD_email'
         before_count = User.objects.count()
@@ -72,6 +77,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(self.user.age, 39)
 
     def test_unsuccessful_profile_update_due_to_duplicate_email(self):
+        """Testing for unsuccessful profile updates due to duplicate email."""
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         self.form_input['email'] = 'janedoe@bookclub.com'
         before_count = User.objects.count()
@@ -93,6 +99,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(self.user.age, 39)
 
     def test_succesful_profile_update(self):
+        """Testing for successful profile updates."""
         self.client.login(email='johndoe@bookclub.com', password='Password123')
         before_count = User.objects.count()
         response = self.client.post(self.url, self.form_input, follow=True)
@@ -114,6 +121,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(self.user.age, 39)
 
     def test_post_profile_redirects_when_not_logged_in(self):
+        """Test if not logged in, redirect to post profile."""
         redirect_url = reverse_with_next('login', self.url)
         response = self.client.post(self.url, self.form_input)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
