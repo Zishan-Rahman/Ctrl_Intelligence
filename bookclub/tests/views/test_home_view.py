@@ -99,6 +99,17 @@ class HomeViewTestCase(TestCase):
         self.assertEqual(20, user_ratings_count)
         self.assertIn(f'New Recommendations', html)
 
+    def test_successful_refresh_recommendation(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self._create_ratings()
+        self._create_recommendations()
+        user_recs_count_before = RecommendedBook.objects.filter(user=self.user).count()
+        response = self.client.get(self.url + 'recommender')
+        html = response.content.decode('utf8')
+        user_recs_count_after = RecommendedBook.objects.filter(user=self.user).count()
+        self.assertNotEqual(user_recs_count_before,user_recs_count_after)
+        self.assertIn('', html)
+
     def test_home_view_has_posts(self):
         """Testing for posts on home page."""
         self.client.login(email=self.user.email, password='Password123')
