@@ -88,3 +88,11 @@ class KickFromClubViewTestCase(TestCase):
         self.assertNotEqual(beforeMemberCount, afterMemberCount + 1)
         self.assertEqual(messages_list[0].message,
                         "You do not have authority to do this!")
+        
+    def test_redirect_if_promotion_or_demotion_does_not_exist(self):
+        """Test promotion/demotion views redirect if a promotion/demotion doesn't exist."""
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get('/club_profile/1/members/10000000000000/kick', follow=True)
+        redirect_url = reverse('club_members', kwargs={'club_id':self.bush_club.id})
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.client.logout()
