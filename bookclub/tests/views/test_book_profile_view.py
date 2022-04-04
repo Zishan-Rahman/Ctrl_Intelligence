@@ -191,3 +191,11 @@ class BookProfileTest(TestCase):
                     </div>
                 </div>"""
         self.assertIn(book_more_info_button, html)
+
+    def test_book_profile_redirects_when_book_does_not_exist(self):
+        """Testing for redirect to books list when non-existent book queried."""
+        self.client.login(email=self.user.email, password='Password123')
+        response = self.client.get('/book_profile/1000000/')
+        redirect_url = reverse('book_list')
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        
