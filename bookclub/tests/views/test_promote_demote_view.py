@@ -16,9 +16,11 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.john = User.objects.get(email='johndoe@bookclub.com')
         self.jane = User.objects.get(email='janedoe@bookclub.com')
         self.joe = User.objects.get(email='joedoe@bookclub.com')
+        self.sam = User.objects.get(email='samdoe@bookclub.com')
 
         self.bush_club = Club.objects.get(name='Bush House Book Club')
         self.bush_club.make_member(self.jane)
+        self.bush_club.make_member(self.sam)
         self.bush_club.make_member(self.joe)
         self.bush_club.make_organiser(self.jane)
 
@@ -119,3 +121,39 @@ class PromoteDemoveViewsTestCase(TestCase):
         self.assertNotEqual(beforeOrganiserCount, afterOrganiserCount + 1)
         self.assertEqual(messages_list[0].message,
                          "You do not have authority to do this!")
+
+    def test_unsuccessful_promotion(self):
+        """Testing for unsuccessful promotion of a member in a club."""
+        self.client.login(email=self.sam.email, password='Password123')
+        beforeMemberCount = self.bush_club.get_number_of_members()
+        beforeOrganiserCount = self.bush_club.get_number_organisers()
+        response = self.client.get('/club_profile/1/members/3/promote', follow=True)
+        redirect_url = '/club_profile/1/members'
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        afterMemberCount = self.bush_club.get_number_of_members()
+        afterOrganiserCount = self.bush_club.get_number_organisers()
+        self.assertNotEqual(beforeMemberCount, afterMemberCount + 1)
+        self.assertNotEqual(beforeOrganiserCount, afterOrganiserCount - 1)
+        self.assertEqual(messages_list[0].message,
+                         "You do not have authority to do this!")
+
+    def test_unsuccessful_promotion_of_an_organiser(self):
+        """Testing for unsuccessful promotion of an organiser in a club."""
+        self.client.login(email=self.john.email, password='Password123')
+        beforeMemberCount = self.bush_club.get_number_of_members()
+        beforeOrganiserCount = self.bush_club.get_number_organisers()
+        response = self.client.get('/club_profile/1/members/2/promote', follow=True)
+        redirect_url = '/club_profile/1/members'
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(messages_list[0].level, messages.ERROR)
+        afterMemberCount = self.bush_club.get_number_of_members()
+        afterOrganiserCount = self.bush_club.get_number_organisers()
+        self.assertNotEqual(beforeMemberCount, afterMemberCount + 1)
+        self.assertNotEqual(beforeOrganiserCount, afterOrganiserCount - 1)
+        self.assertEqual(messages_list[0].message,
+                         "This person is already an organiser!")
