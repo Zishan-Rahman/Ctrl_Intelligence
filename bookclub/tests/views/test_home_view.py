@@ -93,7 +93,7 @@ class HomeViewTestCase(TestCase):
         html = response.content.decode('utf8')
         user_ratings_count = Rating.objects.filter(user=self.user).count()
         self.assertEqual(20, user_ratings_count)
-        response = self.client.get(reverse('refresh_recommendations'))
+        response = self.client.get(reverse('recommend'))
 
     def test_home_does_not_show_alert_if_enough_books_rated(self):
         """Testing if enough books are rated, home page does not show alert message."""
