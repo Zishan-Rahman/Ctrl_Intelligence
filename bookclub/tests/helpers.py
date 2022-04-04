@@ -1,8 +1,4 @@
 from django.urls import reverse
-from bookclub.models import Post
-
-def nums(first_number, last_number, step=1):
-    return range(first_number, last_number+1, step)
 
 def reverse_with_next(url_name, next_url):
     url = reverse(url_name)
