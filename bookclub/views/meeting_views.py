@@ -49,14 +49,14 @@ class ClubMeetingsListView(LoginRequiredMixin, ListView):
         return context
 
 
-@login_required
-def meetings_list(request, club_id):
-    club = Club.objects.get(id=club_id)
-    meetings = club.get_meetings()
-    paginator = Paginator(meetings, 2)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'club_meetings.html', {'club': club, 'page_obj': page_obj})
+# @login_required
+# def meetings_list(request, club_id):
+#     club = Club.objects.get(id=club_id)
+#     meetings = club.get_meetings()
+#     paginator = Paginator(meetings, 2)
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+#     return render(request, 'club_meetings.html', {'club': club, 'page_obj': page_obj})
 
 
 class MeetingScheduler(LoginRequiredMixin, View):
