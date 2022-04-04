@@ -75,6 +75,26 @@ class HomeViewTestCase(TestCase):
         self.assertEqual(20, user_ratings_count)
         self.assertIn(f'Our Most Popular Books', html)
 
+    def test_home_still_shows_top_books_when_enough_books_rated(self):
+        """Testing if enough books are rated, home page still shows popular books."""
+        self.client.login(email=self.user.email, password='Password123')
+        self._create_ratings()
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        user_ratings_count = Rating.objects.filter(user=self.user).count()
+        self.assertEqual(20, user_ratings_count)
+        recommended_books_count = RecommendedBook.objects.filter(user=self.user).count()
+        
+    def test_refresh_recommendations_redirect(self):
+        """Testing if enough books are rated, home page still shows popular books."""
+        self.client.login(email=self.user.email, password='Password123')
+        self._create_ratings()
+        response = self.client.get(self.url)
+        html = response.content.decode('utf8')
+        user_ratings_count = Rating.objects.filter(user=self.user).count()
+        self.assertEqual(20, user_ratings_count)
+        response = self.client.get(reverse('refresh_recommendations'))
+
     def test_home_does_not_show_alert_if_enough_books_rated(self):
         """Testing if enough books are rated, home page does not show alert message."""
         response = self.client.get(self.url)

@@ -67,7 +67,6 @@ class MyApplicationsView(LoginRequiredMixin, View):
 
 
 def app_accept(request, pk):
-    
     """Accept application"""
     try:
         app = Application.objects.all().get(pk=pk)
