@@ -101,6 +101,12 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
         self.assertEqual(len(context['posts']), len(Post.objects.filter(club=self.bush_club)))
         self.assertEqual(len(response.context['page_obj']), settings.POSTS_PER_PAGE)
         
+    def post_club_feed_view(self):
+        self.client.login(email=self.user.email, password="Password123")
+        self._create_test_club_posts(settings.POSTS_PER_PAGE*2+3-1)
+        response = self.client.post(self.url)
+        redirect_url = reverse('feed')
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
     def _is_logged_in(self):
         """Testing if logged in."""
