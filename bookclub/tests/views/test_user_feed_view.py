@@ -6,7 +6,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from bookclub.forms import UserPostForm
 from bookclub.models import User, UserPost
-from bookclub.tests.helpers import create_posts, reverse_with_next, LogInTester
+from bookclub.tests.helpers import reverse_with_next, LogInTester
 
 
 class UserFeedViewTestCase(TestCase, LogInTester):
@@ -25,12 +25,9 @@ class UserFeedViewTestCase(TestCase, LogInTester):
     def test_post_user_feed(self):
         self.client.login(email=self.user.email, password="Password123")
         self._create_test_user_posts(2)
-        form_data = {'text': 'This is a user post'}
-        form = UserPostForm(form_data)
-        response = self.client.post(self.url, {"author": self.user, "form": form})
+        response = self.client.get(self.url, {"user_id": self.user.id})
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self._is_logged_in())
-        self.assertTrue(form.is_valid)
         response = self.client.get(self.url)
 
     def test_user_feed_details(self):

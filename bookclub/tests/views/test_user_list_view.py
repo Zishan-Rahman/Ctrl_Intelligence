@@ -102,7 +102,7 @@ class TestUserListView(TestCase, LogInTester):
         response = self.client.get(page_three_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_list.html')
-        self.assertEqual(len(response.context['users']), 6)
+        self.assertEqual(len(response.context['users']), 7)
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())

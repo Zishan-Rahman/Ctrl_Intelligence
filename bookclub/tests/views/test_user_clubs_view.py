@@ -85,6 +85,7 @@ class UserClubsListViewTestCase(TestCase, LogInTester):
         self.assertTemplateUsed(response, 'club_switcher.html')
         
     def test_user_clubs_view_redirects_to_home_page_when_queried_user_does_not_exist(self):
+        """Test redirect to home page when queried user is non-existent"""
         self.client.login(email=self.john.email, password='Password123')
         url = reverse('user_clubs', kwargs={'user_id': 0})
         with self.assertRaisesMessage(User.DoesNotExist, "User matching query does not exist."):

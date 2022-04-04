@@ -70,15 +70,7 @@ class ReadingListView(LoginRequiredMixin, ListView):
         user = User.objects.get(id=user_id)
         books = user.currently_reading_books.all()
         context['books'] = books
-
-    def post(self, request, *args, **kwargs):
-        user_id = self.kwargs['user_id']
-        user = User.objects.get(id=user_id)
-        books = user.currently_reading_books.all()
-        paginator = Paginator(books, settings.BOOKS_PER_PAGE)
-        page_number = self.request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        return render(request, 'reading_list.html', {"books": books, "user": user, "page_obj": page_obj})
+        return context
 
     def get(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']

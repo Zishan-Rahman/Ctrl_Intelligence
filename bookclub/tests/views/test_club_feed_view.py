@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.shortcuts import redirect
 from bookclub.forms import PostForm
 from bookclub.models import User, Club, Post
-from bookclub.tests.helpers import create_posts, reverse_with_next, LogInTester
+from bookclub.tests.helpers import reverse_with_next, LogInTester
 
 
 class ClubFeedViewTestCase(TestCase, LogInTester):
@@ -24,12 +24,9 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
     def test_post_club_feed(self):
         self.client.login(email=self.user.email, password="Password123")
         self._create_test_club_posts(2)
-        form_data = {'text': 'This is bush house book club post'}
-        form = PostForm(form_data)
-        response = self.client.post(self.url, {"author": self.user, "club": self.bush_club, "form": form})
+        response = self.client.get(self.url, {"club_id": self.bush_club.id})
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self._is_logged_in())
-        self.assertTrue(form.is_valid)
         response = self.client.get(self.url)
 
     def test_club_feed_url(self):
@@ -90,7 +87,7 @@ class ClubFeedViewTestCase(TestCase, LogInTester):
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())
         
-    def test_club_feed_view_context_data(self):
+    def test_club_feed_view_shows_relevant_data_when_logged_in(self):
         self.client.login(email=self.user.email, password="Password123")
         self._create_test_club_posts(settings.POSTS_PER_PAGE*2+3-1)
         response = self.client.get(self.url)
