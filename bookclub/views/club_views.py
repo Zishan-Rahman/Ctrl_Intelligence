@@ -187,28 +187,6 @@ def club_util(request):
 
     config.user_clubs = user_clubs_list
 
-
-
-
-@login_required
-def club_list(request):
-    clubs = []
-    for club in Club.objects.all():
-        clubs.append({
-            "id": club.id,
-            "name": club.get_name,
-            "description": club.get_description,
-            "location": club.get_location,
-            "owner": club.get_owner,
-            "meeting_online": club.meeting_online,
-            "mini_gravatar": club.mini_gravatar(),
-            "gravatar": club.gravatar()
-        })
-    return render(request, 'club_list.html', {'clubs': clubs})
-
-
-
-
 @login_required
 def club_selector(request):
     club_util(request)
