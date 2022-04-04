@@ -127,7 +127,7 @@ def recommender(request, user_id, top_n):
     data = Dataset.load_from_df(result[['user_id', 'isbn', 'rating']], reader)
 
     trainset = data.build_full_trainset()
-    algo = NMF()
+    algo = SVD()
     algo.fit(trainset)
 
     books_list = list(set(user_rating_df['isbn'].to_list()))
