@@ -187,7 +187,6 @@ def unfavourite_book_profile(request, book_id):
     unfavourite(request, book_id)
     return redirect('book_profile', book_id=book_id)
 
-
 class MyBookRatings(LoginRequiredMixin, ListView):
     model = Rating
     template_name = "my_book_ratings.html"
