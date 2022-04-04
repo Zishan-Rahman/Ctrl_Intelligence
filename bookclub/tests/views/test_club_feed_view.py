@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.shortcuts import redirect
 from bookclub.forms import PostForm
 from bookclub.models import User, Club, Post
-from bookclub.tests.helpers import create_posts, reverse_with_next, LogInTester
+from bookclub.tests.helpers import reverse_with_next, LogInTester
 
 
 class ClubFeedViewTestCase(TestCase, LogInTester):
