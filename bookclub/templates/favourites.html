@@ -24,7 +24,7 @@
         <td>{{ entry.title }}</td>
         <td>{{ entry.author }}</td>
         <td>{{ entry.pub_year }}</td>
-        <form action="{% url 'unfavourite_book_profile' entry.id %}" method="post">
+        <form action="{% url 'unfavourite_book_list' entry.id %}" method="post">
           {% csrf_token %}
           <td><button type="submit" class="btn" id="bookwiseGeneralBtn" style="font-size: 24px"><i class="bi bi-star-fill"></i></button></form></td>
         </form>

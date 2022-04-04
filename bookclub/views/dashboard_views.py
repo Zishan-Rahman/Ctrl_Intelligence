@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from bookclub.models import Rating, Book, RecommendedBook, Club, Post, UserPost
 import pandas as pd
-from surprise import SVD
+from surprise import SVD, NormalPredictor, KNNWithMeans, NMF
 from surprise import Dataset, Reader
 import pickle
 from bookclub.views import config
@@ -127,7 +127,7 @@ def recommender(request, user_id, top_n):
     data = Dataset.load_from_df(result[['user_id', 'isbn', 'rating']], reader)
 
     trainset = data.build_full_trainset()
-    algo = SVD()
+    algo = NMF()
     algo.fit(trainset)
 
     books_list = list(set(user_rating_df['isbn'].to_list()))
