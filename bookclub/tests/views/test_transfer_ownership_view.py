@@ -76,3 +76,11 @@ class TransferOwnershipViewsTestCase(TestCase):
         self.assertEqual(messages_list[0].level, messages.ERROR)
         after_owner = self.bush_club.get_owner()
         self.assertNotEqual(before_owner, after_owner)
+        
+    def test_redirect_if_promotion_or_demotion_does_not_exist(self):
+        """Test promotion/demotion views redirect if a promotion/demotion doesn't exist."""
+        self.client.login(email=self.john.email, password='Password123')
+        response = self.client.get('/club_profile/1/members/10000000000000/transfer', follow=True)
+        redirect_url = reverse('club_members', kwargs={'club_id':self.bush_club.id})
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.client.logout()
