@@ -1,6 +1,6 @@
 {% autoescape off %}
 
-Dear, {{user.first_name}} {{user.last_name}}
+Dear {{user.first_name}} {{user.last_name}},
 
 Welcome to the Bookwise community!
 
@@ -10,7 +10,7 @@ http://{{domain}}{% url 'activate' user_id token %}
 
 If you believe this email was sent to you in error, please ignore this email. Any replies to this email will be ignored.
 
-Thank you,
-Bookwise Webmaster
+Sincerely,
+The Bookwise Team
 
 {% endautoescape %}
