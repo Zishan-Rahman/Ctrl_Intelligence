@@ -70,6 +70,7 @@ class ReadingListView(LoginRequiredMixin, ListView):
         user = User.objects.get(id=user_id)
         books = user.currently_reading_books.all()
         context['books'] = books
+        return context
 
     def post(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
