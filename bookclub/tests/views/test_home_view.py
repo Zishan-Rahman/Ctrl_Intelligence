@@ -128,7 +128,6 @@ class HomeViewTestCase(TestCase):
         html = response.content.decode('utf8')
         user_recs_count_after = RecommendedBook.objects.filter(user=self.user).count()
         self.assertNotEqual(user_recs_count_before,user_recs_count_after)
-        self.assertIn('', html)
 
     def test_home_view_has_posts(self):
         """Testing for posts on home page."""
@@ -137,6 +136,15 @@ class HomeViewTestCase(TestCase):
         html = response.content.decode('utf8')
         self.assertIn(f' <p class="card-text fw-bold">This is a Bush House Book Club Post</p>',
                       html)
+
+    def test_successful_update_rating(self):
+        self.client.login(email=self.user.email, password='Password123')
+        self._create_ratings()
+        ratingBefore = Rating.objects.get(pk=1).get_rating
+        response = self.client.get('book_profile/1/rating')
+        html = response.content.decode('utf8')
+        ratingAfter = Rating.objects.get(pk=1).get_rating
+        self.assertNotEqual(ratingBefore , ratingAfter)
 
     def _create_ratings(self):
         """Creation of 20 ratings."""
