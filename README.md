@@ -31,7 +31,7 @@ The main project is called `system` and it consists of two key applications, `bo
 
 ## Installation Instructions
 
-We recommend you use Python 3.8 to run Bookwise due to a dependency that fails to install in later versions of Python.
+We recommend you use Python 3.8 to run Bookwise due to a dependency (psycopg2) that fails to install in later versions of Python.
 
 First, set up a Python virtual environment from the root of this project:
 
