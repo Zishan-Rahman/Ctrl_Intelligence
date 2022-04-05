@@ -1,7 +1,23 @@
-# Ctrl_Intelligence
+# Ctrl Intelligence
+
 Ctrl Intelligence, the major group project for SEG.
 
-## Team Members:
+## Bookwise
+
+Link to deployed version: https://whispering-bastion-83257.herokuapp.com/
+
+Link to deployed version (administrators): https://whispering-bastion-83257.herokuapp.com/admin/
+
+Use the following details:
+- Email: ctrl@intelligence.com
+- Password: Password123
+
+## Project Structure
+
+The main project is called `system` and it consists of two key applications, `bookclub` being the social-network side of Bookwise and `recommender` dealing with the dataset preprocessing.
+
+## Team Members
+
 - Fathima (JD) Jamal-Deen (K1922032)
 - Emma Conteh (K20045772)
 - Surma Begum (K19025208)
@@ -13,7 +29,45 @@ Ctrl Intelligence, the major group project for SEG.
 - Suhayb Yones (K20044202)
 - Brendon Zoto (K19011443)
 
-## Sources used:
+## Installation Instructions
+
+We recommend you use Python 3.8 to run Bookwise due to a dependency that fails to install in later versions of Python.
+
+First, set up a Python virtual environment from the root of this project:
+
+```bash
+$ virtualenv venv
+$ source venv/bin/activate
+```
+
+Then install all the required libraries needed to run Bookwise in your virtual environment:
+
+```bash
+(venv) $ pip3 install -r requirements.txt
+```
+
+Migrate your database, then seed it to get all the data:
+
+```bash
+(venv) $ python3 manage.py makemigrations
+(venv) $ python3 manage.py migrate
+(venv) $ python3 manage.py seed
+```
+
+Finally, run the local server:
+
+```bash
+(venv) $ python3 manage.py runserver
+```
+
+To run the automated test suite:
+
+```bash
+(venv) $ python3 manage.py test
+```
+
+## Sources used
+
 - https://www.youtube.com/watch?v=Rbkc-0rqSw8 (For email verification)
 - Chess club project (KCL 5CCSSEG Semester 1)
 - https://www.kaggle.com (For the recommender system)
