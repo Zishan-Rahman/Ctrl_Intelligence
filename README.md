@@ -46,6 +46,12 @@ Then install all the required libraries needed to run Bookwise in your virtual e
 (venv) $ pip3 install -r requirements.txt
 ```
 
+Set up the recommender system pickle files:
+
+```bash
+(venv) $ python3 manage.py recommender
+```
+
 Migrate your database, then seed it to get all the data:
 
 ```bash
@@ -64,6 +70,12 @@ To run the automated test suite:
 
 ```bash
 (venv) $ python3 manage.py test
+```
+
+To see the results of the machine-learning models evaluator:
+
+```bash
+(venv) $ python3 manage.py evaluator
 ```
 
 ## Sources used
