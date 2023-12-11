@@ -41,7 +41,7 @@ regex==2021.11.10
 requests==2.26.0
 scikit-learn==1.0.2
 scikit-surprise==1.1.1
-scipy==1.8.0
+scipy==1.11.4
 six==1.16.0
 sklearn==0.0
 sqlparse==0.4.2
